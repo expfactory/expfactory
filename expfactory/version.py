@@ -43,18 +43,6 @@ LICENSE = "LICENSE"
 INSTALL_REQUIRES = (
     ('flask', {'min_version': '0.12'}),
     ('flask-restful', {'min_version': None}),
-    ('flask-login', {'min_version': None}),
-    ('flask-openid', {'min_version': None}),
-    ('flask-mail', {'min_version': None}),
-    ('flask-sqlalchemy', {'min_version': None}),
-    ('sqlalchemy-migrate', {'min_version': None}),
-    ('flask-whooshalchemy', {'min_version': None}),
-    ('flask-wtf', {'min_version': None}),
-    ('flask-babel', {'min_version': None}),
-    ('guess_language', {'min_version': None}),
-    ('gunicorn', {'min_version': None}),
-    ('flipflop', {'min_version': None}),
-    ('coverage', {'min_version': None}),
     ('requests', {'min_version': '2.12.4'}),
     ('retrying', {'min_version': '1.3.3'})
 )

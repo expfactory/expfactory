@@ -10,7 +10,7 @@ To build your image (sandbox for testing)
    sudo singularity build --sandbox expfac Singularity
 
 To serve your battery
-    singularity instance.start expfactory.img web1
+    sudo singularity instance.start expfactory.img web1
 
 %environment
 STUDY_ID=expfactory
@@ -18,7 +18,7 @@ export STUDY_ID
 
 %startscript
     service nginx start
-    exec /usr/local/bin/gunicorn -w 2 -b :5000 expfactory.cli:main
+    #exec /usr/local/bin/gunicorn -w 2 -b :5000 expfactory.cli:main
     exec expfactory "$@"
 
 %post
