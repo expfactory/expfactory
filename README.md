@@ -14,18 +14,13 @@ This version is agnostic to the underlying driver of the experiments, and provid
 
 
 ## Experiment Library
-The experiments themselves are now maintained under [expfactory-experiments](https://www.github.com/expfactory-experiments), official submissions to be found by expfactory can be added to the [library](https://www.github.com/expfactory-experiments/library) to be tested for the minimum requirements:
+The experiments themselves are now maintained under [expfactory-experiments](https://www.github.com/expfactory-experiments), official submissions to be found by expfactory can be added to the [library](https://www.github.com/expfactory/library) (under development) to be tested for the minimum requirements:
 
  - an `index.html` file and `config.json` in the root of the folder.
  - (optional) documentation about any special variables that can be set in the Singularity build recipe environment section for it (more on this later).
  - an associated repository to clone from, (optionally) registered in the library.
 
-- Please see our [documentation](http://expfactory.readthedocs.org/en/latest/getting-started.html) for more complete details.
-- Jump in and [try out our experiments](http://expfactory.github.io/table.html)
-- Express interest in Experiments as a Service (EaS) as [expfactory.org](http://www.expfactory.org)
-
-The Experiment Factory code is licensed under the MIT open source license, which is a highly permissive license that places few limits upon reuse. This ensures that the code will be usable by the greatest number of researchers, in both academia and industry. 
-
+For now, you can preview legacy [experiments](http://expfactory.github.io/table.html) that will be ported to this updated version.
 
 
 ## Quick start
@@ -34,16 +29,47 @@ You don't actually need to install the Software on your local machine, it will b
 
 You do, however, need to install [Singularity](https://singularityware.github.io) on your local machine. This is a container technology akin to Docker, but it has support on most HPC clusters and works on old kernels, and Docker does not.
 
+### Database
+
+**default**
+The default (simplest) method for a database is called a flat file, meaning that results are written to a mapped folder on the local machine. This option is provided as many labs are accustomed to providing a battery locally, and want to save output directly to the filesystem without having any expertise with setting up a database.
+
+**MySQL**
+For labs that wish to deploy the container on a server, you are encouraged to use a more substantial database. We will provide instructions for setting this configuration (under development).
+
 
 ### Write your recipe
-A Singularity Recipe is a file that details how you want your container to build. In our case, we want to give instructions about which experiments to install. First, copy an example recipe:
-
+A Singularity Recipe is a file that details how you want your container to build. In our case, we want to give instructions about which experiments to install. You can use the [example recipe provided](Singularity) or (coming soon) our online recipe generator. 
 
 ```
 wget https://raw.githubusercontent.com/vsoch/expfactory-python/development/examples/Singularity
 ```
 
-This will place the build recipe `Singularity` in your present working directory, and by fault we will install two experiments, adaptive-n-back and tower-of-london. The experiments each have their own repository maintained at [https://www.github.com/expfactory-experiments](https://www.github.com/expfactory-experiments).
+This will place the build recipe `Singularity` in your present working directory, and by fault we will install two experiments, adaptive-n-back and tower-of-london. The experiments each have their own repository maintained at [https://www.github.com/expfactory-experiments](https://www.github.com/expfactory-experiments). If you are interested in all the experiments available to you, you can look at the library manifest:
+
+```
+curl https://expfactory.github.io/library/index.json
+
+[
+    {
+        "maintainer": "@vsoch",
+        "github": "https://github.com/expfactory-experiments/tower-of-london.git",
+        "name": "tower-of-london"
+    },
+    {
+
+       "name": "adaptive-n-back",
+       "maintainer": "@vsoch",
+       "github":   "https://github.com/expfactory-experiments/adaptive-n-back.git"
+
+   }
+]
+```
+or just the names
+
+```
+curl https://expfactory.github.io/library/index.json | grep name
+```
 
 If you look inside the recipe, you will see an "app" section for each experiment. All it does is clone the repository content:
 
@@ -52,7 +78,19 @@ git clone https://github.com/expfactory-experiments/adaptive-n-back
 mv adaptive-n-back/* .
 ```
 
-We are installing each experiment as a [Standard Container Integration Format (SCI-F)](https://containers-ftw.github.io/SCI-F/) app. The high level idea is that it gives easy accessibility to multiple different internal modules in our container. In our case, an internal module is an experiment. Note that here we might add different environment variables for an experiment, or specify a custom database, but since we are just developing and testing now, let's keep it simple! 
+We are installing each experiment as a [Standard Container Integration Format (SCI-F)](https://containers-ftw.github.io/SCI-F/) app. The high level idea is that it gives easy accessibility to multiple different internal modules in our container. In our case, an internal module is an experiment. 
+
+### Configure your Battery
+The Experiment Factory will generate a new unique ID for each participant with some study idenitifier prefix. The default is `expfactory`, meaning that my participants will be given identifiers `expfactory_1` through `expfactory_n`. If you want to change this, just customize the variable under the `%environment` section:
+
+
+```
+%environment
+STUDY_ID=expfactory
+export STUDY_ID
+```
+
+At this time you would also specify your preference for a database, or any runtime variables for the experiments. We will add these notes later. Let's move on the building your battery.
 
 
 ### Build the Battery Container
@@ -130,4 +168,4 @@ If you want to shell inside
 sudo singularity shell --writable instance://web1
 ```
 
-
+This code base is under development, so it might even be the case that not all files are added yet! Stay tuned.
