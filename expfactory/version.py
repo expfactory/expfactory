@@ -52,7 +52,9 @@ INSTALL_REQUIRES = (
     ('flask-wtf', {'min_version': None}),
     ('flask-babel', {'min_version': None}),
     ('guess_language', {'min_version': None}),
+    ('gunicorn', {'min_version': None}),
     ('flipflop', {'min_version': None}),
     ('coverage', {'min_version': None}),
     ('requests', {'min_version': '2.12.4'}),
-    ('retrying', {'min_version': '1.3.3'}),
+    ('retrying', {'min_version': '1.3.3'})
+)

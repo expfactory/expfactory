@@ -48,17 +48,33 @@ class EFServer(Flask):
 
     def __init__(self, *args, **kwargs):
         super(EFServer, self).__init__(*args, **kwargs)
-
+        
         self.setup()
+        self.initdb()
 
         # Completed will go into list
         self.completed = []
+
+    def initdb(self):
+        '''initdb will check for writability of the data folder, meaning
+           that it is bound to the local machine. If the folder isn't bound,
+           expfactory runs in demo mode (not saving data)
+        '''
+
+        self.data = getenv('EXPFACTORY_DATA','/scif/data')
+        if not os.access(self.data, os.W_OK):
+            bot.warning("%s is not writable, running in demo mode." %self.data)
+            self.data = None
+
+        if self.data is not None:
+            bot.log("Data base: %s" %self.data)
+
 
     def setup(self):
 
         # Step 1: obtain installed and selected experiments (/scif/apps)
         self.selection = getenv('EXPERIMENTS', [])
-        self.base = os.environ.get('EXPFACTORY_BASE','/scif/apps')
+        self.base = getenv('EXPFACTORY_BASE','/scif/apps')
         self.randomize = convert2boolean(getenv('EXPFACTORY_RANDOM', True))
         available = get_experiments("%s" % self.base)
         self.experiments = get_selection(available, self.selection)
@@ -67,7 +83,7 @@ class EFServer(Flask):
 
         bot.log("User has selected: %s" %self.selection)
         bot.log("Experiments Available: %s" %"\n".join(available))
-        bot.log("Randomize: %s" self.randomize)
+        bot.log("Randomize: %s" % self.randomize)
         bot.log("Final Set \n%s" % final)
        
 
