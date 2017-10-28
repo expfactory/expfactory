@@ -45,33 +45,32 @@ def get_parser():
     parser = argparse.ArgumentParser(
     description="expfactory: produce a reproducible battery of container experiments")
 
+
+    # Package manager to list experiments
     parser.add_argument("--list", dest='list',  # TODO: this will list from library
                          help="list available experiments.",   
                          default=False, action='store_true')
 
+    # Experiments and Runtime Config
     parser.add_argument("--experiments", dest='experiments', 
                          help="comma separated list of experiments for a local battery", 
                          type=str, default=None)
 
     parser.add_argument("--subid", dest='subid', 
                          help="subject id for saving database",
-                         type=str, default=None)
+                         type=str, default='expfactory')
 
     parser.add_argument("--base", dest='base', 
                          help="base folder with experiment subfolders (defaults to /scif/apps)",
                          type=str, default='/scif/apps')
 
-    parser.add_argument("--port", dest='port', 
-                         help="port to preview experiment", 
-                         type=int, default=None)
-
     parser.add_argument("--time", dest='time',
                          help="maximum number of minutes for battery to endure, to select experiments",
                          type=int, default=99999)
 
-    parser.add_argument('--run', dest="run",
-                         help="run a single experiment/survey or battery locally",
-                         default=False, action='store_true')
+    parser.add_argument('--no-random', dest="disable_randomize",
+                         help="present experiments serially",
+                         default=True, action='store_false')
 
     return parser
 
@@ -102,11 +101,12 @@ def main():
         bot.error("Base folder %s does not exist." %args.base)
         sys.exit(1)
 
+    os.environ['EXPFACTORY_RANDOM'] = str(args.disable_randomize)
     os.environ['EXPFACTORY_BASE'] = args.base
     os.environ['EXPFACTORY_SUBID'] = args.subid
 
     from expfactory.server import start
-    start(port=args.port)
+    start()
 
 if __name__ == '__main__':
     main()

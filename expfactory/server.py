@@ -109,7 +109,7 @@ def allowed_file(filename):
 
 
 # This is how the command line version will run
-def start(port=8088, debug=False):
+def start(port=5000, debug=False):
     bot.info("Nobody ever comes in... nobody ever comes out...")
     app.run(host="0.0.0.0", debug=False, port=port)
     

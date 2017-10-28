@@ -36,6 +36,7 @@ import collections
 from expfactory.logman import bot
 import shutil
 import json
+import sys
 import os
 import re
 
@@ -169,7 +170,7 @@ def clean_fields(mydict):
     return newdict
 
 
-def getenv(variable_key,required=False,default=None,silent=False):
+def getenv(variable_key, default=None, required=False, silent=False):
     '''getenv will attempt to get an environment variable. If the variable
     is not found, None is returned.
     :param variable_key: the variable name
