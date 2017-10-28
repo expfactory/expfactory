@@ -2,18 +2,18 @@
 
 ### Database
 
-**default**
-The default (simplest) method for a database is called a flat file, meaning that results are written to a mapped folder on the local machine. This option is provided as many labs are accustomed to providing a battery locally, and want to save output directly to the filesystem without having any expertise with setting up a database.
+**files**
+The default (simplest) method for a database is flat files, meaning that results are written to a mapped folder on the local machine, and each participant has their own results folder. This option is provided as many labs are accustomed to providing a battery locally, and want to save output directly to the filesystem without having any expertise with setting up a database.
 
 **MySQL**
 For labs that wish to deploy the container on a server, you are encouraged to use a more substantial database. We will provide instructions for setting this configuration (under development).
 
 
 ### Write your recipe
-A Singularity Recipe is a file that details how you want your container to build. In our case, we want to give instructions about which experiments to install. You can use the [example recipe provided](Singularity) or (coming soon) our online recipe generator. 
+A Singularity Recipe is a file that details how you want your container to build. In our case, we want to give instructions about which experiments to install. You can use the [example recipe provided](Singularity) or if you haven't cloned the repo:
 
 ```
-wget https://raw.githubusercontent.com/vsoch/expfactory-python/development/examples/Singularity
+wget https://raw.githubusercontent.com/expfactory/expfactory/master/Singularity
 ```
 
 This will place the build recipe `Singularity` in your present working directory, and by fault we will install two experiments, adaptive-n-back and tower-of-london. The experiments each have their own repository maintained at [https://www.github.com/expfactory-experiments](https://www.github.com/expfactory-experiments). If you are interested in all the experiments available to you, you can look at the library manifest:
@@ -51,17 +51,18 @@ mv adaptive-n-back/* .
 
 We are installing each experiment as a [Standard Container Integration Format (SCI-F)](https://containers-ftw.github.io/SCI-F/) app. The high level idea is that it gives easy accessibility to multiple different internal modules in our container. In our case, an internal module is an experiment. 
 
+
 ### Configure your Battery
 The Experiment Factory will generate a new unique ID for each participant with some study idenitifier prefix. The default is `expfactory`, meaning that my participants will be given identifiers `expfactory_1` through `expfactory_n`. If you want to change this, just customize the variable under the `%environment` section:
 
 
 ```
 %environment
-STUDY_ID=expfactory
-export STUDY_ID
+    EXPFACTORY_STUDY_ID=expfactory
+    export EXPFACTORY_STUDY_ID
 ```
 
-At this time you would also specify your preference for a database, or any runtime variables for the experiments. We will add these notes later. Let's move on the building your battery.
+In the future we will have an online recipe generator. At this time you would also specify your preference for a database, or any runtime variables for the experiments. We will add these notes later. Let's move on the building your battery.
 
 
 ### Build the Battery Container
@@ -69,10 +70,10 @@ Let's build the image, and we are going to create a development (tester) image c
 
 
 ```
-sudo singularity build --sandbox expfactory Singularity
+sudo singularity build --sandbox exp-box Singularity
 ```
 
-Let's break down the above. We are asking the singularity command line software to `build` an image, specifically a `--sandbox` (folder) kind for development, **from** the recipe file `Singularity`.
+Where `exp-box` is referring to a sandbox environment for your image. Let's break down the above. We are asking the singularity command line software to `build` an image, specifically a `--sandbox` (folder) kind for development, **from** the recipe file `Singularity`.
 
 Once building is done, we can see what experiments are installed:
 
@@ -91,50 +92,4 @@ singularity help expfactory
 
 In the future I will likely make an automatic "recipe generator" that uses the config.jsons to help, for now it's just a game of copy pasting :)
 
-
-### Start the Server
-We will be starting instances of the container, meaning a deployment of a web server with the expfactory software to serve a battery. This means first starting the container. In the command below, we use `instnace.start` and name our instance `web1`.
-
-```
- singularity instance.start expfactory.img web1
-```
-
-List your images:
-
-```
-singularity instance.list
-DAEMON NAME      PID      CONTAINER IMAGE
-web1             29903    /home/vanessa/Documents/Dropbox/Code/expfactory/experiments/expfactory
-```
-
-Stop the instance
-
-```
-singularity instance.stop web1
-Stopping web1 instance of /home/vanessa/Documents/Dropbox/Code/expfactory/experiments/expfactory (PID=29903)
-```
-
-If you want a writable instance (meaning using shell with sudo) you need to also create it as sudo. The creator is the owner.
-
-```
-sudo singularity instance.start --writable expfactory web2
-```
-
-or to bind a directory from the host (e.g., for writing a result)
-
-```
-sudo singularity instance.start --bind expfactory-python:/opt expfactory/ web1
-```
-And then list your instances
-
-```
-$ sudo singularity instance.list
-DAEMON NAME      PID      CONTAINER IMAGE
-web2             32708    /home/vanessa/Documents/Dropbox/Code/expfactory/experiments/expfactory
-```
-
-If you want to shell inside
-
-```
-sudo singularity shell --writable instance://web1
-```
+Next, you should read about [Running your Experiment Container](running.md)
