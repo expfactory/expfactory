@@ -43,7 +43,7 @@
                                         <div class="col-xs-6">
                                             <div class="ticket-name">
                                                 {{ experiment }}
-                                                <span>experiment<br></span>
+                                                <span><br></span>
                                             </div>
                                         </div>                                    
                                         <div class="col-xs-6">
@@ -52,25 +52,23 @@
                                                     <div class="input-group">
                                                       <span class="input-group-btn">
                                                           <button type="button" 
-                                                                  class="btn btn-default btn-number" 
+                                                                  class="btn btn-default btn-number experiment-select-button experiment-unselected" 
                                                                   data-type="plus" 
-                                                                  style="float:right"
-                                                                  data-field="quant[1]">
+                                                                  style="float:right">
                                                               <span class="glyphicon glyphicon-plus"></span>
                                                           </button>
                                                       </span>
                                                     </div>
                                                 </div>
-                                                <p class="price">{% if metadata.time %}{{ metadata.time }} minutes{% endif %}</p>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="ticket-description">
-                                        {% if metadata.exp_id %}<p><strong>Expfactory ID: </strong>{{ metadata.exp_id }}</p><br>{% endif %}
-                                        {% if metadata.template %}<p><strong>Template: </strong>{{ metadata.template }}</p><br>{% endif %}
-                                        {% if metadata.url %}<p><strong>URL</strong>: {{ metadata.url }}</p><br>{% endif %}
-                                        <hr>
-                                        {% if metadata.description %}<p><strong>: Description</strong>{{ metadata.description }}</p>{% endif %}
+                                        {% if metadata.exp_id %}<p><strong>Expfactory ID: </strong>{{ metadata.exp_id }}</p>{% endif %}
+                                        {% if metadata.time %}<p><strong>Time</strong>: {{ metadata.time }} minutes</p>{% endif %}
+                                        {% if metadata.template %}<p><strong>Template: </strong>{{ metadata.template }}</p>{% endif %}
+                                        {% if metadata.url %}<p><strong>URL</strong>: {{ metadata.url }}</p>{% endif %}
+                                        {% if metadata.description %}<hr><p><strong>: Description</strong>{{ metadata.description }}</p>{% endif %}
                                     </div>                                            
                                 </div>
                             </div>
@@ -96,11 +94,11 @@
                 <div class="row">
                     <div class="col-xs-6">
                         <p> 
-                            <span class="ticket-count">0</span> Tickets <span class="divider"></span> Total: Rs. <span class="total-amount">0</span></p>
+                            <span class="ticket-count">0</span> Experiments <span class="divider"></span> Time: <span class="total-amount">0</span></p>
                     </div>
                     <div class="col-xs-6">
                         <div class="text-right">
-                            <a class="btn disabled" data-toggle="modal" data-target="#ticket-details">PROCEED</a>
+                            <a class="btn" data-toggle="modal" data-target="#ticket-details">PROCEED</a>
                         </div>
                     </div>
                 </div>
@@ -123,23 +121,24 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <img src="{{ url_for('static',filename='img/icons/cancel.png') }}">
         </button>
-        <h4 class="modal-title">Your Tickets</h4>
+        <h4 class="modal-title">Your Battery</h4>
       </div>
       <div class="modal-body">
         
         <div class="cart-information">
                 <div class="ticket-type"></div>
                   <ul>
-                    <li>Tickets: <span class="ticket-count"></span></li>
-                    <li>Price: <span class="ticket-amount"></span></li>
+                    <li>Experiments: <span class="ticket-count"></span></li>
+                    <li>Duration: <span class="ticket-amount"></span></li>
                     <hr>
                     <li>Total: <span class="total-amount"></span></li>
                 </ul>
             </div>
             
             <div class="contactForm">    
-                <h3>Share your contact Details</h3>
+                <h3>Share your Participant Details</h3>
                 <form>
+
                   <div class="form-group">
                     <input type="text" class="form-control" placeholder="Enter your name">
                   </div>
@@ -151,8 +150,8 @@
                   <div class="form-group">
                      <input type="text" class="form-control" placeholder="Enter your Mobile No.">
                   </div>
-                  
-                  <a type="submit" class="btn">Proceed to Payment</a>
+                
+                  <a type="submit" class="btn">Start</a>
                 </form>
             </div>
         
@@ -162,4 +161,22 @@
     </div>
   </div>
 
+{% endblock %}
+{% block scripts %}
+<script>
+$(document).ready(function(){
+
+    $(".experiment-select-button").click(function(){
+        if ($(this).hasClass('experiment-selected')){
+            $(this).removeClass('experiment-selected')
+            $(this).addClass('experiment-unselected');
+            $(this).css('background-color', "rgba(0, 0, 0, 0.09)");
+        } else {
+            $(this).removeClass('experiment-unselected');
+            $(this).addClass('experiment-selected');
+            $(this).css('background-color',"#2dc330");
+       }
+    })
+})
+</script>
 {% endblock %}
