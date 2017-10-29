@@ -1,6 +1,19 @@
 Bootstrap: docker
 From: ubuntu:14.04
 
+########################################
+# Configure
+########################################
+
+%environment
+    EXPFACTORY_STUDY_ID=expfactory
+    export EXPFACTORY_STUDY_ID
+
+
+########################################
+# Install No need to touch below here
+########################################
+
 %help
 
 If you want to see experiments available:
@@ -11,10 +24,6 @@ To build your image (sandbox for testing)
 
 To serve your battery
     sudo singularity instance.start expfactory.img web1
-
-%environment
-    EXPFACTORY_STUDY_ID=expfactory
-    export EXPFACTORY_STUDY_ID
 
 %startscript
     service nginx start
@@ -28,6 +37,12 @@ To serve your battery
     cp script/nginx.conf /etc/nginx/sites-enabled/default
     mkdir -p /scif/apps
     cp script/nginx-index.html /scif/apps/index.html
+
+
+########################################
+# Experiments will be auto generated
+########################################
+
 
 %appinstall adaptive-n-back
     git clone https://github.com/expfactory-experiments/adaptive-n-back
