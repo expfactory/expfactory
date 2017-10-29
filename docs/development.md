@@ -18,10 +18,10 @@ If you are testing writing data, bind a folder to data for that too.
 sudo singularity instance.start --bind $PWD:/opt --bind /tmp/data:/scif/data [expfactory] web1
 ```
 
-You should be able to go to the url `localhost` or `localhost:5000` and see the server running. If not, never fear! This is a good example of how to develop. Let's first shell inside:
+You should be able to go to the url `localhost` or `localhost:5000` and see the server running. If not, never fear! This is a good example of how to develop. Let's first shell inside. Note that we are shelling inside the `instance`:
 
 ```
-sudo singularity shell --writable --bind $PWD:/opt --pwd /opt [expfactory]
+sudo singularity shell --writable --bind $PWD:/opt --pwd /opt instance://web1
 ```
 
 Note that you have to specify the bind **again**. If you forget to specify it at either time, it won't be bound. It's also helpful to set the present working directory (`--pwd`) to be where our code base is. Next, try running expfactory and get an error:
