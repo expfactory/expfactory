@@ -26,6 +26,7 @@ To serve your battery
     git clone https://www.github.com/expfactory/expfactory
     cd expfactory && python3 setup.py install
     cp script/nginx.conf /etc/nginx/sites-enabled/default
+    mkdir -p /scif/apps
     cp script/nginx-index.html /scif/apps/index.html
 
 %appinstall adaptive-n-back
