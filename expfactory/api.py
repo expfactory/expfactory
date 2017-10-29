@@ -52,7 +52,7 @@ class apiExperimentSingle(Resource):
     :param exp_id: exp_id for experiment to preview
     '''
     def get(self, exp_id):
-        return {exp_id: app.lookup[exp_id]}
+        return app.lookup[exp_id]
 
 
 # Create custom loader with experiments to serve
@@ -67,5 +67,5 @@ class apiExperimentSingle(Resource):
 #pickle.dump(loader,open('loader.pkl','wb'))
 
 api = Api(app)    
-api.add_resource(apiExperiments,'/experiments')
-api.add_resource(apiExperimentSingle,'/experiments/<string:exp_id>')
+api.add_resource(apiExperiments,'/api/experiments')
+api.add_resource(apiExperimentSingle,'/api/experiments/<string:exp_id>')

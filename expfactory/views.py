@@ -43,9 +43,15 @@ from expfactory.server import app
 from random import choice
 import os
 
-from expfactory.server import app
 
 # EXPERIMENT ROUTER ###########################################################
+
+# Home screen for user to select what they want
+@app.route('/')
+def home():
+    return render_template('portal.html', experiments=app.lookup,
+                                          base=app.base)
+
 @app.route('/finish')
 def router():
     #TODO: need to handle POST with CSRF, document standard post
@@ -169,11 +175,6 @@ def get_field(request,fields,value):
     if value in request.form.values():
         fields[value] = request.form[value]
     return fields
-
-# Home screen for user to select what they want
-@app.route('/')
-def home():
-    return render_template('portal.html')
 
 
 # INTERACTIVE BATTERY GENERATION ####################################################

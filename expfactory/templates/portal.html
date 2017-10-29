@@ -12,6 +12,7 @@
                     <img src="{{ url_for('static',filename='img/tinypeople.png') }}" 
                          style="width:100%; position: absolute; bottom: 0px; left:0px">             
                     <p><a class="expfactory-blue"
+                          style="margin:auto"
                           href="https://www.github.com/expfactory/expfactory" 
                           target="_blank">the experiment factory</a></p>
                 </div>
@@ -28,347 +29,64 @@
                     <li role="presentation"><a href="#termCondition" aria-controls="termCondition" role="tab" data-toggle="tab">Terms & Conditions</a></li>
                   </ul>
                 
-                  <!-- Tab panes -->
+                  <!-- Experiments Panel -->
                   <div class="tab-content">
                     <div role="tabpanel" class="tab-pane fade in active" id="doExperiments">
                         <div class="row">
+
+                           {% for experiment, metadata in experiments.items() %}
                             <div class="col-md-6">
                                 <div class="ticketBox" data-ticket-price="50000">
                                     <div class="inactiveStatus"></div>
                                     
                                     <div class="row">
                                         <div class="col-xs-6">
-                                        <div class="ticket-name">
-                                            Platinum
-                                            <span>Standing<br>
-                                            1 Ticket for 1 person</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="col-xs-6">
-                                        <div class="ticket-price-count-box">
-                                            <div class="ticket-control">
-                                                <div class="input-group">
-                                                  <span class="input-group-btn">
-                                                      <button type="button" class="btn btn-default btn-number" disabled="disabled" data-type="minus" data-field="quant[1]">
-                                                          <span class="glyphicon glyphicon-minus"></span>
-                                                      </button>
-                                                  </span>
-                                                  <input type="text" name="quant[1]" class="form-control input-number" value="0" min="0" max="10">
-                                                  <span class="input-group-btn">
-                                                      <button type="button" class="btn btn-default btn-number" data-type="plus" data-field="quant[1]">
-                                                          <span class="glyphicon glyphicon-plus"></span>
-                                                      </button>
-                                                  </span>
-                                                </div>
+                                            <div class="ticket-name">
+                                                {{ experiment }}
+                                                <span>experiment<br></span>
                                             </div>
-                                            <p class="price">Rs.50000</p>
-                                        </div>
-                                    </div>
-                                    </div>
-                                    
-                                    
-                                    <div class="ticket-description">
-                                        <p><strong>Please refer resources Plan:</strong><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</p>
-                                    </div>
-                                            
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="ticketBox" data-ticket-price="40000">
-                                    <div class="inactiveStatus"></div>
-                                    
-                                    <div class="row">
+                                        </div>                                    
                                         <div class="col-xs-6">
-                                        <div class="ticket-name">Gold<span>
-                                        Standing<br>
-                                        1 Ticket for 1 person</span></div>
-                                    </div>
-                                    
-                                    <div class="col-xs-6">
-                                        <div class="ticket-price-count-box">
-                                            <div class="ticket-control">
-                                                <div class="input-group">
-                                                  <span class="input-group-btn">
-                                                      <button type="button" class="btn btn-default btn-number" disabled="disabled" data-type="minus" data-field="quant[2]">
-                                                          <span class="glyphicon glyphicon-minus"></span>
-                                                      </button>
-                                                  </span>
-                                                  <input type="text" name="quant[2]" class="form-control input-number" value="0" min="0" max="10">
-                                                  <span class="input-group-btn">
-                                                      <button type="button" class="btn btn-default btn-number" data-type="plus" data-field="quant[2]">
-                                                          <span class="glyphicon glyphicon-plus"></span>
-                                                      </button>
-                                                  </span>
+                                            <div class="ticket-price-count-box">
+                                                <div class="ticket-control">
+                                                    <div class="input-group">
+                                                      <span class="input-group-btn">
+                                                          <button type="button" 
+                                                                  class="btn btn-default btn-number" 
+                                                                  data-type="plus" 
+                                                                  style="float:right"
+                                                                  data-field="quant[1]">
+                                                              <span class="glyphicon glyphicon-plus"></span>
+                                                          </button>
+                                                      </span>
+                                                    </div>
                                                 </div>
-                                                
+                                                <p class="price">{% if metadata.time %}{{ metadata.time }} minutes{% endif %}</p>
                                             </div>
-                                            <p class="price">Rs.40000</p>
                                         </div>
                                     </div>
-                                    </div>
-                                    
-                                    
                                     <div class="ticket-description">
-                                        <p><strong>Please refer resources Plan:</strong><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</p>
-                                    </div>
-                                            
+                                        {% if metadata.exp_id %}<p><strong>Expfactory ID: </strong>{{ metadata.exp_id }}</p><br>{% endif %}
+                                        {% if metadata.template %}<p><strong>Template: </strong>{{ metadata.template }}</p><br>{% endif %}
+                                        {% if metadata.url %}<p><strong>URL</strong>: {{ metadata.url }}</p><br>{% endif %}
+                                        <hr>
+                                        {% if metadata.description %}<p><strong>: Description</strong>{{ metadata.description }}</p>{% endif %}
+                                    </div>                                            
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="ticketBox" data-ticket-price="25000">
-                                    <div class="inactiveStatus"></div>
-                                    
-                                    <div class="row">
-                                        <div class="col-xs-6">
-                                        <div class="ticket-name">Silver <span>
-                                        Standing<br>
-                                        1 Ticket for 1 person</span></div>
-                                    </div>
-                                    
-                                    <div class="col-xs-6">
-                                        <div class="ticket-price-count-box">
-                                            <div class="ticket-control">
-                                                <div class="input-group">
-                                                  <span class="input-group-btn">
-                                                      <button type="button" class="btn btn-default btn-number" disabled="disabled" data-type="minus" data-field="quant[3]">
-                                                          <span class="glyphicon glyphicon-minus"></span>
-                                                      </button>
-                                                  </span>
-                                                  <input type="text" name="quant[3]" class="form-control input-number" value="0" min="0" max="10">
-                                                  <span class="input-group-btn">
-                                                      <button type="button" class="btn btn-default btn-number" data-type="plus" data-field="quant[3]">
-                                                          <span class="glyphicon glyphicon-plus"></span>
-                                                      </button>
-                                                  </span>
-                                                </div>
-                                                
-                                            </div>
-                                            <p class="price">Rs.25000</p>
-                                        </div>
-                                    </div>
-                                    </div>
-                                    
-                                    
-                                    <div class="ticket-description">
-                                        <p><strong>Please refer resources Plan:</strong><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</p>
-                                    </div>
-                                            
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="ticketBox" data-ticket-price="20000">
-                                    <div class="inactiveStatus"></div>
-                                    
-                                    <div class="row">
-                                        <div class="col-xs-6">
-                                        <div class="ticket-name">Diamond<span>
-                                        Standing<br>
-                                        1 Ticket for 1 person</span></div>
-                                    </div>
-                                    
-                                    <div class="col-xs-6">
-                                        <div class="ticket-price-count-box">
-                                            <div class="ticket-control">
-                                                <div class="input-group">
-                                                  <span class="input-group-btn">
-                                                      <button type="button" class="btn btn-default btn-number" disabled="disabled" data-type="minus" data-field="quant[4]">
-                                                          <span class="glyphicon glyphicon-minus"></span>
-                                                      </button>
-                                                  </span>
-                                                  <input type="text" name="quant[4]" class="form-control input-number" value="0" min="0" max="10">
-                                                  <span class="input-group-btn">
-                                                      <button type="button" class="btn btn-default btn-number" data-type="plus" data-field="quant[4]">
-                                                          <span class="glyphicon glyphicon-plus"></span>
-                                                      </button>
-                                                  </span>
-                                                </div>
-                                                
-                                            </div>
-                                            <p class="price">Rs.20000</p>
-                                        </div>
-                                    </div>
-                                    </div>
-                                    
-                                    
-                                    <div class="ticket-description">
-                                        <p><strong>Please refer resources Plan:</strong><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</p>
-                                    </div>
-                                            
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="ticketBox" data-ticket-price="18000">
-                                    <div class="inactiveStatus"></div>
-                                    
-                                    <div class="row">
-                                        <div class="col-xs-6">
-                                        <div class="ticket-name">Ruby<span>
-                                        Standing<br>
-                                        1 Ticket for 1 person</span></div>
-                                    </div>
-                                    
-                                    <div class="col-xs-6">
-                                        <div class="ticket-price-count-box">
-                                            <div class="ticket-control">
-                                                <div class="input-group">
-                                                  <span class="input-group-btn">
-                                                      <button type="button" class="btn btn-default btn-number" disabled="disabled" data-type="minus" data-field="quant[5]">
-                                                          <span class="glyphicon glyphicon-minus"></span>
-                                                      </button>
-                                                  </span>
-                                                  <input type="text" name="quant[5]" class="form-control input-number" value="0" min="0" max="10">
-                                                  <span class="input-group-btn">
-                                                      <button type="button" class="btn btn-default btn-number" data-type="plus" data-field="quant[5]">
-                                                          <span class="glyphicon glyphicon-plus"></span>
-                                                      </button>
-                                                  </span>
-                                                </div>
-                                                
-                                            </div>
-                                            <p class="price">Rs.18000</p>
-                                        </div>
-                                    </div>
-                                    </div>
-                                    
-                                    
-                                    <div class="ticket-description">
-                                        <p><strong>Please refer resources Plan:</strong><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</p>
-                                    </div>
-                                            
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="ticketBox" data-ticket-price="15000">
-                                    <div class="inactiveStatus"></div>
-                                    
-                                    <div class="row">
-                                        <div class="col-xs-6">
-                                        <div class="ticket-name">Pearl<span>
-                                        Standing<br>
-                                        1 Ticket for 1 person</span></div>
-                                    </div>
-                                    
-                                    <div class="col-xs-6">
-                                        <div class="ticket-price-count-box">
-                                            <div class="ticket-control">
-                                                <div class="input-group">
-                                                  <span class="input-group-btn">
-                                                      <button type="button" class="btn btn-default btn-number" disabled="disabled" data-type="minus" data-field="quant[6]">
-                                                          <span class="glyphicon glyphicon-minus"></span>
-                                                      </button>
-                                                  </span>
-                                                  <input type="text" name="quant[6]" class="form-control input-number" value="0" min="0" max="10">
-                                                  <span class="input-group-btn">
-                                                      <button type="button" class="btn btn-default btn-number" data-type="plus" data-field="quant[6]">
-                                                          <span class="glyphicon glyphicon-plus"></span>
-                                                      </button>
-                                                  </span>
-                                                </div>
-                                                
-                                            </div>
-                                            <p class="price">Rs.15000</p>
-                                        </div>
-                                    </div>
-                                    </div>
-                                    
-                                    
-                                    <div class="ticket-description">
-                                        <p><strong>Please refer resources Plan:</strong><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</p>
-                                    </div>
-                                            
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="ticketBox" data-ticket-price="10000">
-                                    <div class="inactiveStatus"></div>
-                                    
-                                    <div class="row">
-                                        <div class="col-xs-6">
-                                        <div class="ticket-name">Emerald<span>
-                                        Standing<br>
-                                        1 Ticket for 1 person</div>
-                                    </div>
-                                    
-                                    <div class="col-xs-6">
-                                        <div class="ticket-price-count-box">
-                                            <div class="ticket-control">
-                                                <div class="input-group">
-                                                  <span class="input-group-btn">
-                                                      <button type="button" class="btn btn-default btn-number" disabled="disabled" data-type="minus" data-field="quant[7]">
-                                                          <span class="glyphicon glyphicon-minus"></span>
-                                                      </button>
-                                                  </span>
-                                                  <input type="text" name="quant[7]" class="form-control input-number" value="0" min="0" max="10">
-                                                  <span class="input-group-btn">
-                                                      <button type="button" class="btn btn-default btn-number" data-type="plus" data-field="quant[7]">
-                                                          <span class="glyphicon glyphicon-plus"></span>
-                                                      </button>
-                                                  </span>
-                                                </div>
-                                                
-                                            </div>
-                                            <p class="price">Rs.10000</p>
-                                        </div>
-                                    </div>
-                                    </div>
-                                    
-                                    
-                                    <div class="ticket-description">
-                                        <p><strong>Please refer resources Plan:</strong><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</p>
-                                    </div>
-                                            
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="ticketBox" data-ticket-price="5000">
-                                    <div class="inactiveStatus"></div>
-                                    
-                                    <div class="row">
-                                        <div class="col-xs-6">
-                                        <div class="ticket-name">Plaza<span>
-                                        Standing<br>
-                                        1 Ticket for 1 person</span></div>
-                                    </div>
-                                    
-                                    <div class="col-xs-6">
-                                        <div class="ticket-price-count-box">
-                                            <div class="ticket-control">
-                                                <div class="input-group">
-                                                  <span class="input-group-btn">
-                                                      <button type="button" class="btn btn-default btn-number" disabled="disabled" data-type="minus" data-field="quant[8]">
-                                                          <span class="glyphicon glyphicon-minus"></span>
-                                                      </button>
-                                                  </span>
-                                                  <input type="text" name="quant[8]" class="form-control input-number" value="0" min="0" max="10">
-                                                  <span class="input-group-btn">
-                                                      <button type="button" class="btn btn-default btn-number" data-type="plus" data-field="quant[8]">
-                                                          <span class="glyphicon glyphicon-plus"></span>
-                                                      </button>
-                                                  </span>
-                                                </div>
-                                                
-                                            </div>
-                                            <p class="price">Rs.5000</p>
-                                        </div>
-                                    </div>
-                                    </div>
-                                    
-                                    
-                                    <div class="ticket-description">
-                                        <p><strong>Please refer resources Plan:</strong><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</p>
-                                    </div>
-                                            
-                                </div>
-                            </div>
+                           {% endfor %}
                         </div>
                     </div>
+
+                    <!-- Resources Tab -->
                     <div role="tabpanel" class="tab-pane fade" id="resources">
                         <h4> Lorem ipsum dolor sit amet,<br> consectetur adipiscing elit,<br> sed do eiusmod<br> Pune 411058</h4><br>
                         <iframe src="#" width="640" height="300"></iframe>
                     </div>
+
+                    <!-- Terms Tab -->
                     <div role="tabpanel" class="tab-pane fade" id="termCondition">
-                            {% include "terms.html" %}
+                        {% include "terms.html" %}
                     </div>
                   </div>
                 
