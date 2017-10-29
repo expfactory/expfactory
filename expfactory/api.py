@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
+from flask_restful import Resource, Api
 from expfactory.logman import bot
 from expfactory.server import app
 import os

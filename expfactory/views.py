@@ -31,7 +31,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
+from flask import render_template, request
 from expfactory.logman import bot
+from werkzeug import secure_filename
+from expfactory.utils import (
+    convert2boolean, 
+    getenv
+)
+
 from expfactory.server import app
 from random import choice
 import os
@@ -57,7 +64,6 @@ def start_battery():
 
 
 # Route the user to the next experiment
-@csrf_exempt
 def battery_router(request,bid,eid=None,userid=None,no_send=False):
     '''battery_router will direct the user (determined from the session variable) to an uncompleted experiment. If an
     experiment id is provided, the redirect is being sent from a completed experiment, and we log the experiment as completed

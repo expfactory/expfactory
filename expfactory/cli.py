@@ -58,11 +58,7 @@ def get_parser():
 
     parser.add_argument("--subid", dest='subid', 
                          help="subject id for saving database",
-                         type=str, default='expfactory')
-
-    parser.add_argument("--time", dest='time',
-                         help="maximum number of minutes for battery to endure, to select experiments",
-                         type=int, default=99999)
+                         type=str, default=None)
 
     parser.add_argument('--no-random', dest="disable_randomize",
                          help="present experiments serially",
@@ -76,6 +72,10 @@ def get_parser():
     parser.add_argument("--port", dest='port', 
                          help="port to serve on (defaults to 5000)",
                          type=str, default=5000)
+
+    parser.add_argument("--base", dest='base', 
+                         help="experiments base (default /scif/apps)",
+                         type=str, default='/scif/apps')
 
     return parser
 
@@ -106,9 +106,13 @@ def main():
         bot.error("Base folder %s does not exist." %args.base)
         sys.exit(1)
 
+    subid = os.environ.get('EXPFACTORY_STUDY_ID')
+    if args.subid is not None:
+        subid = args.subid 
+
     os.environ['EXPFACTORY_RANDOM'] = str(args.disable_randomize)
     os.environ['EXPFACTORY_BASE'] = args.base
-    os.environ['EXPFACTORY_SUBID'] = args.subid
+    os.environ['EXPFACTORY_SUBID'] = subid
 
     from expfactory.server import start
     start(port=args.port)
