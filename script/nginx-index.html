@@ -37,7 +37,7 @@
   }
 }
 body {
-  background-color: black;
+  background-color: white;
 }
 
 .four-oh-four {
@@ -47,7 +47,7 @@ body {
   min-height: 100vh;
   min-width: 100vw;
   z-index: 2;
-  background-color: black;
+  background-color: white;
   transition: opacity 300ms ease-out;
   background-position: center center;
   background-repeat: no-repeat;
@@ -60,7 +60,7 @@ body {
   top: 0;
   left: 0;
   opacity: 0;
-  background-color: black;
+  background-color: white;
 }
 
 .terminal {
@@ -68,7 +68,7 @@ body {
   padding: 4rem;
 }
 .terminal .prompt {
-  color: #1ff042;
+  color: #1757e8;
   display: block;
   font-family: 'AndaleMono', monospace;
   font-weight: bold;
@@ -76,7 +76,6 @@ body {
   font-size: 0.9em;
   letter-spacing: 0.15em;
   white-space: pre-wrap;
-  text-shadow: 0 0 2px rgba(31, 240, 66, 0.75);
   line-height: 1;
   margin-bottom: 0.75em;
 }
@@ -93,8 +92,7 @@ body {
   width: 0.75em;
   height: 1em;
   margin-left: 5px;
-  background: #1ff042;
-  box-shadow: 1px 1px 1px rgba(31, 240, 66, 0.65), -1px -1px 1px rgba(31, 240, 66, 0.65), 1px -1px 1px rgba(31, 240, 66, 0.65), -1px 1px 1px rgba(31, 240, 66, 0.65);
+  background: #1757e8;
   -webkit-animation: cursor-blink 1.25s steps(1) infinite;
   -moz-animation: cursor-blink 1.25s steps(1) infinite;
   animation: cursor-blink 1.25s steps(1) infinite;
@@ -155,7 +153,7 @@ $('.four-oh-four-form').on('submit', function(e){
 
   if (val === 'kittens'){
     showKittens();
-  }else {
+  } else {
     resetForm();
   }
 });

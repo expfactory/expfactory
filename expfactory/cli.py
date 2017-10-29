@@ -99,7 +99,7 @@ def main():
     if experiments is None:
         experiments = " ".join(glob("%s/*" %args.base))
 
-    os.environ['EXPERIMENTS'] = experiments
+    os.environ['EXPFACTORY_EXPERIMENTS'] = experiments
 
     # Does the base folder exist?
     if not os.path.exists(args.base):

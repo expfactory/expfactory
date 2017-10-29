@@ -173,7 +173,7 @@ def get_field(request,fields,value):
 # Home screen for user to select what they want
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('portal.html')
 
 
 # INTERACTIVE BATTERY GENERATION ####################################################

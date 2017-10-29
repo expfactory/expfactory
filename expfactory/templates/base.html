@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>The Experiment Factory</title>
+
+        <link rel="icon" type="image/png" href="{{ url_for('static',filename='img/favicon.ico') }}">
+        <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet" />
+        <link href="{{ url_for('static',filename='css/style.css') }}" rel="stylesheet" />
+        <link href="https://netdna.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.css" rel="stylesheet">
+    
+        <link href='https://fonts.googleapis.com/css?family=Nixie+One' rel='stylesheet' type='text/css'>
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,900" rel="stylesheet">
+
+      </head>
+      <body>	
+          <div class="loader">
+              <div>
+                  <img src="{{ url_for('static',filename='img/icons/preloader.gif') }}" />
+              </div>
+          </div>
+    
+          <div class="container-fluid">
+          {% block content %}
+          {% endblock %}
+          </div>
+    
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+          <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
+          <script>
+          $(window).load(function() {
+              $(".loader").fadeOut("slow");;
+          });
+          </script>
+      </body>
+</html>

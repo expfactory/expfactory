@@ -73,11 +73,12 @@ class EFServer(Flask):
     def setup(self):
 
         # Step 1: obtain installed and selected experiments (/scif/apps)
-        self.selection = getenv('EXPERIMENTS', [])
+        self.selection = getenv('EXPFACTORY_EXPERIMENTS', [])
         self.base = getenv('EXPFACTORY_BASE','/scif/apps')
         self.randomize = convert2boolean(getenv('EXPFACTORY_RANDOM', True))
         available = get_experiments("%s" % self.base)
         self.experiments = get_selection(available, self.selection)
+        bot.debug(self.experiments)
         self.lookup = make_lookup(self.experiments)
         final = "\n".join(list(self.lookup.keys()))        
 
@@ -102,19 +103,11 @@ app = EFServer(__name__)
 import expfactory.views
 import expfactory.api
 
-app.config['ALLOWED_EXTENSIONS'] = set(['png', 'jpg', 'jpeg','gif'])
-
-    
-# For a given file, return whether it's an allowed type or not
-def allowed_file(filename):
-    return '.' in filename and \
-        filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
-
 
 # This is how the command line version will run
-def start(port=5000, debug=True):
+def start(port=5000, debug=False):
     bot.info("Nobody ever comes in... nobody ever comes out...")
-    app.run(host="0.0.0.0", debug=debug, port=port)
+    app.run(host="127.0.0.1", debug=debug, port=port)
     
 
 if __name__ == '__main__':

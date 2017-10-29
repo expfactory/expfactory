@@ -135,42 +135,8 @@ def write_json(json_obj,filename,mode='w'):
     return filename
 
 
-def is_type(var,types=[int,float,list]):
-    """
-    Check type
-    """
 
-    for x in range(len(types)):
-        if isinstance(var,types[x]):
-            return True
-    return False
-
-def clean_fields(mydict):
-    """
-    Ensure utf-8
-    """
-
-    newdict = dict()
-    for field,value in mydict.iteritems():
-        cleanfield = field.encode("utf-8")
-        if isinstance(value,float):
-            newdict[cleanfield] = value
-        if isinstance(value,int):
-            newdict[cleanfield] = value
-        if isinstance(value,list):
-            newlist = []
-            for x in value:
-                if not is_type(x):
-                    newlist.append(x.encode("utf-8"))
-                else:
-                    newlist.append(x)
-            newdict[cleanfield] = newlist
-        else:
-            newdict[cleanfield] = value.encode("utf-8")
-    return newdict
-
-
-def getenv(variable_key, default=None, required=False, silent=False):
+def getenv(variable_key, default=None, required=False, silent=True):
     '''getenv will attempt to get an environment variable. If the variable
     is not found, None is returned.
     :param variable_key: the variable name
@@ -178,16 +144,14 @@ def getenv(variable_key, default=None, required=False, silent=False):
     :param silent: Do not print debugging information for variable
     '''
     variable = os.environ.get(variable_key, default)
-    if variable == None and required:
+    if variable is None and required:
         bot.error("Cannot find environment variable %s, exiting." %variable_key)
         sys.exit(1)
 
-    if silent:
-        bot.verbose2("%s found" %variable_key)
-    else:
+    if not silent:
         if variable is not None:
             bot.verbose2("%s found as %s" %(variable_key,variable))
         else:
             bot.verbose2("%s not defined (None)" %variable_key)
 
-    return variable 
+    return variable

@@ -100,7 +100,11 @@ def get_selection(available, selection, base='/scif/apps'):
 
     available = [os.path.basename(x) for x in available]
     selection = [os.path.basename(x) for x in selection]
-    return ["%s/%s" %(base,x) for x in selection if x in available]
+    finalset = [x for x in selection if x in available]
+    if len(finalset) == 0:
+        bot.warning("No user experiments selected, providing all %s" %(len(available)))
+        finalset = available
+    return ["%s/%s" %(base,x) for x in finalset]
 
 
 def get_validation_fields():
@@ -192,7 +196,7 @@ def make_lookup(experiment_list, key='exp_id'):
     '''
     lookup = dict()
     for single_experiment in experiment_list:
-        if isinstance(single_experiment,str):
+        if isinstance(single_experiment, str):
             single_experiment = load_experiment(single_experiment)
         lookup_key = single_experiment[key]
         lookup[lookup_key] = single_experiment

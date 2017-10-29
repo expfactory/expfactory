@@ -1,3 +1,5 @@
 recursive-include expfactory/ *
+recursive-include expfactory/templates *
+recursive-include expfactory/static *
 recursive-include expfactory/ * *
 recursive-include expfactory/ * * *

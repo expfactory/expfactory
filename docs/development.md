@@ -41,7 +41,7 @@ TypeError: str expected, not NoneType
 
 ```
 
-oh No! The default for the sub_id needs to be a string. We can edit the code (on our local machine) to fix it, then cd to where it is mounted and re-install.
+oh No! The default for the `sub_id` needs to be a string. We can edit the code (on our local machine) to fix it, then cd to where it is mounted and re-install.
 
 ```
 cd /opt
