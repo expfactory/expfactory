@@ -43,15 +43,20 @@ from expfactory.server import app
 from random import choice
 import os
 
+from expfactory.server import app
 
 # EXPERIMENT ROUTER ###########################################################
 @app.route('/finish')
 def router():
-
     #TODO: need to handle POST with CSRF, document standard post
     # create local result database and option to use "real" db - both
     # should be easy to do / switch based on environment setting.
     return render_template('battery.html')
+
+
+@app.route('/index')
+def index():
+    return render_template('index.html')
 
 
 @app.route('/start')

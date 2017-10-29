@@ -99,6 +99,9 @@ class EFServer(Flask):
 
 
 app = EFServer(__name__)
+import expfactory.views
+import expfactory.api
+
 app.config['ALLOWED_EXTENSIONS'] = set(['png', 'jpg', 'jpeg','gif'])
 
     
@@ -111,7 +114,6 @@ def allowed_file(filename):
 # This is how the command line version will run
 def start(port=5000, debug=True):
     bot.info("Nobody ever comes in... nobody ever comes out...")
-    import expfactory.api
     app.run(host="0.0.0.0", debug=debug, port=port)
     
 
