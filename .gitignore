@@ -1,0 +1,8 @@
+[expfactory]
+.gitignore
+*.img
+*.simg
+doc/build
+build
+*.pyc
+dist

@@ -111,8 +111,10 @@ def allowed_file(filename):
 # This is how the command line version will run
 def start(port=5000, debug=False):
     bot.info("Nobody ever comes in... nobody ever comes out...")
+    import expfactory.views
     app.run(host="0.0.0.0", debug=False, port=port)
     
 
 if __name__ == '__main__':
+    import expfactory.views
     start()

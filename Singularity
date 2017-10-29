@@ -13,19 +13,20 @@ To serve your battery
     sudo singularity instance.start expfactory.img web1
 
 %environment
-STUDY_ID=expfactory
-export STUDY_ID
+    EXPFACTORY_STUDY_ID=expfactory
+    export EXPFACTORY_STUDY_ID
 
 %startscript
     service nginx start
     #exec /usr/local/bin/gunicorn -w 2 -b :5000 expfactory.cli:main
-    exec expfactory "$@"
+    #exec expfactory "$@"
 
 %post
     apt-get update && apt-get install -y nginx git python3-pip python3-dev
     git clone https://www.github.com/expfactory/expfactory
     cd expfactory && python3 setup.py install
     cp script/nginx.conf /etc/nginx/sites-enabled/default
+    cp script/nginx-index.html /scif/apps/index.html
 
 %appinstall adaptive-n-back
     git clone https://github.com/expfactory-experiments/adaptive-n-back

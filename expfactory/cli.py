@@ -60,10 +60,6 @@ def get_parser():
                          help="subject id for saving database",
                          type=str, default='expfactory')
 
-    parser.add_argument("--base", dest='base', 
-                         help="base folder with experiment subfolders (defaults to /scif/apps)",
-                         type=str, default='/scif/apps')
-
     parser.add_argument("--time", dest='time',
                          help="maximum number of minutes for battery to endure, to select experiments",
                          type=int, default=99999)
@@ -71,6 +67,15 @@ def get_parser():
     parser.add_argument('--no-random', dest="disable_randomize",
                          help="present experiments serially",
                          default=True, action='store_false')
+
+    # Server variables that likely don't need to be changed
+    parser.add_argument("--time", dest='time',
+                         help="maximum number of minutes for battery to endure, to select experiments",
+                         type=int, default=99999)
+
+    parser.add_argument("--port", dest='port', 
+                         help="port to serve on (defaults to 5000)",
+                         type=str, default=5000)
 
     return parser
 
@@ -106,7 +111,7 @@ def main():
     os.environ['EXPFACTORY_SUBID'] = args.subid
 
     from expfactory.server import start
-    start()
+    start(port=args.port)
 
 if __name__ == '__main__':
     main()
