@@ -17,27 +17,28 @@
         {% block head %}
         {% endblock %}
 
-      </head>
-      <body>	
-          <div class="loader">
-              <div>
-                  <img src="{{ url_for('static',filename='img/icons/preloader.gif') }}" />
-              </div>
-          </div>
+    </head>
+    <body>	
+        <div class="loader">
+            <div>
+                <img src="{{ url_for('static',filename='img/icons/preloader.gif') }}" />
+            </div>
+        </div>
     
-          <div class="container-fluid">
-          {% block content %}
-          {% endblock %}
-          </div>
+      <div class="container-fluid">
+      {% include "messages.html" %}
+      {% block content %}
+      {% endblock %}
+      </div>
     
-          <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-          <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
-          <script>
-          $(window).load(function() {
-              $(".loader").fadeOut("slow");;
-          });
-          </script>
-          {% block scripts %}
-          {% endblock %}
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+      <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
+      <script>
+      $(window).load(function() {
+          $(".loader").fadeOut("slow");;
+      });
+      </script>
+      {% block scripts %}
+      {% endblock %}
       </body>
 </html>

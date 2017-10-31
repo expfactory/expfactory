@@ -29,6 +29,7 @@ from expfactory.experiment import (
 
 from flask import Flask, render_template, request
 from flask_restful import Resource, Api
+from flask_wtf.csrf import CSRFProtect
 from expfactory.logman import bot
 from werkzeug import secure_filename
 from expfactory.utils import (
@@ -95,11 +96,14 @@ class EFServer(Flask):
         # TODO: this should be looked up based on participant ID
         next = 0
         if app.randomize is True:
-            next = choice(range(0,len(self.experiments)))
-        next_experiment = self.experiments.pop(next)
+            next = random.choice(range(0,len(self.experiments)))
+        return self.experiments.pop(next)
 
 
 app = EFServer(__name__)
+app.config.from_object('expfactory.config')
+csrf = CSRFProtect(app)
+
 import expfactory.views
 import expfactory.api
 

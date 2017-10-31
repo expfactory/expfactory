@@ -135,6 +135,14 @@ def write_json(json_obj,filename,mode='w'):
     return filename
 
 
+def get_post_fields(request):
+    '''parse through a request, and return fields from post in a dictionary
+    '''
+    fields = dict()
+    for field,value in request.form.iteritems():
+        fields[field] = value
+    return fields
+
 
 def getenv(variable_key, default=None, required=False, silent=True):
     '''getenv will attempt to get an environment variable. If the variable

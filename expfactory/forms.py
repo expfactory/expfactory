@@ -1,4 +1,5 @@
 '''
+views.py: part of expfactory package
 
 Copyright (c) 2017, Vanessa Sochat
 All rights reserved.
@@ -30,6 +31,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
-WTF_CSRF_ENABLED = True
-SECRET_KEY = 'bwabwabwa-bananas-not'
-SECRET_KEY='?QuVo3`B2V>TC9Xtk3PRHj#)am23m]Dq2^6/a$~i^P^Ekr$OY|'
+from flask_wtf import FlaskForm
+from wtforms import (
+    StringField, 
+    BooleanField
+)
+
+from wtforms.validators import DataRequired
+
+class ParticipantForm(FlaskForm):
+    openid = StringField('openid', validators=[DataRequired()])
+    remember_me = BooleanField('remember_me', default=False)

@@ -97,8 +97,9 @@
                             <span class="ticket-count">0</span> Experiments <span class="divider"></span> Time: <span class="total-amount">0</span></p>
                     </div>
                     <div class="col-xs-6">
-                        <div class="text-right">
-                            <a class="btn" data-toggle="modal" data-target="#ticket-details">PROCEED</a>
+                        <div>
+                            <a class="btn" style="float:left" id="select-button"><i class="fa fa-check"></i></a>
+                            <a class="btn text-right" style="float:right" data-toggle="modal" data-target="#ticket-details">PROCEED</a>
                         </div>
                     </div>
                 </div>
@@ -109,72 +110,89 @@
         </div>
     </div>
 
-<!-- Modal -->
-<div class="modal right fade" id="ticket-details" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <!--<div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Share your contact Details</h4>
-      </div>-->
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <img src="{{ url_for('static',filename='img/icons/cancel.png') }}">
-        </button>
-        <h4 class="modal-title">Your Battery</h4>
-      </div>
-      <div class="modal-body">
-        
-        <div class="cart-information">
-                <div class="ticket-type"></div>
-                  <ul>
-                    <li>Experiments: <span class="ticket-count"></span></li>
-                    <li>Duration: <span class="ticket-amount"></span></li>
-                    <hr>
-                    <li>Total: <span class="total-amount"></span></li>
-                </ul>
-            </div>
-            
-            <div class="contactForm">    
-                <h3>Share your Participant Details</h3>
-                <form>
+    <!-- Modal -->
+    <div class="modal right fade" id="ticket-details" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="{{ url_for('static',filename='img/icons/cancel.png') }}">
+                   </button>
+                   <h4 class="modal-title">Your Battery</h4>
+               </div>
+               <div class="modal-body">     
+                   <div class="contactForm">    
+                       <h3>Participant Details</h3>
 
-                  <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Enter your name">
-                  </div>
-                  
-                  <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Enter your Email ID">
-                  </div>
-                  
-                  <div class="form-group">
-                     <input type="text" class="form-control" placeholder="Enter your Mobile No.">
-                  </div>
-                
-                  <a type="submit" class="btn">Start</a>
-                </form>
-            </div>
-        
-        
-        
-      </div>
-    </div>
-  </div>
+                       <form action="" method="POST" name='form'>
+                          {{ form.hidden_tag() }}
+
+                           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+                           <div class="form-group">
+                               <input id='openid' 
+                                      type="text" 
+                                      class="form-control" 
+                                      name='openid'
+                                      placeholder="Enter your Participant ID">
+                           </div>
+
+                           {% for error in form.openid.errors %}
+                               <span style="color: red;">[{{ error }}]</span>
+                           {% endfor %}<br>
+
+                           <div class="form-check">
+                               <label class="form-check-label">
+                                   <input id="remember_me" name="remember_me" type="checkbox" value="y">
+                                      Remember Me
+                                   </label>
+                           </div>
+                          <p style="margin-top:20px"><input type="submit" class="btn"></p>
+                       </form>
+
+                   </div>
+               </div>
+           </div>
+       </div>
 
 {% endblock %}
 {% block scripts %}
 <script>
 $(document).ready(function(){
 
+    function unselect_experiment(button) {
+        $(button).removeClass('experiment-selected')
+        $(button).addClass('experiment-unselected');
+        $(button).css('background-color', "rgba(0, 0, 0, 0.09)");
+    }
+
+    function select_experiment(button) {
+        $(button).removeClass('experiment-unselected');
+        $(button).addClass('experiment-selected');
+        $(button).css('background-color',"#2dc330");
+    }
+
+    $('#select-button').click(function(){
+        var choices = $('.experiment-select-button');
+        if ($(this).hasClass('experiment-selected')){
+            unselect_experiment(this);
+            unselect_experiment(choices)
+        } else {
+            select_experiment(this);
+            select_experiment(choices)
+
+       }
+    });
+
+    {% if toggleform %}
+        $("#ticket-details").modal('show');
+    {% endif %}
+
     $(".experiment-select-button").click(function(){
         if ($(this).hasClass('experiment-selected')){
-            $(this).removeClass('experiment-selected')
-            $(this).addClass('experiment-unselected');
-            $(this).css('background-color', "rgba(0, 0, 0, 0.09)");
+            unselect_experiment(this);
         } else {
-            $(this).removeClass('experiment-unselected');
-            $(this).addClass('experiment-selected');
-            $(this).css('background-color',"#2dc330");
+            select_experiment(this);
        }
     })
 })

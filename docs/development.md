@@ -15,7 +15,7 @@ sudo singularity instance.start --bind $PWD:/opt [expfactory] web1
 If you are testing writing data, bind a folder to data for that too.
 
 ```
-sudo singularity instance.start --bind $PWD:/opt --bind /tmp/data:/scif/data [expfactory] web1
+sudo singularity instance.start --bind $PWD:/opt --bind /tmp/data:/scif/data --writable [expfactory] web1
 ```
 
 You should be able to go to the url `localhost` or `localhost:5000` and see the server running. If not, never fear! This is a good example of how to develop. Let's first shell inside. Note that we are shelling inside the `instance`:
@@ -41,11 +41,13 @@ TypeError: str expected, not NoneType
 
 ```
 
-oh No! The default for the `sub_id` needs to be a string. We can edit the code (on our local machine) to fix it, then cd to where it is mounted and re-install.
+oh No! The default for the `sub_id` needs to be a string. We can edit the code (on our local machine) to fix it, then cd to where it is mounted and re-install. It's recommended to comment out the lines to start expfactory from the startscript, and then launch it manually with just the `expfactory` executable. That way, you can Control+C to stop it.
 
 ```
 cd /opt
 python3 setup.py install
 ```
+
+Note that during development, it's recommended to mount your expfactory repo to `/opt` if you want to alter any settings. The config.py is expected to be at `/opt/expfactory/config.py`.
 
 and since `/opt` is mounted at our code base on the host, we've just updated the software in the image. Easy!

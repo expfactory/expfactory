@@ -31,29 +31,62 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
-from flask import render_template, request
+from flask import (
+    flash,
+    render_template, 
+    request, 
+    redirect
+)
+
 from expfactory.logman import bot
 from werkzeug import secure_filename
 from expfactory.utils import (
     convert2boolean, 
-    getenv
+    getenv,
+    get_post_fields
 )
 
 from expfactory.server import app
 from random import choice
 import os
 
+from expfactory.forms import ParticipantForm
 
 # EXPERIMENT ROUTER ###########################################################
 
 # Home screen for user to select what they want
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template('portal.html', experiments=app.lookup,
-                                          base=app.base)
 
-@app.route('/finish')
+    form = ParticipantForm()
+
+    if request.method == "POST":   
+
+        # Submit and valid
+        if form.validate_on_submit():
+            flash('Participant ID="%s", remember_me=%s' %
+                  (form.openid.data, str(form.remember_me.data)))
+            return redirect('/start')
+
+        # Submit but not valid
+        return render_template('portal.html', experiments=app.lookup,
+                                              base=app.base,
+                                              form=form, toggleform=True)
+
+    # Not submit
+    return render_template('portal.html', experiments=app.lookup,
+                                          base=app.base,
+                                          form=form)
+
+
+@app.route('/finish', methods=['POST', 'GET'])
 def router():
+
+    # If the user has posted, we are starting a battery
+    if request.method == 'POST':
+        fields = get_post_fields(request)
+
+
     #TODO: need to handle POST with CSRF, document standard post
     # create local result database and option to use "real" db - both
     # should be easy to do / switch based on environment setting.
@@ -69,9 +102,9 @@ def index():
 def start_battery():
     '''start a battery.
     '''
-    next_experiment = app.get_next()
-    print(next_experiment)
-    return render_template('start.html')
+    experiment = app.get_next()
+    print(experiment)
+    return render_template('start.html', experiment=next)
 
 
 # Route the user to the next experiment

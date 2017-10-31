@@ -43,6 +43,7 @@ LICENSE = "LICENSE"
 INSTALL_REQUIRES = (
     ('flask', {'min_version': '0.12'}),
     ('flask-restful', {'min_version': None}),
+    ('flask-wtf', {'min_version': None}),
     ('requests', {'min_version': '2.12.4'}),
     ('retrying', {'min_version': '1.3.3'})
 )
