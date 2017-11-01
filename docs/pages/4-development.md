@@ -7,7 +7,7 @@ pdf: true
 
 # Development
 
-Once you have your [Singularity](../../Singularity) example recipe and a (mostly working) flask application, it's fairly simply to build an image. To develop, it's optimal to build a sandbox, and use sudo of course to have writable. Note that I'm in the same folder as the Singularity file, the root of the repository. Also note that I'm **not** calling my image expfactory, otherwise it would use the python base to dump the image. That would be bad.
+Once you have your [Singularity](https://github.com/expfactory/expfactory/blob/master/Singularity) example recipe and a (mostly working) flask application, it's fairly simply to build an image. To develop, it's optimal to build a sandbox, and use sudo of course to have writable. Note that I'm in the same folder as the Singularity file, the root of the repository. Also note that I'm **not** calling my image expfactory, otherwise it would use the python base to dump the image. That would be bad.
 
 ```
 sudo singularity build --sandbox [expfactory] Singularity

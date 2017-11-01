@@ -64,7 +64,7 @@ You should not keep a version in this metadata file, but instead use Github tags
 
 
 ## Add the Experiment
-When your experiment is ready to go, you should fork this repository, and in the [experiments](experiments) folder, create a file named equivalently to the main identifier (`exp_id`) of your experiment. An example is shown below. The following file should then be submit via a pull request.
+When your experiment is ready to go, you should fork the [library repository](https://expfactory.github.io/library), and in the `experiments` folder, create a file named equivalently to the main identifier (`exp_id`) of your experiment. An example is shown below. The following file should then be submit via a pull request.
 
 ### Experiment Metadata File
 If my experiment is called `tower-of-london`, then my `exp_id` (the identifier) is `tower-of-london` and I probably have a Github repository called `tower-of-london`. I would add a file called `experiments/tower-of-london.json` that has the following content:

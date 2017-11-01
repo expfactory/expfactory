@@ -18,7 +18,7 @@ For labs that wish to deploy the container on a server, you are encouraged to us
 
 
 ### Write your recipe
-A Singularity Recipe is a file that details how you want your container to build. In our case, we want to give instructions about which experiments to install. You can use the [example recipe provided](Singularity) or if you haven't cloned the repo:
+A Singularity Recipe is a file that details how you want your container to build. In our case, we want to give instructions about which experiments to install. You can use the [example recipe provided](https://github.com/expfactory/expfactory/blob/master/Singularity) or if you haven't cloned the repo:
 
 ```
 wget https://raw.githubusercontent.com/expfactory/expfactory/master/Singularity
