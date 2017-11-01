@@ -49,7 +49,7 @@ var tip = d3.tip()
     .attr('class', 'd3-tip')
     .offset([-10, 0])
     .html(function(d) {
-        return "<a href='/" + d.exp_id + "' target='_blank'><strong><span style='color:black;text-decoration:none'>" + d.exp_id +"</span></a>";
+        return "<a id='github-"+ d.exp_id +"' href='https://www.github.com/expfactory-experiments/" + d.exp_id + "' target='_blank'><strong><span style='color:black;text-decoration:none'>" + d.exp_id +"</span></a>";
 })
 
 // D3
@@ -105,7 +105,8 @@ var circle = svg.selectAll("rect")
     .on('mouseout.tip', tip.hide)
     .on('mouseover.tip', tip.show)
     .on('click', function(d){
-        window.location = d.exp_id + ".html";
+        var url = $('#github-' + d.exp_id).attr('href');
+        window.open(url);
     })
     .call(force.drag);
 
@@ -152,28 +153,4 @@ function collide(alpha) {
     });
   };
 }
-
-// A $( document ).ready() block.
-$( document ).ready(function() {
-    
-    // Show text description on mouseover
-    $("#newlink").mouseover(function(){
-       $("#infobox").text("Create a new experiment or battery.")
-    })
-
-    $("#codelink").mouseover(function(){
-       $("#infobox").text("Contribute to our code base.")
-    })
-
-    $("#doclink").mouseover(function(){
-       $("#infobox").text("Learn about the experiment factory.")
-    })
-
-    $("#browselink").mouseover(function(){
-       $("#infobox").text("Browse our experimental paradigms.")
-    })
-
-});
-
 </script>
-
