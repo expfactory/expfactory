@@ -54,9 +54,10 @@
                                                       <span class="input-group-btn">
                                                           <button type="button" 
                                                                   class="btn btn-default btn-number experiment-select-button experiment-unselected" 
+                                                                  id="{{ experiment }}"
                                                                   data-type="plus" 
                                                                   style="float:right">
-                                                              <span class="glyphicon glyphicon-plus"></span>
+                                                              <span class="fa fa-check"></span>
                                                           </button>
                                                       </span>
                                                     </div>
@@ -129,6 +130,7 @@
                           {{ form.hidden_tag() }}
 
                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                           <input type="hidden" id= "exp_ids" name="exp_ids" value=""/>
 
                            <div class="form-group">
                                <input id='openid' 
@@ -140,6 +142,10 @@
 
                            {% for error in form.openid.errors %}
                                <span style="color: red;">[{{ error }}]</span>
+                           {% endfor %}<br>
+
+                           {% for error in form.exp_ids.errors %}
+                               <span style="color: red;">You must select one or more experiments.</span>
                            {% endfor %}<br>
 
                            <div class="form-check">
@@ -173,6 +179,26 @@ $(document).ready(function(){
         $(button).css('background-color',"#2dc330");
     }
 
+    function update_form() {
+        // Update exp_ids in form with selected experiments
+
+        var selected = $('.experiment-selected');
+        var experiments = ""
+        $.each(selected, function(e,i){
+            new_experiment = $(i).attr('id');
+
+            if (new_experiment != "select-button") {
+                if (experiments == "") {
+                    experiments =  new_experiment;
+                } else {
+                    experiments =  experiments + "," + new_experiment;
+                }
+            }
+        })
+        $("#exp_ids").val(experiments)
+
+    }
+    
     $('#select-button').click(function(){
         var choices = $('.experiment-select-button');
         if ($(this).hasClass('experiment-selected')){
@@ -181,8 +207,10 @@ $(document).ready(function(){
         } else {
             select_experiment(this);
             select_experiment(choices)
-
        }
+
+       update_form()
+
     });
 
     {% if toggleform %}
@@ -195,6 +223,9 @@ $(document).ready(function(){
         } else {
             select_experiment(this);
        }
+
+       update_form()
+
     })
 })
 </script>

@@ -65,8 +65,10 @@ def home():
 
         # Submit and valid
         if form.validate_on_submit():
-            flash('Participant ID="%s", remember_me=%s' %
-                  (form.openid.data, str(form.remember_me.data)))
+            flash('Participant ID: "%s", remember_me: %s, Experiments: %s' %
+                  (form.openid.data,
+                   str(form.remember_me.data),
+                   str(form.exp_ids.data)))
             return redirect('/start')
 
         # Submit but not valid
@@ -109,6 +111,7 @@ def index():
 def start_battery():
     '''start a battery.
     '''
+    #TODO: need to take participant ID into account here.
     experiment = app.get_next()
     print(experiment)
     return render_template('start.html', experiment=next)

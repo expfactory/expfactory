@@ -1,5 +1,6 @@
 include README.md LICENSE
 recursive-include expfactory *
+recursive-include expfactory * *
 recursive-exclude * __pycache__
 recursive-exclude * *.pyc
 recursive-exclude * *.pyo
