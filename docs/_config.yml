@@ -1,0 +1,26 @@
+# Setup
+title:        The Experiment Factory
+tagline:      ""
+baseurl:      "/expfactory"
+paginate:     1
+github:       "https://www.github.com/expfactory/expfactory"
+
+# About/contact
+author:
+  name:       Vanessa Sochat
+  url:        https://expfactory.github.io/expfactory
+
+# SCI-F Version
+version: 0.0.1
+
+# Defaults
+defaults:
+  -
+    scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+
+#Others
+markdown: kramdown

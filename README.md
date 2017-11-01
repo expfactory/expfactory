@@ -1,5 +1,7 @@
 # The Experiment Factory
 
+[documentation](https://expfactory.github.io/expfactory)
+
 The Experiment Factory is software to create a reproducible container that you can easily customize to deploy a set of web-based experiments. It's predecessor at [Expfactory.org](https://expfactory.org) was never able to open up to the public, and this went against the original goal of the software. Further, the badly needed functionality to serve a local battery was poorly met with [expfactory-python](https://www.github.com/expfactory/expfactory-python) as time progressed and dependencies changes.
  
 This version is agnostic to the underlying driver of the experiments, and provides reproducible, instantly deployable "container" experiments. What does that mean?
@@ -17,4 +19,4 @@ If you build on [Singularity Hub](https://www.singularity-hub.org) anyone else c
 ## Experiment Library
 The experiments themselves are now maintained under [expfactory-experiments](https://www.github.com/expfactory-experiments), official submissions to be found by expfactory can be added to the [library](https://www.github.com/expfactory/library) (under development) to be tested that they meet minimum requirements.
 
-More documentation will be written as the codebase is developed. For now, you can preview legacy [experiments](http://expfactory.github.io/table.html) that will be ported to this updated version, and preview our [documentation base](docs) provided with this repository. This code base is under development, so it might even be the case that not all files are added yet! Stay tuned.
+The documentation and codebase are under development! For now, you can preview legacy [experiments](http://expfactory.github.io/table.html) that will be ported to this updated version, and preview our [documentation base](https://expfactory.github.io/expfactory) provided with this repository. This code base is under development, so it might even be the case that not all files are added yet! Stay tuned.

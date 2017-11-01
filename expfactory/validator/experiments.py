@@ -30,6 +30,7 @@ SOFTWARE.
 import os
 import re
 import sys
+import tempfile
 from expfactory.logman import bot
 from glob import glob
 import json
@@ -38,8 +39,20 @@ import json
 class ExperimentValidator:
 
     def __init__(self,quiet=False):
+        self.tmpdir = tempfile.mkdtemp()
         if quiet is True:
             bot.level = 0
+
+    def validate_url(self, url):
+        if not self.validate_extension(jsonfile):
+            return False
+        if not self.validate_loading(jsonfile):
+            return False
+        if not self.validate_content(jsonfile):
+            return False
+        return True
+
+
 
 
 class LibraryValidator:

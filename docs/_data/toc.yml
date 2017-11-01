@@ -1,0 +1,19 @@
+  - title: "The Experiment Factory"
+    url: "/expfactory/"
+    slug: expfactory
+
+  - title: "Generate an Experiment Container"
+    url: "/expfactory/generate.html"
+    slug: generate
+
+  - title: "Experiment Container Usage"
+    url: "/expfactory/usage.html"
+    slug: usage
+
+  - title: "Contribute an Experiment"
+    url: "/expfactory/contribute.html"
+    slug: contribute
+
+  - title: "Development Tips"
+    url: "/expfactory/development.html"
+    slug: development
