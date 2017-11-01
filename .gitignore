@@ -2,6 +2,7 @@
 .gitignore
 *.img
 *.simg
+OLD
 doc/build
 build
 *.pyc

@@ -38,6 +38,7 @@ from flask import (
     redirect
 )
 
+from flask_wtf.csrf import generate_csrf
 from expfactory.logman import bot
 from werkzeug import secure_filename
 from expfactory.utils import (
@@ -77,6 +78,12 @@ def home():
     return render_template('portal.html', experiments=app.lookup,
                                           base=app.base,
                                           form=form)
+
+
+@app.after_request
+def inject_csrf_token(response):
+    response.headers.set('X-CSRF-Token', generate_csrf())
+    return response
 
 
 @app.route('/finish', methods=['POST', 'GET'])
