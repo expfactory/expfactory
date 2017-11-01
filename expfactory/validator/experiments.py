@@ -44,12 +44,7 @@ class ExperimentValidator:
             bot.level = 0
 
     def validate_url(self, url):
-        if not self.validate_extension(jsonfile):
-            return False
-        if not self.validate_loading(jsonfile):
-            return False
-        if not self.validate_content(jsonfile):
-            return False
+        print('Beep boop! vsoch is writing me!')
         return True
 
 
