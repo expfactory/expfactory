@@ -3,6 +3,7 @@
 *.img
 *.simg
 OLD
+_site
 doc/build
 build
 *.pyc
