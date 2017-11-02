@@ -113,6 +113,8 @@ class ExperimentValidator:
         fields = self.get_validation_fields()
         for field,value,ftype in fields:
 
+            print('field: %s, required: %s' %(field,value))
+
             # Field must be in the keys if required
             if field not in config.keys():
                 if value == 1:
@@ -121,7 +123,7 @@ class ExperimentValidator:
             # Field is present, check type
             else:
                 if not isinstance(config[field], ftype):
-                    return notvalid("%s: invalid type, must be %s." %(name,ftype))
+                    return notvalid("%s: invalid type, must be %s." %(name,str(ftype)))
 
             # Expid gets special treatment
             if field == "exp_id":
@@ -153,12 +155,11 @@ class ExperimentValidator:
         '''
         return [("name",1,str),   # required
                 ("time",1,int), 
+                ("url",1,str), 
                 ("description",1, str),
                 ("exp_id",1,str),
 
                 ("contributors",0, list), # not required
-                ("reference",0,str), 
+                ("reference",0, list), 
                 ("cognitive_atlas_task_id",0,str),
-                ("experiment_variables",0,list),
-                ("deployment_variables",0,str),
                 ("template",0,str)]
