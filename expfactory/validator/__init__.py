@@ -1,5 +1,3 @@
-from .experiments import (
-    LibraryValidator,
-    ExperimentValidator
-)
+from .experiments import ExperimentValidator
+from .library import LibraryValidator
 

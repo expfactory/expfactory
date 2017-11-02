@@ -40,34 +40,29 @@ import sys
 import os
 import re
 
+################################################################################
+# io utils
+################################################################################
+
 def get_installdir():
     return os.path.dirname(os.path.abspath(__file__))
 
 
-def convert2boolean(arg):
-    '''convert2boolean is used for environmental variables
-    that must be returned as boolean'''
-    if not isinstance(arg, bool):
-        return arg.lower() in ("yes", "true", "t", "1", "y")
-    return arg
-
 def find_subdirectories(basepath):
     '''
     Return directories (and sub) starting from a base
-
     '''
-
     directories = []
     for root, dirnames, filenames in os.walk(basepath):
         new_directories = [d for d in dirnames if d not in directories]
         directories = directories + new_directories
     return directories
+
     
 def find_directories(root,fullpath=True):
     '''
     Return directories at one level specified by user
     (not recursive)
-
     '''
     directories = []
     for item in os.listdir(root):
@@ -82,11 +77,9 @@ def find_directories(root,fullpath=True):
 
  
 def copy_directory(src, dest):
-    """
+    '''
     Copy an entire directory recursively
-
-    """
-
+    '''
     try:
         shutil.copytree(src, dest)
     except OSError as e:
@@ -99,21 +92,19 @@ def copy_directory(src, dest):
 
 
 def get_template(template_file):
-    """
+    '''
     get_template: read in and return a template file
-
-    """
-
+    '''
     filey = open(template_file,"rb")
     template = "".join(filey.readlines())
     filey.close()
     return template
 
-def sub_template(template,template_tag,substitution):
-    """
-    make a substitution for a template_tag in a template
-    """
 
+def sub_template(template,template_tag,substitution):
+    '''
+    make a substitution for a template_tag in a template
+    '''
     template = template.replace(template_tag,substitution)
     return template
 
@@ -142,6 +133,32 @@ def get_post_fields(request):
     for field,value in request.form.iteritems():
         fields[field] = value
     return fields
+
+
+def clone(url, tmpdir=None):
+    '''clone a repository from Github'''
+    if tmpdir is None:
+        tmpdir = tempfile.mkdtemp()
+    name = os.path.basename(url).replace('.git', '')
+    dest = '%s/%s' %(tmpdir,name)
+    return_code = os.system('git clone %s %s' %(url,dest))
+    if return_code == 0:
+        return dest
+    bot.error('Error cloning repo.')
+    sys.exit(error_code)
+
+
+################################################################################
+# environment / options
+################################################################################
+
+
+def convert2boolean(arg):
+    '''convert2boolean is used for environmental variables
+    that must be returned as boolean'''
+    if not isinstance(arg, bool):
+        return arg.lower() in ("yes", "true", "t", "1", "y")
+    return arg
 
 
 def getenv(variable_key, default=None, required=False, silent=True):

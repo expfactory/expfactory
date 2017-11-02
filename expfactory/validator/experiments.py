@@ -31,7 +31,10 @@ import os
 import re
 import sys
 import tempfile
+import shutil
+from expfactory.validator.utils import notvalid
 from expfactory.logman import bot
+from expfactory.utils import clone, read_json
 from glob import glob
 import json
 
@@ -43,71 +46,119 @@ class ExperimentValidator:
         if quiet is True:
             bot.level = 0
 
-    def validate_url(self, url):
-        print('Beep boop! vsoch is writing me!')
-        return True
+    def __str__(self):
+        return "expfactory.validator.ExperimentValidator"
 
+    def _validate_folder(self, folder=None):
+        ''' validate folder takes a cloned github repo, ensures
+            the existence of the config.json, and validates it.
+        '''
+        from expfactory.experiment import load_experiment
 
+        if folder is None:
+            folder=os.path.abspath(os.getcwd())
 
+        config = load_experiment(folder, return_path=True)
 
-class LibraryValidator:
+        if not config:
+            return notvalid("%s is not an experiment." %(folder))
 
-    def __init__(self,quiet=False):
-        if quiet is True:
-            bot.level = 0
-
-    def validate_all(self,jsonfile):
-        if not self.validate_extension(jsonfile):
-            return False
-        if not self.validate_loading(jsonfile):
-            return False
-        if not self.validate_content(jsonfile):
-            return False
-        return True
-
-
-    def validate_extension(self,jsonfile):
-        bot.test("EXTENSION: Experiment %s" %(os.path.basename(jsonfile)))
-        return jsonfile.endswith('.json')
+        return self._validate_config(folder)
  
 
-    def validate_loading(self,jsonfile):
-        bot.test("LOADING: Experiment %s" %(os.path.basename(jsonfile)))
-        with open(jsonfile,'r') as filey:
-            content = json.load(filey)
-        return isinstance(content,dict)
-
-
-    def validate_content(self,jsonfile):
-        name = os.path.basename(jsonfile)
-        bot.test("CONTENT: Experiment %s" %(name))
-        with open(jsonfile,'r') as filey:
-            content = json.load(filey)
-
-        # Validate name
-        bot.test("        Name")
-        if "name" not in content:
-            return notvalid('"name" not found in %s' %(name)) 
-
-        if not re.match("^[a-z0-9_-]*$", content['name']): 
-            return notvalid('''invalid characters in %s, only 
-                               lowercase and "-" or "_" allowed.''' %(content['name'])) 
+    def validate(self, folder, cleanup=False):
+        ''' validate is the entrypoint to all validation, for
+            a folder, config, or url. If a URL is found, it is
+            cloned and cleaned up.
+        '''
          
-        # Validate Github
-        bot.test("        Github")
-        if "github" not in content:
-            return notvalid('"github" not found in %s' %(name)) 
-        if not re.search("(\w+://)(.+@)*([\w\d\.]+)(:[\d]+){0,1}/*(.*)",content['github']):
-            return notvalid('%s is not a valid URL.' %(content['github'])) 
-        if not isinstance(content["github"],str):
-            return notvalid("%s must be a string" %(content['github']))
+        # Obtain any repository URL provided
+        if folder.startswith('http') or 'github' in folder:
+            folder = clone(folder, tmpdir=self.tmpdir)
+            cleanup = True
 
-        # Maintainers
-        bot.test("        Maintainers")
-        if "maintainer" not in content:
-            return notvalid('"maintainer" missing in %s' %(name)) 
+        # Load config.json if provided directly
+        elif os.path.basename(folder) == 'config.json':
+            return self._validate_config(folder)
+
+        # Otherwise, validate folder and cleanup
+        valid = self._validate_folder(folder)
+        if cleanup is True:
+            shutil.rmtree(folder)
+        return valid
+
+
+    def _validate_config(self, folder):
+        ''' validate config is the primary validation function that checks
+            for presence and format of required fields.
+
+        Parameters
+        ==========
+        :folder: full path to folder with config.json
+        :name: if provided, the folder name to check against exp_id
+        '''
+        config = "%s/config.json" % folder
+        name = os.path.basename(folder)
+        if not os.path.exists(config):
+            return notvalid("%s: config.json not found." %(folder))
+
+        # Load the config
+        config = read_json(config)
+
+        # Config.json should be single dict
+        if isinstance(config, list):
+            return notvalid("%s: config.json is a list, not valid." %(name))
+
+        # Check over required fields
+        fields = self.get_validation_fields()
+        for field,value,ftype in fields:
+
+            # Field must be in the keys if required
+            if field not in config.keys():
+                if value == 1:
+                    return notvalid("%s: config.json is missing required field %s" %(name,field))
+
+            # Field is present, check type
+            else:
+                if not isinstance(config[field], ftype):
+                    return notvalid("%s: invalid type, must be %s." %(name,ftype))
+
+            # Expid gets special treatment
+            if field == "exp_id":
+                if config[field] != name:
+                    return notvalid("%s: exp_id parameter %s does not match folder name." 
+                                    %(name,config[field]))
+
+                # name cannot have special characters, only _ and letters/numbers
+                if not re.match("^[a-z0-9_-]*$", config[field]): 
+                    message = "%s: exp_id parameter %s has invalid characters" 
+                    message += "only lowercase [a-z],[0-9], -, and _ allowed."
+                    return notvalid(message %(name,config[field]))
+                
+
         return True
 
-def notvalid(reason):
-    print(reason)
-    return False
+
+    def get_validation_fields(self):
+        '''get_validation_fields returns a list of tuples (each a field)
+           we only require the exp_id to coincide with the folder name, for the sake
+           of reproducibility (given that all are served from sample image or Github
+           organization). All other fields are optional.
+           To specify runtime variables, add to "experiment_variables"
+
+                 0: not required, no warning
+                 1: required, not valid
+                 2: not required, warning      
+                type: indicates the variable type
+        '''
+        return [("name",1,str),   # required
+                ("time",1,int), 
+                ("description",1, str),
+                ("exp_id",1,str),
+
+                ("contributors",0, list), # not required
+                ("reference",0,str), 
+                ("cognitive_atlas_task_id",0,str),
+                ("experiment_variables",0,list),
+                ("deployment_variables",0,str),
+                ("template",0,str)]

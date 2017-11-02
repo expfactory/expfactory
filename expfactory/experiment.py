@@ -71,24 +71,20 @@ def load_experiments(folders):
     return experiments
 
 
-def load_experiment(folder):
+def load_experiment(folder, return_path=False):
     '''load_experiment:
-    reads in the config.json for an
+    reads in the config.json for a folder, returns None if not found.
     :param folder: full path to experiment folder
+    :param return_path: if True, don't load the config.json, but return it
     '''
     fullpath = os.path.abspath(folder)
     config = "%s/config.json" %(fullpath)
     if not os.path.exists(config):
-        return notvalid("config.json could not be found in %s" %(folder))
-    return read_json(config)
-    
-
-def notvalid(reason):
-    bot.error(reason)
-    return False
-
-def dowarning(reason):
-    bot.warning(reason)
+        bot.error("config.json could not be found in %s" %(folder))
+        config = None
+    if return_path is False and config is not None:
+        config = read_json(config)
+    return config
 
 
 def get_selection(available, selection, base='/scif/apps'):
@@ -107,87 +103,6 @@ def get_selection(available, selection, base='/scif/apps'):
     return ["%s/%s" %(base,x) for x in finalset]
 
 
-def get_validation_fields():
-    '''get_validation_fields returns a list of tuples (each a field)
-
-    we only require the exp_id to coincide with the folder name, for the sake
-    of reproducibility (given that all are served from sample image or Github
-    organization). All other fields are optional.
-
-    To specify runtime variables, add to "experiment_variables"
-
-                 0: not required, no warning
-                 1: required, not valid
-                 2: not required, warning      
-                type: indicates the variable type
-    '''
-
-    return [("run",0,list),
-            ("name",0,str), 
-            ("contributors",0,str),
-            ("time",0,int), 
-            ("notes",0,str),
-            ("reference",0,str), 
-            ("exp_id",1,str),
-            ("cognitive_atlas_task_id",0,str),
-            ("experiment_variables",0,list),
-            ("publish",0,str),
-            ("deployment_variables",0,str),
-            ("template",0,str)]
-
-
-
-def validate(folder=None, warning=True):
-    '''validate
-    :param experiment_folder: full path to experiment folder with config.json
-    :param warning: issue a warning for empty fields with level 2 (warning)
-    '''
-
-    if folder is None:
-        folder=os.path.abspath(os.getcwd())
-
-    try:
-        meta = load_experiment(folder)
-        if meta is False:
-            return notvalid("%s is not an experiment." %(folder))
-        experiment_name = os.path.basename(folder)
-
-    except:
-        return notvalid("%s: config.json is not loadable." %(folder))
-
-    if isinstance(meta, list):
-        return notvalid("%s: config.json is a list, not valid." %(folder))
-
-    fields = get_validation_fields()
-
-    for field,value,ftype in fields:
-
-        # Field must be in the keys if required
-        if field not in meta.keys():
-            if value == 1:
-                return notvalid("%s: config.json is missing required field %s" 
-                                %(experiment_name,field))
-
-            elif value == 2 and warning is True:
-                dowarning("WARNING: config.json is missing field %s: %s" 
-                          %(field,experiment_name))
-
-        # Tag must correspond with folder name
-        if field == "exp_id":
-            if meta[field] != experiment_name:
-                return notvalid("%s: exp_id parameter %s does not match folder name." 
-                                %(experiment_name,meta[field]))
-
-            # name cannot have special characters, only _ and letters/numbers
-            if not re.match("^[a-z0-9_-]*$", meta[field]): 
-                message = "%s: exp_id parameter %s has invalid characters" 
-                message += "only lowercase [a-z],[0-9], -, and _ allowed."
-                return notvalid(message %(experiment_name,meta[field]))
-                
-    return True
-
-
-
 def make_lookup(experiment_list, key='exp_id'):
     '''make_lookup returns dict object to quickly look up query experiment on exp_id
     :param experiment_list: a list of query (dict objects)
@@ -201,3 +116,13 @@ def make_lookup(experiment_list, key='exp_id'):
         lookup_key = single_experiment[key]
         lookup[lookup_key] = single_experiment
     return lookup
+
+
+def validate(folder=None, cleanup=False):
+    '''validate
+    :param folder: full path to experiment folder with config.json. If path begins
+                   with https, we assume to be starting from a repository.
+    '''
+    from expfactory.validate import ExperimentValidator
+    cli = ExperimentValidator()
+    return cli.validate(folder, cleanup=cleanup)
