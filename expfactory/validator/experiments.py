@@ -116,7 +116,7 @@ class ExperimentValidator:
         fields = self.get_validation_fields()
         for field,value,ftype in fields:
 
-            print('field: %s, required: %s' %(field,value))
+            bot.verbose('field: %s, required: %s' %(field,value))
 
             # Field must be in the keys if required
             if field not in config.keys():
