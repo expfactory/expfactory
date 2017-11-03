@@ -103,8 +103,11 @@ class ExperimentValidator:
             return notvalid("%s: config.json not found." %(folder))
 
         # Load the config
-        config = read_json(config)
-
+        try:
+            config = read_json(config)
+        except:
+            return notvalid("%s: cannot load json, invalid." %(name))
+ 
         # Config.json should be single dict
         if isinstance(config, list):
             return notvalid("%s: config.json is a list, not valid." %(name))

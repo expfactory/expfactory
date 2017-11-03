@@ -36,7 +36,7 @@ To serve your battery
     cd expfactory && python3 setup.py install
     cp script/nginx.conf /etc/nginx/sites-enabled/default
     mkdir -p /scif/apps && mkdir -p /opt/expfactory
-    SECRET_KEY=`python script/generate_key.py` 
+    SECRET_KEY=`python3 script/generate_key.py` 
     echo "${SECRET_KEY}" >> /opt/expfactory/config.py
     cp script/nginx-index.html /scif/apps/index.html
 

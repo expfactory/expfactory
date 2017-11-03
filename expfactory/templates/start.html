@@ -2,21 +2,48 @@
 
 {% block content %}
         <div class="row">
-            <div class="col-sm-5 left-wrapper">
+            <div class="col-md-12">
 
-            </div>
-            <div class="col-sm-7 right-wrapper">
+<div class="modal fade" id="instructions_modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="instructions_modal_label" aria-hidden="false">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="js-title-step"></h4>
+      </div>
+      <div class="modal-body">
+        {% for instruction_form in instruction_forms %}
+        <div class="row hide" data-step="{{ forloop.counter }}" data-title="{{ instruction_form.title }}">
+          <div style="padding:20px;background-color:#F7F7F7;font-size:18px;line-height:20px">
+                <h1>{{ instruction_form.title }}</h1>
+               {{ instruction_form.html | safe }}<br>
+               <br>
+               {% if instruction_form.title == "Consent" %}
+                   <button id="disagree_button" type="button" class="btn btn-default">Disagree</button>
+               {% endif %}
+           </div>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="previous_button" class="btn btn-default js-btn-step" data-orientation="previous"></button>
+        <button type="button" id="next_button" class="btn btn-default js-btn-step" data-orientation="next"></button>
+      </div>
+    </div>
+  </div>
+</div>
+<button type="button" id="modalToggle" class="btn btn-primary btn-lg hidden" data-toggle="modal" data-target="#instructions_modal" hidden></button>
 
            </div>
        </div>
 
 {% endblock %}
 {% block scripts %}
+<script src="{{ url_for('static',filename='js/jquery_boostrap_modal_steps.js') }}"></script>
+
 <script>
 $(document).ready(function(){
-
-
-
+    $('#instructions_modal').modalSteps();
+    $("#modalToggle").click()
 })
 </script>
 {% endblock %}
