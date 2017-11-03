@@ -40,7 +40,6 @@ To serve your battery
     SECRET_KEY=`python3 script/generate_key.py` 
     echo "${SECRET_KEY}" >> /opt/expfactory/config.py
     cp script/nginx-index.html /scif/apps/index.html
-    cp -R expfactory/static /scif/apps/static
 
 
 ########################################
