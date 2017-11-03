@@ -152,7 +152,6 @@ def clone(url, tmpdir=None):
 # environment / options
 ################################################################################
 
-
 def convert2boolean(arg):
     '''convert2boolean is used for environmental variables
     that must be returned as boolean'''

@@ -30,33 +30,69 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import (
-    scoped_session, 
-    sessionmaker
-)
+#from sqlalchemy import create_engine
+#from sqlalchemy.orm import (
+#    scoped_session, 
+#    sessionmaker
+#)
 
-from sqlalchemy.ext.declarative import declarative_base
+#from sqlalchemy.ext.declarative import declarative_base
+from expfactory.utils import write_json
+from expfactory.defaults import EXPFACTORY_SUBID, EXPFACTORY_DATABASE
+from glob import glob
 import os
 import sys
 
-#TODO: need to customize to have default flat files, then mysql
 
-subid = os.environ.get('EXPFACTORY_SUBID', None)
-if subid is None:
-    print('You must provide a subject id (no spaces) to continue.')
-    sys.exit(1)
+def generate_subid(digits=5):
+    '''find the most recent data path for saving data. If not writable, then
+       return None (and we assume the user is not logged in / testing)
+    '''
+    if EXPFACTORY_DATABASE == '/scif/data':
+        return _generate_subid_flat(digits)
+ 
 
-engine = create_engine('sqlite:///%s.db' %(subid), convert_unicode=True)
-db_session = scoped_session(sessionmaker(autocommit=False,
-                                         autoflush=False,
-                                         bind=engine))
-Base = declarative_base()
-Base.query = db_session.query_property()
+def _generate_subid_flat(digits):
+    '''assumes a flat (file system) database, organized by experiment id, and
+       subject id, with data (json) organized by subject identifier
+    ''' 
+    folder_id = 0
+    folders = glob('%s/%s/*' %(EXPFACTORY_DATABASE, EXPFACTORY_SUBID))
+    folders.sort()
+    if len(folders) > 0:
+        folder_id = int(folders[-1])
+    return "%s/%s" % (EXPFACTORY_SUBID, folder_id)
+    
 
-def init_db():
+# DEFAULT FLAT #################################################################
+# Default "database" is flat files written to the system
+
+def save_data(session, exp_id, fields):
+    '''save data will obtain the current subid from the session, and save it
+       depending on the database type. Currently we just support flat files'''
+
+    subid = session.get('expfactory_subid', None) 
+    
+    # We only attempt save if there is a subject id, set at start
+    data_file = None
+    if subid is not None:
+        if EXPFACTORY_DATABASE == '/scif/data':
+            data_base = "%s/%s" %(EXPFACTORY_DATABASE, subid)
+            data_file = "%s/%s-results.json" %(data_base, exp_id)
+            write_json(fields, data_file)
+
+    return data_file
+
+#engine = create_engine('sqlite:///%s.db' %(subid), convert_unicode=True)
+#db_session = scoped_session(sessionmaker(autocommit=False,
+#                                         autoflush=False,
+#                                         bind=engine))
+#Base = declarative_base()
+#Base.query = db_session.query_property()
+
+#def init_db():
     # import all modules here that might define models so that
     # they will be registered properly on the metadata.  Otherwise
     # you will have to import them first before calling init_db()
-    import expfactory.models
-    Base.metadata.create_all(bind=engine)
+#    import expfactory.models
+#    Base.metadata.create_all(bind=engine)

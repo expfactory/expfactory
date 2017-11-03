@@ -69,8 +69,8 @@
                                         {% if metadata.exp_id %}<p><strong>Expfactory ID: </strong>{{ metadata.exp_id }}</p>{% endif %}
                                         {% if metadata.time %}<p><strong>Time</strong>: {{ metadata.time }} minutes</p>{% endif %}
                                         {% if metadata.template %}<p><strong>Template: </strong>{{ metadata.template }}</p>{% endif %}
-                                        {% if metadata.url %}<p><strong>URL</strong>: {{ metadata.url }}</p>{% endif %}
-                                        {% if metadata.description %}<hr><p><strong>: Description</strong>{{ metadata.description }}</p>{% endif %}
+                                        {% if metadata.url %}<p><a href="{{ metadata.url }}" target="_blank"><i class="fa fa-link"></i></a></p>{% endif %}
+                                        {% if metadata.description %}<hr><p><strong>Description: </strong>{{ metadata.description }}</p>{% endif %}
                                     </div>                                            
                                 </div>
                             </div>
@@ -86,7 +86,7 @@
 
                     <!-- Terms Tab -->
                     <div role="tabpanel" class="tab-pane fade" id="termCondition">
-                        {% include "terms.html" %}
+                        {% include "portal/terms.html" %}
                     </div>
                   </div>
                 
@@ -148,12 +148,12 @@
                                <span style="color: red;">You must select one or more experiments.</span>
                            {% endfor %}<br>
 
-                           <div class="form-check">
+                           <!--<div class="form-check">
                                <label class="form-check-label">
                                    <input id="remember_me" name="remember_me" type="checkbox" value="y">
                                       Remember Me
                                    </label>
-                           </div>
+                           </div>-->
                           <p style="margin-top:20px"><input type="submit" class="btn"></p>
                        </form>
 
@@ -229,5 +229,5 @@ $(document).ready(function(){
     })
 })
 </script>
-{% include "littlepieces.html" %}
+{% include "portal/littlepieces.html" %}
 {% endblock %}

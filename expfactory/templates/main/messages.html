@@ -1,0 +1,14 @@
+<div class='row'>
+    <div class='col-md-3'>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <hr>
+        <p class="alert alert-info">
+        {% for message in messages %}
+            {{ message }} </br>
+        {% endfor %}
+        </p>
+        {% endif %}
+    {% endwith %}
+    </div>
+</div>

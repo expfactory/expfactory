@@ -14,6 +14,7 @@ From: ubuntu:14.04
 # Install No need to touch below here
 ########################################
 
+
 %help
 
 If you want to see experiments available:
@@ -39,12 +40,16 @@ To serve your battery
     SECRET_KEY=`python3 script/generate_key.py` 
     echo "${SECRET_KEY}" >> /opt/expfactory/config.py
     cp script/nginx-index.html /scif/apps/index.html
+    cp -R expfactory/static /scif/apps/static
 
 
 ########################################
 # Experiments will be auto generated
 ########################################
 
+%appinstall test-task
+    git clone https://github.com/expfactory-experiments/test-task
+    mv test-task/* .
 
 %appinstall adaptive-n-back
     git clone https://github.com/expfactory-experiments/adaptive-n-back

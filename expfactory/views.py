@@ -35,7 +35,8 @@ from flask import (
     flash,
     render_template, 
     request, 
-    redirect
+    redirect,
+    session
 )
 
 from flask_wtf.csrf import generate_csrf
@@ -47,40 +48,16 @@ from expfactory.utils import (
     get_post_fields
 )
 
+
+from expfactory.database import generate_subid
 from expfactory.server import app
 from random import choice
 import os
 
 from expfactory.forms import ParticipantForm
 
-# EXPERIMENT ROUTER ###########################################################
 
-# Home screen for user to select what they want
-@app.route('/', methods=['GET', 'POST'])
-def home():
-
-    form = ParticipantForm()
-
-    if request.method == "POST":   
-
-        # Submit and valid
-        if form.validate_on_submit():
-            flash('Participant ID: "%s", remember_me: %s, Experiments: %s' %
-                  (form.openid.data,
-                   str(form.remember_me.data),
-                   str(form.exp_ids.data)))
-            return redirect('/start')
-
-        # Submit but not valid
-        return render_template('portal.html', experiments=app.lookup,
-                                              base=app.base,
-                                              form=form, toggleform=True)
-
-    # Not submit
-    return render_template('portal.html', experiments=app.lookup,
-                                          base=app.base,
-                                          form=form)
-
+# SECURITY #####################################################################
 
 @app.after_request
 def inject_csrf_token(response):
@@ -88,33 +65,105 @@ def inject_csrf_token(response):
     return response
 
 
-@app.route('/finish', methods=['POST', 'GET'])
-def router():
+# EXPERIMENT PORTAL ############################################################
 
-    # If the user has posted, we are starting a battery
+# Home portal to start experiments
+@app.route('/', methods=['GET', 'POST'])
+def home():
+
+    form = ParticipantForm()
+
+    if request.method == "POST":   
+
+        print('SESSION')
+        print(session)
+        # Submit and valid
+        if form.validate_on_submit():
+            session['username'] = form.openid.data
+            session['experiments'] = form.exp_ids.data.split(',') # list
+            flash('Participant ID: "%s", Experiments: %s' %
+                  (form.openid.data,
+                  str(form.exp_ids.data)))
+            return redirect('/start')
+
+        # Submit but not valid
+        return render_template('portal/index.html', experiments=app.lookup,
+                                                    base=app.base,
+                                                    form=form, toggleform=True)
+
+    # Not submit
+    return render_template('portal/index.html', experiments=app.lookup,
+                                                base=app.base,
+                                                form=form)
+
+
+# EXPERIMENT ROUTER ############################################################
+
+
+@app.route('/next', methods=['POST', 'GET'])
+def next():
     if request.method == 'POST':
         fields = get_post_fields(request)
+        result_file = save_data(session, fields)
+        print(result_file)
 
+    username = session.get('username')
+    if username is None:
+        flash('You must start a session before doing experiments.')
+        return redirect('/')
+
+    experiment = app.get_next(session)
+    if experiment is None:
+        flash('Congratulations, you have finished the battery!')
+        return redirect('/finish')
+
+    return redirect('http://127.0.0.1/%s' %experiment)
+
+
+# Reset/Logout
+@app.route('/logout', methods=['POST', 'GET'])
+def logout():
+
+    # If the user has finished, clear session
+    del session['expfactory_subid']
+    del session['username']
+    del session['experiments']
+    return redirect('/')
+
+
+# Finish
+@app.route('/finish', methods=['POST', 'GET'])
+def finish():
+
+    # If the user has finished, clear session
+    del session['expfactory_subid']
+    del session['username']
+    del session['experiments']
 
     #TODO: need to handle POST with CSRF, document standard post
     # create local result database and option to use "real" db - both
     # should be easy to do / switch based on environment setting.
-    return render_template('battery.html')
+    return render_template('finish/index.html')
 
-
-@app.route('/index')
-def index():
-    return render_template('index.html')
 
 
 @app.route('/start')
-def start_battery():
+def start():
     '''start a battery.
     '''
-    #TODO: need to take participant ID into account here.
-    experiment = app.get_next()
-    print(experiment)
-    return render_template('start.html', experiment=next)
+    username = session.get('username')
+    if username is None:
+        flash('You must start a session before doing experiments.')
+        return redirect('/')
+
+    # If the user hasn't started, assign new subid
+    if not session.get('expfactory_subid'):
+        session['expfactory_subid'] = generate_subid()
+
+    print('SESSION')
+    print(session)
+    print(request.headers)
+    return render_template('start/index.html')
 
 
 # Route the user to the next experiment

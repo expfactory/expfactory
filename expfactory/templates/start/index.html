@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="modal fade"
+                     id="instructions_modal"
+                     tabindex="-1" 
+                     data-backdrop="static" 
+                     role="dialog" 
+                     aria-labelledby="instructions_modal_label" 
+                     aria-hidden="false"
+                     style="margin-top:200px">
+                     <div class="modal-dialog modal-lg">
+                         <div class="modal-content">
+                             <div class="modal-header">
+                                 <h4 class="js-title-step"></h4>
+                             </div>
+
+                         <div class="modal-body" style='padding:20px'>
+   
+                         <h2>Welcome {{ session['username'] }}!</h2>
+                         {% include "start/message.html" %}
+                         <br><br>
+                         <a href="/finish"><button id="disagree_button" 
+                                                   type="button" 
+                                                   class="btn btn-default">Disagree</button></a>
+                        </div>
+                        <div class="modal-footer">
+                             <a href="/next"><button type="button" 
+                                id="next_button" 
+                                class="btn btn-default js-btn-step" 
+                                data-orientation="next">Start</button></a>
+                 </div>
+             </div>
+         </div>
+     </div>
+
+     <button type="button" 
+             id="modalToggle"
+             class="btn btn-primary btn-lg hidden"
+             data-toggle="modal"
+             data-target="#instructions_modal" hidden></button>
+     </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<script>
+$(document).ready(function(){
+    $("#modalToggle").click()
+})
+</script>
+{% endblock %}

@@ -27,7 +27,12 @@ from expfactory.experiment import (
     get_selection
 )
 
-from flask import Flask, render_template, request
+from flask import (
+    Flask, 
+    render_template, 
+    request, 
+    flash
+)
 from flask_restful import Resource, Api
 from flask_wtf.csrf import CSRFProtect
 from expfactory.logman import bot
@@ -44,7 +49,8 @@ import random
 import sys
 import os
 
-# SERVER CONFIGURATION ##############################################
+# SERVER CONFIGURATION #########################################################
+
 class EFServer(Flask):
 
     def __init__(self, *args, **kwargs):
@@ -89,15 +95,22 @@ class EFServer(Flask):
         bot.log("Final Set \n%s" % final)
        
 
-    def get_next(self):
+    def get_next(self, session):
         '''return the name of the next experiment, depending on the user's
-           choice to randomize
+           choice to randomize. We don't remove any experiments here, that is
+           done on finish, in the case the user doesn't submit data (and
+           thus finish). A return of None means the user has completed the
+           battery of experiments.
         '''
-        # TODO: this should be looked up based on participant ID
-        next = 0
-        if app.randomize is True:
-            next = random.choice(range(0,len(self.experiments)))
-        return self.experiments.pop(next)
+        next = None
+        experiments = session.get('experiments', [])
+        if len(experiments) > 0:    
+            if app.randomize is True:
+                next = random.choice(range(0,len(experiments)))
+                print(next)
+                print(experiments)
+                next = experiments[next]
+        return next
 
 
 app = EFServer(__name__)

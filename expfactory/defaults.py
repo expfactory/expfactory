@@ -41,7 +41,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
-from logman import bot
+from expfactory.logman import bot
 from expfactory.utils import (
     convert2boolean, 
     getenv
@@ -59,8 +59,11 @@ import sys
 EXPFACTORY_REGISTRY = getenv("EXPFACTORY_REGISTRY_BASE",
                              default="https://expfactory.github.io")
 
-EXPFACTORY_LIBRARY = "%s/library/index.json" %(EXPFACTORY_REGISTRY_BASE)
+EXPFACTORY_LIBRARY = "%s/library/index.json" %(EXPFACTORY_REGISTRY)
 
+EXPFACTORY_SUBID = os.environ.get('EXPFACTORY_STUDY_ID', 'expfactory')
+
+EXPFACTORY_DATABASE = os.environ.get('EXPFACTORY_DATABASE', '/scif/data')
 
 #######################################################################
 # Formatting
