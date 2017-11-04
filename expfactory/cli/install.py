@@ -50,7 +50,6 @@ def main(args,parser,subparser):
     if folder is None:
         folder = os.getcwd()
 
-    print(args.src)
     source = args.src[0]
     if source is None:
         bot.error('Please provide a Github https address to install.')
@@ -96,8 +95,11 @@ def main(args,parser,subparser):
         with open(instruct,'w') as filey:
             filey.writelines(config['instructions'])
 
-    if len(os.listdir(dest)) > 0 and args.force is False:
-        bot.error('%s is not empty! Use --force to override' %folder)
-        sys.exit(1) 
+    if os.path.exists(dest) > 0:
+        if args.force is False:
+            bot.error('%s is not empty! Use --force to delete and re-create.' %folder)
+            sys.exit(1) 
+        else:
+            shutil.rmtree(dest)
 
     copy_directory(source, dest)

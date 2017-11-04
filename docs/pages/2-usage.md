@@ -29,16 +29,22 @@ Experiments
 and you will see a list of the experiments available. If you want to grab one quickly to browse, you could easily just clone a repo address:
 
 ```
+git clone https://github.com/expfactory-experiments/adaptive-n-back.git
 ```
 
-or use the install command, although it does the same thing :)
+or use the install command. It does the same thing, but validates the experiment as well.
 
 ```
-mkdir -p /tmp/pancakes && cd /tmp/pancakes
 expfactory install https://github.com/expfactory-experiments/adaptive-n-back.git
-
+Expfactory Version: 3.0
+Cloning into '/tmp/tmp3h9ug46k/adaptive-n-back'...
+remote: Counting objects: 59, done.
+remote: Compressing objects: 100% (47/47), done.
+remote: Total 59 (delta 21), reused 49 (delta 11), pack-reused 0
+Unpacking objects: 100% (59/59), done.
+Checking connectivity... done.
+LOG Installing adaptive-n-back to /tmp/adaptive-n-back
 ```
-
 Cloning Github repos is only the start. We really need a full fledged container to run our experiments in a nice way, and preserve how they are setup if anyone wants to do it again. So next, you probably want to make your experiments container!
 
 
