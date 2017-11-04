@@ -56,7 +56,7 @@ To serve your battery
     cd .. && expfactory install https://github.com/expfactory-experiments/test-task
 
 %appinstall adaptive-n-back
-    cd .. && expfactory install ttps://github.com/expfactory-experiments/adaptive-n-back
+    cd .. && expfactory install https://github.com/expfactory-experiments/adaptive-n-back
 
 %appinstall tower-of-london
     cd .. && expfactory install https://github.com/expfactory-experiments/tower-of-london
