@@ -38,7 +38,7 @@ import sys
 import os
 
 
-def main(args,parser,subparser):
+def main(args,parser):
 
     # First priority to args.base
     base = args.base

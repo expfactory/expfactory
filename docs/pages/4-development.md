@@ -7,12 +7,14 @@ pdf: true
 
 # Development
 
+## Build a Sandbox
 Once you have your [Singularity](https://github.com/expfactory/expfactory/blob/master/Singularity) example recipe and a (mostly working) flask application, it's fairly simply to build an image. To develop, it's optimal to build a sandbox, and use sudo of course to have writable. Note that I'm in the same folder as the Singularity file, the root of the repository. Also note that I'm **not** calling my image expfactory, otherwise it would use the python base to dump the image. That would be bad.
 
 ```
 sudo singularity build --sandbox [expfactory] Singularity
 ```
 
+## Bring up an Instance
 Once the image is built, you want to start it as an instance. Importantly, you want to be sure to bind the code base to a location in the image where you can easily re-install the software, after you've changed something.
 
 ```
@@ -25,13 +27,27 @@ If you are testing writing data, bind a folder to data for that too.
 sudo singularity instance.start --bind $PWD:/opt --bind /tmp/data:/scif/data --writable [expfactory] web1
 ```
 
-You should be able to go to the url `localhost` or `localhost:5000` and see the server running. If not, never fear! This is a good example of how to develop. Let's first shell inside. Note that we are shelling inside the `instance`:
+To see your instance running:
 
 ```
-sudo singularity shell --writable --bind $PWD:/opt --pwd /opt instance://web1
+sudo singularity instance.list
+ sudo singularity instance.list
+DAEMON NAME      PID      CONTAINER IMAGE
+web1             22842    /home/vanessa/Documents/Dropbox/Code/expfactory/expfactory/[expfactory]
 ```
 
-Note that you have to specify the bind **again**. If you forget to specify it at either time, it won't be bound. It's also helpful to set the present working directory (`--pwd`) to be where our code base is. Next, try running expfactory and get an error:
+## Shell Inside the Instance
+Remember that if you started the daemon as sudo, sudo owns it, and you need to use sudo to interact with it. When it comes time to run a container (as a user) the same applied. You should be able to go to the url `localhost` or `localhost:5000` and see the server running. If not, never fear! This is a good example of how to develop. Let's first shell inside. Note that we are shelling inside the instance (`instance://`) and we are also using `--writable` so we can change things, if necessary.
+
+```
+sudo singularity shell --writable --bind $PWD:/opt --bind /tmp/data:/scif/data --pwd /opt instance://web1
+```
+
+Note that you have to specify the bind **again**. If you forget to specify it at either time, it won't be bound. It's also helpful to set the present working directory (`--pwd`) to be where our code base is. 
+
+
+## Debugging Flow
+Here is an error from when I was starting to develop. I tried running expfactory from `/opt` inside the container instance and got the following error:
 
 ```
 Singularity expfac:~> expfactory

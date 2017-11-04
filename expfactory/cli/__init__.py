@@ -137,7 +137,6 @@ def main():
         # A base exists for experiments
         base = os.environ.get('EXPFACTORY_BASE')
         if args.base is not None or base is not None:
-            command = "main"
             from .main import main
         else:
             command = "list"
@@ -145,6 +144,12 @@ def main():
 
     # Pass on to the correct parser
     if command is not None:
+
+        # Main doesn't have a subparser
+        subparser = None
+        if command != "main":
+            subparser = subparsers[command]
+
         main(args=args,
              parser=parser,
              subparser=subparsers[command])
