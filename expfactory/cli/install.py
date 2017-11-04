@@ -50,10 +50,6 @@ def main(args,parser,subparser):
     if folder is None:
         folder = os.getcwd()
 
-    if len(os.listdir(folder)) > 0 and args.force is False:
-        bot.error('%s is not empty! Use --force to override' %folder)
-        sys.exit(1) 
-
     print(args.src)
     source = args.src[0]
     if source is None:
@@ -76,7 +72,6 @@ def main(args,parser,subparser):
     dest = "%s/%s" %(folder,exp_id)
 
     bot.log("Installing %s to %s" %(exp_id, dest))
-    os.system('mkdir -p %s' %dest)
 
     # Are we in a Container?
     if os.environ.get('EXPFACTORY_CONTAINER') is not None:
@@ -100,5 +95,9 @@ def main(args,parser,subparser):
             instruct = "%s/%s.help" %(views, python_module)
         with open(instruct,'w') as filey:
             filey.writelines(config['instructions'])
+
+    if len(os.listdir(dest)) > 0 and args.force is False:
+        bot.error('%s is not empty! Use --force to override' %folder)
+        sys.exit(1) 
 
     copy_directory(source, dest)

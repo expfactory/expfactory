@@ -26,7 +26,20 @@ Experiments
 3  test-task	https://www.github.com/expfactory-experiments/test-task
 ```
 
-and you will see a list of the experiments available. Next, you probably want to make your experiments container!
+and you will see a list of the experiments available. If you want to grab one quickly to browse, you could easily just clone a repo address:
+
+```
+```
+
+or use the install command, although it does the same thing :)
+
+```
+mkdir -p /tmp/pancakes && cd /tmp/pancakes
+expfactory install https://github.com/expfactory-experiments/adaptive-n-back.git
+
+```
+
+Cloning Github repos is only the start. We really need a full fledged container to run our experiments in a nice way, and preserve how they are setup if anyone wants to do it again. So next, you probably want to make your experiments container!
 
 
 # Running your Experiment Container
