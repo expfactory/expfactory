@@ -82,7 +82,7 @@ def main(args,parser,subparser):
         views = "%s/experiments" % get_viewsdir()
         python_module = exp_id.replace('-','_').lower()
         view_output = "%s/%s.py" %(views, python_module)
-        save_template(template, views_output, base=views)
+        save_template(view_output, template, base=views)
     
         # 2. append to __init__
         init = "%s/__init__.py" % views
@@ -100,5 +100,4 @@ def main(args,parser,subparser):
             bot.error('%s is not empty! Use --force to delete and re-create.' %folder)
             sys.exit(1) 
 
-    result = run_command(['cp','-R', "%s/*" %source, dest])
-    bot.debug("Return code: %s: %s " %(result['return_code'],result['message']))
+    os.system('cp -R %s/* %s' %(source, dest))

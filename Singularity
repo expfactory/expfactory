@@ -14,11 +14,13 @@ From: ubuntu:14.04
 # Install No need to touch below here
 ########################################
 
+    EXPFACTORY_CONTAINER=true
     EXPFACTORY_DATA=/scif/data
     EXPFACTORY_DATABASE=filesystem 
     EXPFACTORY_BASE=/scif/apps
     export EXPFACTORY_BASE EXPFACTORY_DATA \
-           EXPFACTORY_DATABASE
+           EXPFACTORY_DATABASE \
+           EXPFACTORY_CONTAINER
 
 %help
 
