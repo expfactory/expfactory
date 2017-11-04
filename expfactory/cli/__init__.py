@@ -152,7 +152,7 @@ def main():
 
         main(args=args,
              parser=parser,
-             subparser=subparsers[command])
+             subparser=subparser)
 
 
 if __name__ == '__main__':
