@@ -53,10 +53,10 @@ To serve your battery
 ########################################
 
 %appinstall test-task
-    expfactory install https://github.com/expfactory-experiments/test-task
+    cd .. && expfactory install https://github.com/expfactory-experiments/test-task
 
 %appinstall adaptive-n-back
-    expfactory install https://github.com/expfactory-experiments/adaptive-n-back
+    cd .. && expfactory install ttps://github.com/expfactory-experiments/adaptive-n-back
 
 %appinstall tower-of-london
-    expfactory install https://github.com/expfactory-experiments/tower-of-london
+    cd .. && expfactory install https://github.com/expfactory-experiments/tower-of-london
