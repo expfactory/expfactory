@@ -63,7 +63,11 @@ EXPFACTORY_LIBRARY = "%s/library/index.json" %(EXPFACTORY_REGISTRY)
 
 EXPFACTORY_SUBID = os.environ.get('EXPFACTORY_STUDY_ID', 'expfactory')
 
-EXPFACTORY_DATABASE = os.environ.get('EXPFACTORY_DATABASE', '/scif/data')
+EXPFACTORY_DATA = os.environ.get('EXPFACTORY_DATA')
+EXPFACTORY_BASE = os.environ.get('EXPFACTORY_DATABASE')
+EXPFACTORY_DATABASE = os.environ.get('EXPFACTORY_DATABASE', 'filesystem')
+
+# Choices correspond to modules, currently only have filesystem support
 
 #######################################################################
 # Formatting

@@ -14,8 +14,11 @@ From: ubuntu:14.04
 # Install No need to touch below here
 ########################################
 
+    EXPFACTORY_DATA=/scif/data
+    EXPFACTORY_DATABASE=filesystem 
     EXPFACTORY_BASE=/scif/apps
-    export EXPFACTORY_BASE
+    export EXPFACTORY_BASE EXPFACTORY_DATA \
+           EXPFACTORY_DATABASE
 
 %help
 
