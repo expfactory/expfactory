@@ -83,9 +83,12 @@ def find_directories(root,fullpath=True):
     return directories
 
  
-def copy_directory(src, dest):
+def copy_directory(src, dest, force=False):
     ''' Copy an entire directory recursively
     '''
+    if os.path.exists(dest) and force is True:
+        shutil.rmtree(dest)
+
     try:
         shutil.copytree(src, dest)
     except OSError as e:

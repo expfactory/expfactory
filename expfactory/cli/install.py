@@ -99,7 +99,5 @@ def main(args,parser,subparser):
         if args.force is False:
             bot.error('%s is not empty! Use --force to delete and re-create.' %folder)
             sys.exit(1) 
-        else:
-            shutil.rmtree(dest)
 
-    copy_directory(source, dest)
+    copy_directory(source, dest, force=args.force)
