@@ -41,7 +41,7 @@ To serve your battery
     cp script/nginx.gunicorn.conf /etc/nginx/sites-enabled/default
     mkdir -p /scif/apps
     SECRET_KEY=`python3 script/generate_key.py` 
-    cp /opt/expfactory/config_dummy.py /opt/expfactory/config.py
+    cp expfactory/config_dummy.py expfactory/config.py
     echo "${SECRET_KEY}" >> /opt/expfactory/config.py
 
 

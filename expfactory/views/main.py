@@ -88,7 +88,7 @@ def home():
 
             # User name is not required
             username = 'You'
-            if form.openid.data is not in [None,""]:
+            if form.openid.data not in [None,""]:
                 username = form.openid.data
 
             session['username'] = username
