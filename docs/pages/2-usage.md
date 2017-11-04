@@ -5,6 +5,30 @@ pdf: true
 permalink: /usage
 ---
 
+# Browsing Experiments
+
+You don't need to build a container to browse experiments! If you'd prefer to run the software locally to browse experiments, and generate your custom recipe, you can easily install experiment factory and run it:
+
+```
+git clone https://www.github.com/expfactory/expfactory
+cd expfactory && python setup.py install
+```
+
+to see available experiments, meaning they are provided in the [expfactory-experiments](https://www.github.com/expfactory/library) library, just type:
+
+```
+$ expfactory
+
+Expfactory Version: 3.0
+Experiments
+1  adaptive-n-back	https://github.com/expfactory-experiments/adaptive-n-back.git
+2  tower-of-london	https://github.com/expfactory-experiments/tower-of-london.git
+3  test-task	https://www.github.com/expfactory-experiments/test-task
+```
+
+and you will see a list of the experiments available. Next, you probably want to make your experiments container!
+
+
 # Running your Experiment Container
 
 Your container (or sandbox folder) is a file or folder sitting on your computer. When we run it, in order to give it it's own namespace to run a webserver, we are going to create an instance of it. This is [new functionality for Singularity 2.4](https://singularityware.github.io/docs-instances), and we are excited to make good use of it!

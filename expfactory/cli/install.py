@@ -33,7 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 from expfactory.validator import ExperimentValidator
 from expfactory.experiment import load_experiment
 from expfactory.utils import (
-    get_viewsdir
+    get_viewsdir,
     get_template, 
     sub_template,
     copy_directory
