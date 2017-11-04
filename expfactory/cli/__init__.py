@@ -64,7 +64,7 @@ def get_parser():
                           help="empty folder to install experiment, defaults to pwd", 
                           type=str, default=None)
 
-    install.add_argument('--force', dest="force",
+    install.add_argument('--force', '-f',dest="force",
                          help="force installation into non empty directory",
                          default=False, action='store_true')
 
