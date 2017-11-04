@@ -32,7 +32,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
 import errno
-import collections
+from subprocess import (
+    Popen,
+    PIPE,
+    STDOUT
+)
 from expfactory.logger import bot
 import shutil
 import json
@@ -111,6 +115,19 @@ def clone(url, tmpdir=None):
         return dest
     bot.error('Error cloning repo.')
     sys.exit(error_code)
+
+
+def run_command(cmd):
+    '''run_command uses subprocess to send a command to the terminal.
+    :param cmd: the command to send, should be a list for subprocess
+    '''
+    output = Popen(cmd,stderr=STDOUT,stdout=PIPE)
+    t = output.communicate()[0],output.returncode
+    output = {'message':t[0],
+              'return_code':t[1]}
+
+    return output
+
 
 
 ################################################################################

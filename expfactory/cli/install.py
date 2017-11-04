@@ -35,8 +35,8 @@ from expfactory.experiment import load_experiment
 from expfactory.utils import (
     get_viewsdir,
     get_template, 
-    sub_template,
-    copy_directory
+    run_command,
+    sub_template
 )
 from expfactory.logger import bot
 import tempfile
@@ -100,4 +100,5 @@ def main(args,parser,subparser):
             bot.error('%s is not empty! Use --force to delete and re-create.' %folder)
             sys.exit(1) 
 
-    copy_directory(source, dest, force=args.force)
+    result = run_command(['cp','-R', source, dest])
+    bot.debug("Return code: %s: %s " %(result['return_code'],result['message'])
