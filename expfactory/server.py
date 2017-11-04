@@ -28,13 +28,17 @@ from expfactory.experiment import (
 )
 
 from flask import (
+    Blueprint,
     Flask, 
     render_template, 
     request, 
     flash
 )
 from flask_restful import Resource, Api
-from flask_wtf.csrf import CSRFProtect
+from flask_wtf.csrf import (
+    CSRFProtect, 
+    generate_csrf
+)
 from flask_cors import CORS
 from expfactory.logman import bot
 from werkzeug import secure_filename
@@ -116,19 +120,27 @@ class EFServer(Flask):
 
 app = EFServer(__name__)
 app.config.from_object('expfactory.config')
-cors = CORS(app, resources={r"/next/*": {"origins": "localhost"}})
+
+# EXPERIMENTS #################################################################
+
+# Cors
+cors = CORS(app, origins="http://127.0.0.1", 
+            allow_headers=["Content-Type", 
+                           "Authorization", 
+                           "X-Requested-With",
+                           "Access-Control-Allow-Credentials"],
+            supports_credentials=True)
+
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 csrf = CSRFProtect(app)
 
 import expfactory.views
 import expfactory.api
+import expfactory.dynamic_views
 
 
 # This is how the command line version will run
 def start(port=5000, debug=False):
     bot.info("Nobody ever comes in... nobody ever comes out...")
     app.run(host="localhost", debug=debug, port=port)
-    
-
-if __name__ == '__main__':
-    start()

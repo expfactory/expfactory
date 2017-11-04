@@ -40,6 +40,7 @@ from flask import (
 )
 
 from flask_wtf.csrf import generate_csrf
+from flask_cors import cross_origin
 from expfactory.logman import bot
 from werkzeug import secure_filename
 from expfactory.utils import (
@@ -63,9 +64,14 @@ from expfactory.forms import ParticipantForm
 def inject_csrf_token(response):
     response.headers.set('X-CSRF-Token', generate_csrf())
     return response
-
+  
 
 # EXPERIMENT PORTAL ############################################################
+
+@app.route('/experiments')
+def experiment_base():
+    return render_template('experiments/index.html')
+
 
 # Home portal to start experiments
 @app.route('/', methods=['GET', 'POST'])
@@ -102,6 +108,7 @@ def home():
 
 @app.route('/next', methods=['POST', 'GET'])
 def next():
+    print(request)
     if request.method == 'POST':
         fields = get_post_fields(request)
         result_file = save_data(session, fields)
@@ -117,7 +124,7 @@ def next():
         flash('Congratulations, you have finished the battery!')
         return redirect('/finish')
 
-    return redirect('http://127.0.0.1/%s' %experiment)
+    return redirect('http://127.0.0.1/experiments/%s' %experiment)
 
 
 # Reset/Logout

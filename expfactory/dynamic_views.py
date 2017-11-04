@@ -1,4 +1,5 @@
 '''
+dynamic_views.py: part of expfactory package
 
 Copyright (c) 2017, Vanessa Sochat
 All rights reserved.
@@ -30,6 +31,41 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
-WTF_CSRF_ENABLED = True
-SECRET_KEY = 'bwabwabwa-bananas-not'
-SECRET_KEY='?QuVo3`B2V>TC9Xtk3PRHj#)am23m]Dq2^6/a$~i^P^Ekr$OY|'
+from flask import (
+    Blueprint,
+    flash,
+    render_template, 
+    request, 
+    redirect,
+    session
+)
+
+from flask_wtf.csrf import generate_csrf
+from flask_cors import cross_origin
+from expfactory.logman import bot
+from werkzeug import secure_filename
+from expfactory.utils import (
+    convert2boolean, 
+    getenv,
+    get_post_fields
+)
+
+
+from expfactory.database import generate_subid
+from expfactory.server import app
+import os
+
+# TODO: These experiment blueprints will be automatically generated on build
+
+test_task = Blueprint('test-task', __name__,
+                       static_url_path='/experiments', 
+                       static_folder='/scif/apps/test-task',
+                       template_folder='/scif/apps')
+
+@test_task.route('/experiments/test-task')
+def test_task_base():
+    experiment = 'test-task/index.html'
+    return render_template('experiments/experiment.html', experiment=experiment)
+
+test_task.before_request(csrf.protect)
+app.register_blueprint(test_task)

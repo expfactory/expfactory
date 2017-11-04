@@ -30,22 +30,5 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
-__version__ = "3.0"
-AUTHOR = 'Vanessa Sochat'
-AUTHOR_EMAIL = 'vsochat@stanford.edu'
-NAME = 'expfactory'
-PACKAGE_URL = "http://www.github.com/expfactory/expfactory"
-KEYWORDS = 'singularity container reproducible behavior neuroscience experiment factory'
-DESCRIPTION = "software to generate a reproducible container battery of experiments."
-LICENSE = "LICENSE"
-
-
-INSTALL_REQUIRES = (
-    ('flask', {'min_version': '0.12'}),
-    ('flask-restful', {'min_version': None}),
-    ('flask-blueprint',{'min_version': None}),
-    ('flask-wtf', {'min_version': None}),
-    ('flask-cors', {'min_version': None}),
-    ('requests', {'min_version': '2.12.4'}),
-    ('retrying', {'min_version': '1.3.3'})
-)
+WTF_CSRF_ENABLED = True
+SECRET_KEY = 'bwabwabwa-bananas-not'
