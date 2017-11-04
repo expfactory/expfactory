@@ -37,6 +37,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #)
 
 #from sqlalchemy.ext.declarative import declarative_base
+from expfactory.logger import bot
 from expfactory.utils import write_json
 from expfactory.defaults import EXPFACTORY_SUBID, EXPFACTORY_DATABASE
 from glob import glob

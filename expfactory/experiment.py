@@ -38,7 +38,7 @@ from expfactory.utils import (
 
 from glob import glob
 import filecmp
-from expfactory.logman import bot
+from expfactory.logger import bot
 import json
 import re
 import os

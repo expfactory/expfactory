@@ -33,7 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import errno
 import collections
-from expfactory.logman import bot
+from expfactory.logger import bot
 import shutil
 import json
 import sys
@@ -47,6 +47,13 @@ import re
 def get_installdir():
     return os.path.dirname(os.path.abspath(__file__))
 
+def get_templatedir():
+    base = get_installdir()
+    return "%s/templates" %(base)
+
+def get_viewsdir():
+    base = get_installdir()
+    return "%s/views" %(base)
 
 def find_subdirectories(basepath):
     '''
@@ -77,8 +84,7 @@ def find_directories(root,fullpath=True):
 
  
 def copy_directory(src, dest):
-    '''
-    Copy an entire directory recursively
+    ''' Copy an entire directory recursively
     '''
     try:
         shutil.copytree(src, dest)
@@ -91,27 +97,53 @@ def copy_directory(src, dest):
             sys.exit(1)
 
 
-def get_template(template_file):
+def clone(url, tmpdir=None):
+    '''clone a repository from Github'''
+    if tmpdir is None:
+        tmpdir = tempfile.mkdtemp()
+    name = os.path.basename(url).replace('.git', '')
+    dest = '%s/%s' %(tmpdir,name)
+    return_code = os.system('git clone %s %s' %(url,dest))
+    if return_code == 0:
+        return dest
+    bot.error('Error cloning repo.')
+    sys.exit(error_code)
+
+
+################################################################################
+# templates
+################################################################################
+
+def get_template(name, base=None):
+    '''read in and return a template file
     '''
-    get_template: read in and return a template file
-    '''
-    filey = open(template_file,"rb")
-    template = "".join(filey.readlines())
-    filey.close()
-    return template
+    if base is None:
+        base = get_templatedir()
+    template_file = "%s/%s" %(base, name)
+    if os.path.exists(template_file):
+        with open(template_file,"r") as filey:
+            template = "".join(filey.readlines())
+        return template
+    bot.error("%s does not exist." %template_file)
 
 
 def sub_template(template,template_tag,substitution):
-    '''
-    make a substitution for a template_tag in a template
+    '''make a substitution for a template_tag in a template
     '''
     template = template.replace(template_tag,substitution)
     return template
 
-def save_template(output_file,html_snippet):
-    filey = open(output_file,"w")
-    filey.writelines(html_snippet)
-    filey.close()
+def save_template(output_file, snippet, mode="w", base=None):
+    if base is None:
+        base = get_templatedir()
+    with open(output_file, mode) as filey:
+        filey.writelines(snippet)
+    return output_file
+    
+
+################################################################################
+# JSON
+################################################################################
 
 
 def read_json(filename,mode='r'):
@@ -134,18 +166,6 @@ def get_post_fields(request):
         fields[field] = value
     return fields
 
-
-def clone(url, tmpdir=None):
-    '''clone a repository from Github'''
-    if tmpdir is None:
-        tmpdir = tempfile.mkdtemp()
-    name = os.path.basename(url).replace('.git', '')
-    dest = '%s/%s' %(tmpdir,name)
-    return_code = os.system('git clone %s %s' %(url,dest))
-    if return_code == 0:
-        return dest
-    bot.error('Error cloning repo.')
-    sys.exit(error_code)
 
 
 ################################################################################

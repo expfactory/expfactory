@@ -41,7 +41,7 @@ from flask import (
 
 from flask_wtf.csrf import generate_csrf
 from flask_cors import cross_origin
-from expfactory.logman import bot
+from expfactory.logger import bot
 from werkzeug import secure_filename
 from expfactory.utils import (
     convert2boolean, 

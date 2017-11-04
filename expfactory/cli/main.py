@@ -1,5 +1,4 @@
 '''
-api.py: part of expfactory package
 
 Copyright (c) 2017, Vanessa Sochat
 All rights reserved.
@@ -31,41 +30,42 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
-from flask_restful import Resource, Api
+from expfactory.server import start
 from expfactory.logger import bot
-from expfactory.server import app
+from glob import glob
+import tempfile
+import sys
 import os
 
 
-# API VIEWS ####################################################################
+def main(args,parser,subparser):
 
-class apiExperiments(Resource):
-    '''apiExperiments
-    Main view for REST API to display all available experiments
-    '''
-    def get(self):
-        return app.lookup
-        
-class apiExperimentSingle(Resource):
-    '''apiExperimentSingle
-    return complete meta data for specific experiment
-    :param exp_id: exp_id for experiment to preview
-    '''
-    def get(self, exp_id):
-        return app.lookup[exp_id]
+    # First priority to args.base
+    base = args.base
+    if base is None:
+        base = os.environ.get('EXPFACTORY_BASE')
 
+    # Does the base folder exist?
+    if base is None:
+        bot.error("You must set a base of experiments with --base" % base)
+        sys.exit(1)
 
-# Create custom loader with experiments to serve
-#loader = jinja2.ChoiceLoader([
-#             app.jinja_loader,
-#             jinja2.FileSystemLoader(['/scif/apps'])
-#         ])
+    if not os.path.exists(base):
+        bot.error("Base folder %s does not exist." % base)
+        sys.exit(1)
 
-#app.jinja_loader = loader
+    # Export environment variables for the client
+    experiments = args.experiments
+    if experiments is None:
+        experiments = " ".join(glob("%s/*" % base))
 
-#import pickle
-#pickle.dump(loader,open('loader.pkl','wb'))
+    os.environ['EXPFACTORY_EXPERIMENTS'] = experiments
 
-api = Api(app)    
-api.add_resource(apiExperiments,'/api/experiments')
-api.add_resource(apiExperimentSingle,'/api/experiments/<string:exp_id>')
+    subid = os.environ.get('EXPFACTORY_STUDY_ID')
+    if args.subid is not None:
+        subid = args.subid 
+
+    os.environ['EXPFACTORY_RANDOM'] = str(args.disable_randomize)
+    os.environ['EXPFACTORY_BASE'] = args.base
+    os.environ['EXPFACTORY_SUBID'] = subid
+    start(port=5000)

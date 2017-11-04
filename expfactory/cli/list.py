@@ -1,5 +1,4 @@
 '''
-api.py: part of expfactory package
 
 Copyright (c) 2017, Vanessa Sochat
 All rights reserved.
@@ -30,42 +29,26 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
-
-from flask_restful import Resource, Api
 from expfactory.logger import bot
-from expfactory.server import app
+from expfactory.defaults import EXPFACTORY_LIBRARY
+from glob import glob
+import requests
+import tempfile
+import sys
 import os
 
 
-# API VIEWS ####################################################################
+def main(args,parser,subparser):
 
-class apiExperiments(Resource):
-    '''apiExperiments
-    Main view for REST API to display all available experiments
-    '''
-    def get(self):
-        return app.lookup
-        
-class apiExperimentSingle(Resource):
-    '''apiExperimentSingle
-    return complete meta data for specific experiment
-    :param exp_id: exp_id for experiment to preview
-    '''
-    def get(self, exp_id):
-        return app.lookup[exp_id]
+    response = requests.get(EXPFACTORY_LIBRARY)
+    if response.status_code == 200:
+        library = response.json()
 
+        bot.info("Experiments")
 
-# Create custom loader with experiments to serve
-#loader = jinja2.ChoiceLoader([
-#             app.jinja_loader,
-#             jinja2.FileSystemLoader(['/scif/apps'])
-#         ])
+        rows = []
+        for experiment in library:
+            rows.append([ experiment['name'],
+                          experiment['github'] ])
 
-#app.jinja_loader = loader
-
-#import pickle
-#pickle.dump(loader,open('loader.pkl','wb'))
-
-api = Api(app)    
-api.add_resource(apiExperiments,'/api/experiments')
-api.add_resource(apiExperimentSingle,'/api/experiments/<string:exp_id>')
+        bot.table(rows)

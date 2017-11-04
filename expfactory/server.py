@@ -40,7 +40,7 @@ from flask_wtf.csrf import (
     generate_csrf
 )
 from flask_cors import CORS
-from expfactory.logman import bot
+from expfactory.logger import bot
 from werkzeug import secure_filename
 from expfactory.utils import (
     convert2boolean, 
@@ -86,7 +86,8 @@ class EFServer(Flask):
 
         # Step 1: obtain installed and selected experiments (/scif/apps)
         self.selection = getenv('EXPFACTORY_EXPERIMENTS', [])
-        self.base = getenv('EXPFACTORY_BASE','/scif/apps')
+        self.base = getenv('EXPFACTORY_BASE')
+
         self.randomize = convert2boolean(getenv('EXPFACTORY_RANDOM', True))
         available = get_experiments("%s" % self.base)
         self.experiments = get_selection(available, self.selection)
@@ -137,8 +138,6 @@ csrf = CSRFProtect(app)
 
 import expfactory.views
 import expfactory.api
-import expfactory.dynamic_views
-
 
 # This is how the command line version will run
 def start(port=5000, debug=False):

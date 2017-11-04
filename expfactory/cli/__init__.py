@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 '''
-cli.py: part of expfactory package
+client initialization: part of expfactory package
 
 Copyright (c) 2017, Vanessa Sochat
 All rights reserved.
@@ -39,17 +39,37 @@ import sys
 import os
 
 
-
 def get_parser():
 
     parser = argparse.ArgumentParser(
     description="expfactory: produce a reproducible battery of container experiments")
 
 
+    subparsers = parser.add_subparsers(help='Experiment Factory actions',
+                                       title='actions',
+                                       description='actions for expfactory tools',
+                                       dest="command")
+
+
     # Package manager to list experiments
     parser.add_argument("--list", dest='list',  # TODO: this will list from library
                          help="list available experiments.",   
                          default=False, action='store_true')
+
+
+    # List
+    listy = subparsers.add_parser("list", 
+                                   help="List available Expfactory Experiments from Github")
+
+    # Install
+    install = subparsers.add_parser("install", 
+                                     help="install an Experiment from Github")
+
+    install.add_argument('src', nargs=1, help='source url or folder of experiment')
+    install.add_argument("--folder", dest='folder', 
+                          help="full path to folder to install experiment. Default (pwd)", 
+                          type=str, default=None)
+
 
     # Experiments and Runtime Config
     parser.add_argument("--experiments", dest='experiments', 
@@ -69,23 +89,36 @@ def get_parser():
                          help="maximum number of minutes for battery to endure, to select experiments",
                          type=int, default=99999)
 
-    parser.add_argument("--port", dest='port', 
-                         help="port to serve on (defaults to 5000)",
-                         type=str, default=5000)
-
     parser.add_argument("--base", dest='base', 
                          help="experiments base (default /scif/apps)",
-                         type=str, default='/scif/apps')
+                         type=str, default=None)
 
     return parser
 
 
+def get_subparsers(parser):
+    '''get a dictionary of subparsers to help with printing help
+    '''
+    actions = [action for action in parser._actions 
+               if isinstance(action, argparse._SubParsersAction)]
+
+    subparsers = dict()
+    for action in actions:
+        # get all subparsers and print help
+        for choice, subparser in action.choices.items():
+            subparsers[choice] = subparser
+
+    return subparsers
+
+
 def main():
 
-    from expfactory.logman import bot
-    # This will also import and set defaults
+    from expfactory.logger import bot
+    from expfactory.version import __version__
+    bot.info("Expfactory Version: %s" % __version__)
 
     parser = get_parser()
+    subparsers = get_subparsers(parser)
 
     try:
         args = parser.parse_args()
@@ -93,29 +126,32 @@ def main():
         parser.print_help()
         sys.exit(0)
 
+    # Does the use want to install?
+    command = args.command
+    if command == "install":
+        from .install import main
 
-    # Export environment variables for the client
-    experiments = args.experiments
-    if experiments is None:
-        experiments = " ".join(glob("%s/*" %args.base))
+    elif command == "list":
+        from .list import main
 
-    os.environ['EXPFACTORY_EXPERIMENTS'] = experiments
+    # No argument supplied
+    else:
 
-    # Does the base folder exist?
-    if not os.path.exists(args.base):
-        bot.error("Base folder %s does not exist." %args.base)
-        sys.exit(1)
+        # A base exists for experiments
+        base = os.environ.get('EXPFACTORY_BASE')
+        if args.base is not None or base is not None:
+            command = "main"
+            from .main import main
+        else:
+            command = "list"
+            from .list import main
 
-    subid = os.environ.get('EXPFACTORY_STUDY_ID')
-    if args.subid is not None:
-        subid = args.subid 
+    # Pass on to the correct parser
+    if command is not None:
+        main(args=args,
+             parser=parser,
+             subparser=subparsers[command])
 
-    os.environ['EXPFACTORY_RANDOM'] = str(args.disable_randomize)
-    os.environ['EXPFACTORY_BASE'] = args.base
-    os.environ['EXPFACTORY_SUBID'] = subid
-
-    from expfactory.server import start
-    start(port=args.port)
 
 if __name__ == '__main__':
     main()

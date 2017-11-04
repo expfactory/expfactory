@@ -1,4 +1,8 @@
 [expfactory]
+pypi.sh
+expfactory.egg-info
+config.py
+dist
 .gitignore
 *.img
 *.simg

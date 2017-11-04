@@ -33,7 +33,7 @@ import sys
 import tempfile
 import shutil
 from expfactory.validator.utils import notvalid
-from expfactory.logman import bot
+from expfactory.logger import bot
 from expfactory.utils import clone, read_json
 from glob import glob
 import json
@@ -75,7 +75,6 @@ class ExperimentValidator:
         # Obtain any repository URL provided
         if folder.startswith('http') or 'github' in folder:
             folder = clone(folder, tmpdir=self.tmpdir)
-            cleanup = True
 
         # Load config.json if provided directly
         elif os.path.basename(folder) == 'config.json':
@@ -160,6 +159,7 @@ class ExperimentValidator:
                 ("time",1,int), 
                 ("url",1,str), 
                 ("description",1, str),
+                ("instructions",1, str),
                 ("exp_id",1,str),
 
                 ("contributors",0, list), # not required

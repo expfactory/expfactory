@@ -41,7 +41,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
-from expfactory.logman import bot
+from expfactory.logger import bot
 from expfactory.utils import (
     convert2boolean, 
     getenv

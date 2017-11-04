@@ -14,6 +14,8 @@ From: ubuntu:14.04
 # Install No need to touch below here
 ########################################
 
+    EXPFACTORY_BASE=/scif/apps
+    export EXPFACTORY_BASE
 
 %help
 
@@ -41,7 +43,6 @@ To serve your battery
     SECRET_KEY=`python3 script/generate_key.py` 
     cp /opt/expfactory/config_dummy.py /opt/expfactory/config.py
     echo "${SECRET_KEY}" >> /opt/expfactory/config.py
-    cp script/nginx-index.html /scif/apps/index.html
 
 
 ########################################
@@ -49,13 +50,10 @@ To serve your battery
 ########################################
 
 %appinstall test-task
-    git clone https://github.com/expfactory-experiments/test-task
-    mv test-task/* .
+    expfactory --install https://github.com/expfactory-experiments/test-task
 
 %appinstall adaptive-n-back
-    git clone https://github.com/expfactory-experiments/adaptive-n-back
-    mv adaptive-n-back/* .
+    expfactory --install https://github.com/expfactory-experiments/adaptive-n-back
 
 %appinstall tower-of-london
-    git clone https://github.com/expfactory-experiments/tower-of-london
-    mv tower-of-london/* .
+    expfactory --install https://github.com/expfactory-experiments/tower-of-london
