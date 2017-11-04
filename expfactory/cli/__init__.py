@@ -138,6 +138,7 @@ def main():
         base = os.environ.get('EXPFACTORY_BASE')
         if args.base is not None or base is not None:
             from .main import main
+            command = "main"
         else:
             command = "list"
             from .list import main

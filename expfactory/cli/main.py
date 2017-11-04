@@ -30,7 +30,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
-from expfactory.server import start
 from expfactory.logger import bot
 from glob import glob
 import tempfile
@@ -38,7 +37,7 @@ import sys
 import os
 
 
-def main(args,parser):
+def main(args,parser,subparser=None):
 
     # First priority to args.base
     base = args.base
@@ -66,6 +65,8 @@ def main(args,parser):
         subid = args.subid 
 
     os.environ['EXPFACTORY_RANDOM'] = str(args.disable_randomize)
-    os.environ['EXPFACTORY_BASE'] = args.base
+    os.environ['EXPFACTORY_BASE'] = base
     os.environ['EXPFACTORY_SUBID'] = subid
+    
+    from expfactory.server import start
     start(port=5000)
