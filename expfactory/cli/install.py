@@ -101,4 +101,4 @@ def main(args,parser,subparser):
             sys.exit(1) 
 
     result = run_command(['cp','-R', source, dest])
-    bot.debug("Return code: %s: %s " %(result['return_code'],result['message'])
+    bot.debug("Return code: %s: %s " %(result['return_code'],result['message']))
