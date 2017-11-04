@@ -30,7 +30,7 @@ SOFTWARE.
 import os
 import re
 import sys
-from expfactory.logman import bot
+from expfactory.logger import bot
 from glob import glob
 from .utils import notvalid
 import json
