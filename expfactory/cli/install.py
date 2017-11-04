@@ -100,5 +100,5 @@ def main(args,parser,subparser):
             bot.error('%s is not empty! Use --force to delete and re-create.' %folder)
             sys.exit(1) 
 
-    result = run_command(['cp','-R', source, dest])
+    result = run_command(['cp','-R', "%s/*" %source, dest])
     bot.debug("Return code: %s: %s " %(result['return_code'],result['message']))
