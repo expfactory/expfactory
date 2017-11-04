@@ -95,7 +95,7 @@ def main(args,parser,subparser):
         with open(instruct,'w') as filey:
             filey.writelines(config['instructions'])
 
-    if os.path.exists(dest) > 0:
+    if os.path.exists(dest):
         if args.force is False:
             bot.error('%s is not empty! Use --force to delete and re-create.' %folder)
             sys.exit(1) 
