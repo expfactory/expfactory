@@ -33,9 +33,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 from expfactory.validator import ExperimentValidator
 from expfactory.experiment import load_experiment
 from expfactory.utils import (
+    get_viewsdir
     get_template, 
     sub_template,
-    get_viewsdir
+    copy_directory
 )
 from expfactory.logger import bot
 import tempfile
@@ -49,44 +50,55 @@ def main(args,parser,subparser):
     if folder is None:
         folder = os.getcwd()
 
+    if len(os.listdir(folder)) > 0 and args.force is False:
+        bot.error('%s is not empty! Use --force to override' %folder)
+        sys.exit(1) 
+
     print(args.src)
     source = args.src[0]
     if source is None:
-        bot.error('Please provide a Github http address to install.')
+        bot.error('Please provide a Github https address to install.')
         sys.exit(1)
 
     # Is the experiment valid?
     cli = ExperimentValidator()
     result = cli.validate(source, cleanup=False)
+    exp_id = os.path.basename(source).replace('.git','')
     if result is True:
         config = load_experiment("%s/%s" %(cli.tmpdir,exp_id))
+        source = "%s/%s" %(cli.tmpdir,exp_id)
         exp_id = config['exp_id']
+    else:
+        bot.error('%s is not valid.' % exp_id)
+        sys.exit(1)
 
     # Move static files to output folder
-    folder = "%s/%s" %(folder,exp_id)
+    dest = "%s/%s" %(folder,exp_id)
 
-    bot.log("Installing %s to %s" %(exp_id, folder))
-    os.system('mkdir -p %s' %folder)
+    bot.log("Installing %s to %s" %(exp_id, dest))
+    os.system('mkdir -p %s' %dest)
 
-    bot.log("Preparing experiment routes...")
-    template = get_template('experiments/template.py')
-    template = sub_template(template, '{{ exp_id }}', exp_id)
+    # Are we in a Container?
+    if os.environ.get('EXPFACTORY_CONTAINER') is not None:
+        bot.log("Preparing experiment routes...")
+        template = get_template('experiments/template.py')
+        template = sub_template(template, '{{ exp_id }}', exp_id)
 
-    # 1. Python blueprint
-    views = "%s/experiments" % get_viewsdir()
-    python_module = exp_id.replace('-','_').lower()
-    view_output = "%s/%s.py" %(views, python_module)
-    save_template(template, views_output, base=views)
+        # 1. Python blueprint
+        views = "%s/experiments" % get_viewsdir()
+        python_module = exp_id.replace('-','_').lower()
+        view_output = "%s/%s.py" %(views, python_module)
+        save_template(template, views_output, base=views)
     
-    # 2. append to __init__
-    init = "%s/__init__.py" % views
-    with open(init,'a') as filey:
-        filey.writelines('from .%s import *\n' %python_module)
+        # 2. append to __init__
+        init = "%s/__init__.py" % views
+        with open(init,'a') as filey:
+            filey.writelines('from .%s import *\n' %python_module)
 
-    # 3. Instructions
-    if "instructions" in config:
-        instruct = "%s/%s.help" %(views, python_module)
-    with open(instruct,'w') as filey:
-        filey.writelines(config['instructions'])
-    
-    
+        # 3. Instructions
+        if "instructions" in config:
+            instruct = "%s/%s.help" %(views, python_module)
+        with open(instruct,'w') as filey:
+            filey.writelines(config['instructions'])
+
+    copy_directory(source, dest)

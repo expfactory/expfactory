@@ -51,12 +51,6 @@ def get_parser():
                                        dest="command")
 
 
-    # Package manager to list experiments
-    parser.add_argument("--list", dest='list',  # TODO: this will list from library
-                         help="list available experiments.",   
-                         default=False, action='store_true')
-
-
     # List
     listy = subparsers.add_parser("list", 
                                    help="List available Expfactory Experiments from Github")
@@ -67,8 +61,12 @@ def get_parser():
 
     install.add_argument('src', nargs=1, help='source url or folder of experiment')
     install.add_argument("--folder", dest='folder', 
-                          help="full path to folder to install experiment. Default (pwd)", 
+                          help="empty folder to install experiment, defaults to pwd", 
                           type=str, default=None)
+
+    install.add_argument('--force', dest="force",
+                         help="force installation into non empty directory",
+                         default=False, action='store_true')
 
 
     # Experiments and Runtime Config
@@ -123,7 +121,6 @@ def main():
     try:
         args = parser.parse_args()
     except:
-        parser.print_help()
         sys.exit(0)
 
     # Does the use want to install?

@@ -35,6 +35,9 @@ To serve your battery
     #exec expfactory "$@"
 
 %post
+    EXPFACTORY_CONTAINER=true
+    export EXPFACTORY_CONTAINER
+
     apt-get update && apt-get install -y nginx git python3-pip python3-dev
     cd /opt && git clone https://www.github.com/expfactory/expfactory
     cd expfactory && python3 setup.py install
@@ -50,10 +53,10 @@ To serve your battery
 ########################################
 
 %appinstall test-task
-    expfactory --install https://github.com/expfactory-experiments/test-task
+    expfactory install https://github.com/expfactory-experiments/test-task
 
 %appinstall adaptive-n-back
-    expfactory --install https://github.com/expfactory-experiments/adaptive-n-back
+    expfactory install https://github.com/expfactory-experiments/adaptive-n-back
 
 %appinstall tower-of-london
-    expfactory --install https://github.com/expfactory-experiments/tower-of-london
+    expfactory install https://github.com/expfactory-experiments/tower-of-london
