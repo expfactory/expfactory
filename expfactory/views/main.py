@@ -33,6 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from flask import (
     flash,
+    jsonify,
     render_template, 
     request, 
     redirect,
@@ -125,13 +126,22 @@ def home():
 # EXPERIMENT ROUTER ############################################################
 
 
-@app.route('/next', methods=['POST', 'GET'])
-def next():
+@app.route('/save', methods=['POST'])
+def save():
+    '''save is a view to save data. We might want to adjust this to allow for
+       updating saved data, but given single file is just one post for now
+    '''
     if request.method == 'POST':
         fields = get_post_fields(request)
         exp_id = session.get('exp_id')
         result_file = save_data(session=session, fields=fields, exp_id=exp_id)
         print(result_file)
+        return jsonify({"result":"success"})
+    return jsonify({"result":"not allowed"})
+
+
+@app.route('/next', methods=['POST', 'GET'])
+def next():
 
     # Redirects to another template view
     experiment = app.get_next(session)
