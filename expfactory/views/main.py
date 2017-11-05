@@ -98,8 +98,9 @@ def home():
             username = 'You'
             if form.openid.data not in [None,""]:
                 username = form.openid.data
-
-            if not session.get('subid'):
+ 
+            subid = session.get('subid')
+            if not subid:
                 subid = generate_subid()
                 session['subid'] = subid
 
@@ -134,6 +135,7 @@ def next():
 
     # Redirects to another template view
     experiment = app.get_next(session)
+    print('Next experiment is %s' %experiment)
     return perform_checks('/experiments/%s' %experiment, do_redirect=True)
 
 
