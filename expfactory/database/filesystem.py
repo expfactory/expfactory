@@ -67,7 +67,16 @@ def save_data(session, exp_id, fields):
     data_file = None
     if subid is not None:
         if EXPFACTORY_DATA is not None:
+
+            # Data base for experiment study id, /scif/data/expfactory
+            if not os.path.exists(EXPFACTORY_DATA):
+                os.mkdir(EXPFACTORY_DATA)
+
+            # Subject specific folder
             data_base = "%s/%s" %(EXPFACTORY_DATA, subid)
+            if not os.path.exists(data_base):
+                os.mkdir(data_base)
+
             data_file = "%s/%s-results.json" %(data_base, exp_id)
             if os.path.exists(data_file):
                 bot.warning('%s exists, and is being overwritten.' %data_file)
