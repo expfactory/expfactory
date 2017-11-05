@@ -51,7 +51,7 @@ import os
 @{{ exp_id_python }}.route('/experiments/{{ exp_id }}')
 def {{ exp_id_python }}_base():
     context = {'experiment': '{{ exp_id }}/index.html'}
-    if if context['experiment'] is not None:
+    if context['experiment'] is not None:
         return perform_checks('experiments/experiment.html', context=context)
     return redirect('/next')
 
