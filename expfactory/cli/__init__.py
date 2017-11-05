@@ -68,6 +68,10 @@ def get_parser():
                          help="force installation into non empty directory",
                          default=False, action='store_true')
 
+    install.add_argument("--base",'-b', dest='base', 
+                         help="expfactory install base (to write templates)",
+                         type=str, default=None)
+
 
     # Experiments and Runtime Config
     parser.add_argument("--experiments", dest='experiments', 

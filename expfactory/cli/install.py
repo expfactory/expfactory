@@ -80,7 +80,7 @@ def main(args,parser,subparser):
         template = sub_template(template, '{{ exp_id }}', exp_id)
 
         # 1. Python blueprint
-        views = get_viewsdir()
+        views = get_viewsdir(base=args.base)
         python_module = exp_id.replace('-','_').lower()
         view_output = "%s/%s.py" %(views, python_module)
         save_template(view_output, template, base=views)

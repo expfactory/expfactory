@@ -55,8 +55,11 @@ def get_templatedir():
     base = get_installdir()
     return "%s/templates" %(base)
 
-def get_viewsdir():
-    base = get_installdir()
+def get_viewsdir(base=None):
+    '''views might be written to a secondary expfactory install, which can
+       be specified with base'''
+    if base is None:
+        base = get_installdir()
     return "%s/views" %(base)
 
 def find_subdirectories(basepath):

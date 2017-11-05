@@ -47,7 +47,7 @@ To serve your battery
     python3 -m pip install gunicorn
     SECRET_KEY=`python3 script/generate_key.py` 
     cp expfactory/config_dummy.py expfactory/config.py
-    echo "${SECRET_KEY}" >> expfactory/config.py
+    echo "SECRET_KEY='${SECRET_KEY}'" >> expfactory/config.py
     python3 setup.py install
 
 
@@ -56,10 +56,10 @@ To serve your battery
 ########################################
 
 %appinstall test-task
-    cd .. && expfactory install -f https://github.com/expfactory-experiments/test-task
+    cd .. && expfactory install -f -b /opt/expfactory https://github.com/expfactory-experiments/test-task
 
 %appinstall adaptive-n-back
-    cd .. && expfactory install -f https://github.com/expfactory-experiments/adaptive-n-back
+    cd .. && expfactory install -f -b /opt/expfactory https://github.com/expfactory-experiments/adaptive-n-back
 
 %appinstall tower-of-london
-    cd .. && expfactory install -f https://github.com/expfactory-experiments/tower-of-london
+    cd .. && expfactory install -f -b /opt/expfactory https://github.com/expfactory-experiments/tower-of-london
