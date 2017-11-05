@@ -73,13 +73,14 @@ class EFServer(Flask):
            expfactory runs in demo mode (not saving data)
         '''
 
-        self.data = getenv('EXPFACTORY_DATA','/scif/data')
-        if not os.access(self.data, os.W_OK):
-            bot.warning("%s is not writable, running in demo mode." %self.data)
-            self.data = None
+        data_base = getenv('EXPFACTORY_DATA','/scif/data')
+        self.demo = False
+        if not os.access(data_base, os.W_OK):
+            bot.warning("%s is not writable, running in demo mode." %data_base)
+            self.demo = True
 
-        if self.data is not None:
-            bot.log("Data base: %s" %self.data)
+        if self.demo is False:
+            bot.log("Data base: %s" % data_base)
 
 
     def setup(self):
@@ -117,6 +118,14 @@ class EFServer(Flask):
                 print(experiments)
                 next = experiments[next]
         return next
+
+    def finish_experiment(self, session, exp_id):
+        '''remove an experiment from the list after completion.
+        '''
+        experiments = session.get('experiments', [])
+        experiments = [x for x in experiments if x != exp_id]
+        session['experiments'] = experiments
+        return experiments
 
 
 app = EFServer(__name__)

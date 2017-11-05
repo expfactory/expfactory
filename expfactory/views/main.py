@@ -132,14 +132,16 @@ def save():
        updating saved data, but given single file is just one post for now
     '''
     if request.method == 'POST':
-        fields = get_post_fields(request)
         exp_id = session.get('exp_id')
-        result_file = save_data(session=session, fields=fields, exp_id=exp_id)
-        print(result_file)
-        idx = session['experiments'].index(exp_id)
-        finished = session['experiments'].pop(idx)
-        bot.log('Finished %s' % finished)
-        return jsonify({"result":"success, finished %s" %finished})
+
+        if app.demo is False:
+            fields = get_post_fields(request)
+            result_file = save_data(session=session, fields=fields, exp_id=exp_id)
+            print(result_file)
+
+        experiments = app.finish_experiment(session, exp_id)
+        bot.log('Finished %s, %s remaining.' % (exp_id, len(experiments)))
+        return jsonify({"result":"success, finished %s" % exp_id})
     return jsonify({"result":"not allowed"})
 
 
