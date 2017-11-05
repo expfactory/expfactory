@@ -51,6 +51,10 @@ from expfactory.utils import (
 
 
 from expfactory.database import save_data
+from expfactory.views.utils import (
+    perform_checks, 
+    clear_session
+)
 from expfactory.server import app
 from random import choice
 import os
@@ -157,44 +161,3 @@ def start():
     '''start a battery.
     '''
     return perform_checks('start/index.html')
-
-
-def perform_checks(template, do_redirect=False):
-    '''return all checks for required variables before returning to 
-       desired view
-    '''
-    bot.debug('Performing checks...')
-    username = session.get('username')
-    subid = session.get('username')
-    last = session.get('exp_id')
-    next = app.get_next(session)
-    session['exp_id'] = experiment
-
-    if username is None:
-        flash('You must start a session before doing experiments.')
-        return redirect('/')
-
-    if subid is None:
-        flash('You must have a participant identifier before doing experiments')
-        return redirect('/')
-
-    if exp_id is None:
-        flash('You must start a session before doing experiments.')
-        return redirect('/')
-
-    experiment = app.get_next(session)
-    if experiment is None:
-        flash('Congratulations, you have finished the battery!')
-        return redirect('/finish')
-
-    bot.log("<current:%s><next:%s>, <%s, %s>" %(last, next, subid, username))
-    if do_redirect is True:
-        return redirect(template)
-    return render_template(template)
-
-
-def clear_session():
-    del session['subid']
-    del session['username']
-    del session['experiments']
-    del session['exp_id']

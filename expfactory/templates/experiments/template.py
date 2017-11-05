@@ -36,7 +36,10 @@ from flask import (
     Blueprint,
     render_template, 
 )
-
+from expfactory.views.utils import (
+    perform_checks, 
+    clear_session
+)
 from expfactory.server import app, csrf
 import os
 
@@ -47,8 +50,8 @@ import os
 
 @{{ exp_id_python }}.route('/experiments/{{ exp_id }}')
 def {{ exp_id_python }}_base():
-    experiment = '{{ exp_id }}/index.html'
-    return render_template('experiments/experiment.html', experiment=experiment)
+    context = {'experiment': '{{ exp_id }}/index.html'}
+    return perform_checks('experiments/experiment.html', context)
 
 {{ exp_id_python }}.before_request(csrf.protect)
 app.register_blueprint({{ exp_id_python }})
