@@ -28,13 +28,13 @@ If you want to see experiments available:
     singularity apps expfactory.img
 
 To build your image (sandbox for testing)
-   sudo singularity build --sandbox expfac Singularity
+    sudo singularity build --sandbox [expfactory] Singularity
 
 To serve your battery
     sudo singularity instance.start expfactory.img web1
 
 %startscript
-    service nginx start && cd /opt
+    service nginx start
     #exec gunicorn --bind 0.0.0.0:5000 expfactory.wsgi:app
     #exec /usr/local/bin/gunicorn -w 2 -b :5000 expfactory.cli:main
     #exec expfactory "$@"
