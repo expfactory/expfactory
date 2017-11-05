@@ -71,6 +71,6 @@ def save_data(session, exp_id, fields):
             data_file = "%s/%s-results.json" %(data_base, exp_id)
             if os.path.exists(data_file):
                 bot.warning('%s exists, and is being overwritten.' %data_file)
-                write_json(fields, data_file)
+            write_json(fields, data_file)
 
     return data_file
