@@ -70,7 +70,9 @@ class RuntimeValidator:
 
         bot.test('Experiment url: %s' %url)
         org,repo = url.split('/')[-2:]
-        github_pages =  "https://%s.github.io/%s" %(org,repo.strip('.git'))
+        if repo.endswith('.git'):
+            repo = repo.replace('.git','')
+        github_pages =  "https://%s.github.io/%s" %(org,repo)
         bot.test('Github Pages url: %s' %github_pages)
 
         response = requests.get(github_pages)
