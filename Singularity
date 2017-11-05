@@ -7,7 +7,9 @@ From: ubuntu:14.04
 
 %environment
     EXPFACTORY_STUDY_ID=expfactory
-    export EXPFACTORY_STUDY_ID
+    EXPFACTORY_SERVER=localhost
+    export EXPFACTORY_STUDY_ID \
+           EXPFACTORY_SERVER
 
 
 ########################################
