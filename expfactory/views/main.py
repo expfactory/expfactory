@@ -167,10 +167,13 @@ def logout():
 @app.route('/finish', methods=['POST', 'GET'])
 def finish():
 
-    # If the user has finished, clear session
-    clear_session()
-    return render_template('routes/finish.html')
+    subid = session.get('subid')
 
+    # If the user has finished, clear session
+    if subid is not None:
+        clear_session()
+        return render_template('routes/finish.html')
+    return redirect('/')
 
 
 @app.route('/start')
