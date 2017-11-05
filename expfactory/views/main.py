@@ -169,11 +169,7 @@ def finish():
 
     # If the user has finished, clear session
     clear_session()
-
-    #TODO: need to handle POST with CSRF, document standard post
-    # create local result database and option to use "real" db - both
-    # should be easy to do / switch based on environment setting.
-    return render_template('finish/index.html')
+    return render_template('routes/finish.html')
 
 
 
@@ -181,4 +177,4 @@ def finish():
 def start():
     '''start a battery.
     '''
-    return perform_checks('start/index.html')
+    return perform_checks('routes/start.html')
