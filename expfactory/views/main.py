@@ -148,7 +148,7 @@ def next():
 
     # Redirects to another template view
     experiment = app.get_next(session)
-    print('Next experiment is %s' %experiment)
+    bot.log('Next experiment is %s' %experiment)
     return perform_checks('/experiments/%s' %experiment, do_redirect=True)
 
 
