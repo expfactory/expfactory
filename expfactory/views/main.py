@@ -133,6 +133,7 @@ def next():
         print(result_file)
 
     # Redirects to another template view
+    experiment = app.get_next(session)
     return perform_checks('/experiments/%s' %experiment, do_redirect=True)
 
 
