@@ -46,6 +46,8 @@ def perform_checks(template, do_redirect=False, context=None):
     '''return all checks for required variables before returning to 
        desired view
     '''
+    from expfactory.server import app
+
     bot.debug('Performing checks...')
     username = session.get('username')
     subid = session.get('username')
