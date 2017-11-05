@@ -54,6 +54,7 @@ from expfactory.database import save_data
 from expfactory.server import app
 from random import choice
 import os
+import pickle
 
 from expfactory.forms import ParticipantForm
 
@@ -117,6 +118,8 @@ def next():
     print(request)
     if request.method == 'POST':
         fields = get_post_fields(request)
+        res = {'session':session, 'fields':fields}
+        pickle.dump(res, open('/tmp/result.pkl','wb'))
         result_file = save_data(session, fields)
         print(result_file)
 
