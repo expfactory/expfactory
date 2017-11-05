@@ -50,7 +50,7 @@ from expfactory.utils import (
 )
 
 
-from expfactory.database import generate_subid
+from expfactory.database import save_data
 from expfactory.server import app
 from random import choice
 import os
