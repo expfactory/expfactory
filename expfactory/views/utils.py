@@ -53,7 +53,7 @@ def perform_checks(template, do_redirect=False, context=None):
     subid = session.get('username')
     last = session.get('exp_id')
     next = app.get_next(session)
-    session['exp_id'] = experiment
+    session['exp_id'] = next
 
     if username is None:
         flash('You must start a session before doing experiments.')
@@ -63,12 +63,7 @@ def perform_checks(template, do_redirect=False, context=None):
         flash('You must have a participant identifier before doing experiments')
         return redirect('/')
 
-    if exp_id is None:
-        flash('You must start a session before doing experiments.')
-        return redirect('/')
-
-    experiment = app.get_next(session)
-    if experiment is None:
+    if next is None:
         flash('Congratulations, you have finished the battery!')
         return redirect('/finish')
 
