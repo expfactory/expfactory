@@ -50,7 +50,10 @@ from expfactory.utils import (
 )
 
 
-from expfactory.database import save_data
+from expfactory.database import (
+    save_data,
+    generate_subid
+)
 from expfactory.views.utils import (
     perform_checks, 
     clear_session
