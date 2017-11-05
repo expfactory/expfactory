@@ -72,15 +72,27 @@ class EFServer(Flask):
            that it is bound to the local machine. If the folder isn't bound,
            expfactory runs in demo mode (not saving data)
         '''
+        self.database_type = getenv('EXPFACTORY_DATABASE','filesystem') 
 
-        data_base = getenv('EXPFACTORY_DATA','/scif/data')
-        self.demo = False
-        if not os.access(data_base, os.W_OK):
-            bot.warning("%s is not writable, running in demo mode." %data_base)
-            self.demo = True
+        self.demo = True
 
+        # Option 1: Filesystem
+        if self.database_type == "filesystem":
+            self.database = getenv('EXPFACTORY_DATA','/scif/data')
+
+            if not os.access(self.database, os.W_OK):
+                bot.warning("%s is not writable, running in demo mode." %data_base)
+            else:
+                self.study_id = getenv('EXPFACTORY_STUDY_ID', 'expfactory')
+                self.database = "%s/%s" %(self.database, self.study_id)
+                if not os.path.exists(self.database):
+                    os.mkdir(self.database)
+                self.demo = False           
+        else:
+            bot.warning('%s is not yet a supported type. Running in demo mode.' % self.database_type)
+            
         if self.demo is False:
-            bot.log("Data base: %s" % data_base)
+            bot.log("Data base: %s" % self.database)
 
 
     def setup(self):
