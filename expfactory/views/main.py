@@ -90,8 +90,6 @@ def home():
 
     if request.method == "POST":   
 
-        print('SESSION')
-        print(session)
         # Submit and valid
         if form.validate_on_submit():
 

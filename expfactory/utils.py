@@ -40,6 +40,7 @@ from subprocess import (
 from expfactory.logger import bot
 import shutil
 import json
+import tempfile
 import sys
 import os
 import re
@@ -179,6 +180,11 @@ def write_json(json_obj,filename,mode='w'):
     with open(filename,mode) as filey:
         filey.write(json.dumps(json_obj, sort_keys=True,indent=4, separators=(',', ': ')))
     return filename
+
+def read_file(filename,mode='r'):
+    with open(filename,mode) as filey:
+        data = filey.read()
+    return data
 
 
 def get_post_fields(request):

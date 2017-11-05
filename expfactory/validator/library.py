@@ -1,7 +1,6 @@
 '''
 
-validators/experiments.py: python functions to validate experiments and library
-experiment objects
+validators/library.py: python functions to validate library
 
 The MIT License (MIT)
 
