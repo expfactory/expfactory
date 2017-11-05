@@ -61,7 +61,7 @@ def save_data(session, exp_id, fields):
     '''save data will obtain the current subid from the session, and save it
        depending on the database type. Currently we just support flat files'''
 
-    subid = session.get('EXPFACTORY_SUBID', None) 
+    subid = session.get('subid', None) 
 
     # We only attempt save if there is a subject id, set at start
     data_file = None

@@ -136,7 +136,10 @@ def save():
         exp_id = session.get('exp_id')
         result_file = save_data(session=session, fields=fields, exp_id=exp_id)
         print(result_file)
-        return jsonify({"result":"success"})
+        idx = session['experiments'].index(exp_id)
+        finished = session['experiments'].pop(idx)
+        bot.log('Finished %s' % finished)
+        return jsonify({"result":"success, finished %s" %finished})
     return jsonify({"result":"not allowed"})
 
 
