@@ -172,6 +172,7 @@ def start():
     # If the user hasn't started, assign new subid
     if not session.get('EXPFACTORY_SUBID'):
         session['EXPFACTORY_SUBID'] = generate_subid()
+        print(session['EXPFACTORY_SUBID'])
 
     return render_template('start/index.html')
 
