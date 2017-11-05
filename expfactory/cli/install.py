@@ -73,7 +73,7 @@ def main(args,parser,subparser):
     bot.log("Installing %s to %s" %(exp_id, dest))
 
     # Are we in a Container?
-    if os.environ.get('EXPFACTORY_CONTAINER') is not None:
+    if os.environ.get('SINGULARITY_CONTAINER') is not None:
         bot.log("Preparing experiment routes...")
         template = get_template('experiments/template.py')
         template = sub_template(template, '{{ exp_id }}', exp_id)
