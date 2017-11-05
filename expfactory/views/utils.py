@@ -50,7 +50,7 @@ def perform_checks(template, do_redirect=False, context=None):
 
     bot.debug('Performing checks...')
     username = session.get('username')
-    subid = session.get('username')
+    subid = session.get('subid')
     last = session.get('exp_id')
     next = app.get_next(session)
     session['exp_id'] = next

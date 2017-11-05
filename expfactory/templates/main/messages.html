@@ -5,7 +5,7 @@
         <hr>
         <p class="alert alert-info">
         {% for message in messages %}
-            {{ message }} </br>
+            {{ message | safe }} </br>
         {% endfor %}
         </p>
         {% endif %}

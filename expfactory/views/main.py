@@ -105,7 +105,7 @@ def home():
 
             session['username'] = username
             session['experiments'] = form.exp_ids.data.split(',') # list
-            flash('Participant ID: "%s", Name %s, Experiments: %s' %
+            flash('Participant ID: "%s" <br> Name %s <br> Experiments: %s' %
                   (subid, username,
                   str(form.exp_ids.data)))
             return redirect('/start')
