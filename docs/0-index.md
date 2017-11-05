@@ -20,13 +20,13 @@ The Experiment Factory software will help you create a reproducible container to
 
 ## User Guide
 
- - [Building](building.md) your battery means creating and configuring your image.
- - [Running](running.md) an obtained or newly built experiment factory container
+ - [Building](pages/1-generate.md) your battery means creating and configuring your image.
+ - [Running](pages/2-usage.md) an obtained or newly built experiment factory container
 
 ## Development Guide
 
- - [Contribute](contribute.md) an experiment to the [library](https://www.github.com/expfactory/library) for others to use.
- - [Interactive](development.md) Examples for how I (@vsoch) developed the software
+ - [Contribute](pages/3-contribute.md) an experiment to the [library](https://www.github.com/expfactory/library) for others to use.
+ - [Interactive](pages/4-development.md) Examples for how I (@vsoch) developed the software
 
 
 <div>
