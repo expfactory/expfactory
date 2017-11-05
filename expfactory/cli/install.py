@@ -57,9 +57,9 @@ def main(args,parser,subparser):
 
     # Is the experiment valid?
     cli = ExperimentValidator()
-    result = cli.validate(source, cleanup=False)
+    valid = cli.validate(source, cleanup=False)
     exp_id = os.path.basename(source).replace('.git','')
-    if result is True:
+    if valid is True:
         config = load_experiment("%s/%s" %(cli.tmpdir,exp_id))
         source = "%s/%s" %(cli.tmpdir,exp_id)
         exp_id = config['exp_id']
