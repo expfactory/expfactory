@@ -41,15 +41,15 @@ from expfactory.database import generate_subid
 from expfactory.server import app, csrf
 import os
 
-{{ exp_id|replace("-","") }} = Blueprint('{{ exp_id }}', __name__,
+{{ exp_id_python }} = Blueprint('{{ exp_id }}', __name__,
                        static_url_path='/experiments', 
                        static_folder='/scif/apps/{{ exp_id }}',
                        template_folder='/scif/apps')
 
-@{{ exp_id|replace("-","") }}.route('/experiments/{{ exp_id }}')
+@{{ exp_id_python }}.route('/experiments/{{ exp_id }}')
 def {{ exp_id_python }}_base():
     experiment = '{{ exp_id }}/index.html'
     return render_template('experiments/experiment.html', experiment=experiment)
 
-{{ exp_id|replace("-","") }}.before_request(csrf.protect)
-app.register_blueprint({{ exp_id|replace("-","") }})
+{{ exp_id_python }}.before_request(csrf.protect)
+app.register_blueprint({{ exp_id_python }})

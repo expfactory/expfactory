@@ -64,6 +64,7 @@ def main(args,parser,subparser):
         config = load_experiment("%s/%s" %(cli.tmpdir,exp_id))
         source = "%s/%s" %(cli.tmpdir,exp_id)
         exp_id = config['exp_id']
+        python_module = exp_id.replace('-','_').lower()
     else:
         bot.error('%s is not valid.' % exp_id)
         sys.exit(1)
@@ -78,10 +79,10 @@ def main(args,parser,subparser):
         bot.log("Preparing experiment routes...")
         template = get_template('experiments/template.py')
         template = sub_template(template, '{{ exp_id }}', exp_id)
+        template = sub_template(template, '{{ exp_id_python }}', python_module)
 
         # 1. Python blueprint
         views = get_viewsdir(base=args.base)
-        python_module = exp_id.replace('-','_').lower()
         view_output = "%s/%s.py" %(views, python_module)
         save_template(view_output, template, base=views)
     
