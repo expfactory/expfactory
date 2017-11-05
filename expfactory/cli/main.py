@@ -63,10 +63,10 @@ def main(args,parser,subparser=None):
     subid = os.environ.get('EXPFACTORY_STUDY_ID')
     if args.subid is not None:
         subid = args.subid 
+        os.environ['EXPFACTORY_SUBID'] = subid
 
     os.environ['EXPFACTORY_RANDOM'] = str(args.disable_randomize)
     os.environ['EXPFACTORY_BASE'] = base
-    os.environ['EXPFACTORY_SUBID'] = subid
     
     from expfactory.server import start
     start(port=5000)

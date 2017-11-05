@@ -115,12 +115,10 @@ def home():
 
 @app.route('/next', methods=['POST', 'GET'])
 def next():
-    print(request)
     if request.method == 'POST':
         fields = get_post_fields(request)
-        res = {'session':session, 'fields':fields}
-        pickle.dump(res, open('/tmp/result.pkl','wb'))
-        result_file = save_data(session, fields)
+        exp_id = session.get('exp_id')
+        result_file = save_data(session=session, fields=fields, exp_id=exp_id)
         print(result_file)
 
     username = session.get('username')
@@ -129,11 +127,14 @@ def next():
         return redirect('/')
 
     experiment = app.get_next(session)
+
     if experiment is None:
         flash('Congratulations, you have finished the battery!')
         return redirect('/finish')
 
-    return redirect('http://127.0.0.1/experiments/%s' %experiment)
+    # Redirects to template view
+    session['exp_id'] = experiment
+    return redirect('/experiments/%s' %experiment)
 
 
 # Reset/Logout
@@ -141,9 +142,7 @@ def next():
 def logout():
 
     # If the user has finished, clear session
-    del session['expfactory_subid']
-    del session['username']
-    del session['experiments']
+    clear_session()
     return redirect('/')
 
 
@@ -152,9 +151,7 @@ def logout():
 def finish():
 
     # If the user has finished, clear session
-    del session['expfactory_subid']
-    del session['username']
-    del session['experiments']
+    clear_session()
 
     #TODO: need to handle POST with CSRF, document standard post
     # create local result database and option to use "real" db - both
@@ -173,10 +170,13 @@ def start():
         return redirect('/')
 
     # If the user hasn't started, assign new subid
-    if not session.get('expfactory_subid'):
-        session['expfactory_subid'] = generate_subid()
+    if not session.get('EXPFACTORY_SUBID'):
+        session['EXPFACTORY_SUBID'] = generate_subid()
 
-    print('SESSION')
-    print(session)
-    print(request.headers)
     return render_template('start/index.html')
+
+def clear_session():
+    del session['EXPFACTORY_SUBID']
+    del session['username']
+    del session['experiments']
+    del session['exp_id']
