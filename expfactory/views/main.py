@@ -92,10 +92,14 @@ def home():
             if form.openid.data not in [None,""]:
                 username = form.openid.data
 
+            if not session.get('subid'):
+                subid = generate_subid()
+                session['subid'] = subid
+
             session['username'] = username
             session['experiments'] = form.exp_ids.data.split(',') # list
-            flash('Participant ID: "%s", Experiments: %s' %
-                  (username,
+            flash('Participant ID: "%s", Name %s, Experiments: %s' %
+                  (subid, username,
                   str(form.exp_ids.data)))
             return redirect('/start')
 
@@ -121,20 +125,8 @@ def next():
         result_file = save_data(session=session, fields=fields, exp_id=exp_id)
         print(result_file)
 
-    username = session.get('username')
-    if username is None:
-        flash('You must start a session before doing experiments.')
-        return redirect('/')
-
-    experiment = app.get_next(session)
-
-    if experiment is None:
-        flash('Congratulations, you have finished the battery!')
-        return redirect('/finish')
-
-    # Redirects to template view
-    session['exp_id'] = experiment
-    return redirect('/experiments/%s' %experiment)
+    # Redirects to another template view
+    return perform_checks('/experiments/%s' %experiment, do_redirect=True)
 
 
 # Reset/Logout
@@ -164,20 +156,45 @@ def finish():
 def start():
     '''start a battery.
     '''
+    return perform_checks('start/index.html')
+
+
+def perform_checks(template, do_redirect=False):
+    '''return all checks for required variables before returning to 
+       desired view
+    '''
+    bot.debug('Performing checks...')
     username = session.get('username')
+    subid = session.get('username')
+    last = session.get('exp_id')
+    next = app.get_next(session)
+    session['exp_id'] = experiment
+
     if username is None:
         flash('You must start a session before doing experiments.')
         return redirect('/')
 
-    # If the user hasn't started, assign new subid
-    if not session.get('EXPFACTORY_SUBID'):
-        session['EXPFACTORY_SUBID'] = generate_subid()
-        print(session['EXPFACTORY_SUBID'])
+    if subid is None:
+        flash('You must have a participant identifier before doing experiments')
+        return redirect('/')
 
-    return render_template('start/index.html')
+    if exp_id is None:
+        flash('You must start a session before doing experiments.')
+        return redirect('/')
+
+    experiment = app.get_next(session)
+    if experiment is None:
+        flash('Congratulations, you have finished the battery!')
+        return redirect('/finish')
+
+    bot.log("<current:%s><next:%s>, <%s, %s>" %(last, next, subid, username))
+    if do_redirect is True:
+        return redirect(template)
+    return render_template(template)
+
 
 def clear_session():
-    del session['EXPFACTORY_SUBID']
+    del session['subid']
     del session['username']
     del session['experiments']
     del session['exp_id']
