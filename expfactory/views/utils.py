@@ -55,6 +55,9 @@ def perform_checks(template, do_redirect=False, context=None):
     next = app.get_next(session)
     session['exp_id'] = next
 
+    # Update the user / log
+    bot.log("<current:%s><next:%s>, <%s, %s>" %(last, next, subid, username))
+
     if username is None:
         flash('You must start a session before doing experiments.')
         return redirect('/')
@@ -67,7 +70,6 @@ def perform_checks(template, do_redirect=False, context=None):
         flash('Congratulations, you have finished the battery!')
         return redirect('/finish')
 
-    bot.log("<current:%s><next:%s>, <%s, %s>" %(last, next, subid, username))
     if do_redirect is True:
         return redirect(template)
 
