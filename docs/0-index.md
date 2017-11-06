@@ -20,7 +20,7 @@ The Experiment Factory software will help you create a reproducible container to
 
 ```
 singularity pull --name expfactory.simg shub://expfactory/expfactory
-sudo singularity instance.start --bind /tmp/data:/scif/data expfactory.simg web1
+singularity instance.start --bind /tmp/data:/scif/data expfactory.simg web1
 ```
 
 Read more about custom [generation](pages/1-generate.md) and [usage](pages/2-usage.md).
