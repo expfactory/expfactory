@@ -40,7 +40,8 @@ To serve your battery
 
 %startscript
     service nginx start
-    exec gunicorn --bind 0.0.0.0:5000 expfactory.wsgi:app
+    gunicorn --bind 0.0.0.0:5000 expfactory.wsgi:app
+    service nginx restart
     #exec /usr/local/bin/gunicorn -w 2 -b :5000 expfactory.cli:main
     #exec expfactory "$@"
 

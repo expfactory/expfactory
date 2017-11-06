@@ -9,7 +9,7 @@ toc: true
 # Generate your Experiment Container
 The generation of a container comes down to adding the experiments to a build file called a Singularity Recipe. In these sections, we will provide instructions for a [quick start](#quick-start) using a pre-generated container, and a more [detailed start](#detailed-start) where you can fine tune your experiments, database, and other details of your deployment.
 
-## Quick Start
+### Quick Start
 We provide an example container that you can deploy to test out Expfactory. It includes three experiments:
 
  - adaptive-n-back
@@ -24,22 +24,18 @@ and is configured to use a "filesystem" database, meaning results are written to
  4. use it!
 
 
-**Install Singularity**
-Instructions are provided on the [Singularity main site](https://singularityware.github.io/install-linux).
-
-**Pull the Container**
-The container is build and provided for you on Singularity Hub. To pull the latest version:
+First **install Singularity**. Instructions are provided on the [Singularity main site](https://singularityware.github.io/install-linux). Then **pull your container**. The container is build and provided for you on Singularity Hub. To pull the latest version:
 
 ```
 singularity pull --name expfactory.simg shub://expfactory/expfactory
 ```
 
-Next, you probably want to see how to [use your container](2-usage.md).
+Next, you probably want to see how to [use your container](/expfactory/usage.html).
 
 
-## Detailed Start
+### Detailed Start
 
-### Write your recipe
+#### Write your recipe
 A Singularity Recipe is a file that details how you want your container to build. In our case, we want to give instructions about which experiments to install. You can get a recipe in multiple ways!
 
 1. Use the [example recipe provided](https://github.com/expfactory/expfactory/blob/master/Singularity)
@@ -54,7 +50,7 @@ wget https://raw.githubusercontent.com/expfactory/expfactory/master/Singularity
 
 You should have a build recipe `Singularity` in your present working directory. If you are using the example recipe, by default we will install three experiments, adaptive-n-back, test-task, and tower-of-london. If you want more information on browsing or customizing experiments, read about [customizing](1-generate-custom.md) experiments.
 
-### Database
+#### Database
 
 **filesystem**
 The default (simplest) method for a database is flat files, meaning that results are written to a mapped folder on the local machine, and each participant has their own results folder. This option is provided as many labs are accustomed to providing a battery locally, and want to save output directly to the filesystem without having any expertise with setting up a database.
@@ -69,7 +65,7 @@ EXPFACTORY_DATA=/scif/data
 EXPFACTORY_DATABASE=filesystem 
 ```
 
-### Configure your Battery
+#### Configure your Battery
 The Experiment Factory will generate a new unique ID for each participant with some study idenitifier prefix. The default is `expfactory`, meaning that my participants will be given identifiers `expfactory/0` through `expfactory/n`, and for a filesystem database, it will produce output files according to that schema:
 
 ```
@@ -91,7 +87,7 @@ If you want to change the study identifier, just customize the variable under th
 
 In the future, our [online recipe generator](https://expfactory.github.io/experiments/generate) will make it easy to specify all of these variables. We will add these later after getting [feedback from users like you](https://www.github.com/expfactory/expfactory/issues). Let's move on the building your battery.
 
-### Define Custom Metadata
+#### Define Custom Metadata
 Your container will be programmatically accessible. This means that there are a set of labels about it's generation that will be produced automatically:
 
 ```
@@ -126,7 +122,7 @@ You can also add them specific to a particular experiment:
 
 We have plans to expose experiment-specific variables in this way, but @vsoch hasn't implemented it yet! Please send [feedback](https://www.github.com/expfactory/expfactory/issues) about your use case to help.
 
-Next, you probably want to see how to [use your container](2-usage.md).
+Next, you probably want to see how to [use your container](/expfactory/usage.html).
 
 <div>
     <a href="/expfactory/"><button class="previous-button btn btn-primary"><i class="fa fa-chevron-left"></i> </button></a>

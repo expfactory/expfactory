@@ -12,7 +12,16 @@ If you've just finished [generating your experiments container](1.generate.md) (
  - starting and stopping a container instance
  - running a participant through a selection of experiments
 
-## Container Inspection
+
+### Quick Start
+The quick start commands are to pull the container, and start an instance, mounted to an existing directory on the host `/tmp/data` to write data output:
+
+```
+singularity pull --name expfactory.simg shub://expfactory/expfactory
+singularity instance.start --bind /tmp/data:/scif/data expfactory.simg web1
+```
+
+### Container Inspection
 
 What experiments are installed?
 
@@ -47,7 +56,7 @@ singularity inspect expfactory.simg
 
 Importantly, any labels that you added to the `%labels` section of a custom recipe will appear here.
 
-## Create an Instance
+### Container Instances
 You can think of the container like a template, and an "instance" as a full fledged running application that is generated based on the template. This means that you will want to start an instance of your container, which will carry it's own namespace and run the web server. The general commands that are important are to start and stop instances, we will use `singularity instance.start` and  `singularity instance.stop`. Importantly, you need to choose a folder on your local machine to put experiment data (`/tmp/data`), and bind it to the data folder in the instance (`/scif/data`). This means it will persist on our local machine even when the instance is stopped. You will also want to name your instance, we are calling it `web1`
 
 ```
@@ -76,10 +85,6 @@ singularity exec instance://web1 ls /opt/expfactory
 ```
 
 
-
-
-
-
 and you will see a list of the experiments available. If you want to grab one quickly to browse, you could easily just clone a repo address:
 
 ```
@@ -102,7 +107,7 @@ LOG Installing adaptive-n-back to /tmp/adaptive-n-back
 Cloning Github repos is only the start. We really need a full fledged container to run our experiments in a nice way, and preserve how they are setup if anyone wants to do it again. So next, you probably want to make your experiments container!
 
 
-# Running your Experiment Container
+# Running Containers
 
 Your container (or sandbox folder) is a file or folder sitting on your computer. When we run it, in order to give it it's own namespace to run a webserver, we are going to create an instance of it. This is [new functionality for Singularity 2.4](https://singularityware.github.io/docs-instances), and we are excited to make good use of it!
 
@@ -131,7 +136,6 @@ Stopping web1 instance of /home/vanessa/Documents/Dropbox/Code/expfactory/experi
 If you want a writable instance (meaning using shell with sudo) you need to also create it as sudo. The creator is the owner.
 
 ```
-sudo singularity instance.start --writable expfactory web2
 sudo singularity instance.start --writable expfactory web2
 ```
 
