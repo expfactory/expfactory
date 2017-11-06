@@ -30,5 +30,5 @@ The Experiment Factory software will help you create a reproducible container to
 
 
 <div>
-    <a href="/expfactory/building.html"><button class="next-button btn btn-primary"><i class="fa fa-chevron-right"></i> </button></a>
+    <a href="/expfactory/generate"><button class="next-button btn btn-primary"><i class="fa fa-chevron-right"></i> </button></a>
 </div><br>
