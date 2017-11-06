@@ -53,7 +53,7 @@ To serve your battery
     python3 -m pip install gunicorn
     SECRET_KEY=`python3 script/generate_key.py` 
     cp expfactory/config_dummy.py expfactory/config.py
-    echo "SECRET_KEY='${SECRET_KEY}'" >> expfactory/config.py
+    echo "SECRET_KEY=\"${SECRET_KEY}\"" >> expfactory/config.py
     python3 setup.py install
 
 

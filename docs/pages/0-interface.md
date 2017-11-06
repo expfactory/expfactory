@@ -26,6 +26,11 @@ and then click on `proceed` to (optionally) enter a subject id:
 
 The id is optional, and currently is only used to say hello to the participant. The actual experiment identifier is based on a study id defined in the build recipe. Once the session is started, the user is guided through each experiment (with random selection) until no more are remaining.
 
+<div>
+    <img src="/expfactory/img/generate/preview.png"><br>
+</div>
+
+
 ### Feedback Wanted!
 A few questions for you!
 
