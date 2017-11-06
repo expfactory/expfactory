@@ -3,7 +3,6 @@ layout: default
 title: The Expfactory Interface
 pdf: true
 permalink: /interface
-toc: true
 ---
 
 # The Experiment Factory Portal

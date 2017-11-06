@@ -6,7 +6,7 @@ permalink: /usage
 ---
 
 # Using your Experiments Container
-If you've just finished [generating your experiments container](1.generate.md) (whether a custom build or pull of an already existing container) then you are ready to use it! Here we will walk though:
+If you've just finished [generating your experiments container](/expfactory/generate.html) (whether a custom build or pull of an already existing container) then you are ready to use it! Here we will walk though:
 
  - inspecting a container instance
  - starting and stopping a container instance
@@ -89,7 +89,7 @@ singularity exec instance://web1 ls /opt/expfactory
 
 ### Saving Data to the Host
 When you want to run a battery and save data, you either need need a writable container or to mount a directory
-on the host where you have writable. The expfactory container internal organization expects for you to mount some folder on your host to `/data`. When it finds this location is writable, it will save data. It's as easy as specifying the mount when you start the instance:
+on the host where you have writable. The expfactory container internal organization expects for you to mount some folder on your host to `/scif/data`. When it finds this location is writable, it will save data. It's as easy as specifying the mount when you start the instance:
 
 ```
 sudo singularity instance.start --bind /home/vanessa/data:/data expfactory/ web3
