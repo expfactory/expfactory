@@ -7,14 +7,53 @@ toc: true
 ---
 
 # Generate your Experiment Container
+The generation of a container comes down to adding the experiments to a build file called a Singularity Recipe. In these sections, we will provide instructions for a [quick start](#quick-start) using a pre-generated container, and a more [detailed start](#detailed-start) where you can fine tune your experiments, database, and other details of your deployment.
+
+## Quick Start
+**Under development**
+We provide an example container that you can deploy to test out Expfactory. It includes three experiments:
+
+ - adaptive-n-back
+ - test-task
+ - tower-of-london
+
+and is configured to use a "filesystem" database, meaning results are written to a folder that is mounted from the container on the host in `json`, organized by a study identifier. To get started quickly, we will do the following steps:
+
+ - install Singularity
+ - pull the experiment container
+ - start an instance
+ - use it!
+
+
+**Install Singularity**
+Instructions are provided on the [Singularity main site](https://singularityware.github.io/install-linux).
+
+**Pull the Container**
+The container is build and provided for you on Singularity Hub. To pull the latest version:
+
+```
+singularity pull --name `expfactory.simg` shub://expfactory/expfactory
+```
+
+**Create an Instance**
+You next want to start an instance of your container, which will carry it's own namespace and run the web server. Importantly, you need to choose a folder on your local machine to put experiment data, and bind it to the instance.
+
+```
+mkdir -p /tmp/data
+singularity instance.start --bind /tmp:/data:/scif/data expfactory.simg 
+```
+
+When you turn the instance off, the data will persits at `/scif/data`. This is the "filesystem" database type.
+
+## Detailed Start
 
 ### Database
 
-**files**
+**filesystem**
 The default (simplest) method for a database is flat files, meaning that results are written to a mapped folder on the local machine, and each participant has their own results folder. This option is provided as many labs are accustomed to providing a battery locally, and want to save output directly to the filesystem without having any expertise with setting up a database.
 
 **MySQL**
-For labs that wish to deploy the container on a server, you are encouraged to use a more substantial database. We will provide instructions for setting this configuration (under development).
+For labs that wish to deploy the container on a server, you are encouraged to use a more substantial database. We haven't yet developed this, and if you are interested, please [file an issue](https://github.com/expfactory/expfactory).
 
 
 ### Write your recipe
