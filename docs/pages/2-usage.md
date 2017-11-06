@@ -21,6 +21,8 @@ singularity pull --name expfactory.simg shub://expfactory/expfactory
 singularity instance.start --bind /tmp/data:/scif/data expfactory.simg web1
 ```
 
+More detailed notes are provided below.
+
 ### Container Inspection
 
 What experiments are installed?
@@ -82,61 +84,6 @@ If you are wanting to shell into your instance (`shell`) or execute a command to
 ```
 singularity shell instance://web1
 singularity exec instance://web1 ls /opt/expfactory
-```
-
-
-and you will see a list of the experiments available. If you want to grab one quickly to browse, you could easily just clone a repo address:
-
-```
-git clone https://github.com/expfactory-experiments/adaptive-n-back.git
-```
-
-or use the install command. It does the same thing, but validates the experiment as well.
-
-```
-expfactory install https://github.com/expfactory-experiments/adaptive-n-back.git
-Expfactory Version: 3.0
-Cloning into '/tmp/tmp3h9ug46k/adaptive-n-back'...
-remote: Counting objects: 59, done.
-remote: Compressing objects: 100% (47/47), done.
-remote: Total 59 (delta 21), reused 49 (delta 11), pack-reused 0
-Unpacking objects: 100% (59/59), done.
-Checking connectivity... done.
-LOG Installing adaptive-n-back to /tmp/adaptive-n-back
-```
-Cloning Github repos is only the start. We really need a full fledged container to run our experiments in a nice way, and preserve how they are setup if anyone wants to do it again. So next, you probably want to make your experiments container!
-
-
-# Running Containers
-
-Your container (or sandbox folder) is a file or folder sitting on your computer. When we run it, in order to give it it's own namespace to run a webserver, we are going to create an instance of it. This is [new functionality for Singularity 2.4](https://singularityware.github.io/docs-instances), and we are excited to make good use of it!
-
-### Start/Stop the Server
-We will be starting instances of the container, meaning a deployment of a web server with the expfactory software to serve a battery. This means first starting the container. In the command below, we use `instnace.start` and name our instance `web1`.
-
-```
-singularity instance.start expfactory.img web1
-```
-
-List your images:
-
-```
-singularity instance.list
-DAEMON NAME      PID      CONTAINER IMAGE
-web1             29903    /home/vanessa/Documents/Dropbox/Code/expfactory/experiments/expfactory
-```
-
-Stop the instance
-
-```
-singularity instance.stop web1
-Stopping web1 instance of /home/vanessa/Documents/Dropbox/Code/expfactory/experiments/expfactory (PID=29903)
-```
-
-If you want a writable instance (meaning using shell with sudo) you need to also create it as sudo. The creator is the owner.
-
-```
-sudo singularity instance.start --writable expfactory web2
 ```
 
 

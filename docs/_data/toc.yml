@@ -6,6 +6,10 @@
     url: "https://expfactory.github.io/experiments/"
     slug: experiments
 
+  - title: "Expfactory User Interface"
+    url: "/expfactory/interface/"
+    slug: interface
+
   - title: "Generate an Experiment Container"
     url: "/expfactory/generate.html"
     slug: generate
@@ -33,3 +37,8 @@
   - title: "Development Tips"
     url: "/expfactory/development.html"
     slug: development
+    sections:
+      - title: Development Quicktart
+        slug: development-quickstart
+      - title: Development Detailed
+        slug: development-detailed
