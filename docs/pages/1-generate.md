@@ -19,10 +19,10 @@ We provide an example container that you can deploy to test out Expfactory. It i
 
 and is configured to use a "filesystem" database, meaning results are written to a folder that is mounted from the container on the host in `json`, organized by a study identifier. To get started quickly, we will do the following steps:
 
- - install Singularity
- - pull the experiment container
- - start an instance
- - use it!
+ 1. install Singularity
+ 2. pull the experiment container
+ 3. start an instance
+ 4. use it!
 
 
 **Install Singularity**

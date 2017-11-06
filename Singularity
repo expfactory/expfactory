@@ -37,7 +37,9 @@ To serve your battery
 
 %startscript
     service nginx start
-    exec gunicorn -w 2 --bind :5000 expfactory.wsgi:app
+    exec gunicorn --bind 0.0.0.0:5000 expfactory.wsgi:app
+    #exec /usr/local/bin/gunicorn -w 2 -b :5000 expfactory.cli:main
+    #exec expfactory "$@"
 
 %post
     apt-get update && apt-get install -y nginx git python3-pip python3-dev
