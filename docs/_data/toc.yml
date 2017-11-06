@@ -7,11 +7,11 @@
     slug: experiments
 
   - title: "Expfactory User Interface"
-    url: "/expfactory/interface/"
+    url: "/expfactory/interface"
     slug: interface
 
   - title: "Generate an Experiment Container"
-    url: "/expfactory/generate.html"
+    url: "/expfactory/generate"
     slug: generate
     sections:
       - title: Quick Start
@@ -20,7 +20,7 @@
         slug: detailed-start
 
   - title: "Experiment Container Usage"
-    url: "/expfactory/usage.html"
+    url: "/expfactory/usage"
     slug: usage
     sections:
       - title: Container Inspection
@@ -31,11 +31,11 @@
         slug: running-containers
 
   - title: "Contribute an Experiment"
-    url: "/expfactory/contribute.html"
+    url: "/expfactory/contribute"
     slug: contribute
 
   - title: "Development Tips"
-    url: "/expfactory/development.html"
+    url: "/expfactory/development"
     slug: development
     sections:
       - title: Development Quicktart
