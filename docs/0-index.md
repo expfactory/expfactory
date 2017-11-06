@@ -18,10 +18,17 @@ Version: {{ site.version }}<br>
 <p>And that's the way that reproducible behavioral experiments should be: designed, captured, and used again with assurance of running the same thing.
 The Experiment Factory software will help you create a reproducible container to deploy behavioral experiments. <span style="font-style:italic; color:darkmagenta">we are under development for this new container-based version, and will update this documentation base as we go!</span></p>
 
+
 ## User Guide
 
  - [Building](pages/1-generate.md) your battery means creating and configuring your image.
  - [Running](pages/2-usage.md) an obtained or newly built experiment factory container
+
+## Library
+
+ - [Browse](https://expfactory.github.io/experiments/) our available experiments [[json]](https://expfactory.github.io/experiments/library.json).
+ - [Generate](https://expfactory.github.io/experiments/generate) a custom container from our Library, or
+ - [Recipes](https://expfactory.github.io/experiments/recipes) view a pre-generated recipe based on tags in the library.
 
 ## Development Guide
 
