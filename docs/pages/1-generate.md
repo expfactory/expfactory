@@ -34,51 +34,11 @@ The container is build and provided for you on Singularity Hub. To pull the late
 ```
 singularity pull --name `expfactory.simg` shub://expfactory/expfactory
 ```
-What experiments are installed?
 
-```
-singularity apps expfactory.simg
-adaptive-n-back
-test-task
-tower-of-london
-```
+Next, you probably want to see how to [use your container](2-usage.md).
 
-And you can also inspect, and ask the image for help. Try these commands on your local machine:
-
-```
-singularity help expfactory.simg
-singularity inspect expfactory.simg
-
-{
-    "org.label-schema.usage.singularity.deffile.bootstrap": "docker",
-    "org.label-schema.usage.singularity.deffile": "Singularity",
-    "org.label-schema.usage": "/.singularity.d/runscript.help",
-    "org.label-schema.schema-version": "1.0",
-    "org.label-schema.usage.singularity.deffile.from": "ubuntu:14.04",
-    "org.label-schema.build-date": "2017-11-06T20:42:28+00:00",
-    "org.label-schema.usage.singularity.runscript.help": "/.singularity.d/runscript.help",
-    "org.label-schema.usage.singularity.version": "2.4-feature-squashbuild-secbuild.g818b648",
-    "org.label-schema.build-size": "545MB"
-}
-```
-Importantly, any labels that you add to the `%labels` section of a custom recipe will appear here. More on that later.
-
-
-**Create an Instance**
-You next want to start an instance of your container, which will carry it's own namespace and run the web server. Importantly, you need to choose a folder on your local machine to put experiment data (`/tmp/data`), and bind it to the data folder in the instance (`/scif/data`). You will also want to name your instance, we are calling it `web1`
-
-```
-mkdir -p /tmp/data
-singularity instance.start --bind /tmp/data:/scif/data expfactory.simg web1
-singularity instance.list
-DAEMON NAME      PID      CONTAINER IMAGE
-web1             22045    /home/vanessa/Desktop/expfactory.simg
-```
-
-When you turn the instance off, the data will persits at `/scif/data`. This is the "filesystem" database type.
 
 ## Detailed Start
-
 
 ### Write your recipe
 A Singularity Recipe is a file that details how you want your container to build. In our case, we want to give instructions about which experiments to install. You can get a recipe in multiple ways!
@@ -181,7 +141,7 @@ If you want to change the study identifier, just customize the variable under th
 In the future, our [online recipe generator](https://expfactory.github.io/experiments/generate) will make it easy to specify all of these variables. We will add these later after getting [feedback from users like you](https://www.github.com/expfactory/expfactory/issues). Let's move on the building your battery.
 
 ### Define Custom Metadata
-If you remember from the quick start above, we can inspect an image!
+Your container will be programmatically accessible. This means that there are a set of labels about it's generation that will be produced automatically:
 
 ```
 $ singularity inspect expfactory.simg
@@ -198,7 +158,7 @@ $ singularity inspect expfactory.simg
 }
 ```
 
-If you want any labels programmatically accessible here, add them to the containers global label section:
+And additionally you can provide your own custom labels in a `%labels` section of your recipe to appear alongside the default set:
 
 ```
 %labels
@@ -214,33 +174,6 @@ You can also add them specific to a particular experiment:
 ```
 
 We have plans to expose experiment-specific variables in this way, but @vsoch hasn't implemented it yet! Please send [feedback](https://www.github.com/expfactory/expfactory/issues) about your use case to help.
-
-
-### Build the Battery Container
-Let's build the image. Note that this is a squashfs image, which is a read online, immutable file system. We are only writing by way of mounting to the host. It's a reproducibility badass.
-
-```
-sudo singularity build expfactory.simg Singularity
-```
-
-Where expfactory.simg is referring to your image, and `.simg` is in reference to the squashfs filesystem. Let's break down the above. We are asking the singularity command line software to `build` an image **from** the recipe file `Singularity`.
-
-Once building is done, we can see what experiments are installed:
-
-```
-singularity apps expfactory
-adaptive-n-back
-tower-of-london
-test-task
-```
-
-You can also ask for help, and as we saw above, inspect:
-
-```
-singularity help expfactory.simg
-singularity inspect expfactory.simg
-```
-
 
 
 <div>

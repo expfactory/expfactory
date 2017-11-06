@@ -5,6 +5,96 @@ pdf: true
 permalink: /usage
 ---
 
+# Using your Experiments Container
+If you've just finished [generating your experiments container](1.generate.md) (whether a custom build or pull of an already existing container) then you are ready to use it! Here we will walk though:
+
+ - inspecting a container instance
+ - starting and stopping a container instance
+ - running a participant through a selection of experiments
+
+## Container Inspection
+
+What experiments are installed?
+
+```
+singularity apps expfactory.simg
+adaptive-n-back
+test-task
+tower-of-london
+```
+
+I forget the commands. Can I ask the container for help?  Try these commands on your local machine:
+
+```
+singularity help expfactory.simg
+
+...
+
+singularity inspect expfactory.simg
+
+{
+    "org.label-schema.usage.singularity.deffile.bootstrap": "docker",
+    "org.label-schema.usage.singularity.deffile": "Singularity",
+    "org.label-schema.usage": "/.singularity.d/runscript.help",
+    "org.label-schema.schema-version": "1.0",
+    "org.label-schema.usage.singularity.deffile.from": "ubuntu:14.04",
+    "org.label-schema.build-date": "2017-11-06T20:42:28+00:00",
+    "org.label-schema.usage.singularity.runscript.help": "/.singularity.d/runscript.help",
+    "org.label-schema.usage.singularity.version": "2.4-feature-squashbuild-secbuild.g818b648",
+    "org.label-schema.build-size": "545MB"
+}
+```
+
+Importantly, any labels that you added to the `%labels` section of a custom recipe will appear here.
+
+## Create an Instance
+You can think of the container like a template, and an "instance" as a full fledged running application that is generated based on the template. This means that you will want to start an instance of your container, which will carry it's own namespace and run the web server. The general commands that are important are to start and stop instances, we will use `singularity instance.start` and  `singularity instance.stop`. Importantly, you need to choose a folder on your local machine to put experiment data (`/tmp/data`), and bind it to the data folder in the instance (`/scif/data`). You will also want to name your instance, we are calling it `web1`
+
+```
+mkdir -p /tmp/data
+singularity instance.start --bind /tmp/data:/scif/data expfactory.simg web1
+singularity instance.list
+DAEMON NAME      PID      CONTAINER IMAGE
+web1             22045    /home/vanessa/Desktop/expfactory.simg
+```
+
+When you turn the instance off, the data will persits at `/scif/data`. This is the "filesystem" database type.
+
+
+
+
+### Build the Battery Container
+Let's build the image. Note that this is a squashfs image, which is a read online, immutable file system. We are only writing by way of mounting to the host. It's a reproducibility badass.
+
+```
+sudo singularity build expfactory.simg Singularity
+```
+
+Where expfactory.simg is referring to your image, and `.simg` is in reference to the squashfs filesystem. Let's break down the above. We are asking the singularity command line software to `build` an image **from** the recipe file `Singularity`.
+
+Next, you probably want to see how to [use your container](2-usage.md).
+
+Once building is done, we can see what experiments are installed:
+
+```
+singularity apps expfactory
+adaptive-n-back
+tower-of-london
+test-task
+```
+
+You can also ask for help, and as we saw above, inspect:
+
+```
+singularity help expfactory.simg
+singularity inspect expfactory.simg
+```
+
+
+
+
+
+
 # Browsing Experiments
 
 You don't need to build a container to browse experiments! If you'd prefer to run the software locally to browse experiments, and generate your custom recipe, you can easily install experiment factory and run it:

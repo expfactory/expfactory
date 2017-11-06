@@ -45,6 +45,7 @@ To serve your battery
     apt-get update && apt-get install -y nginx git python3-pip python3-dev
     cd /opt && git clone https://www.github.com/expfactory/expfactory
     cd expfactory && cp script/nginx.gunicorn.conf /etc/nginx/sites-enabled/default
+    cd expfactory && cp script/nginx.gunicorn.conf /etc/nginx/nginx.conf
     mkdir -p /scif/apps
     python3 -m pip install gunicorn
     SECRET_KEY=`python3 script/generate_key.py` 
