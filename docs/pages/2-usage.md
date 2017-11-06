@@ -18,9 +18,9 @@ What experiments are installed?
 
 ```
 singularity apps expfactory.simg
-adaptive-n-back
-test-task
-tower-of-london
+    adaptive-n-back
+    test-task
+    tower-of-london
 ```
 
 I forget the commands. Can I ask the container for help?  Try these commands on your local machine:
@@ -48,7 +48,7 @@ singularity inspect expfactory.simg
 Importantly, any labels that you added to the `%labels` section of a custom recipe will appear here.
 
 ## Create an Instance
-You can think of the container like a template, and an "instance" as a full fledged running application that is generated based on the template. This means that you will want to start an instance of your container, which will carry it's own namespace and run the web server. The general commands that are important are to start and stop instances, we will use `singularity instance.start` and  `singularity instance.stop`. Importantly, you need to choose a folder on your local machine to put experiment data (`/tmp/data`), and bind it to the data folder in the instance (`/scif/data`). You will also want to name your instance, we are calling it `web1`
+You can think of the container like a template, and an "instance" as a full fledged running application that is generated based on the template. This means that you will want to start an instance of your container, which will carry it's own namespace and run the web server. The general commands that are important are to start and stop instances, we will use `singularity instance.start` and  `singularity instance.stop`. Importantly, you need to choose a folder on your local machine to put experiment data (`/tmp/data`), and bind it to the data folder in the instance (`/scif/data`). This means it will persist on our local machine even when the instance is stopped. You will also want to name your instance, we are calling it `web1`
 
 ```
 mkdir -p /tmp/data
@@ -58,63 +58,27 @@ DAEMON NAME      PID      CONTAINER IMAGE
 web1             22045    /home/vanessa/Desktop/expfactory.simg
 ```
 
-When you turn the instance off, the data will persits at `/scif/data`. This is the "filesystem" database type.
-
-
-
-
-### Build the Battery Container
-Let's build the image. Note that this is a squashfs image, which is a read online, immutable file system. We are only writing by way of mounting to the host. It's a reproducibility badass.
+Take note that when you interact with your instance, whether you start, stop, or a command specifically for an instance, you should refer to it by name:
 
 ```
-sudo singularity build expfactory.simg Singularity
+singularity instance.stop web1
+singularity instance.start web1
 ```
 
-Where expfactory.simg is referring to your image, and `.simg` is in reference to the squashfs filesystem. Let's break down the above. We are asking the singularity command line software to `build` an image **from** the recipe file `Singularity`.
+Also take note that the user that starts an instance is the owner. So if you start an instance as sudo and then run `singularity instance.list`, you won't see it.
 
-Next, you probably want to see how to [use your container](2-usage.md).
+If you are wanting to shell into your instance (`shell`) or execute a command to it (`exec`) you will need to tell Singularity that you are talking about an instance, and you can do this by using the `instance://` uri:
 
-Once building is done, we can see what experiments are installed:
-
-```
-singularity apps expfactory
-adaptive-n-back
-tower-of-london
-test-task
-```
-
-You can also ask for help, and as we saw above, inspect:
 
 ```
-singularity help expfactory.simg
-singularity inspect expfactory.simg
+singularity shell instance://web1
+singularity exec instance://web1 ls /opt/expfactory
 ```
 
 
 
 
 
-
-# Browsing Experiments
-
-You don't need to build a container to browse experiments! If you'd prefer to run the software locally to browse experiments, and generate your custom recipe, you can easily install experiment factory and run it:
-
-```
-git clone https://www.github.com/expfactory/expfactory
-cd expfactory && python setup.py install
-```
-
-to see available experiments, meaning they are provided in the [expfactory-experiments](https://www.github.com/expfactory/library) library, just type:
-
-```
-$ expfactory
-
-Expfactory Version: 3.0
-Experiments
-1  adaptive-n-back	https://github.com/expfactory-experiments/adaptive-n-back.git
-2  tower-of-london	https://github.com/expfactory-experiments/tower-of-london.git
-3  test-task	https://www.github.com/expfactory-experiments/test-task
-```
 
 and you will see a list of the experiments available. If you want to grab one quickly to browse, you could easily just clone a repo address:
 

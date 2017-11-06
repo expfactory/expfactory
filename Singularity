@@ -32,8 +32,11 @@ If you want to see experiments available:
 To build your image (sandbox for testing)
     sudo singularity build --sandbox [expfactory] Singularity
 
+To build your image (production)
+    sudo singularity build expfactory.simg Singularity
+
 To serve your battery
-    sudo singularity instance.start expfactory.img web1
+    sudo singularity instance.start expfactory.simg web1
 
 %startscript
     service nginx start
@@ -44,7 +47,6 @@ To serve your battery
 %post
     apt-get update && apt-get install -y nginx git python3-pip python3-dev
     cd /opt && git clone https://www.github.com/expfactory/expfactory
-    cd expfactory && cp script/nginx.gunicorn.conf /etc/nginx/sites-enabled/default
     cd expfactory && cp script/nginx.gunicorn.conf /etc/nginx/nginx.conf
     mkdir -p /scif/apps
     python3 -m pip install gunicorn
