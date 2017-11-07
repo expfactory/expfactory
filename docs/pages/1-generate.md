@@ -10,7 +10,7 @@ toc: false
 The generation of a container comes down to adding the experiments to a build file called a Singularity Recipe. In these sections, we will provide instructions for a [quick start](#quick-start) using a pre-generated container, and a more [detailed start](#detailed-start) where you can fine tune your experiments, database, and other details of your deployment.
 
 ### Quick Start
-We provide an example container that you can deploy to test out Expfactory. It includes three experiments:
+We provide an [example container](https://www.singularity-hub.org/collections/203) that you can deploy to test out Expfactory. It includes three experiments:
 
  - adaptive-n-back
  - test-task
