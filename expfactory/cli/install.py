@@ -73,9 +73,18 @@ def main(args,parser,subparser):
     dest = "%s/%s" %(folder,exp_id)
 
     bot.log("Installing %s to %s" %(exp_id, dest))
-
-    # Are we in a Container?
+    
+    # Building container
+    in_container = False
     if os.environ.get('SINGULARITY_IMAGE') is not None:
+        in_container = True
+
+    # Running, live container
+    elif os.environ.get('SINGULARITY_CONTAINER') is not None:
+        in_container = True
+
+    if in_container is True:
+
         bot.log("Preparing experiment routes...")
         template = get_template('experiments/template.py')
         template = sub_template(template, '{{ exp_id }}', exp_id)
