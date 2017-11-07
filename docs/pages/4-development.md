@@ -12,7 +12,7 @@ Build a development sandbox, create an instance, and shell inside:
 ```
 sudo singularity build --sandbox [expfactory] Singularity
 sudo singularity instance.start --writable --bind /tmp/data:/scif/data [expfactory] web1
-sudo singularity shell --writable --bind /tmp/data:/scif/data --pwd /opt/expfactory instance://web1
+sudo singularity shell --writable --bind /tmp/data:/scif/data instance://web1
 ```
 
 Test an experiment in or outside of your container, either by cloning or using expfactory install:
@@ -31,7 +31,6 @@ LOG Installing adaptive-n-back to /tmp/adaptive-n-back
 
 Start the webserver inside the container with gunicorn or expfactory, or locally with python
 ```
-cd /opt/expfactory
 gunicorn --bind 0.0.0.0:5000 expfactory.wsgi:app
 expfactory
 
@@ -101,10 +100,10 @@ web1             22842    /home/vanessa/Documents/Dropbox/Code/expfactory/expfac
 Remember that if you started the daemon as sudo, sudo owns it, and you need to use sudo to interact with it. When it comes time to run a container (as a user) the same applied. You should be able to go to the url `localhost` or `localhost:5000` and see the server running. If not, never fear! This is a good example of how to develop. Let's first shell inside. Note that we are shelling inside the instance (`instance://`) and we are also using `--writable` so we can change things, if necessary.
 
 ```
-sudo singularity shell --writable --bind /tmp/data:/scif/data --pwd /opt/expfactory instance://web1
+sudo singularity shell --writable --bind /tmp/data:/scif/data instance://web1
 ```
 
-Note that you have to specify the bind **again**. If you forget to specify it at either time, it won't be bound. It's also helpful to set the present working directory (`--pwd`) to be where our code base is.
+Note that you have to specify the bind **again**. If you forget to specify it at either time, it won't be bound. 
 
 
 ### Debugging
@@ -115,45 +114,27 @@ We could run the `expfactory` executable to open up the Flask development server
 # install vim for quick changes / tests
 apt-get install -y vim
 
-# Work in the code base
-cd /opt/expfactory # the code base
-
 # Start gunicorn
 gunicorn --bind 0.0.0.0:5000 expfactory.wsgi:app
 [2017-11-05 00:23:12 -0700] [479] [INFO] Starting gunicorn 19.7.1
 [2017-11-05 00:23:12 -0700] [479] [INFO] Listening at: http://0.0.0.0:5000 (479)
 [2017-11-05 00:23:12 -0700] [479] [INFO] Using worker: sync
 [2017-11-05 00:23:12 -0700] [482] [INFO] Booting worker with pid: 482
+```
 
-# Test something in the interface... find a bug! Stop the server with Control +C
-# Make changes on the host, commit to Github, push to origin master
-# then pull the updated changes in the container, restart the server with gunicorn
-git pull origin master
+Let's say that we tested something in the interface... and found a bug! We stop the server with Control +C. On our host we can tweak our cloned fork of the expfactory software, and then push. In the container we can then go to `/opt/expfactory` and pull from our remote branch (you will need to add it in the `.git/config`)
+
+```
+cd /opt/expfactory
+git pull myremote master
+```
+
+Then you can install the software afresh, and restart the server with gunicorn, and then nginx. If you have experiments (previously) installed, you might need to issue the install command again.
+
+```
 python3 setup.py install
-```
-
-As an example, here is an error from when I was starting to develop. I tried running expfactory from `/opt` inside the container instance and got the following error:
-
-```
-Singularity expfac:~> expfactory
-Traceback (most recent call last):
-  File "/usr/local/bin/expfactory", line 9, in <module>
-    load_entry_point('expfactory==3.0', 'console_scripts', 'expfactory')()
-  File "/usr/local/lib/python3.4/dist-packages/expfactory-3.0-py3.4.egg/expfactory/cli.py", line 106, in main
-    os.environ['EXPFACTORY_SUBID'] = args.subid
-  File "/usr/lib/python3.4/os.py", line 638, in __setitem__
-    value = self.encodevalue(value)
-  File "/usr/lib/python3.4/os.py", line 706, in encode
-    raise TypeError("str expected, not %s" % type(value).__name__)
-TypeError: str expected, not NoneType
-
-```
-
-oh No! The default for the `sub_id` needs to be a string. We can edit the code (on our local machine) to fix it, then cd to where it is mounted, pull the changes and re-install. In the [Singularity](../Singularity) Recipe It's recommended to comment out the lines to start expfactory from the startscript, and then launch it manually. That way, you can Control+C to stop it.
-
-```
-cd /opt
-python3 setup.py install
+# install experiments
+service nginx restart
 ```
 
 ### Moving from Development to Production
@@ -164,6 +145,8 @@ sudo singularity build production.simg Singularity   # build production image fr
 sudo singularity build [sandbox] production.simg     # build sandbox (writable) from production
 sudo singularity build production.v2.simg [sandbox]     # back to production (but changes not in build recipe)
 ```
+
+This is an approach that can go in the other direction to - for example, you might start with a full experiment's container, and then want to re-generate your secret key every now and then.
 
 <div>
     <a href="/expfactory/contribute.html"><button class="previous-button btn btn-primary"><i class="fa fa-chevron-left"></i> </button></a>
