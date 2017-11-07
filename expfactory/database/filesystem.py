@@ -53,7 +53,8 @@ def generate_subid(digits=5):
     folders = glob('%s/%s/*' %(EXPFACTORY_DATA, EXPFACTORY_SUBID))
     folders.sort()
     if len(folders) > 0:
-        folder_id = int(folders[-1]).zfill(digits)
+        folder_id = int(os.path.basename(folders[-1])) + 1
+    folder_id = str(folder_id).zfill(digits)
     return "%s/%s" % (EXPFACTORY_SUBID, folder_id)
     
 

@@ -18,10 +18,10 @@ The quick start commands are to pull the container, and start an instance, mount
 
 ```
 singularity pull --name expfactory.simg shub://expfactory/expfactory
-singularity instance.start --bind /tmp/data:/scif/data expfactory.simg web1
+sudo singularity instance.start --bind /tmp/data:/scif/data expfactory.simg web1
 ```
 
-When you do the above, you are using a container with a shared secret key. If you were to deploy it somewhere, someone might be able to figure this out (security red flag!). You can change your key by making the container writable, and then back again:
+Note that sudo is needed to start the instance for nginx. Also note that when you do the above, you are using a container with a shared secret key. If you were to deploy it somewhere, someone might be able to figure this out (security red flag!). You can change your key by making the container writable, and then back again:
 
 ```
 sudo singularity build --writable expfactory.rwx expfactory.simg

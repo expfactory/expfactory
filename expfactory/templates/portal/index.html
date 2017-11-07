@@ -55,6 +55,11 @@
                                                           <button type="button" 
                                                                   class="btn btn-default btn-number experiment-select-button experiment-unselected" 
                                                                   id="{{ experiment }}"
+                                                                  {% if metadata.time %}
+                                                                  data-time="{{ metadata.time }}"
+                                                                  {% else %}
+                                                                  data-time="0"
+                                                                  {% endif %}
                                                                   data-type="plus" 
                                                                   style="float:right">
                                                               <span class="fa fa-check"></span>
@@ -184,9 +189,11 @@ $(document).ready(function(){
 
         var selected = $('.experiment-selected');
         var experiments = ""
+        var total_time = 0
         $.each(selected, function(e,i){
             new_experiment = $(i).attr('id');
-
+            new_time = parseInt($(i).attr('data-time'),10);
+            total_time = total_time + new_time;
             if (new_experiment != "select-button") {
                 if (experiments == "") {
                     experiments =  new_experiment;
@@ -195,7 +202,9 @@ $(document).ready(function(){
                 }
             }
         })
-        $("#exp_ids").val(experiments)
+        $("#exp_ids").val(experiments);
+        $('.ticket-count').text(selected.length);
+        $('.total-amount').text(total_time + ' min');
 
     }
     
