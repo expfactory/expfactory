@@ -51,9 +51,9 @@ To serve your battery
     cd expfactory && cp script/nginx.gunicorn.conf /etc/nginx/nginx.conf
     mkdir -p /scif/apps
     python3 -m pip install gunicorn
-    SECRET_KEY=`python3 script/generate_key.py` 
     cp expfactory/config_dummy.py expfactory/config.py
-    echo "SECRET_KEY=\"${SECRET_KEY}\"" >> expfactory/config.py
+    chmod u+x script/generate_key.sh
+    /bin/bash script/generate_key.sh expfactory/config.py
     python3 setup.py install
 
 

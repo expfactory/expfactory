@@ -21,7 +21,20 @@ singularity pull --name expfactory.simg shub://expfactory/expfactory
 singularity instance.start --bind /tmp/data:/scif/data expfactory.simg web1
 ```
 
-More detailed notes are provided below.
+When you do the above, you are using a container with a shared secret key. If you were to deploy it somewhere, someone might be able to figure this out (security red flag!). You can change your key by making the container writable, and then back again:
+
+```
+sudo singularity build --writable expfactory.rwx expfactory.simg
+
+SECRET_KEY=`sudo singularity exec --pwd /opt/expfactory expfactory.rwx python3 script/generate_key.py`
+
+# Here is how to tranfser it into the image
+SINGULARITY_SECRET_KEY=$SECRET_KEY sudo singularity exec --pwd /opt/expfactory expfactory.rwx echo "${SECRET_KEY}"
+SINGULARITY_SECRET_KEY=$SECRET_KEY sudo singularity exec --pwd /opt/expfactory expfactory.rwx echo "SECRET_KEY=\"${SECRET_KEY}\"" >> /opt/expfactory/expfactory/config.py
+
+    
+
+```
 
 ### Container Inspection
 
