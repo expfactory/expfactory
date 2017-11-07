@@ -74,8 +74,6 @@ def main(args,parser,subparser):
 
     bot.log("Installing %s to %s" %(exp_id, dest))
 
-'/usr/local/lib/python3.4/dist-packages/expfactory-3.0-py3.4.egg/expfactory'
-
     # Are we in a Container?
     if os.environ.get('SINGULARITY_CONTAINER') is not None:
         bot.log("Preparing experiment routes...")
