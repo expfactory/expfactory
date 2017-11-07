@@ -16,7 +16,7 @@ Version: {{ site.version }}<br>
 > Nobody ever comes in... and nobody ever comes out...
 
 <p>And that's the way that reproducible behavioral experiments should be: designed, captured, and used again with assurance of running the same thing.
-The Experiment Factory software will help you create a reproducible container to deploy behavioral experiments. <span style="font-style:italic; color:darkmagenta">we are under development for this new container-based version, and will update this documentation base as we go!</span> Want to jump right in? Pull a demo container, start an instance named `web1`, and browse to `localhost`:</p>
+The Experiment Factory software will help you create a reproducible container to deploy behavioral experiments. <span style="font-style:italic; color:darkmagenta">we are under development for this new container-based version, and will update this documentation base as we go!</span> Want to jump right in? Pull a demo container, start an instance named web1, and browse to localhost:</p>
 
 
 ```
@@ -24,7 +24,7 @@ singularity pull --name expfactory.simg shub://expfactory/expfactory
 sudo singularity instance.start --bind /tmp/data:/scif/data expfactory.simg web1
 ```
 
-Read more about custom [1. generation](pages/1-generate.md) and then [2. usage](pages/2-usage.md).
+Next, read more about [usage](pages/2-usage.md), and when you are ready, [generation](pages/1-generate.md) of your custom container. Please [give feedback](https://www.github.com/expfactory/expfactory/issues) about your needs to further develop the software. The [experiments portal](https://expfactory.github.io/experiments/) will be updated as we migrate experiments from [the legacy Expfactory](https://www.github.com/expfactory/expfactory-experiments) soon. Your contributions and feedback are greatly appreciated!
 
 
 ## User Guide
@@ -43,7 +43,6 @@ Read more about custom [1. generation](pages/1-generate.md) and then [2. usage](
 
  - [Contribute](pages/3-contribute.md) an experiment to the [library](https://www.github.com/expfactory/library) for others to use.
  - [Interactive](pages/4-development.md) Examples for how I (@vsoch) developed the software
-
 
 <div>
     <a href="/expfactory/generate"><button class="next-button btn btn-primary"><i class="fa fa-chevron-right"></i> </button></a>
