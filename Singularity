@@ -42,8 +42,6 @@ To serve your battery
     service nginx start
     gunicorn --bind 0.0.0.0:5000 expfactory.wsgi:app
     service nginx restart
-    #exec /usr/local/bin/gunicorn -w 2 -b :5000 expfactory.cli:main
-    #exec expfactory "$@"
 
 %post
     apt-get update && apt-get install -y nginx git python3-pip python3-dev
@@ -63,10 +61,10 @@ To serve your battery
 ########################################
 
 %appinstall test-task
-    cd .. && expfactory install -f -b /opt/expfactory/expfactory https://github.com/expfactory-experiments/test-task
+    cd .. && expfactory install -f https://github.com/expfactory-experiments/test-task
 
 %appinstall adaptive-n-back
-    cd .. && expfactory install -f -b /opt/expfactory/expfactory https://github.com/expfactory-experiments/adaptive-n-back
+    cd .. && expfactory install -f https://github.com/expfactory-experiments/adaptive-n-back
 
 %appinstall tower-of-london
-    cd .. && expfactory install -f -b /opt/expfactory/expfactory https://github.com/expfactory-experiments/tower-of-london
+    cd .. && expfactory install -f https://github.com/expfactory-experiments/tower-of-london

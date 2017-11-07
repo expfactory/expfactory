@@ -69,7 +69,7 @@ def get_parser():
                          default=False, action='store_true')
 
     install.add_argument("--base",'-b', dest='base', 
-                         help="expfactory install base (to write templates)",
+                         help="expfactory install base (defaults to application base)",
                          type=str, default=None)
 
 
