@@ -21,7 +21,29 @@ singularity pull --name expfactory.simg shub://expfactory/expfactory
 sudo singularity instance.start --bind /tmp/data:/scif/data expfactory.simg web1
 ```
 
+Then go to `localhost` to see the experiment portal. This is where you select experiments, and your session starts. I would recommend the `test-task` as a first try, because it finishes quickly. When you finish, you will see a "congratulations" screen, and the data you will find in the mounted directory:
+
+```
+$ tree /tmp/data/expfactory/00001/
+
+    /tmp/data/expfactory/00001/
+       └── test-task-results.json
+
+0 directories, 1 file
+```
+
+You can then stop the instance, and the data will persist.
+
+```
+sudo singularity instance.stop -a  # stop all instances
+sudo singularity instance.stop web1
+```
+
+That's it! We have over 80 experiments and surveys to add, and will do so en masse after some early testing.
+
+#### Important Notes
 Note that sudo is needed to start the instance for nginx. Also note that when you do the above, you are using a container with a shared secret key. If you were to deploy it somewhere, someone might be able to figure this out (security red flag!). You can change your key by making the container writable, and then back again:
+
 
 ```
 sudo singularity build --writable expfactory.rwx expfactory.simg
@@ -89,7 +111,7 @@ If you are wanting to shell into your instance (`shell`) or execute a command to
 
 ```
 singularity shell instance://web1
-singularity exec instance://web1 ls /opt/expfactory
+singularity exec instance://web1 ls /opt/expfactory  # The original clone of the repository
 ```
 
 

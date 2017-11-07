@@ -71,7 +71,7 @@ The Experiment Factory will generate a new unique ID for each participant with s
 ```
  /scif/data/
       expfactory/
-           0/
+           00001/
             tower-of-london.json
             test-task.json
             adaptive-n-back.json
