@@ -3,7 +3,7 @@
 OUTFILE=${1}
 
 HERE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-SECRET_KEY=`python3 ${HERE}/script/generate_key.py` 
+SECRET_KEY=`python3 ${HERE}/generate_key.py` 
 
 if [ "$#" -ne 1 ]
 then
