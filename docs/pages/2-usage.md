@@ -21,7 +21,27 @@ singularity pull --name expfactory.simg shub://expfactory/expfactory
 sudo singularity instance.start --bind /tmp/data:/scif/data expfactory.simg web1
 ```
 
-Then go to `localhost` to see the experiment portal. This is where you select experiments, and your session starts. I would recommend the `test-task` as a first try, because it finishes quickly. When you finish, you will see a "congratulations" screen, and the data you will find in the mounted directory:
+Then go to `localhost` to see the experiment portal. 
+
+<div>
+    <img src="/expfactory/img/generate/portal.png"><br>
+</div>
+
+
+This is where you select experiments, can get an estimated time, and then start your session: I would recommend the `test-task` as a first try, because it finishes quickly. There is a default "consent" screen that you must agree to (or disagree to return to the portal):
+
+<div>
+    <img src="/expfactory/img/generate/welcome.png"><br>
+</div>
+
+
+When you finish, you will see a "congratulations" screen
+
+<div>
+    <img src="/expfactory/img/generate/finish.png"><br>
+</div>
+
+and the data you will find in the mounted directory:
 
 ```
 $ tree /tmp/data/expfactory/00001/

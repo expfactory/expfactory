@@ -23,12 +23,12 @@ singularity pull --name expfactory.simg shub://expfactory/expfactory
 sudo singularity instance.start --bind /tmp/data:/scif/data expfactory.simg web1
 ```
 
-Read more about custom [generation](pages/1-generate.md) and [usage](pages/2-usage.md).
+Read more about custom [1. generation](pages/1-generate.md) and then [2. usage](pages/2-usage.md).
 
 
 ## User Guide
 
- - [View (UI)](pages/0-interface.md) the user interface, if you are just looking around.
+ - [Interface](pages/0-interface.md) the user interface, if you are just looking around.
  - [Building](pages/1-generate.md) your battery means creating and configuring your image.
  - [Running](pages/2-usage.md) an obtained or newly built experiment factory container
 
