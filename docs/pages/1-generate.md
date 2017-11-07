@@ -3,7 +3,7 @@ layout: default
 title: Generate your Experiment Container
 pdf: true
 permalink: /generate
-toc: true
+toc: false
 ---
 
 # Generate your Experiment Container
