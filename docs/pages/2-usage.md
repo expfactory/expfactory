@@ -25,15 +25,8 @@ When you do the above, you are using a container with a shared secret key. If yo
 
 ```
 sudo singularity build --writable expfactory.rwx expfactory.simg
-
-SECRET_KEY=`sudo singularity exec --pwd /opt/expfactory expfactory.rwx python3 script/generate_key.py`
-
-# Here is how to tranfser it into the image
-SINGULARITY_SECRET_KEY=$SECRET_KEY sudo singularity exec --pwd /opt/expfactory expfactory.rwx echo "${SECRET_KEY}"
-SINGULARITY_SECRET_KEY=$SECRET_KEY sudo singularity exec --pwd /opt/expfactory expfactory.rwx echo "SECRET_KEY=\"${SECRET_KEY}\"" >> /opt/expfactory/expfactory/config.py
-
-    
-
+sudo singularity exec --pwd /opt/expfactory expfactory.rwx /bin/bash script/generate_key.sh expfactory/config.py
+sudo singularity build production.simg expfactory.rwx
 ```
 
 ### Container Inspection
