@@ -65,7 +65,7 @@ class TestContribution(TestCase):
         self.experiments_base = "/scif/data" 
         self.experiments = glob("%s/*md" %self.experiments_base)
         
-    def test_experiment(self):
+    def test_contribution(self):
         '''test an experiment, including the markdown file, and repo itself
         '''
         if len(self.experiments) == 0:

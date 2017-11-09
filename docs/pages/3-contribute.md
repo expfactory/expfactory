@@ -155,6 +155,21 @@ singularity run --app test-experiment expfactory.test
 You must use --bind to bind the folder with config.json to /scif/data in the image.
 ```
 
+You need to bind the folder with your experiment (containing the config.json) to `/scif/data` in the image.
+
+```
+singularity run --app test-experiment --bind $PWD:/scif/data expfactory.test 
+```
+
+### Test a Contribution
+This set of tests is more stringent in that the test starts with one of more submissions (markdown files that you will ask to be added to the `_library` folder via a pull request) and goes through Github cloning to testing of your preview. Specifically it includes:
+
+     - discovery of any markdown files in the bound folder
+     - parsing of the files for required fields
+     - download of the Github repositories to temporary locations
+     - testing of the Github repository config.json, and preview in Github pages
+
+
 
 ### Local Testing
 If you do decide to test on your local machine (without the container) you will need to clone the repository first, and you can use the tests under `/script/singularity/tests` or with the library in the `tests` folder as follows:
