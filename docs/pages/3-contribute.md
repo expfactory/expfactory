@@ -141,8 +141,8 @@ What tests are included?
 
 ```
 singularity apps expfactory.test
-test-experiment
 test-contribution
+test-experiment
 ``` 
 
 You can ask for help for either with `singularity help --app <appname>`
@@ -179,7 +179,7 @@ This set of tests is more stringent in that the test starts with one of more sub
 You need to bind the folder with markdown files for the library to `/scif/data` this time around:
 
 ```
-singularity run --app test-contribution expfactory.test
+singularity run --app test-contribution --bind _library/:/scif/data expfactory.test
 ```
 
 You can also use any of the expfactory software inside the image, the runscript provides the command line executable `expfactory list` by default so

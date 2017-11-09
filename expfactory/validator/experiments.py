@@ -47,7 +47,7 @@ class ExperimentValidator:
             bot.level = 0
 
     def __str__(self):
-        return "expfactory.validator.ExperimentValidator"
+        return "expfactory.ExperimentValidator"
 
     def _validate_folder(self, folder=None):
         ''' validate folder takes a cloned github repo, ensures

@@ -45,7 +45,7 @@ class RuntimeValidator:
             bot.level = 0
 
     def __str__(self):
-        return "expfactory.validator.RuntimeValidator"
+        return "expfactory.RuntimeValidator"
 
     def validate(self, url):
         ''' takes in a Github repository for validation of preview and 
@@ -87,18 +87,22 @@ class RuntimeValidator:
         tmpdir = tempfile.mkdtemp()
         repo_master = clone(url, tmpdir)
         contenders = glob('%s/*' %repo_master)
+        license = False
         found = False
 
         for test in contenders:
             if os.path.isdir(test):
                 continue
-
             print('...%s' %test)
-            text = read_file(test)
-            if text == index:
-                bot.test('Found matching index file in repository.')
+            if "LICENSE" in os.path.basename(test):
+                license = True
+            if os.path.basename(test) == "index.html":
+                bot.test('Found index file in repository.')
                 found = True
                 break
+
+        if license is False:
+            bot.warning("LICENSE file not found. This will be required for future experiments!")
 
         self._print_valid(found)
         return found
