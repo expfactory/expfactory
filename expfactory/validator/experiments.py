@@ -78,7 +78,8 @@ class ExperimentValidator:
 
         # Load config.json if provided directly
         elif os.path.basename(folder) == 'config.json':
-            return self._validate_config(folder)
+            config = os.path.dirname(folder)
+            return self._validate_config(config)
 
         # Otherwise, validate folder and cleanup
         valid = self._validate_folder(folder)
