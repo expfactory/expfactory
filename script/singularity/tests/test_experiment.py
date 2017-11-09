@@ -53,7 +53,8 @@ class TestExperiment(TestCase):
             sys.exit(1) 
 
         print("...Test: Experiment Validation")
-        self.assertTrue(self.ExpValidator.validate(self.config))          
+        validate_folder = False
+        self.assertTrue(self.ExpValidator.validate(self.config, validate_folder)
 
 
 if __name__ == '__main__':

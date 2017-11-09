@@ -66,10 +66,13 @@ class ExperimentValidator:
         return self._validate_config(folder)
  
 
-    def validate(self, folder, cleanup=False):
+    def validate(self, folder, cleanup=False, validate_folder=True):
         ''' validate is the entrypoint to all validation, for
             a folder, config, or url. If a URL is found, it is
             cloned and cleaned up.
+           :param validate_folder: ensures the folder name (github repo)
+                                   matches. Not used if running in singularity
+                                   test image
         '''
          
         # Obtain any repository URL provided
@@ -79,7 +82,7 @@ class ExperimentValidator:
         # Load config.json if provided directly
         elif os.path.basename(folder) == 'config.json':
             config = os.path.dirname(folder)
-            return self._validate_config(config)
+            return self._validate_config(config, validate_folder)
 
         # Otherwise, validate folder and cleanup
         valid = self._validate_folder(folder)
@@ -88,7 +91,7 @@ class ExperimentValidator:
         return valid
 
 
-    def _validate_config(self, folder):
+    def _validate_config(self, folder, validate_folder=True):
         ''' validate config is the primary validation function that checks
             for presence and format of required fields.
 
@@ -129,7 +132,7 @@ class ExperimentValidator:
                     return notvalid("%s: invalid type, must be %s." %(name,str(ftype)))
 
             # Expid gets special treatment
-            if field == "exp_id":
+            if field == "exp_id" and validate_folder is True:
                 if config[field] != name:
                     return notvalid("%s: exp_id parameter %s does not match folder name." 
                                     %(name,config[field]))
