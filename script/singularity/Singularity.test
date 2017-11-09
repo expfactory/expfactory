@@ -1,0 +1,75 @@
+Bootstrap: docker
+From: ubuntu:14.04
+
+%help
+This is a base image to provide an installation of the Experiment Factory
+software. The web server is not included, as it is intended to be added upon
+to create other images, etc.
+
+########################################
+# Configure
+########################################
+
+%environment
+    EXPFACTORY_CONTAINER=true
+    EXPFACTORY_DATA=/scif/data
+    EXPFACTORY_DATABASE=filesystem 
+    EXPFACTORY_BASE=/scif/apps
+    export EXPFACTORY_BASE EXPFACTORY_DATA \
+           EXPFACTORY_DATABASE \
+           EXPFACTORY_CONTAINER
+
+%runscript
+    exec expfactory list
+
+%post
+    apt-get update && apt-get install -y nginx git python3-pip python3-dev
+    cd /opt && git clone https://www.github.com/expfactory/expfactory
+    cd expfactory && cp script/nginx.gunicorn.conf /etc/nginx/sites-enabled/default
+    cp script/nginx.conf /etc/nginx/nginx.conf
+    mkdir -p /scif/apps
+    python3 -m pip install gunicorn pyaml
+    cp expfactory/config_dummy.py expfactory/config.py
+    chmod u+x /opt/expfactory/script/generate_key.sh
+    /bin/bash /opt/expfactory/script/generate_key.sh /opt/expfactory/expfactory/config.py
+    python3 setup.py install
+
+
+########################################
+# Tools
+########################################
+
+%apprun test-experiment
+    cd /opt/expfactory/script/singularity
+    exec python3 -m unittest tests.test_experiment
+
+%apphelp test-experiment
+   The test app is used to help a user test a local experiment. The directory with
+   the experiment (index.html, markdown files, etc) should be bound to the container
+   at /scif/data, eg:
+
+   singularity run --app test-experiment --bind $PWD:/scif/data shub://expfactory/expfactory:test
+
+   This test includes:
+    - parsing the config.json in the folder provided
+    - ensuring that required fields are present
+
+%apprun test-contribution
+    cd /opt/expfactory/script/singularity
+    exec python3 -m unittest tests.test_contribution
+
+%apphelp test-contribution
+   The test app is used to help a user test a contribution to the library. The 
+   directory with the experiment markdown files should be provided by means of
+   a bind to `/scif/data` in the container, eg:
+
+   singularity run --app test-contribution --bind $PWD:/scif/data shub://expfactory/expfactory:test
+
+   The tests include:
+   
+     - discovery of any markdown files in the bound folder
+     - parsing of the files for required fields
+     - download of the Github repositories to temporary locations
+     - testing of the Github repository config.json, and preview in Github pages
+
+   If you are looking to test a single experiment directory, see test-experiment

@@ -176,23 +176,54 @@ This set of tests is more stringent in that the test starts with one of more sub
      - testing of the Github repository config.json, and preview in Github pages
 
 
-You need to bind the folder with markdown files for the library to `/scif/data` this time around:
+You need to bind the folder with markdown files for the library to `/scif/data` this time around. These tests have a lot more output because they are more substantial:
 
 ```
-singularity run --app test-contribution --bind _library/:/scif/data expfactory.test
+$ singularity run --app test-contribution --bind _library/:/scif/data expfactory.test
+
+...Test: Global Library validation
+preview: https://expfactory-experiments.github.io/test-task
+github: https://www.github.com/expfactory-experiments/test-task
+maintainer: @vsoch
+name: test-task
+layout: experiment
+tags: ['test', 'jspsych', 'experiment']
+Cloning into '/tmp/tmpzbfh2w44/test-task'...
+remote: Counting objects: 62, done.
+remote: Compressing objects: 100% (49/49), done.
+remote: Total 62 (delta 20), reused 55 (delta 13), pack-reused 0
+Unpacking objects: 100% (62/62), done.
+Checking connectivity... done.
+Checking connectivity... done.
+.../tmp/tmpmy0dlc0j/test-task/config.json
+.../tmp/tmpmy0dlc0j/test-task/experiment.js
+.../tmp/tmpmy0dlc0j/test-task/default_style.css
+.../tmp/tmpmy0dlc0j/test-task/README.md
+.../tmp/tmpmy0dlc0j/test-task/style.css
+.../tmp/tmpmy0dlc0j/test-task/LICENSE
+.../tmp/tmpmy0dlc0j/test-task/index.html
+True
+...
 ```
 
 You can also use any of the expfactory software inside the image, the runscript provides the command line executable `expfactory list` by default so
 you can easily see experiments available.
 
 ```
-singularity run expfactory.test
+$ singularity run expfactory.test
+Expfactory Version: 3.0
+Experiments
+1  adaptive-n-back	https://www.github.com/expfactory-experiments/adaptive-n-back
+2  breath-counting-task	https://www.github.com/expfactory-experiments/breath-counting-task
+3  test-task	https://www.github.com/expfactory-experiments/test-task
+4  tower-of-london	https://www.github.com/expfactory-experiments/tower-of-london
 ```
 
 or you can execute a custom command to the image:
 
 ```
 singularity exec expfactory.test ls /opt/expfactory
+LICENSE  MANIFEST.in  README.md  build	dist  docs  expfactory	expfactory.egg-info  script  setup.py
 ```
 
 We will soon be adding a command line `build` function to generate a recipe on the fly, without using the interface. Stay tuned!
