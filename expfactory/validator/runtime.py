@@ -90,7 +90,7 @@ class RuntimeValidator:
         found = False
 
         for test in contenders:
-            if os.path.isdir(contender):
+            if os.path.isdir(test):
                 continue
 
             print('...%s' %test)
