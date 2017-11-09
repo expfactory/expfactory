@@ -21,6 +21,7 @@ The most basic experiment contribution could be a web form, an intermediate cont
  - **the experiment runs via a single file**: The server will be authenticating pages based on sessions and CSRF. For now, your experiment is required to run on a single page, meaning that the `POST` to save data comes from the same page where the experiment started.
  - **the experiment runs statically** When it finishes, it posts to `/finish`, and on successful POST redirects to `/next`.
  - (optional) documentation about any special variables that can be set in the Singularity build recipe environment section for it (more on this later).
+ - **experiment completion** should have a POST of json data (`{"data": data}`) to `/save`. If successful, it navigates to `/next`. If not successful, data should be saved locally in the format of your choice (for preview and testing purposes).
 
 
 # The general steps
@@ -119,7 +120,7 @@ Great! Once you are here, you have a folder with a working experiment. This is n
  - `reference`: is a list of articles, link to documentation, or other resource to provide more information on the experiment.
 ```
 
-You can add whatever metadata you want to the config.json, and you can also add labels to the container to be programatically accessible (more later on this). You should not keep a version in this metadata file, but instead use Github tags and commits. This information will be added automatically upon build of your experiment container.
+You can add whatever metadata you want to the config.json, and you can also add labels to the container to be programatically accessible (more later on this). You should not keep a version in this metadata file, but instead use Github tags and commits. This information will be added automatically upon build of your experiment container. We also **strongly** encourate you to add a LICENSE file to your work.
 
 
 ## Add the Experiment
