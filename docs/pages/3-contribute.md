@@ -159,6 +159,12 @@ You need to bind the folder with your experiment (containing the config.json) to
 
 ```
 singularity run --app test-experiment --bind $PWD:/scif/data expfactory.test 
+...Test: Experiment Validation
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK
 ```
 
 ### Test a Contribution
@@ -169,6 +175,27 @@ This set of tests is more stringent in that the test starts with one of more sub
      - download of the Github repositories to temporary locations
      - testing of the Github repository config.json, and preview in Github pages
 
+
+You need to bind the folder with markdown files for the library to `/scif/data` this time around:
+
+```
+singularity run --app test-contribution expfactory.test
+```
+
+You can also use any of the expfactory software inside the image, the runscript provides the command line executable `expfactory list` by default so
+you can easily see experiments available.
+
+```
+singularity run expfactory.test
+```
+
+or you can execute a custom command to the image:
+
+```
+singularity exec expfactory.test ls /opt/expfactory
+```
+
+We will soon be adding a command line `build` function to generate a recipe on the fly, without using the interface. Stay tuned!
 
 
 ### Local Testing
