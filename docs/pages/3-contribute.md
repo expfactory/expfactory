@@ -19,6 +19,8 @@ The most basic experiment contribution could be a web form, an intermediate cont
 
  - **all dependencies can be included in a folder**: While content delivery networks (CDNs) are great for obtaining resources, you can be more assured of having a file if you download it locally.
  - **the experiment runs via a single file**: The server will be authenticating pages based on sessions and CSRF. For now, your experiment is required to run on a single page, meaning that the `POST` to save data comes from the same page where the experiment started.
+ - **the experiment runs statically** When it finishes, it posts to `/finish`, and on successful POST redirects to `/next`.
+ - (optional) documentation about any special variables that can be set in the Singularity build recipe environment section for it (more on this later).
 
 
 # The general steps
@@ -186,19 +188,8 @@ python -m unittest tests.test_recipes
 Any issues with your recipe will be spit out on the screen. When you are confident in your submission, then go ahead and fo the PR. What happens during the PR is the same as on your local machine - the pull request will use the metadata to clone and test the experiment, along with your repository. When it is merged, it will appear automatically in the web interface and be [available programmatically](https://expfactory.github.io/experiments/library.json).
 
 
-# Experiment Requirements
-This section will be expanded as we develop. We try to keep requirements minimal to allow you maximum flexibility to use the libraries of your choosing. The minimum requirements are the following:
-
- - the experiment runs statically. When it finishes, it posts to `localhost/finish`, and on successful POST redirects to `localhost/next`.
- - an `index.html` file and `config.json` in the root of the folder, as described above.
- - (optional) documentation about any special variables that can be set in the Singularity build recipe environment section for it (more on this later).
- - an associated repository to clone from, with a preview on Github pages.
-
-# Testing Experiments
-Each contribution is tested for the conditions above when the pull request is issued. When tests pass, your experiment is added to the library, and available for discovery by anyone that uses the expfactory software. This means availability in the [library](https://expfactory.github.io/experiments/library.json), and the various tools that use it.
-
 # Deploying Experiments
-Approved and merged experiments will be made available in the [library](https://expfactory.github.io/experiments/library.json). More information will be added about using the library as it is developed.
+Once you get here, you've probably had your experiment pull required approved and merged! After this, your experiment will be made available in the [library](https://expfactory.github.io/experiments/library.json). More information will be added about using the library as it is developed. You can then add your experiment to a Reproducible Experiments Container, along with any of the other selection in the library. Read about [usage](/expfactory/usage.html) for your different options if you haven't yet.
 
 <div>
     <a href="/expfactory/usage.html"><button class="previous-button btn btn-primary"><i class="fa fa-chevron-left"></i> </button></a>
