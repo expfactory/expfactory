@@ -1,5 +1,7 @@
 # The Experiment Factory
 
+![expfactory/static/img/expfactoryticketyellow.png](expfactory/static/img/expfactoryticketyellow.png)
+
 [documentation](https://expfactory.github.io/expfactory)
 
 The Experiment Factory is software to create a reproducible container that you can easily customize to deploy a set of web-based experiments. It's predecessor at [Expfactory.org](https://expfactory.org) was never able to open up to the public, and this went against the original goal of the software. Further, the badly needed functionality to serve a local battery was poorly met with [expfactory-python](https://www.github.com/expfactory/expfactory-python) as time progressed and dependencies changes.
