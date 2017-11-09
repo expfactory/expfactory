@@ -6,10 +6,6 @@ This is a base image to provide an installation of the Experiment Factory
 software. The web server is not included, as it is intended to be added upon
 to create other images, etc.
 
-########################################
-# Configure
-########################################
-
 %environment
     EXPFACTORY_CONTAINER=true
     EXPFACTORY_DATA=/scif/data

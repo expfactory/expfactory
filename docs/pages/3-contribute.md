@@ -170,11 +170,10 @@ OK
 ### Test a Contribution
 This set of tests is more stringent in that the test starts with one of more submissions (markdown files that you will ask to be added to the `_library` folder via a pull request) and goes through Github cloning to testing of your preview. Specifically it includes:
 
-     - discovery of any markdown files in the bound folder
-     - parsing of the files for required fields
-     - download of the Github repositories to temporary locations
-     - testing of the Github repository config.json, and preview in Github pages
-
+ - discovery of any markdown files in the bound folder
+ - parsing of the files for required fields
+ - download of the Github repositories to temporary locations
+ - testing of the Github repository config.json, and preview in Github pages
 
 You need to bind the folder with markdown files for the library to `/scif/data` this time around. These tests have a lot more output because they are more substantial:
 
