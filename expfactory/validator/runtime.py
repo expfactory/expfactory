@@ -88,7 +88,11 @@ class RuntimeValidator:
         repo_master = clone(url, tmpdir)
         contenders = glob('%s/*' %repo_master)
         found = False
+
         for test in contenders:
+            if os.path.isdir(contender):
+                continue
+
             print('...%s' %test)
             text = read_file(test)
             if text == index:

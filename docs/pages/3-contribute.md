@@ -175,14 +175,20 @@ and then push!
 git push origin add/breath-counting-task
 ```
 
-You should then be able to go to the [expfactory library](https://www.github.com/expfactory/experiments) interface and click the button to do a **pull request** that is **across forks** to the **expfactory master branch**. If you want to test your experiments locally first, see below.
+You should then be able to go to the [expfactory library](https://www.github.com/expfactory/experiments) interface and click the button to do a **pull request** that is **across forks** to the **expfactory master branch**. Github is usually pretty clever in knowing when you've recently submit to a branch associated with a repository. For example, when I browsed to the expfactory experiments library main repo, I saw:
+
+<div>
+    <img src="/expfactory/img/contribute/pull-request.png"><br>
+</div>
+
+Github, how did you know that's exactly what I wanted to do? If you want to test your experiments locally first, see below.
 
 
 ## Test the Experiment
-Your experiment will be tested when you submit a pull request (as we just showed above). However you can run the tests before filing the PR, if you want to be sure everything looks ok. From the library clone, after you've added the new file, issue the following:
+Your experiment will be tested when you submit a pull request (as we just showed above). However you can run the tests before filing the PR, if you want to be sure everything looks ok. However, you will need to install expfactory first (from github). From the library clone, after you've added the new file, issue the following:
 
 ```
-python -m unittest tests.test_recipes
+python -m unittest tests.test_library
 ```
 
 Any issues with your recipe will be spit out on the screen. When you are confident in your submission, then go ahead and fo the PR. What happens during the PR is the same as on your local machine - the pull request will use the metadata to clone and test the experiment, along with your repository. When it is merged, it will appear automatically in the web interface and be [available programmatically](https://expfactory.github.io/experiments/library.json).
