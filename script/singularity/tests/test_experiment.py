@@ -43,18 +43,17 @@ class TestExperiment(TestCase):
     def setUp(self):
 
         self.ExpValidator = ExperimentValidator()
-        self.config = glob("/scif/data/config.json")
+        self.config = "/scif/data/config.json"
         
     def test_experiment(self):
         '''test an experiment, including the markdown file, and repo itself
         '''
-        if len(self.config) == 0:
+        if not os.path.exists(self.config):
             print('You must use --bind to bind the folder with config.json to /scif/data in the image.')
             sys.exit(1) 
 
         print("...Test: Experiment Validation")
-        for config in self.config:
-            self.assertTrue(self.ExpValidator.validate(config))            
+        self.assertTrue(self.ExpValidator.validate(self.config))          
 
 
 if __name__ == '__main__':
