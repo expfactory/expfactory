@@ -188,6 +188,7 @@ Github, how did you know that's exactly what I wanted to do? If you want to test
 Your experiment will be tested when you submit a pull request (as we just showed above). However you can run the tests before filing the PR, if you want to be sure everything looks ok. However, you will need to install expfactory first (from github). From the library clone, after you've added the new file, issue the following:
 
 ```
+python -m pip install git+https://github.com/expfactory/expfactory.git@master
 python -m unittest tests.test_library
 ```
 

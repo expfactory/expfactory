@@ -41,7 +41,7 @@ Next, read more about [usage](pages/2-usage.md), and when you are ready, [genera
 
 ## Development Guide
 
- - [Contribute](pages/3-contribute.md) an experiment to the [library](https://www.github.com/expfactory/library) for others to use.
+ - [Contribute](pages/3-contribute.md) an experiment to the [library](https://www.github.com/expfactory/experiments) for others to use.
  - [Interactive](pages/4-development.md) Examples for how I (@vsoch) developed the software
 
 <div>
