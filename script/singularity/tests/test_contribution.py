@@ -76,7 +76,6 @@ class TestContribution(TestCase):
         for ymlfile in self.experiments:
             self.assertTrue(self.LibValidator.validate(ymlfile))
             url = self.LibValidator.metadata['github']
-
             self.assertTrue(self.ExpValidator.validate(url))
             result = self.RuntimeValidator.validate(url)
             print(result)

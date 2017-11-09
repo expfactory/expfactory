@@ -123,7 +123,49 @@ Great! Once you are here, you have a folder with a working experiment. This is n
 You can add whatever metadata you want to the config.json, and you can also add labels to the container to be programatically accessible (more later on this). You should not keep a version in this metadata file, but instead use Github tags and commits. This information will be added automatically upon build of your experiment container. We also **strongly** encourate you to add a LICENSE file to your work.
 
 
-## Test Your Experiment
+## Test the Experiment
+Your experiment will be tested when you submit a pull request (as we just showed above). However you can run the tests before filing the PR. There are two kinds of tests, testing an **experiment** and testing a **contribution**:
+
+ - an **experiment** is a single folder with static content to serve an experiment. Usually
+this means an `index.html` file and associated style (css) and javascript (js), and the config.json
+we just talked about above. This test is appropriate if you've prepared an experiment folder but haven't yet pushed to Github.
+ - a **contribution** is a submission of one or more experiments to the [library](https://www.github.com/expfactory/experiments),  meaning one or more markdown file intended to be added to the `_library` folder. The contribution tests also test the experiments, but retrieves them from your repository on Github. Thus, this test is useful when you've pushed your experiment to Github, and want to (locally) test if it's ready for the library.
+
+For both cases above, we provide a prebuilt container so you don't need to install the expfactory software locally.
+
+```
+singularity pull --name expfactory.test shub://expfactory/expfactory:test
+```
+
+What tests are included?
+
+```
+singularity apps expfactory.test
+test-experiment
+test-contribution
+``` 
+
+You can ask for help for either with `singularity help --app <appname>`
+
+### Test an Experiment
+If you run without binding your folder with the experiment, you will get an error message:
+
+```
+singularity run --app test-experiment expfactory.test 
+You must use --bind to bind the folder with config.json to /scif/data in the image.
+```
+
+
+### Local Testing
+If you do decide to test on your local machine (without the container) you will need to clone the repository first, and you can use the tests under `/script/singularity/tests` or with the library in the `tests` folder as follows:
+
+```
+python -m pip install git+https://github.com/expfactory/expfactory.git@master
+python -m unittest tests.test_library
+```
+
+Any issues with your recipe will be spit out on the screen. When you are confident in your submission, then go ahead and fo the PR. What happens during the PR is the same as on your local machine - the pull request will use the metadata to clone and test the experiment, along with your repository. When it is merged, it will appear automatically in the web interface and be [available programmatically](https://expfactory.github.io/experiments/library.json).
+
 
 ## Add the Experiment
 When your experiment is ready to go, you should fork the [library repository](https://expfactory.github.io/library), and in the `experiments` folder, create a file named equivalently to the main identifier (`exp_id`) of your experiment in the folder `docs/_library`. For example, after I've cloned the fork of my repo, I might check out a new branch for my task:
@@ -184,18 +226,6 @@ You should then be able to go to the [expfactory library](https://www.github.com
     <img src="/expfactory/img/contribute/pull-request.png"><br>
 </div>
 
-Github, how did you know that's exactly what I wanted to do? If you want to test your experiments locally first, see below.
-
-
-## Test the Experiment
-Your experiment will be tested when you submit a pull request (as we just showed above). However you can run the tests before filing the PR, if you want to be sure everything looks ok. However, you will need to install expfactory first (from github). From the library clone, after you've added the new file, issue the following:
-
-```
-python -m pip install git+https://github.com/expfactory/expfactory.git@master
-python -m unittest tests.test_library
-```
-
-Any issues with your recipe will be spit out on the screen. When you are confident in your submission, then go ahead and fo the PR. What happens during the PR is the same as on your local machine - the pull request will use the metadata to clone and test the experiment, along with your repository. When it is merged, it will appear automatically in the web interface and be [available programmatically](https://expfactory.github.io/experiments/library.json).
 
 
 # Deploying Experiments
