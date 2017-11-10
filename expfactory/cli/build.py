@@ -49,10 +49,11 @@ def main(args,parser,subparser):
     # List of experiments is required
     template = get_template('build/singularity/Singularity.template')
     
+    print(parser)
     # For now, only one database provided
-    database = parser.database
-    studyid = parser.studyid
-    experiments = parser.experiments
+    database = args.database
+    studyid = args.studyid
+    experiments = args.experiments
     
     template = sub_template(template,"{{studyid}}",studyid)
     template = sub_template(template,"{{database}}",database)
