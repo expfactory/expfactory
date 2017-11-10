@@ -90,5 +90,5 @@ def main(args,parser,subparser):
         sys.exit(1)
 
     template = sub_template(template,"{{experiments}}",apps)
-    outfile = write_file(parser.output,template)
+    outfile = write_file(args.output,template)
     bot.log("Recipe written to %s" %outfile)
