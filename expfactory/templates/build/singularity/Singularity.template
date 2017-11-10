@@ -1,0 +1,68 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%help
+    see experiments available:
+        singularity apps expfactory.img
+
+    serve your battery
+        sudo singularity instance.start expfactory.simg web1
+
+
+########################################
+# Configure
+########################################
+
+%environment
+    EXPFACTORY_STUDY_ID={{studyid}}
+    EXPFACTORY_SERVER=localhost
+    EXPFACTORY_CONTAINER=true
+    EXPFACTORY_DATA=/scif/data
+    EXPFACTORY_DATABASE={{database}}
+    EXPFACTORY_BASE=/scif/apps
+    export EXPFACTORY_BASE EXPFACTORY_DATA \
+           EXPFACTORY_DATABASE \
+           EXPFACTORY_CONTAINER \
+           EXPFACTORY_STUDY_ID \
+           EXPFACTORY_SERVER
+
+
+%startscript
+    service nginx start
+    gunicorn --bind 0.0.0.0:5000 expfactory.wsgi:app
+    service nginx restart
+
+%post
+    apt-get update && apt-get install -y nginx git python3-pip python3-dev
+    cd /opt && git clone https://www.github.com/expfactory/expfactory
+    cd expfactory && cp script/nginx.gunicorn.conf /etc/nginx/sites-enabled/default
+    cp script/nginx.conf /etc/nginx/nginx.conf
+    mkdir -p /scif/apps
+    python3 -m pip install gunicorn
+    cp expfactory/config_dummy.py expfactory/config.py
+    chmod u+x /opt/expfactory/script/generate_key.sh
+    /bin/bash /opt/expfactory/script/generate_key.sh /opt/expfactory/expfactory/config.py
+    python3 setup.py install
+
+
+########################################
+# Tools
+########################################
+
+%apprun test-experiments
+    cd /opt/expfactory/expfactory/templates/build/singularity
+    exec python3 -m unittest tests.test_experiments
+
+%apphelp test-experiments
+   The test-experiments app is used to help you test all experiments installed
+   in the container at /scif/apps.
+
+   Usage:
+       singularity run --app test-experiment experiment.simg
+
+
+########################################
+# Experiments
+########################################
+
+{{experiments}}
