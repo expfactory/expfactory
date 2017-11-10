@@ -85,7 +85,7 @@ def get_parser():
                          help="output name for Singularity recipe", 
                          type=str, required=True)
 
-    build.add_argument('experiments', nargs="+", required=True
+    build.add_argument('experiments', nargs="+", required=True,
                         help='experiments to build in image')
 
     build.add_argument("--studyid", dest='studyid', 
