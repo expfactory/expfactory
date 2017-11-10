@@ -63,7 +63,7 @@ def main(args,parser,subparser):
     for experiment in experiments:
         if experiment in library:
             config = library[experiment]
-            app = "%appinstall %s\n" %experiment
+            app = "%" + "appinstall %s\n" %experiment
 
             # Here add custom build routine, should be list of lines
             if "install" in config:
@@ -74,7 +74,7 @@ def main(args,parser,subparser):
             app = "%scd.. && expfactory install -f %s\n\n" %(app,config['github'])  
 
             if "template" in config:
-                app = "%sapplabels %s\n" %(app, experiment)
+                app = app + "%" + "applabels %s\n" %(experiment)
                 app = "%sTEMPLATE %s\n" %(app, config['template'])
             if "contributors" in config:
                 contributors = ','.join(config['contributors'])
@@ -83,7 +83,7 @@ def main(args,parser,subparser):
             apps = "%s%s\n" %(apps,app)
 
         else:
-            bot.warning('%s not in library, check spelling & punctuation.')
+            bot.warning('%s not in library, check spelling & punctuation.' %experiment)
 
     if apps == "\n":
         bot.error('No valid experiments found, cancelling recipe build.')
