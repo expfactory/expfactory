@@ -36,7 +36,7 @@ from expfactory.utils import (
     sub_template,
     write_file
 )
-from expfactory.experiments import get_library
+from expfactory.experiment import get_library
 from expfactory.logger import bot
 from glob import glob
 import tempfile
