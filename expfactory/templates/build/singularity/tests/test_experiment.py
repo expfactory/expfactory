@@ -1,7 +1,6 @@
 '''
-test_experiment.py: Allow a user to test a local experiment. This is intended
-                    to run from the provided Expfactory container. The experiment
-                    is assumed to be mounted at /scif/data
+test_experiments.py: Allow a user to test all experiments in the container. 
+                     The experiments are assumed to be installed at /scif/apps
 
 Copyright (c) 2017, Vanessa Sochat
 All rights reserved.
@@ -43,17 +42,20 @@ class TestExperiment(TestCase):
     def setUp(self):
 
         self.ExpValidator = ExperimentValidator()
-        self.config = "/scif/data/config.json"
+        self.base = "/scif/apps"
+        self.experiments = glob("%s/*" %self.base)
         
     def test_experiment(self):
         '''test an experiment, including the markdown file, and repo itself
         '''
-        if not os.path.exists(self.config):
-            print('You must use --bind to bind the folder with config.json to /scif/data in the image.')
-            sys.exit(1) 
-
         print("...Test: Experiment Validation")
-        self.assertTrue(self.ExpValidator.validate(self.config,validate_folder=False))
+
+        for experiment in self.experiments:
+            if os.path.isdir(experiment):
+                name = os.path.basename(experiment)
+                print('Found experiment %s' %name)
+                valid = self.ExpValidator.validate(experiment) 
+                self.assertTrue(valid)
 
 
 if __name__ == '__main__':

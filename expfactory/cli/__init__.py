@@ -73,7 +73,31 @@ def get_parser():
                          type=str, default=None)
 
 
-    # Experiments and Runtime Config
+    # Generate Build Recipe
+    build = subparsers.add_parser("build", 
+                                   help="Build an experiment container (or just recipe)")
+
+    build.add_argument('--recipe', '-r',dest="recipe",
+                        help="only generate a recipe",
+                        default=False, action='store_true')
+
+    build.add_argument("--output",'-o', dest='output', 
+                         help="output name for Singularity recipe", 
+                         type=str, required=True)
+
+    build.add_argument('experiments', nargs="+", required=True
+                        help='experiments to build in image')
+
+    build.add_argument("--studyid", dest='studyid', 
+                        help="study id for saving database",
+                        type=str, default="expfactory")
+
+    build.add_argument("--database", dest='database', 
+                        choices=['fllesystem'],
+                        help="database for application (default filesystem)",
+                        type=str, default="filesystem")
+
+    # Experiment Runtime Arguments
     parser.add_argument("--experiments", dest='experiments', 
                          help="comma separated list of experiments for a local battery", 
                          type=str, default=None)
@@ -134,6 +158,9 @@ def main():
 
     elif command == "list":
         from .list import main
+
+    elif command == "build":
+        from .build import main
 
     # No argument supplied
     else:
