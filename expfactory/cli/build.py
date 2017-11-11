@@ -67,7 +67,7 @@ def main(args,parser,subparser):
 
             # Here add custom build routine, should be list of lines
             if "install" in config:
-                commands = "\n".join(["RUN %s "%s for x in config['install'])
+                commands = "\n".join(["RUN %s "%s for x in config['install']])
                 app = "%s%s\n" %(app, commands)
 
             # The final installation step
