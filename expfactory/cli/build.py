@@ -63,11 +63,11 @@ def main(args,parser,subparser):
     for experiment in experiments:
         if experiment in library:
             config = library[experiment]
-            app = "LABEL  EXPERIMENT_%s\n" %experiment
+            app = "LABEL EXPERIMENT_%s\n /scif/apps/%s" %(experiment,experiment)
 
             # Here add custom build routine, should be list of lines
             if "install" in config:
-                commands = "\n".join(["RUN %s "%s for x in config['install']])
+                commands = "\n".join(["RUN %s "%s for x in config['install']]).strip('\n')
                 app = "%s%s\n" %(app, commands)
 
             # The final installation step

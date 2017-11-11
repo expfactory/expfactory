@@ -1,4 +1,12 @@
-y# Docker Builder
+# Docker Builder
+
+To do a build, you will be doing the following:
+
+ - generating a recipe with (reproducible) steps to build a custom container
+ - building the container!
+
+## The Expfactory Builder Image
+Both of these steps start with the expfactory builder container. 
 In [builder](Dockerfile) we've provided an image that will generate a Dockerfile,
 and from it you can build your Docker image.  We don't build the image within the same 
 container for the explicit purpose that you should keep a copy of the recipe
@@ -28,6 +36,7 @@ optional arguments:
                         database for application (default filesystem)
 ```
 
+## Experiment Selection
 The minimum requirement we need is a list of `experiments`. You can either [browse
 the table](https://expfactory.github.io/experiments/) or see a current library list with `list.`
 
@@ -45,6 +54,7 @@ Experiments
 7  tower-of-london	https://www.github.com/expfactory-experiments/tower-of-london
 ```
 
+## Recipe Generation
 To generate a Dockerfile to build our custom image, we need to run expfactory in the container,
 and mount a folder (`my-experiment`) to retrieve the image that is built. The folder
 should not already container a Dockerfile, and most appropriate is a new folder that you
@@ -55,17 +65,51 @@ mkdir -p /tmp/my-experiment
 docker run -v /tmp/my-experiment:/data \
               vanessa/expfactory-builder \
               tower-of-london
+
+Expfactory Version: 3.0
+LOG Recipe written to /data/Dockerfile
+
+To build, cd to recipe and:
+              docker build -t expfactory/experiments .
 ```
+
+## Container Generation
+Now we would go to the folder (`/tmp/my-experiment`) to bulid our experiments container. We
+could actually do this in the container for you, but it's better to generate the file first
+(and generate for version control) than not. You have a Dockerfile and a script to run 
+when it's used:
+
+```
+cd /tmp/my-experiments
+ls
+Dockerfile  startscript.sh
+```
+
+At this point we recommend you add `LABELS` to your Dockerfile. A label can be any form of
+metadata to describe the image. Look at the [label.schema](http://label-schema.org/rc1/) for
+inspiration. Then build the image, and replace `vanessa/experiment` with whatever namespace/container you
+want to give to the image. It's easy to remember to correspond to your Github repository (`username/reponame`).
+
+```
+docker build -t vanessa/experiment .
+```
+
+## Run your Container
+After you do the above steps, your custom container will exist on your local machine,
+and you need just interact with it. To run the application (and not save any data):
+
+
+##TODO: stopped here, need to debug how to get nxinx etc running in container
+```
+docker run vanessa/experiment
+```
+
 
 To shell and work interactively in the image:
 
 ```
-docker run --entrypoint /bin/bash -it vanessa/expfactory-builder
+docker run --entrypoint /bin/bash -it vanessa/experiments
 ```
-
-Note that I'm making two volumes, and the second is to make sure that my present working
-directory is bound to `/data` in the container. The last line is my list of experiments.
-
 
 
 To generate a recipe, but not ask it to build the image, we would add the `--recipe`

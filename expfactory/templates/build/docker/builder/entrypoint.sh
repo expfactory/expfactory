@@ -27,7 +27,7 @@ if [ $1 == "build" ]; then
 
     if [ -f "${recipe}" ]; then
         cp /opt/expfactory/expfactory/templates/build/docker/startscript.sh /data
-        echo "Dockerfile finished at ${recipe}!"
+        echo
         echo "To build, cd to recipe and:
               docker build -t expfactory/experiments ."
     else
