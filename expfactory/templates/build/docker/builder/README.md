@@ -54,6 +54,16 @@ Experiments
 7  tower-of-london	https://www.github.com/expfactory-experiments/tower-of-london
 ```
 
+Try using grep if you want to search for a term in the name or url
+
+```
+docker run vanessa/expfactory-builder list | grep survey
+2  alcohol-drugs-survey	https://www.github.com/expfactory-experiments/alcohol-drugs-survey
+4  dospert-eb-survey	https://www.github.com/expfactory-experiments/dospert-eb-survey
+5  dospert-rp-survey	https://www.github.com/expfactory-experiments/dospert-rp-survey
+6  dospert-rt-survey	https://www.github.com/expfactory-experiments/dospert-rt-survey
+```
+
 ## Recipe Generation
 To generate a Dockerfile to build our custom image, we need to run expfactory in the container,
 and mount a folder (`my-experiment`) to retrieve the image that is built. The folder
@@ -64,7 +74,7 @@ intend to set up with version control (a.k.a. Github). That looks like this:
 mkdir -p /tmp/my-experiment
 docker run -v /tmp/my-experiment:/data \
               vanessa/expfactory-builder \
-              tower-of-london
+              build tower-of-london
 
 Expfactory Version: 3.0
 LOG Recipe written to /data/Dockerfile
@@ -101,11 +111,13 @@ Don't forget the `.` at the end! It references the present working directory wit
 
 ## Run your Container
 After you do the above steps, your custom container will exist on your local machine,
-and you need just interact with it. To run the application (and not save any data):
+and you need just interact with it. To run the application (and not save any data), you can
+just use run, and importantly, we need to map the web server port to our local machine,
+otherwise it will be running and we won't see it:
 
 
 ```
-docker run vanessa/experiment
+docker run -p 80:80 vanessa/experiment
 ```
 
 

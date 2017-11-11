@@ -2,8 +2,8 @@
 
 if [ $# -eq 0 ]; then
     echo "Usage:"
-    echo "docker run vanessa/expfactory:builder [build|list|test-experiments]"
-    expfactory --help
+    echo "docker run vanessa/expfactory:builder [help|list|test-experiments|start]"
+    echo "docker run -p 80:80 -v /tmp/data:/scif/data vanessa/expfactory:builder start"
     exit
 fi
 
@@ -24,12 +24,19 @@ while true; do
             exit
         ;;
         -ls|--list|list)
-            echo "Experiments in the library:"
-            echo
             echo "Experiments in this image:"
             ls /scif/apps -1
             echo
+            echo "Experiments in the library:"
             exec expfactory list
+            exit
+        ;;
+        -s|--start|start)
+            echo "Starting Web Server"
+            echo
+            service nginx start
+            gunicorn --bind 0.0.0.0:5000 expfactory.wsgi:app
+            service nginx restart
             exit
         ;;
         -*)
@@ -41,7 +48,3 @@ while true; do
         ;;
     esac
 done
-
-service nginx start
-gunicorn --bind 0.0.0.0:5000 expfactory.wsgi:app
-service nginx restart

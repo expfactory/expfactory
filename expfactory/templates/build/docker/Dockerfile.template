@@ -37,3 +37,4 @@ RUN python3 setup.py install
 
 ENTRYPOINT ["/bin/bash", "/startscript.sh"]
 EXPOSE 5000
+EXPOSE 80
