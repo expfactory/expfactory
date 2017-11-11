@@ -77,7 +77,7 @@ var nodes = d3.range(m).map(function(ii) {
     radius: Math.max(10,Math.sqrt(v) * maxRadius),
     color: nodes[ii].color,
     exp_id: nodes[ii].exp_id,
-    cy: x(i),
+    cy: x(ii),
     cx: width / 2
   };
 });
