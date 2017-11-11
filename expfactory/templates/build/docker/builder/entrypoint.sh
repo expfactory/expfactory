@@ -14,6 +14,7 @@ fi
 
 if [ $1 == "build" ]; then 
 
+    shift
     recipe="/data/Dockerfile"
 
     # Don't overwrite recipe
