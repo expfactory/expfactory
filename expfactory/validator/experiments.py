@@ -166,6 +166,7 @@ class ExperimentValidator:
                 ("instructions",1, str),
                 ("exp_id",1,str),
 
+                ("install",0, list),  # list of commands to install / build experiment 
                 ("contributors",0, list), # not required
                 ("reference",0, list), 
                 ("cognitive_atlas_task_id",0,str),

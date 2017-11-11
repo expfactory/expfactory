@@ -187,6 +187,11 @@ def read_file(filename,mode='r'):
     return data
 
 
+def write_file(filename,content,mode='w'):
+    with open(filename,mode) as filey:
+        filey.writelines(content)
+    return filename
+
 def get_post_fields(request):
     '''parse through a request, and return fields from post in a dictionary
     '''

@@ -80,7 +80,7 @@ def main(args,parser,subparser):
         in_container = True
 
     # Running, live container
-    elif os.environ.get('SINGULARITY_CONTAINER') is not None:
+    elif os.environ.get('EXPFACTORY_CONTAINER') is not None:
         in_container = True
 
     if in_container is True:
@@ -106,9 +106,11 @@ def main(args,parser,subparser):
         with open(instruct,'w') as filey:
             filey.writelines(config['instructions'])
 
-    if os.path.exists(dest):
+    if not os.path.exists(dest):
+        os.system('mv %s %s' %(source, dest))
+    else:
         if args.force is False:
             bot.error('%s is not empty! Use --force to delete and re-create.' %folder)
             sys.exit(1) 
 
-    os.system('cp -R %s/* %s' %(source, dest))
+        os.system('cp -R %s/* %s' %(source, dest))

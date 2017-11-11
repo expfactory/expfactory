@@ -81,7 +81,7 @@ class EFServer(Flask):
             self.database = getenv('EXPFACTORY_DATA','/scif/data')
 
             if not os.access(self.database, os.W_OK):
-                bot.warning("%s is not writable, running in demo mode." %data_base)
+                bot.warning("%s is not writable, running in demo mode." %self.data_base)
             else:
                 self.study_id = getenv('EXPFACTORY_STUDY_ID', 'expfactory')
                 self.database = "%s/%s" %(self.database, self.study_id)

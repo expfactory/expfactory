@@ -109,6 +109,7 @@ Great! Once you are here, you have a folder with a working experiment. This is n
 ```
 
  - `name`: Is a human friendly name for the experiment *[required]*.
+ - `install`: should be a list of commands to compile, build, etc. your experiment. You **must** include installation of all dependencies.
  - `exp_id`: is the experiment factory unique identifier. It must be unique among other experiment factory-provided experiments *[required]*. It must also correspond to the repository name that houses the experiment *[required]*. 
  - `description`: A brief description of your experiment *[required]*.
  - `instructions`: What should the participant do? *[required]*.

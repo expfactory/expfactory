@@ -38,10 +38,17 @@ from expfactory.utils import (
 
 from glob import glob
 import filecmp
+from expfactory.defaults import EXPFACTORY_LIBRARY
 from expfactory.logger import bot
 import json
+import requests
 import re
 import os
+
+
+################################################################################
+# Experiments
+################################################################################
 
 
 def get_experiments(base, load=False):
@@ -129,3 +136,21 @@ def validate(folder=None, cleanup=False):
     from expfactory.validator import ExperimentValidator
     cli = ExperimentValidator()
     return cli.validate(folder, cleanup=cleanup)
+
+
+
+
+################################################################################
+# Library
+################################################################################
+
+def get_library(lookup=True, key='exp_id'):
+    ''' return the raw library, without parsing'''
+    library = None
+    response = requests.get(EXPFACTORY_LIBRARY)
+    if response.status_code == 200:
+        library = response.json()
+        if lookup is True:
+            return make_lookup(library,key=key)
+    return library
+
