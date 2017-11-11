@@ -21,8 +21,9 @@ RUN git clone https://www.github.com/expfactory/expfactory
 WORKDIR expfactory 
 RUN cp script/nginx.gunicorn.conf /etc/nginx/sites-enabled/default
 RUN cp script/nginx.conf /etc/nginx/nginx.conf
-RUN mkdir -p /scif/data
-RUN mkdir -p /scif/apps
+RUN mkdir -p /scif/data  # saved data
+RUN mkdir -p /scif/apps  # experiments
+RUN mkdir -p /scif/logs  # gunicorn logs
 RUN python3 -m pip install gunicorn
 RUN cp expfactory/config_dummy.py expfactory/config.py
 RUN chmod u+x /opt/expfactory/script/generate_key.sh

@@ -35,8 +35,24 @@ while true; do
             echo "Starting Web Server"
             echo
             service nginx start
-            gunicorn --bind 0.0.0.0:5000 expfactory.wsgi:app
-            service nginx restart
+            touch /scif/logs/gunicorn.log
+            touch /scif/logs/gunicorn-access.log
+            tail -n 0 -f /scif/logs/gunicorn*.log &
+
+            exec  gunicorn expfactory.wsgi:app \
+                  --bind 0.0.0.0:5000 \
+                  --name expfactory_experiments
+                  --workers 5
+                  --log-level=info
+                  --log-file=/scif/logs/gunicorn.log \
+                  --access-logfile=/scif/logs/gunicorn-access.log \
+            "$@" & service nginx restart
+
+            # simple manual command could be
+            #service nginx start
+            #gunicorn --bind 0.0.0.0:5000 expfactory.wsgi:app
+            #service nginx restart
+
             exit
         ;;
         -*)

@@ -109,44 +109,143 @@ docker build --no-cache -t vanessa/experiment .
 
 Don't forget the `.` at the end! It references the present working directory with the Dockerfile.
 
-## Run your Container
+## Start your Container
 After you do the above steps, your custom container will exist on your local machine,
-and you need just interact with it. To run the application (and not save any data), you can
+and you need just interact with it. To run the application (and **not save any data**), you can
 just use run, and importantly, we need to map the web server port to our local machine,
-otherwise it will be running and we won't see it:
-
+otherwise it will be running and we won't see it. First, let's pretend we haven't a clue
+what it does, and just run it:
 
 ```
-docker run -p 80:80 vanessa/experiment
+docker run vanessa/experiment
+
+Usage:
+    docker run <container> [help|list|test-experiments|start]
+    docker run -p 80:80 -v /tmp/data:/scif/data <container> start
 ```
 
+The important command is the second - we want to start the server to run experiments. 
+
+- `port`: The `-p 80:80` is telling Docker to map port 80 (the nginx web server) in the container to port 80 on our local machine. If we don't do this, we won't see any experiments in the browser!
+- `volumes`: The second command `-v` is telling Docker we want to see the output in the container at `/scif/data` to appear in the folder `/tmp/data` on our local machine. If you are just testing and don't care about saving or seeing data, you don't need to specify this.
+
+For this first go, we aren't going to map the data folder. This way I can show you how to shell inside an interactive container.
+
+```
+docker run -p 80:80 vanessa/experiment start
+
+Starting Web Server
+
+ * Starting nginx nginx
+   ...done.
+==> /scif/logs/gunicorn-access.log <==
+
+==> /scif/logs/gunicorn.log <==
+[2017-11-11 16:28:42 +0000] [1] [INFO] Starting gunicorn 19.7.1
+[2017-11-11 16:28:42 +0000] [1] [INFO] Listening at: http://0.0.0.0:5000 (1)
+[2017-11-11 16:28:42 +0000] [1] [INFO] Using worker: sync
+[2017-11-11 16:28:42 +0000] [35] [INFO] Booting worker with pid: 35
+```
+
+The above is telling us that the webserver is writing output to logs in `/scif/logs`
+in the image, and we are viewing the main log. The port `5000` that is running the Flask
+server is being served via gunicorn at localhost.
+
+This means that if you open your browser to localhost ([http://127.0.0.1](http://127.0.0.1)) you will
+see your experiment interface! When you select an experiment, the general url will look 
+something like `http://127.0.0.1/experiments/tower-of-london`
+
+## Shell into your Container
+It's important that you know how to shell into your container for interactive debugging, and 
+general knowledge about Docker. First, open up a new terminal. We are going to use `docker ps`
+to see our running container:
+
+```
+docker ps
+
+CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS              PORTS                          NAMES
+2c503ddf6a7a        vanessa/experiment   "/bin/bash /starts..."   10 minutes ago      Up 10 minutes       0.0.0.0:80->80/tcp, 5000/tcp   zealous_raman
+```
+
+The cool part is that it shows us what we already know - port 80 in the container is mapped to 80 on our local machine, and the application served at port 5000 is exposed. And it has QUITE a fantastic name (`zealous_raman`). Note that docker assigns these automatically, you could have easily added a `--name` argument to specify your own when you issued the run command. I like the fun of having a surprise name :)
 
 To shell and work interactively in the image:
 
 ```
-docker run --entrypoint /bin/bash -it vanessa/experiments
+docker exec -it zealous_raman /bin/bash
+root@2c503ddf6a7a:/scif/apps# 
 ```
 
-
-To generate a recipe, but not ask it to build the image, we would add the `--recipe`
-flag. We would also mount the container's data directory to our machine so that 
-we can keep the final recipe.
+We shell into the `/scif/apps` directory - we are inside the container, with our installed experiments! Take a look!
 
 ```
-docker run --volume vanessa/expfactory-builder --recipe tower-of-london
+$ ls
+   tower-of-london
 ```
 
-docker run \
--v /var/run/docker.sock:/var/run/docker.sock \
--v D:\host\path\where\to\output\singularity\image:/output \
---privileged -t --rm \
-singularityware/docker2singularity \
-ubuntu:14.04
-
-
-This image is provided on Docker Hub so you shouldn't need to
-build it, but if you need to:
+Here are the logs we were looking at:
 
 ```
-docker build -t vanessa/expfactory-builder .
+$ ls /scif/logs
+gunicorn-access.log  gunicorn.log
 ```
+
+Importantly, our data is to be saved under `/scif/data`
+
+```
+ls /scif/data/
+expfactory
+```
+
+But the folder is empty because we haven't had anyone do the experiment yet. Try navigating back to ([http://127.0.0.1](http://127.0.0.1)) in
+your browser, and completing a round of the task.
+
+## Stopping your Container
+If you press Control+C for the terminal with the container started, you will kill the process and remove the container. This will
+happen regardless if you are shelled in another container, because the start script exits. You can also stop it from another terminal if you
+do:
+
+```
+docker stop zealous_raman
+```
+
+or use the container identifier (alphanumeric string) that you find with `docker ps`. This was helpful for me
+when I first didn't give an easy exit to running the gunicorn process.
+
+
+## Adding Experiments
+Guess what, it's really easy to install new experiments into your container! Be careful, however, that
+a running container that is changed on the fly doesn't change the image on your machine. If you want to add 
+experiments properly you should create a recipe that includes all necessary steps. This is only for quick testing.
+
+```
+# Shell into the container, and go to experiment base
+
+cd /scif/apps
+## Shell into your Container
+
+## List experiments if you want to see what is available
+expfactory list
+
+# Install test-task
+expfactory install https://www.github.com/expfactory-experiments/test-task
+
+Expfactory Version: 3.0
+Cloning into '/tmp/tmpab9ka6z_/test-task'...
+remote: Counting objects: 62, done.
+remote: Compressing objects: 100% (49/49), done.
+remote: Total 62 (delta 20), reused 55 (delta 13), pack-reused 0
+Unpacking objects: 100% (62/62), done.
+Checking connectivity... done.
+LOG Installing test-task to /scif/apps/test-task
+LOG Preparing experiment routes...
+```
+
+Note that you would need to restart nginx and gunicorn. @vsoch is going to make an easy 
+way to do this. 
+
+## Summary
+
+This is a quick preview of running a quick server with gunicorn, flask, and Docker. While this implementation isn't
+ideal for production, it will work reasonable well for a local lab that needs to run participants through a 
+behavioral paradigm.
