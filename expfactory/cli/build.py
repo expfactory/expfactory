@@ -71,7 +71,7 @@ def main(args,parser,subparser):
                 app = "%s%s\n" %(app, commands)
 
             # The final installation step
-            app = "%sWORKDIR /scif/apps\n RUN expfactory install -f %s\n\n" %(app,config['github'])  
+            app = "%sWORKDIR /scif/apps\n RUN expfactory install %s\n\n" %(app,config['github'])  
             apps = "%s%s\n" %(apps,app)
 
         else:
