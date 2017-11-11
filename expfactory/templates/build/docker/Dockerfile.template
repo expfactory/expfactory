@@ -29,11 +29,11 @@ RUN chmod u+x /opt/expfactory/script/generate_key.sh
 RUN /bin/bash /opt/expfactory/script/generate_key.sh /opt/expfactory/expfactory/config.py
 RUN python3 setup.py install
 
-ENTRYPOINT ["/bin/bash", "/startscript.sh"]
-EXPOSE 5000
-
 ########################################
 # Experiments
 ########################################
 
 {{experiments}}
+
+ENTRYPOINT ["/bin/bash", "/startscript.sh"]
+EXPOSE 5000
