@@ -47,7 +47,7 @@ import os
 def main(args,parser,subparser):
 
     # List of experiments is required
-    template = get_template('build/singularity/Singularity.template')
+    template = get_template('build/docker/Dockerfile.template')
     
     # For now, only one database provided
     database = args.database
@@ -63,23 +63,15 @@ def main(args,parser,subparser):
     for experiment in experiments:
         if experiment in library:
             config = library[experiment]
-            app = "%" + "appinstall %s\n" %experiment
+            app = "LABEL  EXPERIMENT_%s\n" %experiment
 
             # Here add custom build routine, should be list of lines
             if "install" in config:
-                commands = "\n".join(config['install'])
-                app = "%s%s\n" %(app, commands) 
+                commands = "\n".join(["RUN %s "%s for x in config['install'])
+                app = "%s%s\n" %(app, commands)
 
             # The final installation step
-            app = "%scd.. && expfactory install -f %s\n\n" %(app,config['github'])  
-
-            if "template" in config:
-                app = app + "%" + "applabels %s\n" %(experiment)
-                app = "%sTEMPLATE %s\n" %(app, config['template'])
-            if "contributors" in config:
-                contributors = ','.join(config['contributors'])
-                app = "%sCONTRIBUTORS %s\n" %(app, contributors)
-
+            app = "WORKDIR /scif/apps\n expfactory install -f %s\n\n" %(app,config['github'])  
             apps = "%s%s\n" %(apps,app)
 
         else:
