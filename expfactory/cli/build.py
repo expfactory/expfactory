@@ -63,7 +63,7 @@ def main(args,parser,subparser):
     for experiment in experiments:
         if experiment in library:
             config = library[experiment]
-            app = "LABEL EXPERIMENT_%s\n /scif/apps/%s" %(experiment,experiment)
+            app = "LABEL EXPERIMENT_%s /scif/apps/%s\n" %(experiment,experiment)
 
             # Here add custom build routine, should be list of lines
             if "install" in config:
@@ -71,7 +71,7 @@ def main(args,parser,subparser):
                 app = "%s%s\n" %(app, commands)
 
             # The final installation step
-            app = "%sWORKDIR /scif/apps\n RUN expfactory install %s\n\n" %(app,config['github'])  
+            app = "%sWORKDIR /scif/apps\nRUN expfactory install %s\n\n" %(app,config['github'])  
             apps = "%s%s\n" %(apps,app)
 
         else:
