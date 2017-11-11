@@ -18,12 +18,12 @@ while true; do
             exec expfactory --help
             exit
         ;;
-        -test-experiments|--te)
+        -test-experiments|--te|test)
             cd /opt/expfactory/expfactory/templates/build/singularity
             exec python3 -m unittest tests.test_experiments
             exit
         ;;
-        -ls|--list)
+        -ls|--list|list)
             echo "Experiments in the library:"
             echo
             echo "Experiments in this image:"

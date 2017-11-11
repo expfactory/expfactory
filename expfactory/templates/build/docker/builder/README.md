@@ -92,14 +92,18 @@ want to give to the image. It's easy to remember to correspond to your Github re
 
 ```
 docker build -t vanessa/experiment .
+
+# if you don't want to use cache
+docker build --no-cache -t vanessa/experiment .
 ```
+
+Don't forget the `.` at the end! It references the present working directory with the Dockerfile.
 
 ## Run your Container
 After you do the above steps, your custom container will exist on your local machine,
 and you need just interact with it. To run the application (and not save any data):
 
 
-##TODO: stopped here, need to debug how to get nxinx etc running in container
 ```
 docker run vanessa/experiment
 ```

@@ -118,10 +118,16 @@ class LibraryValidator:
 
         bot.test("Content:")
         name = os.path.basename(jsonfile)
+        exp_id = name.replace('.json','')
 
         # Validate name
         if "name" not in content:
             return notvalid('"name" not found in %s' % name)
+
+        # Library "name" corresponds to exp_id, name of repo
+        if exp_id != content['name']:
+            return notvalid('"name" not found in %s' % name)
+
         bot.test("        Name: %s" % content['name'])
 
         if not re.match("^[a-z0-9_-]*$", content['name']): 
