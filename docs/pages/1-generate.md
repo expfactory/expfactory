@@ -47,11 +47,7 @@ docker run -v /tmp/my-experiment/data/:/scif/data \
            expfactory/experiments start 
 ```
 
-Open your browser to localhost ([http://127.0.0.1](http://127.0.0.1)) to see the portal. See more pictures of the interface under [usage](/expfactory/usage.html).
-
-<div>
-    <img src="/expfactory/img/generate/portal.png"><br>
-</div>
+Open your browser to localhost ([http://127.0.0.1](http://127.0.0.1)) to see the portal [portal](/expfactory/usage.html).
 
 
 # Detailed Start
