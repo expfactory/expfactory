@@ -109,7 +109,7 @@ Great! Once you are here, you have a folder with a working experiment. This is n
 ```
 
  - `name`: Is a human friendly name for the experiment *[required]*.
- - `install`: should be a list of commands to compile, build, etc. your experiment. You **must** include installation of all dependencies.
+ - `install`: should be a list of commands to compile, build, etc. your experiment. This is not required unless your experiment index.html needs some kind of custom generation. You **must** include installation of all dependencies.
  - `exp_id`: is the experiment factory unique identifier. It must be unique among other experiment factory-provided experiments *[required]*. It must also correspond to the repository name that houses the experiment *[required]*. 
  - `description`: A brief description of your experiment *[required]*.
  - `instructions`: What should the participant do? *[required]*.
@@ -125,48 +125,74 @@ You can add whatever metadata you want to the config.json, and you can also add 
 
 
 ## Test the Experiment
-Your experiment will be tested when you submit a pull request (as we just showed above). However you can run the tests before filing the PR. There are two kinds of tests, testing an **experiment** and testing a **contribution**:
+Your experiment will be tested when you submit a pull request (as we just showed above). However you can run the tests before filing the PR. There are three kinds of tests, testing an **experiment** testing a **contribution**, and testing an **install**. You likely want to do the first and second, minimally, and ideally the third:
 
  - an **experiment** is a single folder with static content to serve an experiment. Usually
 this means an `index.html` file and associated style (css) and javascript (js), and the config.json
 we just talked about above. This test is appropriate if you've prepared an experiment folder but haven't yet pushed to Github.
  - a **contribution** is a submission of one or more experiments to the [library](https://www.github.com/expfactory/experiments),  meaning one or more markdown file intended to be added to the `_library` folder. The contribution tests also test the experiments, but retrieves them from your repository on Github. Thus, this test is useful when you've pushed your experiment to Github, and want to (locally) test if it's ready for the library.
+ - an **install** means that you've finished your experiment, and want to see it running in the experiments container.
 
-For both cases above, we provide a prebuilt container so you don't need to install the expfactory software locally.
+For the cases above, you can use the `vanessa/expfactory-builder` image to run tests. It assumes mounting either a directory with one or more experiment subfolders
 
-```
-singularity pull --name expfactory.test shub://expfactory/expfactory:test
-```
-
-What tests are included?
-
-```
-singularity apps expfactory.test
-test-contribution
-test-experiment
-``` 
-
-You can ask for help for either with `singularity help --app <appname>`
 
 ### Test an Experiment
-If you run without binding your folder with the experiment, you will get an error message:
+You have two options to test experiments on your host using `vanessa/expfactory-builder`. If you want to test a single experiment, meaning a folder with a `config.json` file:
 
 ```
-singularity run --app test-experiment expfactory.test 
-You must use --bind to bind the folder with config.json to /scif/data in the image.
+my-experiment/
+    config.json
 ```
 
-You need to bind the folder with your experiment (containing the config.json) to `/scif/data` in the image.
+then you should bind directory to it like this:
 
 ```
-singularity run --app test-experiment --bind $PWD:/scif/data expfactory.test 
-...Test: Experiment Validation
-.
+docker run -v my-experiment:/scif/apps vanessa/expfactory-builder test
+Testing experiments mounted to /scif/apps
+....Test: Experiment Validation
+
 ----------------------------------------------------------------------
 Ran 1 test in 0.001s
 
 OK
 ```
+
+If you want to test a group of experiments (a folder with subfolders, where each subfolder has a `config.json`):
+
+```
+experiments/
+    experiment-1/
+        config.json
+    experiment-2/
+        config.json
+    ...
+    experiment-N/
+        config.json
+```
+
+then you can bind the the main top level folder like this:
+
+```
+docker run -v experiments:/scif/apps vanessa/expfactory-builder test
+Testing experiments mounted to /scif/apps
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.007s
+
+OK
+...Test: Experiment Validation
+Found experiment tower-of-london
+Found experiment test-task
+Found experiment digit-span
+Found experiment adaptive-n-back
+Found experiment angling-risk-task
+Found experiment breath-counting-task
+Found experiment angling-risk-task-always-sunny
+Found experiment spatial-span
+Found experiment emotion-regulation
+```
+
+Remember that these tests are primarily looking at metadata, and runtime of your experiment still will need to be tested by a human, primarily when installed in the container.
 
 ### Test a Contribution
 This set of tests is more stringent in that the test starts with one of more submissions (markdown files that you will ask to be added to the `_library` folder via a pull request) and goes through Github cloning to testing of your preview. Specifically it includes:
@@ -179,65 +205,37 @@ This set of tests is more stringent in that the test starts with one of more sub
 You need to bind the folder with markdown files for the library to `/scif/data` this time around. These tests have a lot more output because they are more substantial:
 
 ```
-$ singularity run --app test-contribution --bind _library/:/scif/data expfactory.test
-
-...Test: Global Library validation
-preview: https://expfactory-experiments.github.io/test-task
-github: https://www.github.com/expfactory-experiments/test-task
-maintainer: @vsoch
-name: test-task
-layout: experiment
-tags: ['test', 'jspsych', 'experiment']
-Cloning into '/tmp/tmpzbfh2w44/test-task'...
-remote: Counting objects: 62, done.
-remote: Compressing objects: 100% (49/49), done.
-remote: Total 62 (delta 20), reused 55 (delta 13), pack-reused 0
-Unpacking objects: 100% (62/62), done.
-Checking connectivity... done.
-Checking connectivity... done.
-.../tmp/tmpmy0dlc0j/test-task/config.json
-.../tmp/tmpmy0dlc0j/test-task/experiment.js
-.../tmp/tmpmy0dlc0j/test-task/default_style.css
-.../tmp/tmpmy0dlc0j/test-task/README.md
-.../tmp/tmpmy0dlc0j/test-task/style.css
-.../tmp/tmpmy0dlc0j/test-task/LICENSE
-.../tmp/tmpmy0dlc0j/test-task/index.html
-True
-...
+docker run -v $PWD/_library:/scif/data vanessa/expfactory-builder test-library
 ```
 
-You can also use any of the expfactory software inside the image, the runscript provides the command line executable `expfactory list` by default so
-you can easily see experiments available.
+
+### Test an Installation
+Testing an installation is likely the most important, and final step. We mimic the same steps of generating a "full fledged" container to remain consistent. You will want to generate a base container, and install your experiment to it. We can use the builder to generate our recipe as we did before. It's good practice to include the `test-task` so you can test transitioning to the next experiment.
 
 ```
-$ singularity run expfactory.test
-Expfactory Version: 3.0
-Experiments
-1  adaptive-n-back	https://www.github.com/expfactory-experiments/adaptive-n-back
-2  breath-counting-task	https://www.github.com/expfactory-experiments/breath-counting-task
-3  test-task	https://www.github.com/expfactory-experiments/test-task
-4  tower-of-london	https://www.github.com/expfactory-experiments/tower-of-london
+mydir -p /tmp/recipe
+docker run -v /tmp/recipe:/data vanessa/expfactory-builder build test-task
 ```
 
-or you can execute a custom command to the image:
+then build your container
 
 ```
-singularity exec expfactory.test ls /opt/expfactory
-LICENSE  MANIFEST.in  README.md  build	dist  docs  expfactory	expfactory.egg-info  script  setup.py
+cd /tmp/recipe
+docker build -t expfactory/experiments .
 ```
 
-We will soon be adding a command line `build` function to generate a recipe on the fly, without using the interface. Stay tuned!
-
-
-### Local Testing
-If you do decide to test on your local machine (without the container) you will need to clone the repository first, and you can use the tests under `/script/singularity/tests` or with the library in the `tests` folder as follows:
+Finally, start the container (and make sure to bind a local folder if you need it, otherwise Github install works)
 
 ```
-python -m pip install git+https://github.com/expfactory/expfactory.git@master
-python -m unittest tests.test_library
+docker run -p 80:80 -d expfactory/experiments 
 ```
 
-Any issues with your recipe will be spit out on the screen. When you are confident in your submission, then go ahead and fo the PR. What happens during the PR is the same as on your local machine - the pull request will use the metadata to clone and test the experiment, along with your repository. When it is merged, it will appear automatically in the web interface and be [available programmatically](https://expfactory.github.io/experiments/library.json).
+Remember if you need to shell inside, you can do `docker exec -it <containerid> bash` and if you want to bind a folder from the host, use `-v`. You want to make sure that:
+
+ 1. the experiment metadata you would expect is rendered in the portal
+ 2. the experiment starts cleanly, including all static files (check the console with right click "Inspect" and then view the "console" tab)
+ 3. the experiment finishes cleanly, and outputs the expected data in `/scif/data`.
+ 4. the experiment transitions cleanly to the next, or if it's the only experiment, the finished screen appears.
 
 
 ## Add the Experiment
@@ -252,9 +250,7 @@ Switched to a new branch 'add/breath-counting-task'
 and then I would create a new file:
 
 ```
-
 touch docs/_library/breath-counting-task.md
-
 ```
 
 and it's contents would be:
@@ -306,5 +302,5 @@ Once you get here, you've probably had your experiment pull required approved an
 
 <div>
     <a href="/expfactory/usage.html"><button class="previous-button btn btn-primary"><i class="fa fa-chevron-left"></i> </button></a>
-    <a href="/expfactory/development.html"><button class="next-button btn btn-primary"><i class="fa fa-chevron-right"></i> </button></a>
+    <a href="/expfactory/"><button class="next-button btn btn-primary"><i class="fa fa-chevron-right"></i> </button></a>
 </div><br>

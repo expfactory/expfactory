@@ -1,5 +1,7 @@
 # Docker Builder
 
+**Note that updated versions of these docs are maintainer at [expfactory](https://expfactory.github.io/expfactory/generate.html).
+
 To do a build, you will be doing the following:
 
  - generating a recipe with (reproducible) steps to build a custom container
@@ -153,16 +155,35 @@ server is being served via gunicorn at localhost.
 
 This means that if you open your browser to localhost ([http://127.0.0.1](http://127.0.0.1)) you will
 see your experiment interface! When you select an experiment, the general url will look 
-something like `http://127.0.0.1/experiments/tower-of-london`
+something like `http://127.0.0.1/experiments/tower-of-london`. Now try hitting "Control+C" in the terminal
+where the server is running. You will see it exit. Refresh the browser, and see that the experiment is
+gone too. What we actually want to do is run the server in `detached` mode. After you've Control+C, try adding
+a `-d` to the original command. This means detached.
+
+
+```
+docker run -d -p 80:80 vanessa/experiment start
+2c503ddf6a7a0f2a629fa2e55276e220246320291c14f6393a33ef54ab5d512a
+```
+
+The long identifier spit out is the container identifier, and we will reference it by the first 12 digits.
+Try running `docker ps` to list your active containers - you will see it is the first one! And look at the 
+`CONTAINER_ID`:
+
+```
+$ docker ps
+CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS              PORTS                          NAMES
+2c503ddf6a7a        vanessa/experiment   "/bin/bash /starts..."   10 minutes ago      Up 10 minutes       0.0.0.0:80->80/tcp, 5000/tcp   zealous_raman
+```
+
 
 ## Shell into your Container
 It's important that you know how to shell into your container for interactive debugging, and 
-general knowledge about Docker. First, open up a new terminal. We are going to use `docker ps`
+general knowledge about Docker. First, open up a new terminal. As we did above, we used `docker ps`
 to see our running container:
 
 ```
-docker ps
-
+$ docker ps
 CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS              PORTS                          NAMES
 2c503ddf6a7a        vanessa/experiment   "/bin/bash /starts..."   10 minutes ago      Up 10 minutes       0.0.0.0:80->80/tcp, 5000/tcp   zealous_raman
 ```
@@ -200,10 +221,10 @@ expfactory
 But the folder is empty because we haven't had anyone do the experiment yet. Try navigating back to ([http://127.0.0.1](http://127.0.0.1)) in
 your browser, and completing a round of the task.
 
+
 ## Stopping your Container
-If you press Control+C for the terminal with the container started, you will kill the process and remove the container. This will
-happen regardless if you are shelled in another container, because the start script exits. You can also stop it from another terminal if you
-do:
+For the first example that we did without detached (`-d`) if you pressed Control+C for the terminal with the container started, you will kill the process and remove the container. This would happen regardless if you were shelled in another container, because the start script exits. However, now we have it
+running in this detached state, and we need to stop it using the docker daemon:
 
 ```
 docker stop zealous_raman
@@ -214,24 +235,65 @@ when I first didn't give an easy exit to running the gunicorn process.
 
 
 ## Adding Experiments
-Guess what, it's really easy to install new experiments into your container! Be careful, however, that
-a running container that is changed on the fly doesn't change the image on your machine. If you want to add 
-experiments properly you should create a recipe that includes all necessary steps. This is only for quick testing.
+While we are working on a development workflow for you to install experiments interactively, for now we encourage you
+to use the `vanessa/expfactory-builder` image to generate Dockerfile to maximize reproducibility of your work. Each
+change or command that you would do interactively breaks reproducibility!
+
+
+### Under Development
+**not ready for use**
+While we encourage you to re-generate the file with the `vanessa/expfactory-builder` so generation of your
+container is reproducible, it's possible to install experiments into your container after it's generated. You
+should only do this for development, as changes that you make to your container that are not recorded in the Dockerfile
+are not reproducible. Let's say that we have an experiment container that has one task, `tower-of-london`, and we want to install
+`test-task` to it.
+
+First let's create our container fresh, find the name, and shell into it:
 
 ```
-# Shell into the container, and go to experiment base
+$ docker run -p 80:80 vanessa/experiment start
 
-cd /scif/apps
-## Shell into your Container
+# What's the name?
+$ docker ps
+9e256e1b1473        vanessa/experiment   "/bin/bash /starts..."   3 seconds ago       Up 2 seconds        0.0.0.0:80->80/tcp, 5000/tcp   vigorous_lovelace
 
-## List experiments if you want to see what is available
+# Let's shell inside!
+docker exec -it vigorous_lovelace bash
+```
+
+We can see the one experiment installed, it was the one in our Dockerfile:
+
+```
+$ docker exec -it vigorous_lovelace bash
+root@9e256e1b1473:/scif/apps# ls
+tower-of-london
+```
+
+Now let's install a new one! Remember we need to be in `/scif/apps` to install the experiment there. What was the Github 
+url again? Let's ask...
+
+```
 expfactory list
-
-# Install test-task
-expfactory install https://www.github.com/expfactory-experiments/test-task
-
 Expfactory Version: 3.0
-Cloning into '/tmp/tmpab9ka6z_/test-task'...
+Experiments
+1  adaptive-n-back	https://www.github.com/expfactory-experiments/adaptive-n-back
+2  alcohol-drugs-survey	https://www.github.com/expfactory-experiments/alcohol-drugs-survey
+3  breath-counting-task	https://www.github.com/expfactory-experiments/breath-counting-task
+4  digit-span	https://www.github.com/expfactory-experiments/digit-span
+5  dospert-eb-survey	https://www.github.com/expfactory-experiments/dospert-eb-survey
+6  dospert-rp-survey	https://www.github.com/expfactory-experiments/dospert-rp-survey
+7  dospert-rt-survey	https://www.github.com/expfactory-experiments/dospert-rt-survey
+8  spatial-span	https://www.github.com/expfactory-experiments/spatial-span
+9  test-task	https://www.github.com/expfactory-experiments/test-task
+10 tower-of-london	https://www.github.com/expfactory-experiments/tower-of-london
+```
+
+Ah yes, let's install test-task:
+
+```
+$ expfactory install https://www.github.com/expfactory-experiments/test-task
+Expfactory Version: 3.0
+Cloning into '/tmp/tmp5xn6oc4v/test-task'...
 remote: Counting objects: 62, done.
 remote: Compressing objects: 100% (49/49), done.
 remote: Total 62 (delta 20), reused 55 (delta 13), pack-reused 0
@@ -241,11 +303,26 @@ LOG Installing test-task to /scif/apps/test-task
 LOG Preparing experiment routes...
 ```
 
-Note that you would need to restart nginx and gunicorn. @vsoch is going to make an easy 
-way to do this. 
+Now you are probably navigating to your web interface at ([http://127.0.0.1](http://127.0.0.1)) and confused that the new experiment
+isn't there. The easiest way to restart all the moving pieces is to (from outside the container) restart it. Let's exit, and do that.
+
+```
+$ exit
+docker restart vigorous_lovelace
+```
+
 
 ## Summary
-
-This is a quick preview of running a quick server with gunicorn, flask, and Docker. While this implementation isn't
+This is a quick preview of running a quick server with gunicorn, Flask, and Docker. While this implementation isn't
 ideal for production, it will work reasonable well for a local lab that needs to run participants through a 
-behavioral paradigm.
+behavioral paradigm. Do you have a use case that warrants a different kind of database, experiment, or deployment? 
+Please [get in touch](https://www.github.com/expfactory/issues) as I am looking to develop this.
+
+
+## Building the Builder
+Make sure that the branch that you want is cloned in the [Dockerfile](Dockerfile). Then cd to this directory and
+build the image
+
+```
+docker build -t vanessa/expfactory-builder .
+```

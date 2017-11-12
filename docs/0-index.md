@@ -16,22 +16,21 @@ Version: {{ site.version }}<br>
 > Nobody ever comes in... and nobody ever comes out...
 
 <p>And that's the way that reproducible behavioral experiments should be: designed, captured, and used again with assurance of running the same thing.
-The Experiment Factory software will help you create a reproducible container to deploy behavioral experiments. <span style="font-style:italic; color:darkmagenta">we are under development for this new container-based version, and will update this documentation base as we go!</span> Want to jump right in? Pull a demo container, start an instance named web1, and browse to localhost:</p>
+The Experiment Factory software will help you create a reproducible container to deploy behavioral experiments. <span style="font-style:italic; color:darkmagenta">we are under development for this new container-based version, and will update this documentation base as we go!</span> Want to jump right in? Run a demo container, and browse to localhost:</p>
 
 
 ```
-singularity pull --name expfactory.simg shub://expfactory/expfactory
-sudo singularity instance.start --bind /tmp/data:/scif/data expfactory.simg web1
+docker run -d -p 80:80 vanessa/experiments
 ```
 
-Next, read more about [usage](pages/2-usage.md), and when you are ready, [generation](pages/1-generate.md) of your custom container. Please [give feedback](https://www.github.com/expfactory/expfactory/issues) about your needs to further develop the software. The [experiments portal](https://expfactory.github.io/experiments/) will be updated as we migrate experiments from [the legacy Expfactory](https://www.github.com/expfactory/expfactory-experiments) soon. Your contributions and feedback are greatly appreciated!
+Next, read more about [generation](pages/1-generate.md) of your own experiment container. Please [give feedback](https://www.github.com/expfactory/expfactory/issues) about your needs to further develop the software. The [experiments portal](https://expfactory.github.io/experiments/) will be updated as we migrate experiments from [the legacy Expfactory](https://www.github.com/expfactory/expfactory-experiments) soon. Your contributions and feedback are greatly appreciated!
 
 
 ## User Guide
 
- - [Interface](pages/0-interface.md) the user interface, if you are just looking around.
  - [Building](pages/1-generate.md) your battery means creating and configuring your image.
- - [Running](pages/2-usage.md) an obtained or newly built experiment factory container
+ - [Using](pages/2-usage.md) an experiment factory container.
+ - [Contribute](pages/3-contribute.md) an experiment to the [library](https://www.github.com/expfactory/experiments) for others to use.
 
 ## Library
 
@@ -39,10 +38,6 @@ Next, read more about [usage](pages/2-usage.md), and when you are ready, [genera
  - [Generate](https://expfactory.github.io/experiments/generate) a custom container from our Library, or
  - [Recipes](https://expfactory.github.io/experiments/recipes) view a pre-generated recipe based on tags in the library.
 
-## Development Guide
-
- - [Contribute](pages/3-contribute.md) an experiment to the [library](https://www.github.com/expfactory/experiments) for others to use.
- - [Interactive](pages/4-development.md) Examples for how I (@vsoch) developed the software
 
 <div>
     <a href="/expfactory/generate"><button class="next-button btn btn-primary"><i class="fa fa-chevron-right"></i> </button></a>

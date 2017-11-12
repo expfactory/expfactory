@@ -36,7 +36,7 @@ to create other images, etc.
 ########################################
 
 %apprun test-experiment
-    cd /opt/expfactory/expfactory/templates/build/singularity
+    cd /opt/expfactory/expfactory/templates/build
     exec python3 -m unittest tests.test_experiment
 
 %apphelp test-experiment
@@ -51,7 +51,7 @@ to create other images, etc.
     - ensuring that required fields are present
 
 %apprun test-contribution
-    cd /opt/expfactory/expfactory/templates/build/singularity
+    cd /opt/expfactory/expfactory/templates/build
     exec python3 -m unittest tests.test_contribution
 
 %apphelp test-contribution
