@@ -20,7 +20,7 @@ The Experiment Factory software will help you create a reproducible container to
 
 
 ```
-docker run -d -p 80:80 vanessa/experiments
+docker run -p 80:80 vanessa/experiments start
 ```
 
 Next, read more about [generation](pages/1-generate.md) of your own experiment container. Please [give feedback](https://www.github.com/expfactory/expfactory/issues) about your needs to further develop the software. The [experiments portal](https://expfactory.github.io/experiments/) will be updated as we migrate experiments from [the legacy Expfactory](https://www.github.com/expfactory/expfactory-experiments) soon. Your contributions and feedback are greatly appreciated!

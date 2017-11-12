@@ -10,7 +10,7 @@ toc: false
 Pull our pre-generated example container, and use it!
 
 ```
-docker run -p 80:80 vanessa/experiments
+docker run -p 80:80 vanessa/experiments start
 ```
 
 # Quick Start
