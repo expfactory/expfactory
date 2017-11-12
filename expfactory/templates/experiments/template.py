@@ -43,10 +43,11 @@ from expfactory.views.utils import (
 from expfactory.server import app, csrf
 import os
 
+
 {{ exp_id_python }} = Blueprint('{{ exp_id }}', __name__,
                                 static_url_path='/experiments/{{ exp_id }}/', 
                                 static_folder='/scif/apps/{{ exp_id }}',
-                                template_folder='/scif/apps/{{ exp_id }}')
+                                template_folder='/scif/apps')
 
 @{{ exp_id_python }}.route('/experiments/{{ exp_id }}/')
 def {{ exp_id_python }}_base():

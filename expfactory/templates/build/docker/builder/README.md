@@ -315,3 +315,12 @@ This is a quick preview of running a quick server with gunicorn, Flask, and Dock
 ideal for production, it will work reasonable well for a local lab that needs to run participants through a 
 behavioral paradigm. Do you have a use case that warrants a different kind of database, experiment, or deployment? 
 Please [get in touch](https://www.github.com/expfactory/issues) as I am looking to develop this.
+
+
+## Building the Builder
+Make sure that the branch that you want is cloned in the [Dockerfile](Dockerfile). Then cd to this directory and
+build the image
+
+```
+docker build -t vanessa/expfactory-builder .
+```
