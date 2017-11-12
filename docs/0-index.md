@@ -16,7 +16,7 @@ Version: {{ site.version }}<br>
 > Nobody ever comes in... and nobody ever comes out...
 
 <p>And that's the way that reproducible behavioral experiments should be: designed, captured, and used again with assurance of running the same thing.
-The Experiment Factory software will help you create a reproducible container to deploy behavioral experiments. <span style="font-style:italic; color:darkmagenta">we are under development for this new container-based version, and will update this documentation base as we go!</span> Want to jump right in? Run a demo container, and browse to localhost:</p>
+The Experiment Factory software will help you create a reproducible container to deploy behavioral experiments. Want to jump right in? Run a demo container, and browse to localhost:</p>
 
 
 ```
