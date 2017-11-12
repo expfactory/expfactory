@@ -44,18 +44,30 @@ class TestExperiment(TestCase):
         self.ExpValidator = ExperimentValidator()
         self.base = "/scif/apps"
         self.experiments = glob("%s/*" %self.base)
+        self.contenders = [os.path.basename(x) for x in self.experiments]
         
     def test_experiment(self):
         '''test an experiment, including the markdown file, and repo itself
         '''
         print("...Test: Experiment Validation")
 
-        for experiment in self.experiments:
-            if os.path.isdir(experiment):
+        # First priority - the user gave an experiment folder
+        if "config.json" in self.contenders:
+            for experiment in self.experiments:
                 name = os.path.basename(experiment)
-                print('Found experiment %s' %name)
-                valid = self.ExpValidator.validate(experiment) 
-                self.assertTrue(valid)
+                if name == "config.json":
+                    print('Found experiment %s' %name)
+                    valid = self.ExpValidator.validate(experiment) 
+                    self.assertTrue(valid)
+
+        # Otherwise, the user gave a folder with subfolders
+        else
+            for experiment in self.experiments:
+                name = os.path.basename(experiment)
+                if os.path.isdir(experiment):
+                    print('Found experiment %s' %name)
+                    valid = self.ExpValidator.validate(experiment) 
+                    self.assertTrue(valid)
 
 
 if __name__ == '__main__':

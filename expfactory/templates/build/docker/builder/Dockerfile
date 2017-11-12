@@ -15,6 +15,7 @@ WORKDIR /opt/expfactory
 RUN python3 setup.py install
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod u+x /entrypoint.sh
+RUN mkdir -p /scif/apps
 RUN mkdir -p /data
 
 ENTRYPOINT ["/bin/bash","/entrypoint.sh"]

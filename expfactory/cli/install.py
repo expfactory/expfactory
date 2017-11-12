@@ -107,10 +107,10 @@ def main(args,parser,subparser):
             filey.writelines(config['instructions'])
 
     if not os.path.exists(dest):
-        os.system('mv %s %s' %(source, dest))
+        os.system('mkdir -p %s' %dest)
     else:
         if args.force is False:
             bot.error('%s is not empty! Use --force to delete and re-create.' %folder)
             sys.exit(1) 
 
-        os.system('cp -R %s/* %s' %(source, dest))
+    os.system('cp -R %s/* %s' %(source, dest))

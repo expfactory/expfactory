@@ -1,5 +1,7 @@
 # Docker Builder
 
+**Note that updated versions of these docs are maintainer at [expfactory](https://expfactory.github.io/expfactory/generate.html).
+
 To do a build, you will be doing the following:
 
  - generating a recipe with (reproducible) steps to build a custom container
