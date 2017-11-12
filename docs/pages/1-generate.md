@@ -36,26 +36,15 @@ docker run -v /tmp/my-experiment/data/:/scif/data \
 Open your browser to localhost ([http://127.0.0.1](http://127.0.0.1))
 
 
-# Generate your Experiment Container
-The generation of a container comes down to adding the experiments to a text file that records all the commands to generate your container. Since we are using Docker, this file will be the Dockerfile. In these sections, we will first 
-
-
-
-
-
-
-
-
-# Docker Builder
-
-To do a build, you will be doing the following:
+# Detailed Start
+The generation of a container comes down to adding the experiments to a text file that records all the commands to generate your container. Since we are using Docker, this file will be the Dockerfile. In these sections, we will be building your container from a customized file. You will be doing the following:
 
  - generating a recipe with (reproducible) steps to build a custom container
  - building the container!
 
 ## The Expfactory Builder Image
 Both of these steps start with the expfactory builder container. 
-In [builder](Dockerfile) we've provided an image that will generate a Dockerfile,
+We've [provided an image](https://hub.docker.com/r/vanessa/expfactory-builder) that will generate a Dockerfile,
 and from it you can build your Docker image.  We don't build the image within the same 
 container for the explicit purpose that you should keep a copy of the recipe
 Dockerfile at hand. The basic usage is to run the image, and you will see output
@@ -76,16 +65,19 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
-  --recipe, -r          only generate a recipe
   --output OUTPUT, -o OUTPUT
-                        output name for Singularity recipe
+                        output name for Dockerfile
   --studyid STUDYID     study id for saving database
   --database {fllesystem}
                         database for application (default filesystem)
 ```
 
+You actually **don't** want to edit the recipe output file, since this happens inside the container
+(and you map a folder of your choice to it.) The others, however, you can modify.
+
 ## Experiment Selection
-The minimum requirement we need is a list of `experiments`. You can either [browse
+The first we've already used, and it's the only required argument. We need to give the
+expfactory builder a list of `experiments`. You can either [browse
 the table](https://expfactory.github.io/experiments/) or see a current library list with `list.`
 
 ```
@@ -119,7 +111,7 @@ should not already container a Dockerfile, and most appropriate is a new folder 
 intend to set up with version control (a.k.a. Github). That looks like this:
 
 ```
-mkdir -p /tmp/my-experiment
+mkdir -p /tmp/my-experiment/data
 docker run -v /tmp/my-experiment:/data \
               vanessa/expfactory-builder \
               build tower-of-london
@@ -134,7 +126,7 @@ To build, cd to recipe and:
 ## Container Generation
 Now we would go to the folder (`/tmp/my-experiment`) to bulid our experiments container. We
 could actually do this in the container for you, but it's better to generate the file first
-(and generate for version control) than not. You have a Dockerfile and a script to run 
+(and save to a repository like Github for version control) than not. You have a Dockerfile and a script to run 
 when it's used:
 
 ```
@@ -158,11 +150,8 @@ docker build --no-cache -t vanessa/experiment .
 Don't forget the `.` at the end! It references the present working directory with the Dockerfile.
 
 ## Start your Container
-After you do the above steps, your custom container will exist on your local machine,
-and you need just interact with it. To run the application (and **not save any data**), you can
-just use run, and importantly, we need to map the web server port to our local machine,
-otherwise it will be running and we won't see it. First, let's pretend we haven't a clue
-what it does, and just run it:
+After you do the above steps, your custom container will exist on your local machine.
+First, let's pretend we haven't a clue what it does, and just run it:
 
 ```
 docker run vanessa/experiment
@@ -239,7 +228,7 @@ The cool part is that it shows us what we already know - port 80 in the containe
 To shell and work interactively in the image:
 
 ```
-docker exec -it zealous_raman /bin/bash
+docker exec -it 2c503ddf6a7a bash
 root@2c503ddf6a7a:/scif/apps# 
 ```
 
@@ -257,37 +246,32 @@ $ ls /scif/logs
 gunicorn-access.log  gunicorn.log
 ```
 
-Importantly, our data is to be saved under `/scif/data`
+Importantly, our data is to be saved under `/scif/data`, which we would map to our local machine (so the generated data doesn't disappear when we remove the container)
 
 ```
 ls /scif/data/
 expfactory
 ```
 
-But the folder is empty because we haven't had anyone do the experiment yet. Try navigating back to ([http://127.0.0.1](http://127.0.0.1)) in
-your browser, and completing a round of the task.
+Right now the folder is empty because we haven't had anyone do the experiment yet. Try navigating back to ([http://127.0.0.1](http://127.0.0.1)) in
+your browser, and completing a round of the task. Here I am from outside the container. Remember I've mapped `/tmp/my-experiment/data` to `/scif/data` in the image. My study id is `expfactory` and the first participant has just finished:
 
+```
+$ ls data/expfactory/00000/
+test-task-results.json
+```
 
 ## Stopping your Container
 For the first example that we did without detached (`-d`) if you pressed Control+C for the terminal with the container started, you will kill the process and remove the container. This would happen regardless if you were shelled in another container, because the start script exits. However, now we have it
 running in this detached state, and we need to stop it using the docker daemon:
 
 ```
-docker stop zealous_raman
+docker stop 2c503ddf6a7a
 ```
 
-or use the container identifier (alphanumeric string) that you find with `docker ps`. This was helpful for me
-when I first didn't give an easy exit to running the gunicorn process.
-
+I find that using the container identifier (alphanumeric string) that you find with `docker ps` works better than the name. I've seen inconsistent behavior between the two and I'm not sure why.
 
 ## Adding Experiments
-While we are working on a development workflow for you to install experiments interactively, for now we encourage you
-to use the `vanessa/expfactory-builder` image to generate Dockerfile to maximize reproducibility of your work. Each
-change or command that you would do interactively breaks reproducibility!
-
-
-### Under Development
-**not ready for use**
 While we encourage you to re-generate the file with the `vanessa/expfactory-builder` so generation of your
 container is reproducible, it's possible to install experiments into your container after it's generated. You
 should only do this for development, as changes that you make to your container that are not recorded in the Dockerfile
@@ -304,7 +288,7 @@ $ docker ps
 9e256e1b1473        vanessa/experiment   "/bin/bash /starts..."   3 seconds ago       Up 2 seconds        0.0.0.0:80->80/tcp, 5000/tcp   vigorous_lovelace
 
 # Let's shell inside!
-docker exec -it vigorous_lovelace bash
+docker exec -it 9e256e1b1473 bash
 ```
 
 We can see the one experiment installed, it was the one in our Dockerfile:
@@ -354,64 +338,53 @@ isn't there. The easiest way to restart all the moving pieces is to (from outsid
 
 ```
 $ exit
-docker restart vigorous_lovelace
+docker restart 9e256e1b1473
 ```
 
+You then should have the new experiment installed in the container! Remember, you would want to go back and (properly) produce this:
+
+```
+docker run -v $PWD:/data vanessa/expfactory-builder build digit-span test-task 
+```
 
 ## Summary
 This is a quick preview of running a quick server with gunicorn, Flask, and Docker. While this implementation isn't
-ideal for production, it will work reasonable well for a local lab that needs to run participants through a 
+perfect for production, it will work reasonable well for a local lab that needs to run participants through a 
 behavioral paradigm. Do you have a use case that warrants a different kind of database, experiment, or deployment? 
 Please [get in touch](https://www.github.com/expfactory/issues) as I am looking to develop this.
 
 
+# Custom Configuration
+If you want more specificity to configure your container, you might want to customize the database or experiment variables. This isn't developed much at this point (please give me your feedback) however we can review the current options.
 
 
-
-provide instructions for a [quick start](#quick-start) using a pre-generated container, and a more [detailed start](#detailed-start) where you can fine tune your experiments, database, and other details of your deployment.
-
-### Quick Start
-We provide an [example container](https://www.singularity-hub.org/collections/203) that you can deploy to test out Expfactory. It includes three experiments:
-
- - adaptive-n-back
- - test-task
- - tower-of-london
-
-and is configured to use a "filesystem" database, meaning results are written to a folder that is mounted from the container on the host in `json`, organized by a study identifier. To get started quickly, we will do the following steps:
-
- 1. install Singularity
- 2. pull the experiment container
- 3. start an instance
- 4. use it!
-
-
-First **install Singularity**. Instructions are provided on the [Singularity main site](https://singularityware.github.io/install-linux). Then **pull your container**. The container is build and provided for you on Singularity Hub. To pull the latest version:
+## Variables
+If you recall from the `vanessa/expfactory-builder` image, there were other command line options available pertaining to the database and study id.
 
 ```
-singularity pull --name expfactory.simg shub://expfactory/expfactory
+$ docker run vanessa/expfactory-builder
+
+Usage:
+docker run vanessa/expfactory-builder experiment-one experiment-two ...
+Expfactory Version: 3.0
+usage: expfactory build [-h] [--recipe] --output OUTPUT [--studyid STUDYID]
+                        [--database {fllesystem}]
+                        experiments [experiments ...]
+
+positional arguments:
+  experiments           experiments to build in image
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --output OUTPUT, -o OUTPUT
+                        output name for Dockerfile
+  --studyid STUDYID     study id for saving database
+  --database {fllesystem}
+                        database for application (default filesystem)
 ```
-
-Next, you probably want to see how to [use your container](/expfactory/usage.html).
-
-
-### Detailed Start
-
-#### Write your recipe
-A Singularity Recipe is a file that details how you want your container to build. In our case, we want to give instructions about which experiments to install. You can get a recipe in multiple ways!
-
-1. Use the [example recipe provided](https://github.com/expfactory/expfactory/blob/master/Singularity)
-
-```
-wget https://raw.githubusercontent.com/expfactory/expfactory/master/Singularity
-```
-
-2. Use our [Recipe generator](https://www.github.com/expfactory/experiments/) to select experiments from the table, and generate a custom recipe. The table will also let you search and preview experiments in your browser.
-
-3. Browse our [recipes generated by tag](https://www.github.com/expfactory/experiments/recipes) from the library.
-
-You should have a build recipe `Singularity` in your present working directory. If you are using the example recipe, by default we will install three experiments, adaptive-n-back, test-task, and tower-of-london. If you want more information on browsing or customizing experiments, read about [customizing](1-generate-custom.md) experiments.
-
-#### Database
+**output**
+You actually **don't** want to edit the recipe output file, since this happens inside the container
+(and you map a folder of your choice to it.) The others, however, you can modify.
 
 **filesystem**
 The default (simplest) method for a database is flat files, meaning that results are written to a mapped folder on the local machine, and each participant has their own results folder. This option is provided as many labs are accustomed to providing a battery locally, and want to save output directly to the filesystem without having any expertise with setting up a database.
@@ -419,71 +392,24 @@ The default (simplest) method for a database is flat files, meaning that results
 **MySQL/Postgres/Mongo/Other**
 For labs that wish to deploy the container on a server, you are encouraged to use a more substantial database. We haven't yet developed this, and if you are interested, please [file an issue](https://github.com/expfactory/expfactory).
 
-In the future when you have the option to set up a custom database (other than filesystem) you will do so via a set of environment variables in the Singularity Recipe. Here is what the default looks like:
+For any of the above, if you generate a Dockerfile and then change your mind, you can easily edit the Dockerfile instead of re-generating with the builder. In fact, this applies to make **any changes** to the Dockerfile. You can clone your own repos not in the library, add different images, or change the templates.
 
-```
-EXPFACTORY_DATA=/scif/data
-EXPFACTORY_DATABASE=filesystem 
-```
-
-#### Configure your Battery
+**studyid**
 The Experiment Factory will generate a new unique ID for each participant with some study idenitifier prefix. The default is `expfactory`, meaning that my participants will be given identifiers `expfactory/0` through `expfactory/n`, and for a filesystem database, it will produce output files according to that schema:
 
 ```
  /scif/data/
       expfactory/
-           00001/
+           00000/
             tower-of-london.json
             test-task.json
             adaptive-n-back.json
 ```
 
-If you want to change the study identifier, just customize the variable under the `%environment` section:
-
-```
-%environment
-    EXPFACTORY_STUDY_ID=expfactory
-    export EXPFACTORY_STUDY_ID
+Yes, we start counting at 0. No, Matlab, not 1. 
 ```
 
-In the future, our [online recipe generator](https://expfactory.github.io/experiments/generate) will make it easy to specify all of these variables. We will add these later after getting [feedback from users like you](https://www.github.com/expfactory/expfactory/issues). Let's move on the building your battery.
-
-#### Define Custom Metadata
-Your container will be programmatically accessible. This means that there are a set of labels about it's generation that will be produced automatically:
-
-```
-$ singularity inspect expfactory.simg
-{
-    "org.label-schema.usage.singularity.deffile.bootstrap": "docker",
-    "org.label-schema.usage.singularity.deffile": "Singularity",
-    "org.label-schema.usage": "/.singularity.d/runscript.help",
-    "org.label-schema.schema-version": "1.0",
-    "org.label-schema.usage.singularity.deffile.from": "ubuntu:14.04",
-    "org.label-schema.build-date": "2017-11-06T20:42:28+00:00",
-    "org.label-schema.usage.singularity.runscript.help": "/.singularity.d/runscript.help",
-    "org.label-schema.usage.singularity.version": "2.4-feature-squashbuild-secbuild.g818b648",
-    "org.label-schema.build-size": "545MB"
-}
-```
-
-And additionally you can provide your own custom labels in a `%labels` section of your recipe to appear alongside the default set:
-
-```
-%labels
-    Maintainer Vanessasaur
-    Version 1.0.0
-```
-
-You can also add them specific to a particular experiment:
-
-```
-%applabels test-task
-   variable value
-```
-
-We have plans to expose experiment-specific variables in this way, but @vsoch hasn't implemented it yet! Please send [feedback](https://www.github.com/expfactory/expfactory/issues) about your use case to help.
-
-Next, you probably want to see how to [use your container](/expfactory/usage.html).
+In the future, our [online recipe generator](https://expfactory.github.io/experiments/generate) will make it easy to specify all of these variables. We will add these later after getting [feedback from users like you](https://www.github.com/expfactory/expfactory/issues).
 
 <div>
     <a href="/expfactory/"><button class="previous-button btn btn-primary"><i class="fa fa-chevron-left"></i> </button></a>

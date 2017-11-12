@@ -77,12 +77,8 @@ def get_parser():
     build = subparsers.add_parser("build", 
                                    help="Build an experiment container (or just recipe)")
 
-    build.add_argument('--recipe', '-r',dest="recipe",
-                        help="only generate a recipe",
-                        default=False, action='store_true')
-
     build.add_argument("--output",'-o', dest='output', 
-                         help="output name for Singularity recipe", 
+                         help="output name for Dockerfile (if you want a custom path)", 
                          type=str, required=True)
 
     build.add_argument('experiments', nargs="+",
