@@ -7,7 +7,7 @@ toc: false
 ---
 
 # Really Quick Start
-Pull our pre-generated example container, and use it!
+Pull our pre-generated example container, and start it! Your experiment portal is at [http://127.0.0.1](http://127.0.0.1) in your browser.
 
 ```
 docker run -p 80:80 vanessa/experiments start
@@ -15,27 +15,43 @@ docker run -p 80:80 vanessa/experiments start
 
 # Quick Start
 
+Make a folder. This will be a place to generate your Dockerfile.
+
 ```
-# Make a Folder
 mkdir -p /tmp/my-experiment/data
 cd /tmp/my-experiment
+```
 
-# List experiments
+What experiments do you want in your container? Let's see the ones that are available!
+```
 docker run vanessa/expfactory-builder list
+```
 
-# Make your Container Recipe
+Cool, I like `digit-span`, `spatial-span`, `test-task`, and `tower-of-london`.
+
+```
 docker run -v $PWD:/data vanessa/expfactory-builder build digit-span spatial-span tower-of-london test-task 
+```
 
-# Build it
+Let's build the container from the Dockerfile!
+
+```
 docker build -t expfactory/experiments .
 
-# Start it
+```
+
+Now let's start it.
+```
 docker run -v /tmp/my-experiment/data/:/scif/data \
            -d -p 80:80 \
            expfactory/experiments start 
 ```
 
-Open your browser to localhost ([http://127.0.0.1](http://127.0.0.1))
+Open your browser to localhost ([http://127.0.0.1](http://127.0.0.1)) to see the portal. See more pictures of the interface at [/expfactory/usage.html](/expfactory/usage.html).
+
+<div>
+    <img src="/expfactory/img/generate/portal.png"><br>
+</div>
 
 
 # Detailed Start
@@ -49,33 +65,20 @@ Both of these steps start with the expfactory builder container.
 We've [provided an image](https://hub.docker.com/r/vanessa/expfactory-builder) that will generate a Dockerfile,
 and from it you can build your Docker image.  We don't build the image within the same 
 container for the explicit purpose that you should keep a copy of the recipe
-Dockerfile at hand. The basic usage is to run the image, and you will see output
-from the expfactory build tool inside:
+Dockerfile at hand. The basic usage is to run the image, and you can either build, test, or list.
 
 ```
 $ docker run vanessa/expfactory-builder
 
 Usage:
-docker run vanessa/expfactory-builder experiment-one experiment-two ...
-Expfactory Version: 3.0
-usage: expfactory build [-h] [--recipe] --output OUTPUT [--studyid STUDYID]
-                        [--database {fllesystem}]
-                        experiments [experiments ...]
 
-positional arguments:
-  experiments           experiments to build in image
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --output OUTPUT, -o OUTPUT
-                        output name for Dockerfile
-  --studyid STUDYID     study id for saving database
-  --database {fllesystem}
-                        database for application (default filesystem)
+          docker run vanessa/expfactory-builder list
+          docker run vanessa/expfactory-builder build experiment-one experiment-two ...
+          docker run -v experiments:/scif/apps vanessa/expfactory-builder test
+          docker run -v $PWD/_library:/scif/apps vanessa/expfactory-builder test-contribution
 ```
 
-You actually **don't** want to edit the recipe output file, since this happens inside the container
-(and you map a folder of your choice to it.) The others, however, you can modify.
+We will discuss each of these commands in more detail.
 
 ## Experiment Selection
 The first we've already used, and it's the only required argument. We need to give the
@@ -361,29 +364,8 @@ If you want more specificity to configure your container, you might want to cust
 
 
 ## Variables
-If you recall from the `vanessa/expfactory-builder` image, there were other command line options available pertaining to the database and study id.
+When you run a build with `vanessa/expfactory-builder` image, there are other command line options available pertaining to the database and study id. Try running `docker run vanessa/expfactory-builder build --help` to see usage.
 
-```
-$ docker run vanessa/expfactory-builder
-
-Usage:
-docker run vanessa/expfactory-builder experiment-one experiment-two ...
-Expfactory Version: 3.0
-usage: expfactory build [-h] [--recipe] --output OUTPUT [--studyid STUDYID]
-                        [--database {fllesystem}]
-                        experiments [experiments ...]
-
-positional arguments:
-  experiments           experiments to build in image
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --output OUTPUT, -o OUTPUT
-                        output name for Dockerfile
-  --studyid STUDYID     study id for saving database
-  --database {fllesystem}
-                        database for application (default filesystem)
-```
 **output**
 You actually **don't** want to edit the recipe output file, since this happens inside the container
 (and you map a folder of your choice to it.) The others, however, you can modify.
@@ -408,7 +390,7 @@ The Experiment Factory will generate a new unique ID for each participant with s
             adaptive-n-back.json
 ```
 
-Yes, we start counting at 0. No, Matlab, not 1. 
+Yes, we start counting at 0. :)
 ```
 
 In the future, our [online recipe generator](https://expfactory.github.io/experiments/generate) will make it easy to specify all of these variables. We will add these later after getting [feedback from users like you](https://www.github.com/expfactory/expfactory/issues).

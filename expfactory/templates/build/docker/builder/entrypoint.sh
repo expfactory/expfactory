@@ -3,9 +3,10 @@
 if [ $# -eq 0 ]; then
     echo "Usage:"
     echo "
+          docker run vanessa/expfactory-builder list
           docker run vanessa/expfactory-builder build experiment-one experiment-two ...
           docker run -v experiments:/scif/apps vanessa/expfactory-builder test
-          docker run -v _library:/scif/apps vanessa/expfactory-builder test-contribution"
+          docker run -v _library:/scif/apps vanessa/expfactory-builder test-library"
     exit
 fi
 
@@ -57,9 +58,9 @@ if [ $1 == "build" ]; then
     fi
 else
     echo "Usage:"
-    echo "      
+    echo "
+          docker run vanessa/expfactory-builder list
           docker run vanessa/expfactory-builder build experiment-one experiment-two ...
           docker run -v experiments:/scif/apps vanessa/expfactory-builder test
-          docker run -v _library:/scif/apps vanessa/expfactory-builder test-contribution"
-
+          docker run -v _library:/scif/apps vanessa/expfactory-builder test-library"
 fi
