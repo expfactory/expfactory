@@ -61,7 +61,7 @@ class TestExperiment(TestCase):
                     self.assertTrue(valid)
 
         # Otherwise, the user gave a folder with subfolders
-        else
+        else:
             for experiment in self.experiments:
                 name = os.path.basename(experiment)
                 if os.path.isdir(experiment):
