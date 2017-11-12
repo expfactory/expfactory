@@ -39,7 +39,7 @@ Open your browser to localhost ([http://127.0.0.1](http://127.0.0.1))
 
 
 # Detailed Start
-The generation of a container comes down to adding the experiments to a text file that records all the commands to generate your container. Since we are using Docker, this file will be the Dockerfile. In these sections, we will be building your container from a customized file. You will be doing the following:
+The generation of a container comes down to adding the experiments to a text file that records all the commands to generate your container. Since we are using Docker, this file will be the Dockerfile, and you should [install Docker](https://docs.docker.com/engine/installation/) first and be comfortable with the basic usage. In these sections, we will be building your container from a customized file. You will be doing the following:
 
  - generating a recipe with (reproducible) steps to build a custom container
  - building the container!
