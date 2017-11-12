@@ -148,6 +148,13 @@ then you should bind directory to it like this:
 
 ```
 docker run -v my-experiment:/scif/apps vanessa/expfactory-builder test
+Testing experiments mounted to /scif/apps
+....Test: Experiment Validation
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK
 ```
 
 If you want to test a group of experiments (a folder with subfolders, where each subfolder has a `config.json`):
@@ -167,6 +174,22 @@ then you can bind the the main top level folder like this:
 
 ```
 docker run -v experiments:/scif/apps vanessa/expfactory-builder test
+Testing experiments mounted to /scif/apps
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.007s
+
+OK
+...Test: Experiment Validation
+Found experiment tower-of-london
+Found experiment test-task
+Found experiment digit-span
+Found experiment adaptive-n-back
+Found experiment angling-risk-task
+Found experiment breath-counting-task
+Found experiment angling-risk-task-always-sunny
+Found experiment spatial-span
+Found experiment emotion-regulation
 ```
 
 Remember that these tests are primarily looking at metadata, and runtime of your experiment still will need to be tested by a human, primarily when installed in the container.
@@ -182,41 +205,37 @@ This set of tests is more stringent in that the test starts with one of more sub
 You need to bind the folder with markdown files for the library to `/scif/data` this time around. These tests have a lot more output because they are more substantial:
 
 ```
-docker run -v _library:/scif/data vanessa/expfactory-builder test-library
+docker run -v $PWD/_library:/scif/data vanessa/expfactory-builder test-library
 ```
 
-You can also use any of the expfactory software inside the image, the runscript provides the command line executable `expfactory list` by default so
-you can easily see experiments available.
+
+### Test an Installation
+Testing an installation is likely the most important, and final step. We mimic the same steps of generating a "full fledged" container to remain consistent. You will want to generate a base container, and install your experiment to it. We can use the builder to generate our recipe as we did before. It's good practice to include the `test-task` so you can test transitioning to the next experiment.
 
 ```
-$ singularity run expfactory.test
-Expfactory Version: 3.0
-Experiments
-1  adaptive-n-back	https://www.github.com/expfactory-experiments/adaptive-n-back
-2  breath-counting-task	https://www.github.com/expfactory-experiments/breath-counting-task
-3  test-task	https://www.github.com/expfactory-experiments/test-task
-4  tower-of-london	https://www.github.com/expfactory-experiments/tower-of-london
+mydir -p /tmp/recipe
+docker run -v /tmp/recipe:/data vanessa/expfactory-builder build test-task
 ```
 
-or you can execute a custom command to the image:
+then build your container
 
 ```
-singularity exec expfactory.test ls /opt/expfactory
-LICENSE  MANIFEST.in  README.md  build	dist  docs  expfactory	expfactory.egg-info  script  setup.py
+cd /tmp/recipe
+docker build -t expfactory/experiments .
 ```
 
-We will soon be adding a command line `build` function to generate a recipe on the fly, without using the interface. Stay tuned!
-
-
-### Local Testing
-If you do decide to test on your local machine (without the container) you will need to clone the repository first, and you can use the tests under `/script/singularity/tests` or with the library in the `tests` folder as follows:
+Finally, start the container (and make sure to bind a local folder if you need it, otherwise Github install works)
 
 ```
-python -m pip install git+https://github.com/expfactory/expfactory.git@master
-python -m unittest tests.test_library
+docker run -p 80:80 -d expfactory/experiments 
 ```
 
-Any issues with your recipe will be spit out on the screen. When you are confident in your submission, then go ahead and fo the PR. What happens during the PR is the same as on your local machine - the pull request will use the metadata to clone and test the experiment, along with your repository. When it is merged, it will appear automatically in the web interface and be [available programmatically](https://expfactory.github.io/experiments/library.json).
+Remember if you need to shell inside, you can do `docker exec -it <containerid> bash` and if you want to bind a folder from the host, use `-v`. You want to make sure that:
+
+ 1. the experiment metadata you would expect is rendered in the portal
+ 2. the experiment starts cleanly, including all static files (check the console with right click "Inspect" and then view the "console" tab)
+ 3. the experiment finishes cleanly, and outputs the expected data in `/scif/data`.
+ 4. the experiment transitions cleanly to the next, or if it's the only experiment, the finished screen appears.
 
 
 ## Add the Experiment
@@ -231,9 +250,7 @@ Switched to a new branch 'add/breath-counting-task'
 and then I would create a new file:
 
 ```
-
 touch docs/_library/breath-counting-task.md
-
 ```
 
 and it's contents would be:
@@ -285,5 +302,5 @@ Once you get here, you've probably had your experiment pull required approved an
 
 <div>
     <a href="/expfactory/usage.html"><button class="previous-button btn btn-primary"><i class="fa fa-chevron-left"></i> </button></a>
-    <a href="/expfactory/development.html"><button class="next-button btn btn-primary"><i class="fa fa-chevron-right"></i> </button></a>
+    <a href="/expfactory/"><button class="next-button btn btn-primary"><i class="fa fa-chevron-right"></i> </button></a>
 </div><br>

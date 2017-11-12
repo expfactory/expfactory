@@ -9,6 +9,6 @@ dist
 OLD
 _site
 doc/build
-build
+.build
 *.pyc
 dist

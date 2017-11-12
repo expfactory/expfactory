@@ -20,7 +20,7 @@ The Experiment Factory software will help you create a reproducible container to
 
 
 ```
-docker run -p 80:80 vanessa/expfactory-experiments
+docker run -d -p 80:80 vanessa/experiments
 ```
 
 Next, read more about [generation](pages/1-generate.md) of your own experiment container. Please [give feedback](https://www.github.com/expfactory/expfactory/issues) about your needs to further develop the software. The [experiments portal](https://expfactory.github.io/experiments/) will be updated as we migrate experiments from [the legacy Expfactory](https://www.github.com/expfactory/expfactory-experiments) soon. Your contributions and feedback are greatly appreciated!
@@ -30,6 +30,7 @@ Next, read more about [generation](pages/1-generate.md) of your own experiment c
 
  - [Building](pages/1-generate.md) your battery means creating and configuring your image.
  - [Using](pages/2-usage.md) an experiment factory container.
+ - [Contribute](pages/3-contribute.md) an experiment to the [library](https://www.github.com/expfactory/experiments) for others to use.
 
 ## Library
 
@@ -37,10 +38,6 @@ Next, read more about [generation](pages/1-generate.md) of your own experiment c
  - [Generate](https://expfactory.github.io/experiments/generate) a custom container from our Library, or
  - [Recipes](https://expfactory.github.io/experiments/recipes) view a pre-generated recipe based on tags in the library.
 
-## Development Guide
-
- - [Contribute](pages/3-contribute.md) an experiment to the [library](https://www.github.com/expfactory/experiments) for others to use.
- - [Interactive](pages/4-development.md) Examples for how I (@vsoch) developed the software
 
 <div>
     <a href="/expfactory/generate"><button class="next-button btn btn-primary"><i class="fa fa-chevron-right"></i> </button></a>

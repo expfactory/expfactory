@@ -9,7 +9,9 @@ toc: false
 # Really Quick Start
 Pull our pre-generated example container, and use it!
 
-
+```
+docker run -p 80:80 vanessa/experiments
+```
 
 # Quick Start
 
@@ -410,6 +412,17 @@ Yes, we start counting at 0. No, Matlab, not 1.
 ```
 
 In the future, our [online recipe generator](https://expfactory.github.io/experiments/generate) will make it easy to specify all of these variables. We will add these later after getting [feedback from users like you](https://www.github.com/expfactory/expfactory/issues).
+
+### Expfactory wants Your Feedback!
+The customization process is very important, because it will mean allowing you to select variable stimuli, lengths, or anything to make a likely general experiment specific to your use case. To help with this, @vsoch is looking for feedback about:
+
+ - what kind of experiments (those provided in the library? generated with a build tool?) do you want to use
+ - what variables do you want to customize? Do you have preference for how you would want to go about this?
+ - if there is a build, when and how does it happen?
+
+A reasonable feature would be to have the experiment manifests capture variables that are "allowed" to be changed (e.g., a stimulus number or similar) and then exposing these options to the user at build time, likely with a simple configuration file. Currently, It's important to remember that your experiment to be truly reproducible, other than introducing planned randomness (e.g., presentation of stimuli) it shouldn't be the case that a lot of the experiment details are required to be set at runtime. They must be frozen into the container so that when a colleague tries to reproduce your study, the exact thing is used.
+
+With this in mind, please [let us know](https://www.github.com/expfactory/expfactory/issues) your thoughts.
 
 <div>
     <a href="/expfactory/"><button class="previous-button btn btn-primary"><i class="fa fa-chevron-left"></i> </button></a>

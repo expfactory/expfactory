@@ -13,6 +13,7 @@ WORKDIR /opt
 RUN git clone -b update/docker https://www.github.com/expfactory/expfactory
 WORKDIR /opt/expfactory
 RUN python3 setup.py install
+RUN python3 -m pip install pyaml
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod u+x /entrypoint.sh
 RUN mkdir -p /scif/apps

@@ -37,8 +37,6 @@ from subprocess import (
     PIPE,
     STDOUT
 )
-
-import yaml
  
 import os
 import re
