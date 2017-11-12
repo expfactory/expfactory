@@ -13,14 +13,16 @@ while true; do
         -h|--help|help)
 
             echo "Additional commands:
-                  docker run vanessa/expfactory:builder test-experiments"
+                  docker run vanessa/expfactory-builder test
+                  docker run vanessa/expfactory-builder list
+                  docker run vanessa/expfactory-builder start"
 
             exec expfactory --help
             exit
         ;;
         -test-experiments|--te|test)
-            cd /opt/expfactory/expfactory/templates/build/singularity
-            exec python3 -m unittest tests.test_experiments
+            cd /opt/expfactory/expfactory/templates/build
+            exec python3 -m unittest tests.test_experiment
             exit
         ;;
         -ls|--list|list)

@@ -6,32 +6,39 @@ permalink: /usage
 ---
 
 # Using your Experiments Container
-If you've just finished [generating your experiments container](/expfactory/generate.html) (whether a custom build or pull of an already existing container) then you are ready to use it! Here we will walk though:
+If you've just finished [generating your experiments container](/expfactory/generate.html) (whether a custom build or pull of an already existing container) then you are ready to use it! Here we assume that the container is running, and will look quickly at the experience of running a participant through a selection of experiments. 
 
- - inspecting a container instance
- - starting and stopping a container instance
- - running a participant through a selection of experiments
-
-
-### Quick Start
-The quick start commands are to pull the container, and start an instance, mounted to an existing directory on the host `/tmp/data` to write data output:
-
-```
-singularity pull --name expfactory.simg shub://expfactory/expfactory
-sudo singularity instance.start --bind /tmp/data:/scif/data expfactory.simg web1
-```
-
-Then go to `localhost` to see the experiment portal. 
+## The Experiment Factory Portal
+When you start your container instance, browsing to your localhost will show the entrypoint, a user portal that lists all experiments installed in the container:
 
 <div>
     <img src="/expfactory/img/generate/portal.png"><br>
 </div>
 
 
-This is where you select experiments, can get an estimated time, and then start your session: I would recommend the `test-task` as a first try, because it finishes quickly. There is a default "consent" screen that you must agree to (or disagree to return to the portal):
+This is where the experiment administrator would select one or more experiments, either with the single large checkbox ("select all") or smaller individual checkboxes. When you make a selection, the estimated time and exeperiment count on the bottom of the page are adjusted. 
+
+<div>
+    <img src="/expfactory/img/generate/selected.png"><br>
+</div>
+
+You can make a selection and then start your session. I would recommend the `test-task` as a first try, because it finishes quickly. When you click on `proceed` you can (optionally) enter a subject name:
+
+<div>
+    <img src="/expfactory/img/generate/proceed.png"><br>
+</div>
+
+This name is currently is only used to say hello to the participant. The actual experiment identifier is based on a study id defined in the build recipe.  After proceeding, there is a default "consent" screen that you must agree to (or disagree to return to the portal):
 
 <div>
     <img src="/expfactory/img/generate/welcome.png"><br>
+</div>
+
+
+Once the session is started, the user is guided through each experiment (with random selection) until no more are remaining.
+
+<div>
+    <img src="/expfactory/img/generate/preview.png"><br>
 </div>
 
 
@@ -52,110 +59,18 @@ $ tree /tmp/data/expfactory/00001/
 0 directories, 1 file
 ```
 
-You can then stop the instance, and the data will persist.
-
-```
-sudo singularity instance.stop -a  # stop all instances
-sudo singularity instance.stop web1
-```
-
-That's it! We have over 80 experiments and surveys to add, and will do so en masse after some early testing.
-
-#### Important Notes
-Note that sudo is needed to start the instance for nginx. Also note that when you do the above, you are using a container with a shared secret key. If you were to deploy it somewhere, someone might be able to figure this out (security red flag!). You can change your key by making the container writable, and then back again:
+You can then stop the container, and the data will persist.
 
 
-```
-sudo singularity build --writable expfactory.rwx expfactory.simg
-sudo singularity exec --pwd /opt/expfactory expfactory.rwx /bin/bash script/generate_key.sh expfactory/config.py
-sudo singularity build production.simg expfactory.rwx
-```
+### Feedback Wanted!
+A few questions for you!
 
-### Container Inspection
+ - Would password protection of the portal be desired?
+ - Is a user allowed to redo an experiment? Meaning, if a session is started and the data is written (and the experiment done again) is it over-written? 
+ - Is some higher level mechanism for generating user ids in advance, and then validating them with an individual, desired?
 
-What experiments are installed?
+Right now, this setup is optimized for a low volume of user's in a local lab. To best develop the software for different deployment, it's important to discuss these issues. Please [post an issue](https://www.github.com/expfactory/expfactory/issues) to give feedback.
 
-```
-singularity apps expfactory.simg
-    adaptive-n-back
-    test-task
-    tower-of-london
-```
-
-I forget the commands. Can I ask the container for help?  Try these commands on your local machine:
-
-```
-singularity help expfactory.simg
-
-...
-
-singularity inspect expfactory.simg
-
-{
-    "org.label-schema.usage.singularity.deffile.bootstrap": "docker",
-    "org.label-schema.usage.singularity.deffile": "Singularity",
-    "org.label-schema.usage": "/.singularity.d/runscript.help",
-    "org.label-schema.schema-version": "1.0",
-    "org.label-schema.usage.singularity.deffile.from": "ubuntu:14.04",
-    "org.label-schema.build-date": "2017-11-06T20:42:28+00:00",
-    "org.label-schema.usage.singularity.runscript.help": "/.singularity.d/runscript.help",
-    "org.label-schema.usage.singularity.version": "2.4-feature-squashbuild-secbuild.g818b648",
-    "org.label-schema.build-size": "545MB"
-}
-```
-
-Importantly, any labels that you added to the `%labels` section of a custom recipe will appear here.
-
-### Container Instances
-You can think of the container like a template, and an "instance" as a full fledged running application that is generated based on the template. This means that you will want to start an instance of your container, which will carry it's own namespace and run the web server. The general commands that are important are to start and stop instances, we will use `singularity instance.start` and  `singularity instance.stop`. Importantly, you need to choose a folder on your local machine to put experiment data (`/tmp/data`), and bind it to the data folder in the instance (`/scif/data`). This means it will persist on our local machine even when the instance is stopped. You will also want to name your instance, we are calling it `web1`
-
-```
-mkdir -p /tmp/data
-singularity instance.start --bind /tmp/data:/scif/data expfactory.simg web1
-singularity instance.list
-DAEMON NAME      PID      CONTAINER IMAGE
-web1             22045    /home/vanessa/Desktop/expfactory.simg
-```
-
-Take note that when you interact with your instance, whether you start, stop, or a command specifically for an instance, you should refer to it by name:
-
-```
-singularity instance.stop web1
-singularity instance.start web1
-```
-
-Also take note that the user that starts an instance is the owner. So if you start an instance as sudo and then run `singularity instance.list`, you won't see it.
-
-If you are wanting to shell into your instance (`shell`) or execute a command to it (`exec`) you will need to tell Singularity that you are talking about an instance, and you can do this by using the `instance://` uri:
-
-
-```
-singularity shell instance://web1
-singularity exec instance://web1 ls /opt/expfactory  # The original clone of the repository
-```
-
-
-### Saving Data to the Host
-When you want to run a battery and save data, you either need need a writable container or to mount a directory
-on the host where you have writable. The expfactory container internal organization expects for you to mount some folder on your host to `/scif/data`. When it finds this location is writable, it will save data. It's as easy as specifying the mount when you start the instance:
-
-```
-sudo singularity instance.start --bind /home/vanessa/data:/data expfactory/ web3
-```
-
-Now we can again list our instances, this time we have data And then list your instances
-
-```
-$ sudo singularity instance.list
-DAEMON NAME      PID      CONTAINER IMAGE
-web3             32708    /home/vanessa/Documents/Dropbox/Code/expfactory/experiments/expfactory
-```
-
-If you want to shell inside
-
-```
-sudo singularity shell --writable instance://web3
-```
 
 <br>
 <div>
