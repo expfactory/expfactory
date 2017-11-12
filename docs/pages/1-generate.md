@@ -75,7 +75,7 @@ Usage:
           docker run vanessa/expfactory-builder list
           docker run vanessa/expfactory-builder build experiment-one experiment-two ...
           docker run -v experiments:/scif/apps vanessa/expfactory-builder test
-          docker run -v $PWD/_library:/scif/apps vanessa/expfactory-builder test-contribution
+          docker run -v $PWD/_library:/scif/apps vanessa/expfactory-builder test-library
 ```
 
 We will discuss each of these commands in more detail.
