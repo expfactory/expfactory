@@ -56,7 +56,7 @@ class TestExperiment(TestCase):
             for experiment in self.experiments:
                 name = os.path.basename(experiment)
                 if name == "config.json":
-                    valid = self.ExpValidator.validate(name, validate_folder=False) 
+                    valid = self.ExpValidator.validate(experiment, validate_folder=False) 
                     self.assertTrue(valid)
 
         # Otherwise, the user gave a folder with subfolders
