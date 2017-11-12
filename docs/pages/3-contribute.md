@@ -109,7 +109,7 @@ Great! Once you are here, you have a folder with a working experiment. This is n
 ```
 
  - `name`: Is a human friendly name for the experiment *[required]*.
- - `install`: should be a list of commands to compile, build, etc. your experiment. You **must** include installation of all dependencies.
+ - `install`: should be a list of commands to compile, build, etc. your experiment. This is not required unless your experiment index.html needs some kind of custom generation. You **must** include installation of all dependencies.
  - `exp_id`: is the experiment factory unique identifier. It must be unique among other experiment factory-provided experiments *[required]*. It must also correspond to the repository name that houses the experiment *[required]*. 
  - `description`: A brief description of your experiment *[required]*.
  - `instructions`: What should the participant do? *[required]*.
@@ -125,48 +125,51 @@ You can add whatever metadata you want to the config.json, and you can also add 
 
 
 ## Test the Experiment
-Your experiment will be tested when you submit a pull request (as we just showed above). However you can run the tests before filing the PR. There are two kinds of tests, testing an **experiment** and testing a **contribution**:
+Your experiment will be tested when you submit a pull request (as we just showed above). However you can run the tests before filing the PR. There are three kinds of tests, testing an **experiment** testing a **contribution**, and testing an **install**. You likely want to do the first and second, minimally, and ideally the third:
 
  - an **experiment** is a single folder with static content to serve an experiment. Usually
 this means an `index.html` file and associated style (css) and javascript (js), and the config.json
 we just talked about above. This test is appropriate if you've prepared an experiment folder but haven't yet pushed to Github.
  - a **contribution** is a submission of one or more experiments to the [library](https://www.github.com/expfactory/experiments),  meaning one or more markdown file intended to be added to the `_library` folder. The contribution tests also test the experiments, but retrieves them from your repository on Github. Thus, this test is useful when you've pushed your experiment to Github, and want to (locally) test if it's ready for the library.
+ - an **install** means that you've finished your experiment, and want to see it running in the experiments container.
 
-For both cases above, we provide a prebuilt container so you don't need to install the expfactory software locally.
+For the cases above, you can use the `vanessa/expfactory-builder` image to run tests. It assumes mounting either a directory with one or more experiment subfolders
 
-```
-singularity pull --name expfactory.test shub://expfactory/expfactory:test
-```
-
-What tests are included?
-
-```
-singularity apps expfactory.test
-test-contribution
-test-experiment
-``` 
-
-You can ask for help for either with `singularity help --app <appname>`
 
 ### Test an Experiment
-If you run without binding your folder with the experiment, you will get an error message:
+You have two options to test experiments on your host using `vanessa/expfactory-builder`. If you want to test a single experiment, meaning a folder with a `config.json` file:
 
 ```
-singularity run --app test-experiment expfactory.test 
-You must use --bind to bind the folder with config.json to /scif/data in the image.
+my-experiment/
+    config.json
 ```
 
-You need to bind the folder with your experiment (containing the config.json) to `/scif/data` in the image.
+then you should bind directory to it like this:
 
 ```
-singularity run --app test-experiment --bind $PWD:/scif/data expfactory.test 
-...Test: Experiment Validation
-.
-----------------------------------------------------------------------
-Ran 1 test in 0.001s
-
-OK
+docker run -v my-experiment:/scif/apps vanessa/expfactory-builder test
 ```
+
+If you want to test a group of experiments (a folder with subfolders, where each subfolder has a `config.json`):
+
+```
+experiments/
+    experiment-1/
+        config.json
+    experiment-2/
+        config.json
+    ...
+    experiment-N/
+        config.json
+```
+
+then you can bind the the main top level folder like this:
+
+```
+docker run -v experiments:/scif/apps vanessa/expfactory-builder test
+```
+
+Remember that these tests are primarily looking at metadata, and runtime of your experiment still will need to be tested by a human, primarily when installed in the container.
 
 ### Test a Contribution
 This set of tests is more stringent in that the test starts with one of more submissions (markdown files that you will ask to be added to the `_library` folder via a pull request) and goes through Github cloning to testing of your preview. Specifically it includes:
@@ -179,31 +182,7 @@ This set of tests is more stringent in that the test starts with one of more sub
 You need to bind the folder with markdown files for the library to `/scif/data` this time around. These tests have a lot more output because they are more substantial:
 
 ```
-$ singularity run --app test-contribution --bind _library/:/scif/data expfactory.test
-
-...Test: Global Library validation
-preview: https://expfactory-experiments.github.io/test-task
-github: https://www.github.com/expfactory-experiments/test-task
-maintainer: @vsoch
-name: test-task
-layout: experiment
-tags: ['test', 'jspsych', 'experiment']
-Cloning into '/tmp/tmpzbfh2w44/test-task'...
-remote: Counting objects: 62, done.
-remote: Compressing objects: 100% (49/49), done.
-remote: Total 62 (delta 20), reused 55 (delta 13), pack-reused 0
-Unpacking objects: 100% (62/62), done.
-Checking connectivity... done.
-Checking connectivity... done.
-.../tmp/tmpmy0dlc0j/test-task/config.json
-.../tmp/tmpmy0dlc0j/test-task/experiment.js
-.../tmp/tmpmy0dlc0j/test-task/default_style.css
-.../tmp/tmpmy0dlc0j/test-task/README.md
-.../tmp/tmpmy0dlc0j/test-task/style.css
-.../tmp/tmpmy0dlc0j/test-task/LICENSE
-.../tmp/tmpmy0dlc0j/test-task/index.html
-True
-...
+docker run -v _library:/scif/data vanessa/expfactory-builder test-library
 ```
 
 You can also use any of the expfactory software inside the image, the runscript provides the command line executable `expfactory list` by default so
