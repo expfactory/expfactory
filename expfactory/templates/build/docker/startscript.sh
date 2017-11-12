@@ -53,6 +53,9 @@ while true; do
             #gunicorn --bind 0.0.0.0:5000 expfactory.wsgi:app
             #service nginx restart
 
+            # Keep container running if we get here
+            tail -f /dev/null
+
             exit
         ;;
         -*)

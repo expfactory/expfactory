@@ -44,11 +44,11 @@ from expfactory.server import app, csrf
 import os
 
 {{ exp_id_python }} = Blueprint('{{ exp_id }}', __name__,
-                                static_url_path='/experiments', 
+                                static_url_path='/experiments/{{ exp_id }}/', 
                                 static_folder='/scif/apps/{{ exp_id }}',
-                                template_folder='/scif/apps')
+                                template_folder='/scif/apps/{{ exp_id }}')
 
-@{{ exp_id_python }}.route('/experiments/{{ exp_id }}')
+@{{ exp_id_python }}.route('/experiments/{{ exp_id }}/')
 def {{ exp_id_python }}_base():
     context = {'experiment': '{{ exp_id }}/index.html'}
     if context['experiment'] is not None:

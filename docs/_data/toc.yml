@@ -16,8 +16,8 @@
     sections:
       - title: Quick Start
         slug: quick-start
-      - title: Detailed Start
-        slug: detailed-start
+      - title: Custom Build
+        slug: custom-build
 
   - title: "Experiment Container Usage"
     url: "/expfactory/usage"

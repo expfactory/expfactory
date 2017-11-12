@@ -10,7 +10,7 @@ ENV DEBIAN_FRONTEND noninteractive
 ###################################
 
 WORKDIR /opt
-RUN git clone https://www.github.com/expfactory/expfactory
+RUN git clone -b update/docker https://www.github.com/expfactory/expfactory
 WORKDIR /opt/expfactory
 RUN python3 setup.py install
 ADD entrypoint.sh /entrypoint.sh

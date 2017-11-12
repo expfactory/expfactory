@@ -19,6 +19,8 @@ Version: {{ site.version }}<br>
 The Experiment Factory software will help you create a reproducible container to deploy behavioral experiments. <span style="font-style:italic; color:darkmagenta">we are under development for this new container-based version, and will update this documentation base as we go!</span> Want to jump right in? Pull a demo container, start an instance named web1, and browse to localhost:</p>
 
 
+**note: we are currently updating the base images and will be finished soon!**
+
 ```
 singularity pull --name expfactory.simg shub://expfactory/expfactory
 sudo singularity instance.start --bind /tmp/data:/scif/data expfactory.simg web1
