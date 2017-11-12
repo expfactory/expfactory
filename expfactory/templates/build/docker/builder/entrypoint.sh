@@ -6,7 +6,7 @@ if [ $# -eq 0 ]; then
           docker run vanessa/expfactory-builder list
           docker run vanessa/expfactory-builder build experiment-one experiment-two ...
           docker run -v experiments:/scif/apps vanessa/expfactory-builder test
-          docker run -v _library:/scif/apps vanessa/expfactory-builder test-library"
+          docker run -v library:/scif/apps vanessa/expfactory-builder test-library"
     exit
 fi
 
@@ -62,5 +62,5 @@ else
           docker run vanessa/expfactory-builder list
           docker run vanessa/expfactory-builder build experiment-one experiment-two ...
           docker run -v experiments:/scif/apps vanessa/expfactory-builder test
-          docker run -v _library:/scif/apps vanessa/expfactory-builder test-library"
+          docker run -v library:/scif/apps vanessa/expfactory-builder test-library"
 fi
