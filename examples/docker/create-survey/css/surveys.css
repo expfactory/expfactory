@@ -1,0 +1,117 @@
+.experiment-ribbon {
+  width: 100%;
+  height: 40vh;
+  -webkit-flex-shrink: 0;
+      -ms-flex-negative: 0;
+          flex-shrink: 0;
+}
+
+.experiment-main {
+  margin-top: -35vh;
+  -webkit-flex-shrink: 0;
+      -ms-flex-negative: 0;
+          flex-shrink: 0;
+}
+
+.experiment-header .mdl-layout__header-row {
+  padding-left: 40px;
+}
+
+.experiment-container {
+  max-width: 1600px;
+  width: calc(100% - 16px);
+  margin: 0 auto;
+}
+
+.experiment-content {
+  border-radius: 2px;
+  padding: 80px 56px;
+  margin-bottom: 80px;
+}
+
+.experiment-layout.is-small-screen .experiment-content {
+  padding: 40px 28px;
+}
+
+.experiment-content h3 {
+  margin-top: 48px;
+}
+
+.experiment-footer {
+  padding-left: 40px;
+}
+
+.experiment-footer .mdl-mini-footer--link-list a {
+  font-size: 13px;
+}
+
+#next_button {
+  position: fixed;
+  display: block;
+  right: 0;
+  bottom: 0;
+  margin-right: 40px;
+  margin-bottom: 40px;
+  z-index: 900;
+}
+.mdl-radio__label {
+  padding-right:20px;
+}
+
+/* Jquery Wizard */
+
+#navigation {
+    background-color: #fff;
+    border: #ddd 1px solid;
+    border-radius: 10px;
+    margin: 10px;
+    padding: 10px;
+}
+
+#navigation li {
+    margin: 2px 0;
+}
+
+label.error {
+    color: #ff0000;
+    margin-left: 10px;
+    position: relative;
+}
+
+#progressbar {
+    margin: 10px 0;
+    width: 400px;
+    height: 15px;
+}
+
+
+.navigation {
+    margin-top: 50px;
+    padding-top: 10px;
+}
+
+.navigation ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.navigation li {
+    float: left;
+    margin-right: 10px;
+}
+
+.pad {
+    margin-top:30px;
+    padding: 5px;
+}
+
+.blue {
+    background: blue;
+    color: white;
+}
+
+.pink {
+    background: pink;
+    color: black;
+}

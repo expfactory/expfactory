@@ -22,3 +22,9 @@
   - title: "Contribute an Experiment"
     url: "/expfactory/contribute"
     slug: contribute
+    sections:
+      - title: "Contribute an Experiment"
+        slug: contribute-an-experiment
+      - title: "Contribute a Survey"
+        slug: contribute-a-survey
+
