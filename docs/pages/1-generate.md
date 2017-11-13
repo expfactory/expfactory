@@ -108,7 +108,7 @@ docker run vanessa/expfactory-builder list | grep survey
 ## Recipe Generation
 To generate a Dockerfile to build our custom image, we need to run expfactory in the container,
 and mount a folder (`my-experiment`) to retrieve the image that is built. The folder
-should not already container a Dockerfile, and most appropriate is a new folder that you
+should not already contain a Dockerfile, and most appropriate is a new folder that you
 intend to set up with version control (a.k.a. Github). That looks like this:
 
 ```
