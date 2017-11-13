@@ -189,7 +189,10 @@ def read_file(filename,mode='r'):
 
 def write_file(filename,content,mode='w'):
     with open(filename,mode) as filey:
-        filey.writelines(content)
+        try:
+            filey.writelines(content)
+        except:
+            filey.writelines(content.encode('utf-8'))
     return filename
 
 def get_post_fields(request):
