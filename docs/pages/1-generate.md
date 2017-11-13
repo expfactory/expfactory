@@ -108,7 +108,7 @@ docker run vanessa/expfactory-builder list | grep survey
 ## Recipe Generation
 To generate a Dockerfile to build our custom image, we need to run expfactory in the container,
 and mount a folder (`my-experiment`) to retrieve the image that is built. The folder
-should not already container a Dockerfile, and most appropriate is a new folder that you
+should not already contain a Dockerfile, and most appropriate is a new folder that you
 intend to set up with version control (a.k.a. Github). That looks like this:
 
 ```
@@ -263,8 +263,7 @@ test-task-results.json
 ```
 
 ## Stopping your Container
-For the first example that we did without detached (`-d`) if you pressed Control+C for the terminal with the container started, you will kill the process and remove the container. This would happen regardless if you were shelled in another container, because the start script exits. However, now we have it
-running in this detached state, and we need to stop it using the docker daemon:
+For the first example that we did without detached (`-d`) if you pressed Control+C for the terminal with the container started, you will kill the process and remove the container. This would happen regardless if you were shelled in another container, because the start script exits. However, now that we have it running in this detached state, we need to stop it using the docker daemon:
 
 ```
 docker stop 2c503ddf6a7a
