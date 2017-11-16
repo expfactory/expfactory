@@ -192,13 +192,14 @@ $(document).ready(function(){
         $.each(selected, function(e,i){
             new_experiment = $(i).attr('id');
             new_time = parseInt($(i).attr('data-time'),10);
-            total_time = total_time + new_time;
             if (new_experiment != "select-button") {
                 if (experiments == "") {
                     experiments =  new_experiment;
                 } else {
                     experiments =  experiments + "," + new_experiment;
                 }
+
+            total_time = total_time + new_time;
             }
         })
         $("#exp_ids").val(experiments);
