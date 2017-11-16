@@ -118,7 +118,7 @@ def clone(url, tmpdir=None):
     if return_code == 0:
         return dest
     bot.error('Error cloning repo.')
-    sys.exit(error_code)
+    sys.exit(return_code)
 
 
 def run_command(cmd):
