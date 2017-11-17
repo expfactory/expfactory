@@ -5,6 +5,25 @@ pdf: true
 permalink: /contribute
 ---
 
+# Contribute a Container
+If you've finished your container and want to add it to the [recipes page](https://expfactory.github.io/experiments/recipes) for others to find and use, then you simply need to add an entry to the [containers file](https://github.com/expfactory/experiments/blob/master/docs/_data/containers.yml) to provide a name, link, and container base. You can do this via a pull request (meaning you would fork the repository, clone your fork, make changes, commit, and then file a pull request against the main repository) or simply [file an issue](https://github.com/expfactory/experiments/issues) with the following fields and the container will be added for you.
+
+```
+- name: expfactory-games
+  base: "docker"
+  url: "https://hub.docker.com/r/vanessa/expfactory-games/"
+  maintainer: "@vsoch"
+  description: Example Docker container with all experiment factory (phaser) games
+```
+
+ - **name**: a human friendly name or title for your container
+ - **base**: the container technoloy (likely Docker)
+ - **url**: a url for your container. In the example above, there is no Github repository so Docker Hub is used.
+ - **maintainer**: an alias to identify you if there are questions about the container
+ - **description**: a more verbose description of your container.
+
+The idea here is that you can find others with similar work to your own, and collaborate.
+
 # Contribute an Experiment
 
 This guide will walk you through contribution of an experiment. We are still developing these steps, and there may be small changes as we do. 
