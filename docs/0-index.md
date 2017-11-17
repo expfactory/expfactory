@@ -25,7 +25,7 @@ docker run -p 80:80 vanessa/expfactory-surveys start
 docker run -p 80:80 vanessa/expfactory-experiments start
 ```
 
-Next, read more about [generation](pages/1-generate.md) of your own experiment container. Please [give feedback](https://www.github.com/expfactory/expfactory/issues) about your needs to further develop the software. The [experiments library](https://expfactory.github.io/experiments/) will show you currently available experiments, including all experiments, surveys, and games migrated from [the legacy Expfactory](https://www.github.com/expfactory/expfactory-experiments). If you have web-based experiments to contribute, please [reach out](https://www.github.com/expfactory/expfactory/issues)! Your contributions and feedback are greatly appreciated!
+Next, read more about [generation](pages/1-generate.md) of your own experiment container. Please [give feedback](https://www.github.com/expfactory/expfactory/issues) about your needs to further develop the software. The [library](https://expfactory.github.io/experiments/) will show you a selection to choose from, including all experiments, surveys, and games migrated from [the legacy Expfactory](https://www.github.com/expfactory/expfactory-experiments). If you have web-based experiments to contribute, please [reach out](https://www.github.com/expfactory/expfactory/issues)! Your contributions and feedback are greatly appreciated!
 
 
 ## User Guide
