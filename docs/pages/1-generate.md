@@ -18,6 +18,7 @@ or if you want to see the entire set of surveys or experiments:
 ```
 docker run -p 80:80 vanessa/expfactory-experiments start
 docker run -p 80:80 vanessa/expfactory-surveys start
+docker run -p 80:80 vanessa/expfactory-games start
 ```
 
 # Quick Start
