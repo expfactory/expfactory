@@ -29,59 +29,75 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
-from flask import session
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import (
+    scoped_session, 
+    sessionmaker
+)
+
+from sqlalchemy.ext.declarative import declarative_base
 from expfactory.logger import bot
 from expfactory.utils import write_json
-from expfactory.defaults import (
-    EXPFACTORY_SUBID,
-    EXPFACTORY_DATA
+from expfactory.database.models import (
+    Participant,
+    Result
 )
+from expfactory.defaults import EXPFACTORY_SUBID
 from glob import glob
 import os
 import sys
 
-
-# DEFAULT FLAT #################################################################
-# Default "database" is flat files written to the system
-
-db_session = None
+# Primary (Shared) functions
 
 def generate_subid(digits=5):
-    '''assumes a flat (file system) database, organized by experiment id, and
-       subject id, with data (json) organized by subject identifier
-    ''' 
-    folder_id = 0
-    folders = glob('%s/%s/*' %(EXPFACTORY_DATA, EXPFACTORY_SUBID))
-    folders.sort()
-    if len(folders) > 0:
-        folder_id = int(os.path.basename(folders[-1])) + 1
-    folder_id = str(folder_id).zfill(digits)
-    return "%s/%s" % (EXPFACTORY_SUBID, folder_id)
-    
+    '''generate a new user in the database, still session based so we
+       create a new identifier.
+
+    This might be helpful
+            user = User(name="Joe")
+            session = self.sessionmaker()
+            session.save(user)
+            session.flush()
+            print 'user_id', user.user_id
+            session.commit()
+            session.close()
+    '''    
+    p = Participant()
+    db_session.add(p)
+    db_session.commit()
+    return p.id
+
+
 
 def save_data(session, exp_id, content):
     '''save data will obtain the current subid from the session, and save it
        depending on the database type. Currently we just support flat files'''
 
-    subid = session.get('subid', None) 
-
+    subid = session.get('expfactory_subid', None) 
+    
     # We only attempt save if there is a subject id, set at start
-    data_file = None
     if subid is not None:
-        if EXPFACTORY_DATA is not None:
+        p = Participant.query.filter(Participant.id == subid).first() # better query here
+        result = Result(data=content, # might need to json.dumps
+                        exp_id=exp_id,
+                        participant_id=p.id) # check if changes from str/int
+        p.results.append(result)
+        db_session.commit()
+        # TODO: what to return here?
 
-            # Data base for experiment study id, /scif/data/expfactory
-            if not os.path.exists(EXPFACTORY_DATA):
-                os.mkdir(EXPFACTORY_DATA)
 
-            # Subject specific folder
-            data_base = "%s/%s" %(EXPFACTORY_DATA, subid)
-            if not os.path.exists(data_base):
-                os.mkdir(data_base)
+# Database Setup
+engine = create_engine('sqlite:///%s.db' %(EXPFACTORY_SUBID), convert_unicode=True)
+db_session = scoped_session(sessionmaker(autocommit=False,
+                                         autoflush=False,
+                                         bind=engine))
+Base = declarative_base()
+Base.query = db_session.query_property()
 
-            data_file = "%s/%s-results.json" %(data_base, exp_id)
-            if os.path.exists(data_file):
-                bot.warning('%s exists, and is being overwritten.' %data_file)
-            write_json(content, data_file)
-
-    return data_file
+def init_db():
+    # import all modules here that might define models so that
+    # they will be registered properly on the metadata.  Otherwise
+    # you will have to import them first before calling init_db()
+    import expfactory.models
+    Base.metadata.create_all(bind=engine)

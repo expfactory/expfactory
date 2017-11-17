@@ -1,4 +1,5 @@
 '''
+database.py: part of expfactory package
 
 Copyright (c) 2017, Vanessa Sochat
 All rights reserved.
@@ -30,23 +31,34 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
-__version__ = "3.0"
-AUTHOR = 'Vanessa Sochat'
-AUTHOR_EMAIL = 'vsochat@stanford.edu'
-NAME = 'expfactory'
-PACKAGE_URL = "http://www.github.com/expfactory/expfactory"
-KEYWORDS = 'singularity container reproducible behavior neuroscience experiment factory'
-DESCRIPTION = "software to generate a reproducible container battery of experiments."
-LICENSE = "LICENSE"
+from expfactory.logger import bot
+from sqlalchemy import Column, Integer, String
+from expfactory.database import Base
 
 
-INSTALL_REQUIRES = (
-    ('flask', {'min_version': '0.12'}),
-    ('flask-restful', {'min_version': None}),
-    ('flask-blueprint',{'min_version': None}),
-    ('Flask-WTF', {'min_version': None}),
-    ('Flask-SQLAlchemy', {'min_version': None}),
-    ('flask-cors', {'min_version': None}),
-    ('requests', {'min_version': '2.12.4'}),
-    ('retrying', {'min_version': '1.3.3'})
-)
+class Participant(Base):
+    '''A participant in a local assessment. Names must be unique
+    '''
+    __tablename__ = 'participant'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(150))
+    results = db.relationship('Result', lazy='select',
+                               backref=db.backref('participant', lazy='joined'))
+
+    def __init__(self, name=None):
+        self.name = name
+
+    def __repr__(self):
+        return '<Participant %r>' % (self.name)
+
+
+class Result(db.Model):
+    '''a result is an experiment name, json dump, and datetime'''
+    __tablename__ = 'result'
+
+    id = db.Column(db.Integer, primary_key=True)
+    data = db.Column(db.Text, nullable=False)
+    exp_id = db.Column(db.String(250), nullable=False)
+    participant_id = db.Column(db.Integer, 
+                               db.ForeignKey('participant.id'),
+                               nullable=False)

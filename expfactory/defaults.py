@@ -64,11 +64,19 @@ EXPFACTORY_LIBRARY = "%s/experiments/library.json" %(EXPFACTORY_REGISTRY)
 EXPFACTORY_SUBID = os.environ.get('EXPFACTORY_STUDY_ID', 'expfactory')
 EXPFACTORY_SERVER = os.environ.get('EXPFACTORY_SERVER', 'localhost')
 
-EXPFACTORY_DATA = os.environ.get('EXPFACTORY_DATA')
-EXPFACTORY_BASE = os.environ.get('EXPFACTORY_DATABASE')
+
+#######################################################################
+# Expfactory Database
+#######################################################################
+
 EXPFACTORY_DATABASE = os.environ.get('EXPFACTORY_DATABASE', 'filesystem')
+EXPFACTORY_BASE = os.environ.get('EXPFACTORY_BASE')  # /scif/apps
+
+# Filesystem
+EXPFACTORY_DATA = os.environ.get('EXPFACTORY_DATA')
 
 # Choices correspond to modules, currently only have filesystem support
+
 
 #######################################################################
 # Formatting

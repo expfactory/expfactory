@@ -30,5 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
+import os
+
 WTF_CSRF_ENABLED = True
 SECRET_KEY = 'bwabwabwa-bananas-not'

@@ -87,7 +87,13 @@ class EFServer(Flask):
                 self.database = "%s/%s" %(self.database, self.study_id)
                 if not os.path.exists(self.database):
                     os.mkdir(self.database)
-                self.demo = False           
+                self.demo = False
+         
+        # Option 2: sqlite
+        elif self.database_type == "sqlite":
+            from expfactory.database import init_db
+            init_db()
+
         else:
             bot.warning('%s is not yet a supported type. Running in demo mode.' % self.database_type)
             

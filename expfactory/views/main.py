@@ -134,7 +134,7 @@ def save():
 
         if app.demo is False:
             fields = get_post_fields(request)
-            result_file = save_data(session=session, fields=fields, exp_id=exp_id)
+            result_file = save_data(session=session, content=fields, exp_id=exp_id)
             print(result_file)
 
         experiments = app.finish_experiment(session, exp_id)
