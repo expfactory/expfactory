@@ -89,7 +89,7 @@ def get_parser():
                         type=str, default="expfactory")
 
     build.add_argument("--database", dest='database', 
-                        choices=['fllesystem'],
+                        choices=['fllesystem', 'sqlite'],
                         help="database for application (default filesystem)",
                         type=str, default="filesystem")
 

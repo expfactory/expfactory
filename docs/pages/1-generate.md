@@ -132,6 +132,10 @@ To build, cd to recipe and:
               docker build -t expfactory/experiments .
 ```
 
+Before you generate your recipe, read the [custom build](#custom-build) section below to learn about the variables that you can customize.
+
+
+
 ## Container Generation
 Now we would go to the folder (`/tmp/my-experiment`) to bulid our experiments container. We
 could actually do this in the container for you, but it's better to generate the file first
@@ -363,8 +367,7 @@ Please [get in touch](https://www.github.com/expfactory/issues) as I am looking 
 
 
 # Custom Configuration
-If you want more specificity to configure your container, you might want to customize the database or experiment variables. This isn't developed much at this point (please give me your feedback) however we can review the current options.
-
+If you want more specificity to configure your container, you might want to customize the database or experiment variables. 
 
 ## Variables
 When you run a build with `vanessa/expfactory-builder` image, there are other command line options available pertaining to the database and study id. Try running `docker run vanessa/expfactory-builder build --help` to see usage.
@@ -373,8 +376,26 @@ When you run a build with `vanessa/expfactory-builder` image, there are other co
 You actually **don't** want to edit the recipe output file, since this happens inside the container
 (and you map a folder of your choice to it.) The others, however, you can modify.
 
-**filesystem**
-The default (simplest) method for a database is flat files, meaning that results are written to a mapped folder on the local machine, and each participant has their own results folder. This option is provided as many labs are accustomed to providing a battery locally, and want to save output directly to the filesystem without having any expertise with setting up a database.
+**database**
+The default (simplest) method for a database is flat files, meaning that results are written to a mapped folder on the local machine, and each participant has their own results folder. This option is provided as many labs are accustomed to providing a battery locally, and want to save output directly to the filesystem without having any expertise with setting up a database. This argument doesn't need to be specified, but would coincide with:
+
+```
+docker run -v /tmp/my-experiment:/data \
+              vanessa/expfactory-builder \
+              build --database filesystem \
+                      tower-of-london
+```
+
+**sqlite**
+An sqlite database can be used instead of a flat filesytem. This will produce one file that you can move around and read with any standard scientific software (python, R) with functions to talk to sqlite databases. If you want to use sqlite3, then specify:
+
+```
+docker run -v /tmp/my-experiment:/data \
+              vanessa/expfactory-builder \
+              build --database sqlite \
+                      tower-of-london
+```
+
 
 **MySQL/Postgres/Mongo/Other**
 For labs that wish to deploy the container on a server, you are encouraged to use a more substantial database. We haven't yet developed this, and if you are interested, please [file an issue](https://github.com/expfactory/expfactory).
@@ -394,6 +415,16 @@ The Experiment Factory will generate a new unique ID for each participant with s
 ```
 
 Yes, we start counting at 0. :)
+
+```
+
+To ask for a different study id:
+
+```
+docker run -v /tmp/my-experiment:/data \
+              vanessa/expfactory-builder \
+              build --studyid dns \
+                      tower-of-london
 ```
 
 In the future, our [online recipe generator](https://expfactory.github.io/experiments/generate) will make it easy to specify all of these variables. We will add these later after getting [feedback from users like you](https://www.github.com/expfactory/expfactory/issues).
