@@ -50,7 +50,6 @@ from expfactory.utils import (
     get_post_fields
 )
 
-
 from expfactory.database import (
     save_data,
     generate_subid
@@ -107,9 +106,10 @@ def home():
                 username = form.openid.data
  
             subid = session.get('subid')
-            if not subid:
+            if subid is None:
                 subid = generate_subid()
                 session['subid'] = subid
+                app.logger.info('New session [subid] %s' %subid)
 
             session['username'] = username
             session['experiments'] = form.exp_ids.data.split(',') # list

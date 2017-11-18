@@ -63,10 +63,12 @@ def generate_subid(digits=5):
             session.close()
     '''    
     from expfactory.database.models import Participant
-
     p = Participant()
     db_session.add(p)
     db_session.commit()
+    print('session:')
+    print(p)
+    print(p.id)
     return p.id
 
 
