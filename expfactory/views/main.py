@@ -145,7 +145,7 @@ def save():
             result_file = save_data(session=session, content=fields, exp_id=exp_id)
 
         experiments = app.finish_experiment(session, exp_id)
-        app.logging.info('Finished %s, %s remaining.' % (exp_id, len(experiments)))
+        app.logger.info('Finished %s, %s remaining.' % (exp_id, len(experiments)))
         result = jsonify({"message":"success, finished %s" % exp_id})
         result.status_code = 200
         return result
@@ -160,7 +160,7 @@ def next():
     # Redirects to another template view
     experiment = app.get_next(session)
     if experiment is not None:
-        app.logging.info('Next experiment is %s' %experiment)
+        app.logger.info('Next experiment is %s' %experiment)
     return perform_checks('/experiments/%s' %experiment, do_redirect=True)
 
 
