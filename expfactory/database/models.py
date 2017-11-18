@@ -53,7 +53,6 @@ class Participant(Base):
     name = Column(String(150))
     results = relationship('Result', lazy='select',
                            backref=backref('participant', lazy='joined'))
-
     def __init__(self, name=None):
         self.name = name
 
@@ -64,7 +63,6 @@ class Participant(Base):
 class Result(Base):
     '''a result is an experiment name, json dump, and datetime'''
     __tablename__ = 'result'
-
     id = Column(Integer, primary_key=True)
     date = Column(DateTime, default=func.now())
     data = Column(Text, nullable=False)

@@ -139,9 +139,13 @@ def save():
 
         experiments = app.finish_experiment(session, exp_id)
         bot.log('Finished %s, %s remaining.' % (exp_id, len(experiments)))
-        return jsonify({"result":"success, finished %s" % exp_id})
-    return jsonify({"result":"not allowed"})
+        result = jsonify({"message":"success, finished %s" % exp_id})
+        result.status_code = 200
+        return result
 
+    result = jsonify({"message":"not allowed"})
+    result.status_code = 403
+    return result
 
 @app.route('/next', methods=['POST', 'GET'])
 def next():

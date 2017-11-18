@@ -97,9 +97,29 @@ For detailed information about how to read json strings (whether from file or da
 
 
 ## sqlite3
-Using a sqlite3 database (`sqlite` database) means that you will also have a file database that needs to be mounted to the host, but instead of individual json files, you will find a single sqlite3 file. This is more of a "substantial" database than a flat file, but still not ideal for any kind of production server.
+Using a sqlite3 database (`sqlite` database) means that you will also have a file database that needs to be mounted to the host, but instead of individual json files, you will find a single sqlite3 file named by the study id. This is more of a "substantial" database than a flat file, but still not ideal for any kind of production server. For example, here is my sqlite3 database under `/scif/data`:
+
+```
+ls /scif/data
+    expfactory.db
+```
 
 **How do I read it?**
+You can generally use any scientific programming software that has libraries for interacting with sqlite3 databases. My preference is for the [sqlite3](http://www.sqlitetutorial.net/sqlite-python/sqlite-python-select/) library, and we might read the file like this (in python):
+
+```
+import sqlite3
+conn = sqlite3.connect('/scif/apps/dns.db')
+
+cur = conn.cursor()
+cur.execute("SELECT * FROM participant")
+results = cur.fetchall()
+ 
+for row in results:
+    print(row)
+```
+
+For each result, the first integer is the database index (and participant id) and the second index is that data result. The result itself is likely to be a string that should be loaded as json (see [loading results](#loading-results)) below.
 
 
 ## Loading Results

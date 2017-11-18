@@ -79,16 +79,20 @@ def save_data(session, exp_id, content):
         Result
     )
     subid = session.get('expfactory_subid', None) 
-    
+    bot.info('Saving data for subid %s' % subid)    
+
     # We only attempt save if there is a subject id, set at start
     if subid is not None:
         p = Participant.query.filter(Participant.id == subid).first() # better query here
         result = Result(data=content, # might need to json.dumps
                         exp_id=exp_id,
                         participant_id=p.id) # check if changes from str/int
+        db_session.add(result)
         p.results.append(result)
         db_session.commit()
-        # TODO: what to return here?
+
+        bot.info("Participant: %s" %p)
+        bot.info("Result: %s" %result)
 
 
 # Database Setup
