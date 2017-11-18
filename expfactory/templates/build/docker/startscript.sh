@@ -50,12 +50,14 @@ while true; do
         --database|--db)
             shift
             EXPFACTORY_DATABASE=${1:-}
+            echo "Database selected as ${EXPFACTORY_DATABASE}"
             export EXPFACTORY_DATABASE
             shift
         ;;
         --studyid)
             shift
             EXPFACTORY_STUDY_ID=${1:-}
+            echo "Study ID selected as ${EXPFACTORY_STUDYID}"
             export EXPFACTORY_STUDY_ID
             shift
         ;;

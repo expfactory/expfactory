@@ -73,7 +73,7 @@ EXPFACTORY_DATABASE = os.environ.get('EXPFACTORY_DATABASE', 'filesystem')
 EXPFACTORY_BASE = os.environ.get('EXPFACTORY_BASE')  # /scif/apps
 
 # Filesystem
-EXPFACTORY_DATA = os.environ.get('EXPFACTORY_DATA')
+EXPFACTORY_DATA = os.environ.get('EXPFACTORY_DATA') # /scif/data
 
 # Choices correspond to modules, currently only have filesystem support
 

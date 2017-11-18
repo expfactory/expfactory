@@ -39,7 +39,10 @@ from sqlalchemy.orm import (
 from sqlalchemy.ext.declarative import declarative_base
 from expfactory.logger import bot
 from expfactory.utils import write_json
-from expfactory.defaults import EXPFACTORY_SUBID
+from expfactory.defaults import (
+    EXPFACTORY_SUBID, 
+    EXPFACTORY_DATA
+)
 from glob import glob
 import os
 import sys
@@ -89,7 +92,9 @@ def save_data(session, exp_id, content):
 
 
 # Database Setup
-engine = create_engine('sqlite:///%s.db' %(EXPFACTORY_SUBID), convert_unicode=True)
+db_path = os.path.join(EXPFACTORY_DATA, '%s.db' % EXPFACTORY_SUBID)
+bot.info("Database located at %s" % db_path)
+engine = create_engine('sqlite:///%s' % db_path, convert_unicode=True)
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
                                          bind=engine))
