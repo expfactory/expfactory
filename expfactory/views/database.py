@@ -41,16 +41,11 @@ from flask import (
 )
 
 from expfactory.logger import bot
-from expfactory.database import (
-    save_data,
-    generate_subid,
-    db_session
-)
+from expfactory.database import db_session
 
 from expfactory.server import app
 from random import choice
 import os
-
 
 
 @app.teardown_appcontext
