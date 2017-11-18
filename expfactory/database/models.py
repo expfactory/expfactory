@@ -32,11 +32,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
 from expfactory.logger import bot
-from sqlalchemy import Column, Integer, String
-from expfactory.database import (
-    Base,
-    db_session as db
+from sqlalchemy import (
+    Column, 
+    Integer, 
+    String, 
+    ForeignKey
 )
+from sqlalchemy.orm import relationship, backref
+from expfactory.database import Base
 
 
 class Participant(Base):
@@ -45,8 +48,8 @@ class Participant(Base):
     __tablename__ = 'participant'
     id = Column(Integer, primary_key=True)
     name = Column(String(150))
-    results = db.relationship('Result', lazy='select',
-                               backref=db.backref('participant', lazy='joined'))
+    results = relationship('Result', lazy='select',
+                           backref=backref('participant', lazy='joined'))
 
     def __init__(self, name=None):
         self.name = name
@@ -55,13 +58,13 @@ class Participant(Base):
         return '<Participant %r>' % (self.name)
 
 
-class Result(db.Model):
+class Result(Base):
     '''a result is an experiment name, json dump, and datetime'''
     __tablename__ = 'result'
 
-    id = db.Column(db.Integer, primary_key=True)
-    data = db.Column(db.Text, nullable=False)
-    exp_id = db.Column(db.String(250), nullable=False)
-    participant_id = db.Column(db.Integer, 
-                               db.ForeignKey('participant.id'),
-                               nullable=False)
+    id = Column(Integer, primary_key=True)
+    data = Column(Text, nullable=False)
+    exp_id = Column(String(250), nullable=False)
+    participant_id = Column(Integer, 
+                            ForeignKey('participant.id'),
+                            nullable=False)
