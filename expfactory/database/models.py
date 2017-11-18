@@ -33,7 +33,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from expfactory.logger import bot
 from sqlalchemy import Column, Integer, String
-from expfactory.database import Base
+from expfactory.database import (
+    Base,
+    db_session as db
+)
 
 
 class Participant(Base):
