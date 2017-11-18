@@ -112,14 +112,34 @@ import sqlite3
 conn = sqlite3.connect('/scif/data/expfactory.db')
 
 cur = conn.cursor()
-cur.execute("SELECT * FROM participant")
+cur.execute("SELECT * FROM result")
 results = cur.fetchall()
- 
+
 for row in results:
     print(row)
 ```
 
-For each result, the first integer is the database index (and participant id) and the second index is that data result. The result itself is likely to be a string that should be loaded as json (see [loading results](#loading-results)) below.
+Each result row includes the table row id, the date, result content, and participant id.
+
+```
+>>> res[0]  # table result row index
+1
+
+>>> res[1]  # date
+'2017-11-18 17:26:30'
+
+>>> res[2]  # data from experiment, json.loads needed
+>>> json.loads(res[2])
+[{'timing_post_trial': 100, 'exp_id': 'test-task', 'block_duration': 2000, 'trial_index': 0, 'possible_responses': [32], 'focus_shifts': 0, 'internal_node_id': '0.0-0.0', 'trial_id': 'test', 'addingOnTrial': 'added!', 'rt': 805, 'trial_type': 'poldrack-single-stim', 'stimulus': '<div class = "shapebox"><div id = "cross"></div></div>', 'stim_duration': 2000, 'full_screen': True, 'key_press': 32, 'time_elapsed': 2005}, {'timing_post_trial': 100, 'exp_id': 'test-task', 'block_duration': 2000, 'trial_index': 1, 'possible_responses': [32], 'focus_shifts': 0, 'internal_node_id': '0.0-1.0', 'trial_id': 'test', 'addingOnTrial': 'added!', 'rt': 331, 'trial_type': 'poldrack-single-stim', 'stimulus': '<div class = "shapebox"><div id = "cross"></div></div>', 'stim_duration': 2000, 'full_screen': True, 'key_press': 32, 'time_elapsed': 4111}, {'timing_post_trial': 100, 'exp_id': 'test-task', 'block_duration': 2000, 'trial_index': 2, 'possible_responses': [32], 'focus_shifts': 0, 'internal_node_id': '0.0-2.0', 'trial_id': 'test', 'addingOnTrial': 'added!', 'rt': 339, 'trial_type': 'poldrack-single-stim', 'stimulus': '<div class = "shapebox"><div id = "cross"></div></div>', 'added_Data?': 'success!', 'stim_duration': 2000, 'full_screen': True, 'key_press': 32, 'time_elapsed': 6213}, {'full_screen': True, 'trial_index': 3, 'trial_type': 'call-function', 'focus_shifts': 0, 'exp_id': 'test-task', 'internal_node_id': '0.0-3.0', 'time_elapsed': 6314}, {'responses': '{"Q0":"Stuff","Q1":"Nope"}', 'full_screen': True, 'exp_id': 'test-task', 'focus_shifts': 0, 'trial_type': 'survey-text', 'rt': 6169, 'trial_index': 4, 'trial_id': 'post task questions', 'internal_node_id': '0.0-5.0', 'time_elapsed': 12492}, {'performance_var': 661, 'timing_post_trial': 0, 'exp_id': 'test-task', 'text': '<div class = centerbox><p class = center-block-text>Thanks for completing this task!</p><p class = center-block-text>Press <strong>enter</strong> to continue.</p></div>', 'key_press': 13, 'trial_index': 5, 'focus_shifts': 0, 'internal_node_id': '0.0-6.0', 'trial_id': 'end', 'credit_var': True, 'trial_type': 'poldrack-text', 'rt': 1083, 'full_screen': True, 'block_duration': 1083, 'time_elapsed': 14579}]
+
+>>> res[3] # experiment id (exp_id)
+'test-task'
+
+>>> res[4] # participant id
+7
+```
+
+Since the Participant table doesn't hold anything beyond the participant id, you shouldn't need to query it. More detail is added for loading json in (see [loading results](#loading-results)) below.
 
 
 ## Loading Results
