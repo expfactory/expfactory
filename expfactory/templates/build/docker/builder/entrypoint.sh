@@ -50,7 +50,7 @@ if [ $1 == "build" ]; then
     if [ -f "${recipe}" ]; then
         cp /opt/expfactory/expfactory/templates/build/docker/startscript.sh /data
         echo
-        echo "To build, cd to recipe and:
+        echo "To build, cd to directory with Dockerfile and:
               docker build -t expfactory/experiments ."
     else
         expfactory build --help

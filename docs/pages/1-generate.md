@@ -49,13 +49,15 @@ docker build -t expfactory/experiments .
 ```
 
 Now let's start it.
+
 ```
 docker run -v /tmp/my-experiment/data/:/scif/data \
            -d -p 80:80 \
            expfactory/experiments start 
 ```
 
-Open your browser to localhost ([http://127.0.0.1](http://127.0.0.1)) to see the portal [portal](/expfactory/usage.html).
+Open your browser to localhost ([http://127.0.0.1](http://127.0.0.1)) to see the portal [portal](/expfactory/usage.html). For specifying a different database or study identifier, read the detailed start, specifically how to [customize your container runtime](#customize-your-container). 
+
 
 
 # Detailed Start
@@ -63,6 +65,7 @@ The generation of a container comes down to adding the experiments to a text fil
 
  - generating a recipe with (reproducible) steps to build a custom container
  - building the container!
+
 
 ## The Expfactory Builder Image
 Both of these steps start with the expfactory builder container. 
@@ -132,8 +135,7 @@ To build, cd to recipe and:
               docker build -t expfactory/experiments .
 ```
 
-Before you generate your recipe, read the [custom build](#custom-build) section below to learn about the variables that you can customize.
-
+Before you generate your recipe, in the case that you want "hard coded" defaults (e.g., set as defaults for future users) read the [custom build](#custom-build) section below to learn about the variables that you can customize. If not, then rest assured that these values can be specified when a built container is started.
 
 
 ## Container Generation
@@ -161,6 +163,7 @@ docker build --no-cache -t vanessa/experiment .
 ```
 
 Don't forget the `.` at the end! It references the present working directory with the Dockerfile.
+
 
 ## Start your Container
 After you do the above steps, your custom container will exist on your local machine.
@@ -222,6 +225,25 @@ Try running `docker ps` to list your active containers - you will see it is the 
 $ docker ps
 CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS              PORTS                          NAMES
 2c503ddf6a7a        vanessa/experiment   "/bin/bash /starts..."   10 minutes ago      Up 10 minutes       0.0.0.0:80->80/tcp, 5000/tcp   zealous_raman
+```
+
+## Customize Your Container
+
+It's most likely the case that your container default is to save data to the file system, and use a study id of expfactory. You can set this to be custom at runtime, if you intend to have it change (or want to distribute a general container that is amenable to different databases and/or study identifiers). First, here is how you would specify a different studyid:
+
+```
+docker run -v /tmp/my-experiment/data/:/scif/data \
+           -d -p 80:80 \
+           expfactory/experiments start --studyid dns
+```
+
+Here is how to specify a different database, like sqlite3
+
+
+```
+docker run -v /tmp/my-experiment/data/:/scif/data \
+           -d -p 80:80 \
+           expfactory/experiments start --database sqlite
 ```
 
 
@@ -367,16 +389,20 @@ Please [get in touch](https://www.github.com/expfactory/issues) as I am looking 
 
 
 # Custom Configuration
-If you want more specificity to configure your container, you might want to customize the database or experiment variables. 
+If you want more specificity to configure your container, you might want to customize the database or experiment variables. There are **two** kinds of customization, the customization that happens **before** you build the container (akin to setting defaults for future users of it) and the customization that happens at runtime (meaning defining the database type when you start the container).
 
-## Variables
-When you run a build with `vanessa/expfactory-builder` image, there are other command line options available pertaining to the database and study id. Try running `docker run vanessa/expfactory-builder build --help` to see usage.
+If you change the defaults, this means that any users that run your container (without specifying these variables) will get these as default. If you want your container to be most usable by others, we recommend that you don't do this, and keep the defaults as the most flexible types - a flat file system database and general study id (expfactory). 
 
-**output**
-You actually **don't** want to edit the recipe output file, since this happens inside the container
-(and you map a folder of your choice to it.) The others, however, you can modify.
+If you leave these defaults, you (and the future users of your container) can then easily customize these variables when the container is started in the future. The risk of setting a default database like `sql` or `postgres` is that a user that doesn't know some credential needs to be defined won't be able to use the container. 
 
-**database**
+The choice is up to you! For settings defaults, see the first section [default variables](#default-variables). For setting at runtime, see the second section [runtime variables](#runtime-variables).
+ 
+## Default Variables
+When you run a build with `vanessa/expfactory-builder` image, there are other command line options available pertaining to the database and study id. Try running `docker run vanessa/expfactory-builder build --help` to see usage. If you customize these variables, the container recipe generated will follow suit.
+
+### database
+
+**filesystem**
 The default (simplest) method for a database is flat files, meaning that results are written to a mapped folder on the local machine, and each participant has their own results folder. This option is provided as many labs are accustomed to providing a battery locally, and want to save output directly to the filesystem without having any expertise with setting up a database. This argument doesn't need to be specified, but would coincide with:
 
 ```
@@ -387,7 +413,7 @@ docker run -v /tmp/my-experiment:/data \
 ```
 
 **sqlite**
-An sqlite database can be used instead of a flat filesytem. This will produce one file that you can move around and read with any standard scientific software (python, R) with functions to talk to sqlite databases. If you want to use sqlite3, then specify:
+An sqlite database can be used instead of a flat filesytem. This will produce one file that you can move around and read with any standard scientific software (python, R) with functions to talk to sqlite databases. If you want to set a default for the container of sqlite3, then specify:
 
 ```
 docker run -v /tmp/my-experiment:/data \
@@ -396,11 +422,17 @@ docker run -v /tmp/my-experiment:/data \
                       tower-of-london
 ```
 
+**sql**
+For labs that wish to deploy the container on a server, you are encouraged to use a more substantial database, such as a traditional relational database like sql. To use sql, you need to specify the database type for the Dockerfile, and then you will need to...
+
+#TODO: how to specify username and password? 
 
 **MySQL/Postgres/Mongo/Other**
-For labs that wish to deploy the container on a server, you are encouraged to use a more substantial database. We haven't yet developed this, and if you are interested, please [file an issue](https://github.com/expfactory/expfactory).
+We haven't yet developed this, and if you are interested, please [file an issue](https://github.com/expfactory/expfactory).
 
 For any of the above, if you generate a Dockerfile and then change your mind, you can easily edit the Dockerfile instead of re-generating with the builder. In fact, this applies to make **any changes** to the Dockerfile. You can clone your own repos not in the library, add different images, or change the templates.
+
+## Identifiers
 
 **studyid**
 The Experiment Factory will generate a new unique ID for each participant with some study idenitifier prefix. The default is `expfactory`, meaning that my participants will be given identifiers `expfactory/0` through `expfactory/n`, and for a filesystem database, it will produce output files according to that schema:
@@ -409,13 +441,7 @@ The Experiment Factory will generate a new unique ID for each participant with s
  /scif/data/
       expfactory/
            00000/
-            tower-of-london.json
-            test-task.json
-            adaptive-n-back.json
-```
-
-Yes, we start counting at 0. :)
-
+            tower-of-london-result.json
 ```
 
 To ask for a different study id:
@@ -426,6 +452,11 @@ docker run -v /tmp/my-experiment:/data \
               build --studyid dns \
                       tower-of-london
 ```
+
+**output**
+You actually **don't** want to edit the recipe output file, since this happens inside the container
+(and you map a folder of your choice to it.) The others, however, you can modify.
+
 
 In the future, our [online recipe generator](https://expfactory.github.io/experiments/generate) will make it easy to specify all of these variables. We will add these later after getting [feedback from users like you](https://www.github.com/expfactory/expfactory/issues).
 
