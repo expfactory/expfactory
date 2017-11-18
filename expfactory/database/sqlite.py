@@ -111,3 +111,4 @@ def init_db():
     # you will have to import them first before calling init_db()
     import expfactory.database.models
     Base.metadata.create_all(bind=engine)
+    return engine.url

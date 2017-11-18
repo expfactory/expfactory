@@ -92,7 +92,7 @@ class EFServer(Flask):
         # Option 2: sqlite
         elif self.database_type == "sqlite":
             from expfactory.database import init_db
-            init_db()
+            self.database = init_db()
             self.demo = False
 
         else:
