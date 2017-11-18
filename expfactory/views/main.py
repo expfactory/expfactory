@@ -42,7 +42,7 @@ from flask import (
 
 from flask_wtf.csrf import generate_csrf
 from flask_cors import cross_origin
-from expfactory.logger import bot
+from expfactory.defaults import EXPFACTORY_LOGS
 from werkzeug import secure_filename
 from expfactory.utils import (
     convert2boolean, 
@@ -65,6 +65,13 @@ import os
 import pickle
 
 from expfactory.forms import ParticipantForm
+
+
+# LOGGING ######################################################################
+
+file_handler = logging.FileHandler("%s/expfactory.log" % EXPFACTORY_LOGS)
+app.logger.addHandler(file_handler)
+app.logger.setLevel(logging.DEBUG)
 
 
 # SECURITY #####################################################################
@@ -137,7 +144,7 @@ def save():
             result_file = save_data(session=session, content=fields, exp_id=exp_id)
 
         experiments = app.finish_experiment(session, exp_id)
-        bot.log('Finished %s, %s remaining.' % (exp_id, len(experiments)))
+        app.logging.info('Finished %s, %s remaining.' % (exp_id, len(experiments)))
         result = jsonify({"message":"success, finished %s" % exp_id})
         result.status_code = 200
         return result
@@ -152,7 +159,7 @@ def next():
     # Redirects to another template view
     experiment = app.get_next(session)
     if experiment is not None:
-        bot.log('Next experiment is %s' %experiment)
+        app.logging.info('Next experiment is %s' %experiment)
     return perform_checks('/experiments/%s' %experiment, do_redirect=True)
 
 

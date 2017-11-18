@@ -69,6 +69,7 @@ EXPFACTORY_SERVER = os.environ.get('EXPFACTORY_SERVER', 'localhost')
 # Expfactory Database
 #######################################################################
 
+EXPFACTORY_LOGS = os.environ.get('EXPFACTORY_LOGS', '/scif/logs')
 EXPFACTORY_DATABASE = os.environ.get('EXPFACTORY_DATABASE', 'filesystem')
 EXPFACTORY_BASE = os.environ.get('EXPFACTORY_BASE')  # /scif/apps
 

@@ -48,6 +48,7 @@ from expfactory.utils import (
 )
 
 import jinja2
+import logging
 import tempfile
 import shutil
 import random
@@ -64,8 +65,6 @@ class EFServer(Flask):
         self.setup()
         self.initdb()
 
-        # Completed will go into list
-        self.completed = []
 
     def initdb(self):
         '''initdb will check for writability of the data folder, meaning
@@ -73,7 +72,7 @@ class EFServer(Flask):
            expfactory runs in demo mode (not saving data)
         '''
         self.database_type = getenv('EXPFACTORY_DATABASE','filesystem') 
-            bot.info("DATABASE: %s" self.database_type)
+            bot.info("DATABASE: %s" %self.database_type)
         self.demo = True
 
         # Option 1: Filesystem
