@@ -135,7 +135,6 @@ def save():
         if app.demo is False:
             fields = get_post_fields(request)
             result_file = save_data(session=session, content=fields, exp_id=exp_id)
-            print(result_file)
 
         experiments = app.finish_experiment(session, exp_id)
         bot.log('Finished %s, %s remaining.' % (exp_id, len(experiments)))
@@ -152,7 +151,8 @@ def next():
 
     # Redirects to another template view
     experiment = app.get_next(session)
-    bot.log('Next experiment is %s' %experiment)
+    if experiment is not None:
+        bot.log('Next experiment is %s' %experiment)
     return perform_checks('/experiments/%s' %experiment, do_redirect=True)
 
 

@@ -73,7 +73,7 @@ class EFServer(Flask):
            expfactory runs in demo mode (not saving data)
         '''
         self.database_type = getenv('EXPFACTORY_DATABASE','filesystem') 
-
+            bot.info("DATABASE: %s" self.database_type)
         self.demo = True
 
         # Option 1: Filesystem
@@ -82,6 +82,7 @@ class EFServer(Flask):
 
             if not os.access(self.database, os.W_OK):
                 bot.warning("%s is not writable, running in demo mode." %self.data_base)
+
             else:
                 self.study_id = getenv('EXPFACTORY_STUDY_ID', 'expfactory')
                 self.database = "%s/%s" %(self.database, self.study_id)
@@ -93,6 +94,7 @@ class EFServer(Flask):
         elif self.database_type == "sqlite":
             from expfactory.database import init_db
             init_db()
+            self.demo = False
 
         else:
             bot.warning('%s is not yet a supported type. Running in demo mode.' % self.database_type)

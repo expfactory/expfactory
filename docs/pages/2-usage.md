@@ -109,7 +109,7 @@ You can generally use any scientific programming software that has libraries for
 
 ```
 import sqlite3
-conn = sqlite3.connect('/scif/apps/dns.db')
+conn = sqlite3.connect('/scif/data/expfactory.db')
 
 cur = conn.cursor()
 cur.execute("SELECT * FROM participant")

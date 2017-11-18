@@ -245,7 +245,7 @@ It's most likely the case that your container default is to save data to the fil
 ```
 docker run -v /tmp/my-experiment/data/:/scif/data \
            -d -p 80:80 \
-           expfactory/experiments start --studyid dns
+           expfactory/experiments  --studyid dns start
 ```
 
 Here is how to specify a different database, like sqlite3
@@ -253,8 +253,8 @@ Here is how to specify a different database, like sqlite3
 
 ```
 docker run -v /tmp/my-experiment/data/:/scif/data \
-           -p -d 80:80 \
-           expfactory/experiments start --database sqlite
+           -d -p 80:80 \
+           expfactory/experiments  --database sqlite start
 ```
 
 
