@@ -66,9 +66,7 @@ def generate_subid(digits=5):
     p = Participant()
     db_session.add(p)
     db_session.commit()
-    print('session:')
-    print(p)
-    print(p.id)
+    print('Session Participant id: %s' % p.id)
     return p.id
 
 
@@ -80,7 +78,7 @@ def save_data(session, exp_id, content):
         Participant,
         Result
     )
-    subid = session.get('expfactory_subid', None) 
+    subid = session.get('subid') 
     bot.info('Saving data for subid %s' % subid)    
 
     # We only attempt save if there is a subject id, set at start
