@@ -72,7 +72,7 @@ class EFServer(Flask):
            expfactory runs in demo mode (not saving data)
         '''
         self.database_type = getenv('EXPFACTORY_DATABASE','filesystem') 
-            bot.info("DATABASE: %s" %self.database_type)
+        bot.info("DATABASE: %s" %self.database_type)
         self.demo = True
 
         # Option 1: Filesystem
