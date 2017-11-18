@@ -173,11 +173,25 @@ First, let's pretend we haven't a clue what it does, and just run it:
 docker run vanessa/experiment
 
 Usage:
-    docker run <container> [help|list|test-experiments|start]
-    docker run -p 80:80 -v /tmp/data:/scif/data <container> start
+    
+         docker run vanessa/expfactory-builder [help|list|test-experiments|start]
+         docker run -p 80:80 -v /tmp/data:/scif/data vanessa/expfactory-builder start
+
+         Commands:
+                help: show help and exit
+                list: list experiments in the library
+                test: test experiments installed in container
+                start: start the container to do the experiments*
+                env: search for an environment variable set in the container
+         
+         *you are required to map port 80, otherwise you won't see the portal at localhost
+
+         Options [start]:
+                --database: specify a database to override the default
+                --studyid: specify a studyid to override the default
 ```
 
-The important command is the second - we want to start the server to run experiments. 
+The important command is the second usage example - we want to start the server to run experiments. The important (Docker) arguments are the following:
 
 - `port`: The `-p 80:80` is telling Docker to map port 80 (the nginx web server) in the container to port 80 on our local machine. If we don't do this, we won't see any experiments in the browser!
 - `volumes`: The second command `-v` is telling Docker we want to see the output in the container at `/scif/data` to appear in the folder `/tmp/data` on our local machine. If you are just testing and don't care about saving or seeing data, you don't need to specify this.
@@ -206,10 +220,7 @@ server is being served via gunicorn at localhost.
 
 This means that if you open your browser to localhost ([http://127.0.0.1](http://127.0.0.1)) you will
 see your experiment interface! When you select an experiment, the general url will look 
-something like `http://127.0.0.1/experiments/tower-of-london`. Now try hitting "Control+C" in the terminal
-where the server is running. You will see it exit. Refresh the browser, and see that the experiment is
-gone too. What we actually want to do is run the server in `detached` mode. After you've Control+C, try adding
-a `-d` to the original command. This means detached.
+something like `http://127.0.0.1/experiments/tower-of-london`. Now try hitting "Control+C" in the terminal where the server is running. You will see it exit. Refresh the browser, and see that the experiment is gone too. What we actually want to do is run the server in `detached` mode. After you've Control+C, try adding a `-d` to the original command. This means detached.
 
 
 ```
@@ -242,7 +253,7 @@ Here is how to specify a different database, like sqlite3
 
 ```
 docker run -v /tmp/my-experiment/data/:/scif/data \
-           -d -p 80:80 \
+           -p -d 80:80 \
            expfactory/experiments start --database sqlite
 ```
 

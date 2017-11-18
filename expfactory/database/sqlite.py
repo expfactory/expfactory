@@ -39,10 +39,6 @@ from sqlalchemy.orm import (
 from sqlalchemy.ext.declarative import declarative_base
 from expfactory.logger import bot
 from expfactory.utils import write_json
-from expfactory.database.models import (
-    Participant,
-    Result
-)
 from expfactory.defaults import EXPFACTORY_SUBID
 from glob import glob
 import os
@@ -63,6 +59,8 @@ def generate_subid(digits=5):
             session.commit()
             session.close()
     '''    
+    from expfactory.database.models import Participant
+
     p = Participant()
     db_session.add(p)
     db_session.commit()
@@ -73,7 +71,10 @@ def generate_subid(digits=5):
 def save_data(session, exp_id, content):
     '''save data will obtain the current subid from the session, and save it
        depending on the database type. Currently we just support flat files'''
-
+    from expfactory.database.models import (
+        Participant,
+        Result
+    )
     subid = session.get('expfactory_subid', None) 
     
     # We only attempt save if there is a subject id, set at start
