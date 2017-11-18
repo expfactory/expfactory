@@ -34,9 +34,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 from expfactory.logger import bot
 from sqlalchemy import (
     Column, 
+    DateTime,
     Integer, 
     String, 
-    ForeignKey
+    Text,
+    ForeignKey,
+    func
 )
 from sqlalchemy.orm import relationship, backref
 from expfactory.database import Base
@@ -63,6 +66,7 @@ class Result(Base):
     __tablename__ = 'result'
 
     id = Column(Integer, primary_key=True)
+    date = Column(DateTime, default=func.now())
     data = Column(Text, nullable=False)
     exp_id = Column(String(250), nullable=False)
     participant_id = Column(Integer, 
