@@ -61,19 +61,19 @@ import sys
 
 Base = declarative_base()
 
-def init_db(self, database_url=None):
+def init_db(self):
     '''initialize the database, with the default database path or custom of
        the format sqlite:////scif/data/expfactory.db
 
     '''
 
-    # Database Setup
-    if database_url is None:
+    # Database Setup, use default if uri not provided
+    if self.database == 'sqlite':
         db_path = os.path.join(EXPFACTORY_DATA, '%s.db' % EXPFACTORY_SUBID)
-        database_url = 'sqlite:///%s' % db_path
+        self.database = 'sqlite:///%s' % db_path
 
-    bot.info("Database located at %s" % database_url)
-    self.engine = create_engine(database_uri, convert_unicode=True)
+    bot.info("Database located at %s" % self.database)
+    self.engine = create_engine(self.database, convert_unicode=True)
     self.session = scoped_session(sessionmaker(autocommit=False,
                                                autoflush=False,
                                                bind=self.engine))

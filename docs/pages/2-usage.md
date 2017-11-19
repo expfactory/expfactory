@@ -73,6 +73,7 @@ Now let's discuss what happens after participants interact with the portal. We h
 ## Databases
 
 ### filesystem
+Saving to the filesytem is the default (what you get when you don't specify a particular database) and means saving to a folder called `/scif/data` in the Docker image.
 
 **Where is the data?**
 If you are saving data to the filesystem (`filesystem` database), given that you've mounted the container data folder `/scif/data` to the host, this means that the data will be found on the host in that location:
@@ -100,7 +101,7 @@ $ tree /tmp/data/dns/00001/
 If you stop the container, and the data will persist on the host. If you didn't mount to the host, then stopping the container means losing the data.
 
 **How do I read it?**
-For detailed information about how to read json strings (whether from file or database) see below. For a filesystem save, the data is saved to a json object, regardless of the string output produced by the experiment. This means that you can load the data as json, and then look at the `data` key to find the result saved by the particular experiment. Typically you will find another string saved as json, but it could be the case that some experiments do this differently.
+For detailed information about how to read json strings (whether from file or database) see further down this page. For a filesystem save, the data is saved to a json object, regardless of the string output produced by the experiment. This means that you can load the data as json, and then look at the `data` key to find the result saved by the particular experiment. Typically you will find another string saved as json, but it could be the case that some experiments do this differently.
 
 
 ## sqlite3
