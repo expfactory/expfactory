@@ -41,7 +41,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
-from expfactory.logger import bot
 from expfactory.utils import (
     convert2boolean, 
     getenv
@@ -61,14 +60,27 @@ EXPFACTORY_REGISTRY = getenv("EXPFACTORY_REGISTRY_BASE",
 
 EXPFACTORY_LIBRARY = "%s/experiments/library.json" %(EXPFACTORY_REGISTRY)
 
-EXPFACTORY_SUBID = os.environ.get('EXPFACTORY_STUDY_ID', 'expfactory')
 EXPFACTORY_SERVER = os.environ.get('EXPFACTORY_SERVER', 'localhost')
 
-EXPFACTORY_DATA = os.environ.get('EXPFACTORY_DATA')
-EXPFACTORY_BASE = os.environ.get('EXPFACTORY_DATABASE')
-EXPFACTORY_DATABASE = os.environ.get('EXPFACTORY_DATABASE', 'filesystem')
 
-# Choices correspond to modules, currently only have filesystem support
+#######################################################################
+# Expfactory Database
+#######################################################################
+
+EXPFACTORY_LOGS = os.environ.get('EXPFACTORY_LOGS', '/scif/logs')
+EXPFACTORY_DATABASE = os.environ.get('EXPFACTORY_DATABASE', 'filesystem')
+EXPFACTORY_BASE = os.environ.get('EXPFACTORY_BASE', '/scif/apps')
+EXPFACTORY_DATA = os.environ.get('EXPFACTORY_DATA', '/scif/data')
+
+
+#######################################################################
+# Expfactory Experiments
+#######################################################################
+
+EXPFACTORY_SUBID = os.environ.get('EXPFACTORY_STUDY_ID', 'expfactory')
+EXPFACTORY_EXPERIMENTS = getenv('EXPFACTORY_EXPERIMENTS', [])
+EXPFACTORY_RANDOMIZE = convert2boolean(getenv('EXPFACTORY_RANDOM', True))
+
 
 #######################################################################
 # Formatting

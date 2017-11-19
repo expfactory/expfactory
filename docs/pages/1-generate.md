@@ -49,13 +49,15 @@ docker build -t expfactory/experiments .
 ```
 
 Now let's start it.
+
 ```
 docker run -v /tmp/my-experiment/data/:/scif/data \
            -d -p 80:80 \
            expfactory/experiments start 
 ```
 
-Open your browser to localhost ([http://127.0.0.1](http://127.0.0.1)) to see the portal [portal](/expfactory/usage.html).
+Open your browser to localhost ([http://127.0.0.1](http://127.0.0.1)) to see the portal [portal](/expfactory/usage.html). For specifying a different database or study identifier, read the detailed start, specifically how to [customize your container runtime](#customize-your-container). 
+
 
 
 # Detailed Start
@@ -63,6 +65,7 @@ The generation of a container comes down to adding the experiments to a text fil
 
  - generating a recipe with (reproducible) steps to build a custom container
  - building the container!
+
 
 ## The Expfactory Builder Image
 Both of these steps start with the expfactory builder container. 
@@ -132,6 +135,9 @@ To build, cd to recipe and:
               docker build -t expfactory/experiments .
 ```
 
+Before you generate your recipe, in the case that you want "hard coded" defaults (e.g., set as defaults for future users) read the [custom build](#custom-build) section below to learn about the variables that you can customize. If not, then rest assured that these values can be specified when a built container is started.
+
+
 ## Container Generation
 Now we would go to the folder (`/tmp/my-experiment`) to bulid our experiments container. We
 could actually do this in the container for you, but it's better to generate the file first
@@ -158,6 +164,7 @@ docker build --no-cache -t vanessa/experiment .
 
 Don't forget the `.` at the end! It references the present working directory with the Dockerfile.
 
+
 ## Start your Container
 After you do the above steps, your custom container will exist on your local machine.
 First, let's pretend we haven't a clue what it does, and just run it:
@@ -166,11 +173,25 @@ First, let's pretend we haven't a clue what it does, and just run it:
 docker run vanessa/experiment
 
 Usage:
-    docker run <container> [help|list|test-experiments|start]
-    docker run -p 80:80 -v /tmp/data:/scif/data <container> start
+    
+         docker run vanessa/expfactory-builder [help|list|test-experiments|start]
+         docker run -p 80:80 -v /tmp/data:/scif/data vanessa/expfactory-builder start
+
+         Commands:
+                help: show help and exit
+                list: list experiments in the library
+                test: test experiments installed in container
+                start: start the container to do the experiments*
+                env: search for an environment variable set in the container
+         
+         *you are required to map port 80, otherwise you won't see the portal at localhost
+
+         Options [start]:
+                --database: specify a database to override the default
+                --studyid: specify a studyid to override the default
 ```
 
-The important command is the second - we want to start the server to run experiments. 
+The important command is the second usage example - we want to start the server to run experiments. The important (Docker) arguments are the following:
 
 - `port`: The `-p 80:80` is telling Docker to map port 80 (the nginx web server) in the container to port 80 on our local machine. If we don't do this, we won't see any experiments in the browser!
 - `volumes`: The second command `-v` is telling Docker we want to see the output in the container at `/scif/data` to appear in the folder `/tmp/data` on our local machine. If you are just testing and don't care about saving or seeing data, you don't need to specify this.
@@ -199,10 +220,7 @@ server is being served via gunicorn at localhost.
 
 This means that if you open your browser to localhost ([http://127.0.0.1](http://127.0.0.1)) you will
 see your experiment interface! When you select an experiment, the general url will look 
-something like `http://127.0.0.1/experiments/tower-of-london`. Now try hitting "Control+C" in the terminal
-where the server is running. You will see it exit. Refresh the browser, and see that the experiment is
-gone too. What we actually want to do is run the server in `detached` mode. After you've Control+C, try adding
-a `-d` to the original command. This means detached.
+something like `http://127.0.0.1/experiments/tower-of-london`. Now try hitting "Control+C" in the terminal where the server is running. You will see it exit. Refresh the browser, and see that the experiment is gone too. What we actually want to do is run the server in `detached` mode. After you've Control+C, try adding a `-d` to the original command. This means detached.
 
 
 ```
@@ -219,6 +237,8 @@ $ docker ps
 CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS              PORTS                          NAMES
 2c503ddf6a7a        vanessa/experiment   "/bin/bash /starts..."   10 minutes ago      Up 10 minutes       0.0.0.0:80->80/tcp, 5000/tcp   zealous_raman
 ```
+
+for more details on how to customize your container, including the database and study id, see the [usage](/expfactory/usage.html) docs.
 
 
 ## Shell into your Container
@@ -363,23 +383,31 @@ Please [get in touch](https://www.github.com/expfactory/issues) as I am looking 
 
 
 # Custom Configuration
-If you want more specificity to configure your container, you might want to customize the database or experiment variables. This isn't developed much at this point (please give me your feedback) however we can review the current options.
+If you want more specificity to configure your container, you might want to customize the database or experiment variables. There are **two** kinds of customization, the customization that happens **before** you build the container (akin to setting defaults for future users of it) and the customization that happens at runtime (meaning defining the database type when you start the container).
+
+If you change the defaults, this means that any users that run your container (without specifying these variables) will get these as default. If you want your container to be most usable by others, we recommend that you don't do this, and keep the defaults as the most flexible types - a flat file system database and general study id (expfactory). 
+
+If you leave these defaults, you (and the future users of your container) can then easily customize these variables when the container is started in the future. The risk of setting a default database like `sql` or `postgres` is that a user that doesn't know some credential needs to be defined won't be able to use the container. 
+
+The choice is up to you! For settings defaults, see the first section [default variables](#default-variables). For setting at runtime, see the second section [runtime variables](#runtime-variables).
+ 
+## Default Variables
+When you run a build with `vanessa/expfactory-builder` image, there are other command line options available pertaining to the database and study id. Try running `docker run vanessa/expfactory-builder build --help` to see usage. If you customize these variables, the container recipe generated will follow suit.
+
+### database
+We recommend that you generate your container using the default "filesystem" database, and customize the database at runtime. A **filesystem** database is flat files, meaning that results are written to a mapped folder on the local machine, and each participant has their own results folder. This option is provided as many labs are accustomed to providing a battery locally, and want to save output directly to the filesystem without having any expertise with setting up a database. This argument doesn't need to be specified, and would coincide with:
+
+```
+docker run -v /tmp/my-experiment:/data \
+              vanessa/expfactory-builder \
+              build --database filesystem \
+                      tower-of-london
+```
+
+Your other options are **sqlite**, **mysql**, and **postgres** all of which we recommend you specify when you start the image.
 
 
-## Variables
-When you run a build with `vanessa/expfactory-builder` image, there are other command line options available pertaining to the database and study id. Try running `docker run vanessa/expfactory-builder build --help` to see usage.
-
-**output**
-You actually **don't** want to edit the recipe output file, since this happens inside the container
-(and you map a folder of your choice to it.) The others, however, you can modify.
-
-**filesystem**
-The default (simplest) method for a database is flat files, meaning that results are written to a mapped folder on the local machine, and each participant has their own results folder. This option is provided as many labs are accustomed to providing a battery locally, and want to save output directly to the filesystem without having any expertise with setting up a database.
-
-**MySQL/Postgres/Mongo/Other**
-For labs that wish to deploy the container on a server, you are encouraged to use a more substantial database. We haven't yet developed this, and if you are interested, please [file an issue](https://github.com/expfactory/expfactory).
-
-For any of the above, if you generate a Dockerfile and then change your mind, you can easily edit the Dockerfile instead of re-generating with the builder. In fact, this applies to make **any changes** to the Dockerfile. You can clone your own repos not in the library, add different images, or change the templates.
+## Identifiers
 
 **studyid**
 The Experiment Factory will generate a new unique ID for each participant with some study idenitifier prefix. The default is `expfactory`, meaning that my participants will be given identifiers `expfactory/0` through `expfactory/n`, and for a filesystem database, it will produce output files according to that schema:
@@ -388,13 +416,22 @@ The Experiment Factory will generate a new unique ID for each participant with s
  /scif/data/
       expfactory/
            00000/
-            tower-of-london.json
-            test-task.json
-            adaptive-n-back.json
+            tower-of-london-result.json
 ```
 
-Yes, we start counting at 0. :)
+To ask for a different study id:
+
 ```
+docker run -v /tmp/my-experiment:/data \
+              vanessa/expfactory-builder \
+              build --studyid dns \
+                      tower-of-london
+```
+
+**output**
+You actually **don't** want to edit the recipe output file, since this happens inside the container
+(and you map a folder of your choice to it.) The others, however, you can modify.
+
 
 In the future, our [online recipe generator](https://expfactory.github.io/experiments/generate) will make it easy to specify all of these variables. We will add these later after getting [feedback from users like you](https://www.github.com/expfactory/expfactory/issues).
 

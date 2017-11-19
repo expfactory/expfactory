@@ -1,11 +1,12 @@
 # Docker Builder
 
-**Note that updated versions of these docs are maintainer at [expfactory](https://expfactory.github.io/expfactory/generate.html).
+This is the expfactory builder image provided on Docker Hub to produce other Dockerfiles to generate custom experiment containers. **Note that updated versions of these docs are maintainer at [expfactory](https://expfactory.github.io/expfactory/generate.html).
 
 To do a build, you will be doing the following:
 
  - generating a recipe with (reproducible) steps to build a custom container
  - building the container!
+
 
 ## The Expfactory Builder Image
 Both of these steps start with the expfactory builder container. 

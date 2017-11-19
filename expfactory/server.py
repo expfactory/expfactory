@@ -27,29 +27,20 @@ from expfactory.experiment import (
     get_selection
 )
 
-from flask import (
-    Blueprint,
-    Flask, 
-    render_template, 
-    request, 
-    flash
+from expfactory.database import (
+    init_db, 
+    generate_subid,
+    save_data
 )
-from flask_restful import Resource, Api
+from flask import Flask
 from flask_wtf.csrf import (
     CSRFProtect, 
     generate_csrf
 )
 from flask_cors import CORS
 from expfactory.logger import bot
-from werkzeug import secure_filename
-from expfactory.utils import (
-    convert2boolean, 
-    getenv
-)
+from expfactory.defaults import *
 
-import jinja2
-import tempfile
-import shutil
 import random
 import sys
 import os
@@ -64,51 +55,46 @@ class EFServer(Flask):
         self.setup()
         self.initdb()
 
-        # Completed will go into list
-        self.completed = []
 
     def initdb(self):
         '''initdb will check for writability of the data folder, meaning
            that it is bound to the local machine. If the folder isn't bound,
            expfactory runs in demo mode (not saving data)
         '''
-        self.database_type = getenv('EXPFACTORY_DATABASE','filesystem') 
 
-        self.demo = True
+        self.database = EXPFACTORY_DATABASE
+        bot.info("DATABASE: %s" %self.database)
 
-        # Option 1: Filesystem
-        if self.database_type == "filesystem":
-            self.database = getenv('EXPFACTORY_DATA','/scif/data')
+        # Supported database options
+        valid = ('sqlite', 'postgres', 'mysql', 'filesystem')
+        if not self.database.startswith(valid):
+            bot.warning('%s is not yet a supported type, saving to filesystem.' % self.database)
+            self.database = 'filesystem'
 
-            if not os.access(self.database, os.W_OK):
-                bot.warning("%s is not writable, running in demo mode." %self.data_base)
-            else:
-                self.study_id = getenv('EXPFACTORY_STUDY_ID', 'expfactory')
-                self.database = "%s/%s" %(self.database, self.study_id)
-                if not os.path.exists(self.database):
-                    os.mkdir(self.database)
-                self.demo = False           
-        else:
-            bot.warning('%s is not yet a supported type. Running in demo mode.' % self.database_type)
-            
-        if self.demo is False:
-            bot.log("Data base: %s" % self.database)
+        # Add functions specific to database type
+        self.init_db() # uses url in self.database
+
+        bot.log("Data base: %s" % self.database)
 
 
     def setup(self):
+        ''' obtain database and filesystem preferences from defaults,
+            and compare with selection in container.
+        '''
 
-        # Step 1: obtain installed and selected experiments (/scif/apps)
-        self.selection = getenv('EXPFACTORY_EXPERIMENTS', [])
-        self.base = getenv('EXPFACTORY_BASE')
+        self.selection = EXPFACTORY_EXPERIMENTS
+        self.data_base = EXPFACTORY_DATA
+        self.study_id = EXPFACTORY_SUBID
+        self.base = EXPFACTORY_BASE
+        self.randomize = EXPFACTORY_RANDOMIZE
 
-        self.randomize = convert2boolean(getenv('EXPFACTORY_RANDOM', True))
         available = get_experiments("%s" % self.base)
         self.experiments = get_selection(available, self.selection)
-        bot.debug(self.experiments)
+        self.logger.debug(self.experiments)
         self.lookup = make_lookup(self.experiments)
         final = "\n".join(list(self.lookup.keys()))        
 
-        bot.log("User has selected: %s" %self.selection)
+        bot.log("User has selected: %s" % self.selection)
         bot.log("Experiments Available: %s" %"\n".join(available))
         bot.log("Randomize: %s" % self.randomize)
         bot.log("Final Set \n%s" % final)
@@ -140,6 +126,9 @@ class EFServer(Flask):
         return experiments
 
 
+EFServer.init_db = init_db
+EFServer.save_data = save_data
+EFServer.generate_subid = generate_subid
 app = EFServer(__name__)
 app.config.from_object('expfactory.config')
 

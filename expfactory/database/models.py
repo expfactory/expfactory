@@ -1,4 +1,5 @@
 '''
+models.py: datanases for the expfactory package
 
 Copyright (c) 2017, Vanessa Sochat
 All rights reserved.
@@ -30,23 +31,42 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
-__version__ = "3.0"
-AUTHOR = 'Vanessa Sochat'
-AUTHOR_EMAIL = 'vsochat@stanford.edu'
-NAME = 'expfactory'
-PACKAGE_URL = "http://www.github.com/expfactory/expfactory"
-KEYWORDS = 'singularity container reproducible behavior neuroscience experiment factory'
-DESCRIPTION = "software to generate a reproducible container battery of experiments."
-LICENSE = "LICENSE"
-
-
-INSTALL_REQUIRES = (
-    ('flask', {'min_version': '0.12'}),
-    ('flask-restful', {'min_version': None}),
-    ('flask-blueprint',{'min_version': None}),
-    ('Flask-WTF', {'min_version': None}),
-    ('Flask-SQLAlchemy', {'min_version': None}),
-    ('flask-cors', {'min_version': None}),
-    ('requests', {'min_version': '2.12.4'}),
-    ('retrying', {'min_version': '1.3.3'})
+from expfactory.logger import bot
+from sqlalchemy import (
+    Column, 
+    DateTime,
+    Integer, 
+    String, 
+    Text,
+    ForeignKey,
+    func
 )
+from sqlalchemy.orm import relationship, backref
+from expfactory.database import Base
+
+
+class Participant(Base):
+    '''A participant in a local assessment. Names must be unique
+    '''
+    __tablename__ = 'participant'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(150))
+    results = relationship('Result', lazy='select',
+                           backref=backref('participant', lazy='joined'))
+    def __init__(self, name=None):
+        self.name = name
+
+    def __repr__(self):
+        return '<Participant %r>' % (self.name)
+
+
+class Result(Base):
+    '''a result is an experiment name, json dump, and datetime'''
+    __tablename__ = 'result'
+    id = Column(Integer, primary_key=True)
+    date = Column(DateTime, default=func.now())
+    data = Column(Text, nullable=False)
+    exp_id = Column(String(250), nullable=False)
+    participant_id = Column(Integer, 
+                            ForeignKey('participant.id'),
+                            nullable=False)

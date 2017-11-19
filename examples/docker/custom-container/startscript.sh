@@ -2,8 +2,8 @@
 
 if [ $# -eq 0 ]; then
     echo "Usage:"
-    echo "docker run vanessa/expfactory:builder [help|list|test-experiments|start]"
-    echo "docker run -p 80:80 -v /tmp/data:/scif/data vanessa/expfactory:builder start"
+    echo "docker run vanessa/expfactory-builder [help|list|test-experiments|start]"
+    echo "docker run -p 80:80 -v /tmp/data:/scif/data vanessa/expfactory-builder start"
     exit
 fi
 

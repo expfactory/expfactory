@@ -42,29 +42,28 @@ from flask import (
 
 from flask_wtf.csrf import generate_csrf
 from flask_cors import cross_origin
-from expfactory.logger import bot
+from expfactory.defaults import EXPFACTORY_LOGS
 from werkzeug import secure_filename
-from expfactory.utils import (
-    convert2boolean, 
-    getenv,
-    get_post_fields
-)
+from expfactory.utils import get_post_fields
 
-
-from expfactory.database import (
-    save_data,
-    generate_subid
-)
 from expfactory.views.utils import (
     perform_checks, 
     clear_session
 )
 from expfactory.server import app
 from random import choice
+import logging
 import os
-import pickle
+import json
 
 from expfactory.forms import ParticipantForm
+
+
+# LOGGING ######################################################################
+
+file_handler = logging.FileHandler("%s/expfactory.log" % EXPFACTORY_LOGS)
+app.logger.addHandler(file_handler)
+app.logger.setLevel(logging.DEBUG)
 
 
 # SECURITY #####################################################################
@@ -99,9 +98,10 @@ def home():
                 username = form.openid.data
  
             subid = session.get('subid')
-            if not subid:
-                subid = generate_subid()
+            if subid is None:
+                subid = app.generate_subid()
                 session['subid'] = subid
+                app.logger.info('New session [subid] %s' %subid)
 
             session['username'] = username
             session['experiments'] = form.exp_ids.data.split(',') # list
@@ -132,15 +132,15 @@ def save():
     if request.method == 'POST':
         exp_id = session.get('exp_id')
 
-        if app.demo is False:
-            fields = get_post_fields(request)
-            result_file = save_data(session=session, fields=fields, exp_id=exp_id)
-            print(result_file)
+        fields = get_post_fields(request)
+        result_file = app.save_data(session=session, content=fields, exp_id=exp_id)
 
         experiments = app.finish_experiment(session, exp_id)
-        bot.log('Finished %s, %s remaining.' % (exp_id, len(experiments)))
-        return jsonify({"result":"success, finished %s" % exp_id})
-    return jsonify({"result":"not allowed"})
+        app.logger.info('Finished %s, %s remaining.' % (exp_id, len(experiments)))
+
+        # Note, this doesn't seem to be enough to trigger ajax success
+        return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
+    return json.dumps({'success':False}), 403, {'ContentType':'application/json'} 
 
 
 @app.route('/next', methods=['POST', 'GET'])
@@ -148,8 +148,9 @@ def next():
 
     # Redirects to another template view
     experiment = app.get_next(session)
-    bot.log('Next experiment is %s' %experiment)
-    return perform_checks('/experiments/%s' %experiment, do_redirect=True)
+    if experiment is not None:
+        app.logger.info('Next experiment is %s' % experiment)
+    return perform_checks('/experiments/%s' % experiment, do_redirect=True)
 
 
 # Reset/Logout

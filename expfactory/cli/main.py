@@ -38,6 +38,11 @@ import os
 
 
 def main(args,parser,subparser=None):
+    '''this is the main entrypoint for a container based web server, with
+       most of the variables coming from the environment. See the Dockerfile
+       template for how this function is executed.
+
+    '''
 
     # First priority to args.base
     base = args.base

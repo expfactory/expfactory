@@ -56,7 +56,7 @@ def perform_checks(template, do_redirect=False, context=None):
     session['exp_id'] = next
 
     # Update the user / log
-    bot.log("<current:%s><next:%s>, <%s, %s>" %(last, next, subid, username))
+    app.logger.info("<current:%s><next:%s> for <%s, %s>" %(last, next, subid, username))
 
     if username is None:
         flash('You must start a session before doing experiments.')
