@@ -238,24 +238,7 @@ CONTAINER ID        IMAGE                COMMAND                  CREATED       
 2c503ddf6a7a        vanessa/experiment   "/bin/bash /starts..."   10 minutes ago      Up 10 minutes       0.0.0.0:80->80/tcp, 5000/tcp   zealous_raman
 ```
 
-## Customize Your Container
-
-It's most likely the case that your container default is to save data to the file system, and use a study id of expfactory. You can set this to be custom at runtime, if you intend to have it change (or want to distribute a general container that is amenable to different databases and/or study identifiers). First, here is how you would specify a different studyid:
-
-```
-docker run -v /tmp/my-experiment/data/:/scif/data \
-           -d -p 80:80 \
-           expfactory/experiments  --studyid dns start
-```
-
-Here is how to specify a different database, like sqlite3
-
-
-```
-docker run -v /tmp/my-experiment/data/:/scif/data \
-           -d -p 80:80 \
-           expfactory/experiments  --database sqlite start
-```
+for more details on how to customize your container, including the database and study id, see the [usage](/expfactory/usage.html) docs.
 
 
 ## Shell into your Container
@@ -412,9 +395,7 @@ The choice is up to you! For settings defaults, see the first section [default v
 When you run a build with `vanessa/expfactory-builder` image, there are other command line options available pertaining to the database and study id. Try running `docker run vanessa/expfactory-builder build --help` to see usage. If you customize these variables, the container recipe generated will follow suit.
 
 ### database
-
-**filesystem**
-The default (simplest) method for a database is flat files, meaning that results are written to a mapped folder on the local machine, and each participant has their own results folder. This option is provided as many labs are accustomed to providing a battery locally, and want to save output directly to the filesystem without having any expertise with setting up a database. This argument doesn't need to be specified, but would coincide with:
+We recommend that you generate your container using the default "filesystem" database, and customize the database at runtime. A **filesystem** database is flat files, meaning that results are written to a mapped folder on the local machine, and each participant has their own results folder. This option is provided as many labs are accustomed to providing a battery locally, and want to save output directly to the filesystem without having any expertise with setting up a database. This argument doesn't need to be specified, and would coincide with:
 
 ```
 docker run -v /tmp/my-experiment:/data \
@@ -423,39 +404,7 @@ docker run -v /tmp/my-experiment:/data \
                       tower-of-london
 ```
 
-**sqlite**
-An sqlite database can be used instead of a flat filesytem. This will produce one file that you can move around and read with any standard scientific software (python, R) with functions to talk to sqlite databases. If you want to set a default for the container of sqlite3, then specify:
-
-```
-docker run -v /tmp/my-experiment:/data \
-              vanessa/expfactory-builder \
-              build --database sqlite \
-                      tower-of-london
-```
-
-**mysql/postgres**
-For labs that wish to deploy the container on a server, you are encouraged to use a more substantial database, such as a traditional relational database like MySQL or Postgres. To make either the  **default** for the container (not recommended), you would need to specify the database type for the Dockerfile, for example:
-
-```
-# mysql
-docker run -v /tmp/my-experiment:/data \
-              vanessa/expfactory-builder \
-              build --database mysql \
-                      tower-of-london
-
-# postgres
-docker run -v /tmp/my-experiment:/data \
-              vanessa/expfactory-builder \
-              build --database postgres \
-                      tower-of-london
-```
-
-As we stated previously, when you specify these parameters to generate the Dockerfile, they will be defaults for the image, and you might have more flexibility specifying them at runtime. Also, for any of the above, if you generate a Dockerfile and then change your mind, you can easily edit the Dockerfile instead of re-generating with the builder. In fact, this applies to make **any changes** to the Dockerfile. You can clone your own repos not in the library, add different images, or change the templates.
-
-The particulars of the database (username, password, etc.) will not be saved with the image, but specified when you start it. 
-
-**CouchDB/MariaDB/Mongo/Other**
-We haven't yet developed this, and if you are interested, please [file an issue](https://github.com/expfactory/expfactory).
+Your other options are **sqlite**, **mysql**, and **postgres** all of which we recommend you specify when you start the image.
 
 
 ## Identifiers

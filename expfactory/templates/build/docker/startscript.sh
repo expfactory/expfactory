@@ -86,7 +86,7 @@ while true; do
             shift
         ;;
         -*)
-            message ERROR "Unknown option: ${1:-}\n"
+            echo "Unknown option: ${1:-}\n"
             exit 1
         ;;
         *)
