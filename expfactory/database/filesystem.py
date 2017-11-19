@@ -85,6 +85,8 @@ def init_db(self):
     '''init_db for the filesystem ensures that the base folder (named 
        according to the studyid) exists.
     '''
+    self.session = None
+
     if not os.path.exists(self.data_base):
         os.mkdir(self.data_base)
 
