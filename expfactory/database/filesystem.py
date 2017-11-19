@@ -72,7 +72,12 @@ def save_data(self, session, exp_id, content):
     # We only attempt save if there is a subject id, set at start
     data_file = None
     if subid is not None:
-        if os.path.exists(self.data_base):    # /scif/data | expfactory/00001 | test-task
+
+        if os.path.exists(self.data_base):    # /scif/data
+            data_base = "%s/%s" %(self.data_base, subid)
+            # expfactory/00001
+            if not os.path.exists(data_base):
+                os.mkdir(data_base)
             data_file = "%s/%s/%s-results.json" %(self.data_base, subid, exp_id)
             if os.path.exists(data_file):
                 bot.warning('%s exists, and is being overwritten.' %data_file)
