@@ -44,11 +44,7 @@ from flask_wtf.csrf import generate_csrf
 from flask_cors import cross_origin
 from expfactory.defaults import EXPFACTORY_LOGS
 from werkzeug import secure_filename
-from expfactory.utils import (
-    convert2boolean, 
-    getenv,
-    get_post_fields
-)
+from expfactory.utils import get_post_fields
 
 from expfactory.views.utils import (
     perform_checks, 

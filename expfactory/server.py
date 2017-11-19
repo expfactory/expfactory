@@ -67,7 +67,7 @@ class EFServer(Flask):
             self.database = 'filesystem'
 
         # Add functions specific to database type
-        from expfactory.database import *
+        from expfactory.database import init_db, generate_subid
         self.init_db = init_db
         self.generate_subid = generate_subid
         self.init_db() # uses url in self.database
