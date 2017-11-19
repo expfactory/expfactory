@@ -168,8 +168,6 @@ First, let's pretend we haven't a clue what it does, and just run it:
 $ docker run expfactory/experiments
 
     Usage:
-
-
     
          docker run <container> [help|list|test-experiments|start]
          docker run -p 80:80 -v /tmp/data:/scif/data <container> start
@@ -177,7 +175,8 @@ $ docker run expfactory/experiments
          Commands:
 
                 help: show help and exit
-                list: list experiments in the library
+                list: list installed experiments
+                lib: list experiments in the library
                 test: test experiments installed in container
                 start: start the container to do the experiments*
                 env: search for an environment variable set in the container
@@ -199,8 +198,10 @@ $ docker run expfactory/experiments
               docker run -p 80:80 <container> --database mysql+pymysql://username:password@host/dbname start
               docker run -p 80:80 <container> --database sqlite start
               docker run -p 80:80 <container> --database postgresql://username:password@host/dbname start
+
 ```
 
+Note that you can list installed experiments with `list` and library experiments with `lib`.
 The command we are interested in is `start`, and the important (Docker) arguments are the following:
 
 - `port`: The `-p 80:80` is telling Docker to map port 80 (the nginx web server) in the container to port 80 on our local machine. If we don't do this, we won't see any experiments in the browser!
@@ -248,7 +249,7 @@ CONTAINER ID        IMAGE                COMMAND                  CREATED       
 2c503ddf6a7a        vanessa/experiment   "/bin/bash /starts..."   10 minutes ago      Up 10 minutes       0.0.0.0:80->80/tcp, 5000/tcp   zealous_raman
 ```
 
-for more details on how to customize your container, including the database and study id, see the [usage](/expfactory/usage.html) docs.
+You can also use the name (in this example `zealous_raman`) to reference the container, or give it your own name with `--name` when you run it. For more details on how to customize your container, including the database and study id, see the [usage](/expfactory/usage.html) docs.
 
 
 ## Shell into your Container
@@ -262,7 +263,7 @@ CONTAINER ID        IMAGE                COMMAND                  CREATED       
 2c503ddf6a7a        vanessa/experiment   "/bin/bash /starts..."   10 minutes ago      Up 10 minutes       0.0.0.0:80->80/tcp, 5000/tcp   zealous_raman
 ```
 
-The cool part is that it shows us what we already know - port 80 in the container is mapped to 80 on our local machine, and the application served at port 5000 is exposed. And it has QUITE a fantastic name (`zealous_raman`). Note that docker assigns these automatically, you could have easily added a `--name` argument to specify your own when you issued the run command. I like the fun of having a surprise name :)
+The cool part is that it shows us what we already know - port 80 in the container is mapped to 80 on our local machine, and the application served at port 5000 is exposed. And it has QUITE a fantastic name (`zealous_raman`) because we didn't specify one with a `--name` argument.
 
 To shell and work interactively in the image:
 
@@ -282,10 +283,10 @@ Here are the logs we were looking at:
 
 ```
 $ ls /scif/logs
-gunicorn-access.log  gunicorn.log
+gunicorn-access.log  gunicorn.log  expfactory.log
 ```
 
-Importantly, our data is to be saved under `/scif/data`, which we would map to our local machine (so the generated data doesn't disappear when we remove the container)
+Importantly, our data is to be saved under `/scif/data`, which we would map to our local machine (so the generated data doesn't disappear when we remove the container).
 
 ```
 ls /scif/data/
@@ -301,13 +302,15 @@ test-task-results.json
 ```
 
 ## Stopping your Container
-For the first example that we did without detached (`-d`) if you pressed Control+C for the terminal with the container started, you will kill the process and remove the container. This would happen regardless if you were shelled in another container, because the start script exits. However, now that we have it running in this detached state, we need to stop it using the docker daemon:
+For the first example that we did without detached (`-d`) if you pressed Control+C for the terminal with the container started, you will kill the process and stop the container. This would happen regardless if you were shelled in another container, because the start script exits. However, now that we have it running in this detached state, we need to stop it using the docker daemon, and don't forget to remove it:
 
 ```
 docker stop 2c503ddf6a7a
+docker rm 2c503ddf6a7a
 ```
 
-I find that using the container identifier (alphanumeric string) that you find with `docker ps` works better than the name. I've seen inconsistent behavior between the two and I'm not sure why.
+You can also use the name.
+
 
 ## Adding Experiments
 While we encourage you to re-generate the file with the `vanessa/expfactory-builder` so generation of your
@@ -385,17 +388,13 @@ You then should have the new experiment installed in the container! Remember, yo
 docker run -v $PWD:/data vanessa/expfactory-builder build digit-span test-task 
 ```
 
-## Summary
-This is a quick preview of running a quick server with gunicorn, Flask, and Docker. While this implementation isn't
-perfect for production, it will work reasonable well for a local lab that needs to run participants through a 
-behavioral paradigm. Do you have a use case that warrants a different kind of database, experiment, or deployment? 
-Please [get in touch](https://www.github.com/expfactory/issues) as I am looking to develop this.
+If you have any questions about the above, or want more detail, please [get in touch](https://www.github.com/expfactory/issues) as I am looking to develop this.
 
 
 # Custom Configuration
-If you want more specificity to configure your container, you might want to customize the database or experiment variables. There are **two** kinds of customization, the customization that happens **before** you build the container (akin to setting defaults for future users of it) and the customization that happens at runtime (meaning defining the database type when you start the container).
+If you want more specificity to configure your container, you might want to customize the database or experiment variables. There are **two** kinds of customization, the customization that happens **before** you build the container (for example, the experiments you choose to install, period, and any defaults you want set for running them) and the customization that happens at runtime (meaning defining the database type when you start the container).
 
-If you change the defaults, this means that any users that run your container (without specifying these variables) will get these as default. If you want your container to be most usable by others, we recommend that you don't do this, and keep the defaults as the most flexible types - a flat file system database and general study id (expfactory). 
+If you change the defaults, this means that any users that run your container (without specifying these variables) will get these as default. If you want your container to be most usable by others, we recommend that you don't do this, and keep the defaults as the most flexible types - a flat file system database and general study id (expfactory).
 
 If you leave these defaults, you (and the future users of your container) can then easily customize these variables when the container is started in the future. The risk of setting a default database like `sql` or `postgres` is that a user that doesn't know some credential needs to be defined won't be able to use the container. 
 
@@ -438,12 +437,13 @@ docker run -v /tmp/my-experiment:/data \
                       tower-of-london
 ```
 
+Again, we recommend that you leave this as general (or the default) and specify the study identifier at runtime. If you want to preserve a container to be integrated into an analysis exactly as is, then you would want to specify it at build.
+
+
 **output**
 You actually **don't** want to edit the recipe output file, since this happens inside the container
-(and you map a folder of your choice to it.) The others, however, you can modify.
+(and you map a folder of your choice to it.) Note that it is a variable, however, if you need to use expfactory natively and want to specify a different location.
 
-
-In the future, our [online recipe generator](https://expfactory.github.io/experiments/generate) will make it easy to specify all of these variables. We will add these later after getting [feedback from users like you](https://www.github.com/expfactory/expfactory/issues).
 
 ### Expfactory wants Your Feedback!
 The customization process is very important, because it will mean allowing you to select variable stimuli, lengths, or anything to make a likely general experiment specific to your use case. To help with this, @vsoch is looking for feedback about:

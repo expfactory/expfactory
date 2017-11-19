@@ -26,8 +26,7 @@ docker run -v /tmp/my-experiment/data/:/scif/data \
            expfactory/experiments  --studyid dns start
 ```
 
-Here is how to specify a different database, like sqlite3
-
+Here is how to specify a different database, like sqlite
 
 ```
 docker run -v /tmp/my-experiment/data/:/scif/data \
@@ -63,7 +62,7 @@ $ tree /tmp/data/dns/00000/
 
 If you stop the container, and the data will persist on the host. If you didn't mount to the host, then stopping the container means losing the data.
 
-**How do I read it?**
+#### How do I read it?
 For detailed information about how to read json strings (whether from file or database) see further down this page. For a filesystem save, the data is saved to a json object, regardless of the string output produced by the experiment. This means that you can load the data as json, and then look at the `data` key to find the result saved by the particular experiment. Typically you will find another string saved as json, but it could be the case that some experiments do this differently.
 
 
@@ -83,7 +82,7 @@ ls /scif/data
     expfactory.db
 ```
 
-**How do I read it?**
+#### How do I read it?
 You can generally use any scientific programming software that has libraries for interacting with sqlite3 databases. My preference is for the [sqlite3](http://www.sqlitetutorial.net/sqlite-python/sqlite-python-select/) library, and we might read the file like this (in python):
 
 ```
@@ -134,7 +133,7 @@ Each result row includes the table row id, the date, result content, and partici
 Since the Participant table doesn't hold anything beyond the participant id, you shouldn't need to query it. More detail is added for loading json in (see [loading results](#working-with-json)) below.
 
 
-**mysql**
+### mysql
 For labs that wish to deploy the container on a server, you are encouraged to use a more substantial database, such as a traditional relational database like MySQL or Postgres. In all of these cases, you need to specify the full database url. For mysql, we also specify using a particular driver called `pymysql`. For example:
 
 ```
@@ -217,7 +216,7 @@ docker rm expfactory-mysql
 
 Note that this is only an example, we recommend that you get proper hosting (for example, [Stanford provides this](https://uit.stanford.edu/service/sql) for users) or use a standard cloud service (AWS or Google Cloud) to do the same. You generally want to make sure your database has sufficient levels of permissions to be sure, encryption if necessary, and redundancy (backup). Keep in mind that some experiments might give participants open boxes to type, meaning you should be careful about PHI, etc. This is also another reason that a much simpler, local save to the file system isn't such a crazy idea. Always discuss your experiment strategy with your IRB before proceeding!
 
-**postgres**
+### postgres
 We can do similar to the above, but use postgres instead. First we will start a second container:
 
 ```
@@ -278,11 +277,11 @@ And here is our row, a list with 5 indices.
   1)]
 ```
 
- - row[0][0] is the index for the result table, probably not useful
- - row[0][1] is a python datetime object for when the result was created
- - row[0][2] is the data from the experiment
- - row[0][3] is the experiment id (`exp_id`)
- - row[0][4] is the participant id
+ - `row[0][0]` is the index for the result table, probably not useful
+ - `row[0][1]` is a python datetime object for when the result was created
+ - `row[0][2]` is the data from the experiment
+ - `row[0][3]` is the experiment id (`exp_id`)
+ - `row[0][4]` is the participant id
 
 Again, you should consider a robust and secure setup when running this in production. For the example, don't forget to shut down your database after the image.
 
@@ -293,7 +292,7 @@ docker rm expfactory-postgres
 
 The reason to provide these arguments at runtime is that the particulars of the database (username, password, etc.) will not be saved with the image, but specified when you start it. Be careful that you do not save any secrets or credentials inside the image, and if you use an image with an existing expfactory config.py, you re-generate the secret first.
 
-**CouchDB/MariaDB/Mongo/Other**
+### CouchDB/MariaDB/Mongo/Other
 We haven't yet developed this, and if you are interested, please [file an issue](https://github.com/expfactory/expfactory/issues). If you need help with more substantial or different deployments, please reach out!
 
 

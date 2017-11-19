@@ -12,7 +12,8 @@ usage () {
          Commands:
 
                 help: show help and exit
-                list: list experiments in the library
+                list: list installed experiments
+                lib: list experiments in the library
                 test: test experiments installed in container
                 start: start the container to do the experiments*
                 env: search for an environment variable set in the container
@@ -78,8 +79,12 @@ while true; do
             echo "Experiments in this image:"
             ls /scif/apps -1
             echo
+            exit
+        ;;
+        --lib)
             echo "Experiments in the library:"
-            exec expfactory list
+            expfactory list
+            echo
             exit
         ;;
         -s|--start|start)
