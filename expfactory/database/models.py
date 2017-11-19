@@ -1,5 +1,5 @@
 '''
-database.py: part of expfactory package
+models.py: datanases for the expfactory package
 
 Copyright (c) 2017, Vanessa Sochat
 All rights reserved.
