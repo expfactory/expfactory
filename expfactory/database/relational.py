@@ -50,15 +50,15 @@ import json
 import sys
 
 
-# MYSQL DATABASE ###############################################################
+# RELATIONAL ###################################################################
 #
 # This is an Expfactory Flask Server database plugin. It implements common 
 # functions (generate_subid, save_data, init_db) that should prepare a 
 # database and perform actions to save data to it. The functions are added
-# to the main application upon initialization of the server.
+# to the main application upon initialization of the server. This relational
+# module has support for sqlite3, mysql, and postgres
 #
 ################################################################################
-
 
 def generate_subid(self, digits=5):
     '''generate a new user in the database, still session based so we
@@ -72,8 +72,7 @@ def generate_subid(self, digits=5):
     return p.id
 
 
-
-def save_data(self, session, exp_id, content):
+def save_data(self,session, exp_id, content):
     '''save data will obtain the current subid from the session, and save it
        depending on the database type. Currently we just support flat files'''
     from expfactory.database.models import (
@@ -96,24 +95,26 @@ def save_data(self, session, exp_id, content):
         bot.info("Participant: %s" %p)
         bot.info("Result: %s" %result)
 
+
+
 Base = declarative_base()
     
-def init_db(self, database_url=None):
-    '''initialize the database, with the default database path or custom of
-       the format sqlite:////scif/data/expfactory.db
 
+def init_db(self):
+    '''initialize the database, with the default database path or custom with
+       a format corresponding to the database type:
+
+       Examples:
+
+       sqlite:////scif/data/expfactory.db
     '''
 
     # The user can provide a custom string
-    if database_url is None:
-        bot.error("You must provide a database uri for sql, exiting.")
+    if self.database is None:
+        bot.error("You must provide a database url, exiting.")
         sys.exit(1)
 
-    if not database_url.startswith('mysql://'):
-        bot.error("Database uri must start with mysql, exiting.")
-        sys.exit(1)
-
-    self.engine = create_engine(databse_url, convert_unicode=True)
+    self.engine = create_engine(self.database, convert_unicode=True)
     self.session = scoped_session(sessionmaker(autocommit=False,
                                                autoflush=False,
                                                bind=self.engine))

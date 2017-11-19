@@ -106,11 +106,6 @@ def get_parser():
                          help="present experiments serially",
                          default=True, action='store_false')
 
-    # Server variables that likely don't need to be changed
-    parser.add_argument("--time", dest='time',
-                         help="maximum number of minutes for battery to endure, to select experiments",
-                         type=int, default=99999)
-
     parser.add_argument("--base", dest='base', 
                          help="experiments base (default /scif/apps)",
                          type=str, default=None)

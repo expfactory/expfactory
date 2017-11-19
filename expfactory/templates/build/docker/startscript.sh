@@ -1,12 +1,14 @@
 #!/bin/bash
 
-if [ $# -eq 0 ]; then
+usage () {
+
     echo "Usage:
     
          docker run vanessa/expfactory-builder [help|list|test-experiments|start]
          docker run -p 80:80 -v /tmp/data:/scif/data vanessa/expfactory-builder start
 
          Commands:
+
                 help: show help and exit
                 list: list experiments in the library
                 test: test experiments installed in container
@@ -16,32 +18,37 @@ if [ $# -eq 0 ]; then
          *you are required to map port 80, otherwise you won't see the portal at localhost
 
          Options [start]:
-                --database: specify a database to override the default filesystem
-                            [filesystem|sqlite|mysql|postgres]
-                --conn:     for mysql and postgres, a connection uri (examples below)
+
+                --db: specify a database url to override the default filesystem
+                                 [sqlite|mysql|postgresql]:///
+
                 --studyid:  specify a studyid to override the default
 
-         Connection (--conn) examples:
+         Examples:
 
-            --conn mysql://username:password@server/mydatabase start
-            --conn postgresql://username:password@server/mydatabase  start
+              docker run vanessa/expfactory-builder test
+              docker run vanessa/expfactory-builder list
+              docker run vanessa/expfactory-builder start
+
+              docker run vanessa/expfactory-builder \
+                        --db mysql://username:password@server/mydatabase \
+                        --studyid dns \
+                         start
          "
+}
+
+if [ $# -eq 0 ]; then
+    usage
     exit
 fi
 
-
 EXPFACTORY_START="no"
+EXPFACTORY_DATABASE="filesystem"
 
 while true; do
     case ${1:-} in
         -h|--help|help)
-
-            echo "Additional commands:
-                  docker run vanessa/expfactory-builder test
-                  docker run vanessa/expfactory-builder list
-                  docker run vanessa/expfactory-builder start"
-
-            exec expfactory --help
+            usage
             exit
         ;;
         -test-experiments|--te|test)
@@ -57,15 +64,6 @@ while true; do
         --database|--db)
             shift
             EXPFACTORY_DATABASE=${1:-}
-            echo "Database selected as ${EXPFACTORY_DATABASE}"
-            export EXPFACTORY_DATABASE
-            shift
-        ;;
-        --connection|--conn)
-            shift
-            EXPFACTORY_DATABASE_URI=${1:-}
-            echo "Database connection uri: ${EXPFACTORY_DATABASE_URI}"
-            export EXPFACTORY_DATABASE_URI
             shift
         ;;
         --studyid)
@@ -100,6 +98,9 @@ done
 # Are we starting the server?
 
 if [ "${EXPFACTORY_START}" == "yes" ]; then
+
+    echo "Database set as ${EXPFACTORY_DATABASE}"
+    export EXPFACTORY_DATABASE
 
     echo "Starting Web Server"
     echo

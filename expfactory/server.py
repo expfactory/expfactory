@@ -27,29 +27,15 @@ from expfactory.experiment import (
     get_selection
 )
 
-from flask import (
-    Blueprint,
-    Flask, 
-    render_template, 
-    request, 
-    flash
-)
-from flask_restful import Resource, Api
+from flask import Flask
 from flask_wtf.csrf import (
     CSRFProtect, 
     generate_csrf
 )
 from flask_cors import CORS
 from expfactory.logger import bot
-from werkzeug import secure_filename
-from expfactory.utils import (
-    convert2boolean, 
-    getenv
-)
+from expfactory.defaults import *
 
-import jinja2
-import tempfile
-import shutil
 import random
 import sys
 import os
@@ -70,57 +56,43 @@ class EFServer(Flask):
            that it is bound to the local machine. If the folder isn't bound,
            expfactory runs in demo mode (not saving data)
         '''
-        self.database_type = getenv('EXPFACTORY_DATABASE','filesystem') 
-        bot.info("DATABASE: %s" %self.database_type)
+
+        self.database = EXPFACTORY_DATABASE
+        bot.info("DATABASE: %s" %self.database)
 
         # Supported database options
         valid = ('sqlite', 'postgres', 'mysql', 'filesystem')
-        if self.database_type not in valid:
-            bot.warning('%s is not yet a supported type, saving to filesystem.' % self.database_type)
-            self.database_type = 'filesystem'
-
-            if self.database is not None:
-                if not self.database.startswith(self.database_type):
-                   bot.error("Database connection must start with %s, using filesystem." % " or ".join(valid))
-                   self.database_type = "filesystem"
+        if not self.database.startswith(valid):
+            bot.warning('%s is not yet a supported type, saving to filesystem.' % self.database)
+            self.database = 'filesystem'
 
         # Add functions specific to database type
         from expfactory.database import *
         self.init_db = init_db
         self.generate_subid = generate_subid
+        self.init_db() # uses url in self.database
 
-
-        # Option 1: Filesystem
-        if self.database_type == "filesystem":
-            self.study_id = getenv('EXPFACTORY_STUDY_ID', 'expfactory')
-            self.database = "%s/%s" %(self.data_base, self.study_id)
-            if not os.path.exists(self.database):
-                os.mkdir(self.database)
-
-        # sqlite, mysql, or postgres         
-        else:
-            address = os.environ.get('EXPFACTORY_DATABASE_URI')
-            self.init_db(address)
-            self.database = self.engine.url
-
-        bot.log("Data base: %s:%s" % (self.database_type, self.database))
+        bot.log("Data base: %s" % self.database)
 
 
     def setup(self):
+        ''' obtain database and filesystem preferences from defaults,
+            and compare with selection in container.
+        '''
 
-        # Step 1: obtain installed and selected experiments (/scif/apps)
-        self.selection = getenv('EXPFACTORY_EXPERIMENTS', [])
-        self.data_base = getenv('EXPFACTORY_DATA','/scif/data')
-        self.base = getenv('EXPFACTORY_BASE')
+        self.selection = EXPFACTORY_EXPERIMENTS
+        self.data_base = EXPFACTORY_DATA
+        self.study_id = EXPFACTORY_SUBID
+        self.base = EXPFACTORY_BASE
+        self.randomize = EXPFACTORY_RANDOMIZE
 
-        self.randomize = convert2boolean(getenv('EXPFACTORY_RANDOM', True))
         available = get_experiments("%s" % self.base)
         self.experiments = get_selection(available, self.selection)
         self.logger.debug(self.experiments)
         self.lookup = make_lookup(self.experiments)
         final = "\n".join(list(self.lookup.keys()))        
 
-        bot.log("User has selected: %s" %self.selection)
+        bot.log("User has selected: %s" % self.selection)
         bot.log("Experiments Available: %s" %"\n".join(available))
         bot.log("Randomize: %s" % self.randomize)
         bot.log("Final Set \n%s" % final)

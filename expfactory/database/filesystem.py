@@ -55,12 +55,12 @@ def generate_subid(self, digits=5):
        subject id, with data (json) organized by subject identifier
     ''' 
     folder_id = 0
-    folders = glob('%s/%s/*' %(EXPFACTORY_DATA, EXPFACTORY_SUBID))
+    folders = glob('%s/*' %(self.database))
     folders.sort()
     if len(folders) > 0:
         folder_id = int(os.path.basename(folders[-1])) + 1
     folder_id = str(folder_id).zfill(digits)
-    return "%s/%s" % (EXPFACTORY_SUBID, folder_id)
+    return "%s/%s" % (self.study_id, folder_id)
     
 
 def save_data(self, session, exp_id, content):
@@ -72,20 +72,22 @@ def save_data(self, session, exp_id, content):
     # We only attempt save if there is a subject id, set at start
     data_file = None
     if subid is not None:
-        if EXPFACTORY_DATA is not None:
-
-            # Data base for experiment study id, /scif/data/expfactory
-            if not os.path.exists(EXPFACTORY_DATA):
-                os.mkdir(EXPFACTORY_DATA)
-
-            # Subject specific folder
-            data_base = "%s/%s" %(EXPFACTORY_DATA, subid)
-            if not os.path.exists(data_base):
-                os.mkdir(data_base)
-
-            data_file = "%s/%s-results.json" %(data_base, exp_id)
+        if os.path.exists(self.data_base):    # /scif/data | expfactory/00001 | test-task
+            data_file = "%s/%s/%s-results.json" %(self.data_base, subid, exp_id)
             if os.path.exists(data_file):
                 bot.warning('%s exists, and is being overwritten.' %data_file)
             write_json(content, data_file)
 
     return data_file
+
+
+def init_db(self):
+    '''init_db for the filesystem ensures that the base folder (named 
+       according to the studyid) exists.
+    '''
+    if not os.path.exists(self.data_base):
+        os.mkdir(self.data_base)
+
+    self.database = "%s/%s" %(self.data_base, self.study_id)
+    if not os.path.exists(self.database):
+        os.mkdir(self.database)

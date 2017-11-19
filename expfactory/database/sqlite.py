@@ -59,44 +59,7 @@ import sys
 #
 ################################################################################
 
-def generate_subid(self, digits=5):
-    '''generate a new user in the database, still session based so we
-       create a new identifier.
-    '''    
-    from expfactory.database.models import Participant
-    p = Participant()
-    self.session.add(p)
-    self.session.commit()
-    print('Session Participant id: %s' % p.id)
-    return p.id
-
-
-def save_data(self,session, exp_id, content):
-    '''save data will obtain the current subid from the session, and save it
-       depending on the database type. Currently we just support flat files'''
-    from expfactory.database.models import (
-        Participant,
-        Result
-    )
-    subid = session.get('subid') 
-    bot.info('Saving data for subid %s' % subid)    
-
-    # We only attempt save if there is a subject id, set at start
-    if subid is not None:
-        p = Participant.query.filter(Participant.id == subid).first() # better query here
-        result = Result(data=content['data'],
-                        exp_id=exp_id,
-                        participant_id=p.id) # check if changes from str/int
-        self.session.add(result)
-        p.results.append(result)
-        self.session.commit()
-
-        bot.info("Participant: %s" %p)
-        bot.info("Result: %s" %result)
-
-
 Base = declarative_base()
-
 
 def init_db(self, database_url=None):
     '''initialize the database, with the default database path or custom of
