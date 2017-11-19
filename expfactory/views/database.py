@@ -40,9 +40,6 @@ from flask import (
     session
 )
 
-from expfactory.logger import bot
-from expfactory.database import db_session
-
 from expfactory.server import app
 from random import choice
 import os
