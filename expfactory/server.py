@@ -27,6 +27,10 @@ from expfactory.experiment import (
     get_selection
 )
 
+from expfactory.database import (
+    init_db, 
+    generate_subid
+)
 from flask import Flask
 from flask_wtf.csrf import (
     CSRFProtect, 
@@ -67,9 +71,6 @@ class EFServer(Flask):
             self.database = 'filesystem'
 
         # Add functions specific to database type
-        from expfactory.database import init_db, generate_subid
-        self.init_db = init_db
-        self.generate_subid = generate_subid
         self.init_db() # uses url in self.database
 
         bot.log("Data base: %s" % self.database)
@@ -124,6 +125,8 @@ class EFServer(Flask):
         return experiments
 
 
+EFServer.init_db = init_db
+EFServer.generate_subid = generate_subid
 app = EFServer(__name__)
 app.config.from_object('expfactory.config')
 
