@@ -54,7 +54,7 @@ from expfactory.server import app
 from random import choice
 import logging
 import os
-import pickle
+import json
 
 from expfactory.forms import ParticipantForm
 
@@ -137,13 +137,9 @@ def save():
 
         experiments = app.finish_experiment(session, exp_id)
         app.logger.info('Finished %s, %s remaining.' % (exp_id, len(experiments)))
-        result = jsonify({"message":"success, finished %s" % exp_id})
-        result.status_code = 200
-        return result
+        return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
+    return json.dumps({'success':False}), 403, {'ContentType':'application/json'} 
 
-    result = jsonify({"message":"not allowed"})
-    result.status_code = 403
-    return result
 
 @app.route('/next', methods=['POST', 'GET'])
 def next():
