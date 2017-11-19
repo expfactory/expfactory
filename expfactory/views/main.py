@@ -132,9 +132,8 @@ def save():
     if request.method == 'POST':
         exp_id = session.get('exp_id')
 
-        if app.demo is False:
-            fields = get_post_fields(request)
-            result_file = app.save_data(session=session, content=fields, exp_id=exp_id)
+        fields = get_post_fields(request)
+        result_file = app.save_data(session=session, content=fields, exp_id=exp_id)
 
         experiments = app.finish_experiment(session, exp_id)
         app.logger.info('Finished %s, %s remaining.' % (exp_id, len(experiments)))
@@ -152,8 +151,8 @@ def next():
     # Redirects to another template view
     experiment = app.get_next(session)
     if experiment is not None:
-        app.logger.info('Next experiment is %s' %experiment)
-    return perform_checks('/experiments/%s' %experiment, do_redirect=True)
+        app.logger.info('Next experiment is %s' % experiment)
+    return perform_checks('/experiments/%s' % experiment, do_redirect=True)
 
 
 # Reset/Logout
