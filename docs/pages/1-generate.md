@@ -10,16 +10,12 @@ toc: false
 Pull our pre-generated example containers, and start! Your experiment portal is at [http://127.0.0.1](http://127.0.0.1) in your browser.
 
 ```
-docker run -p 80:80 vanessa/experiments start
-```
-
-or if you want to see the entire set of surveys or experiments:
-
-```
 docker run -p 80:80 vanessa/expfactory-experiments start
 docker run -p 80:80 vanessa/expfactory-surveys start
 docker run -p 80:80 vanessa/expfactory-games start
 ```
+
+These [container recipes](/experiments/recipes) are derived from tags in our library. Feel free to use one for the examples below.
 
 # Quick Start
 
@@ -41,7 +37,7 @@ Cool, I like `digit-span`, `spatial-span`, `test-task`, and `tower-of-london`.
 docker run -v $PWD:/data vanessa/expfactory-builder build digit-span spatial-span tower-of-london test-task 
 ```
 
-Let's build the container from the Dockerfile!
+Let's build the container from the Dockerfile! We are going to name it `expfactory/experiments`
 
 ```
 docker build -t expfactory/experiments .
@@ -56,7 +52,7 @@ docker run -v /tmp/my-experiment/data/:/scif/data \
            expfactory/experiments start 
 ```
 
-Open your browser to localhost ([http://127.0.0.1](http://127.0.0.1)) to see the portal [portal](/expfactory/usage.html). For specifying a different database or study identifier, read the detailed start, specifically how to [customize your container runtime](#customize-your-container). 
+Open your browser to localhost ([http://127.0.0.1](http://127.0.0.1)) to see the portal [portal](/expfactory/usage.html). For specifying a different database or study identifier, read the detailed start below, and then how to [customize your container runtime](#customize-your-container). When you are ready to run (and specify a particular database type) read [the usage docs](/expfactory/usage.html).
 
 
 
@@ -91,6 +87,8 @@ We will discuss each of these commands in more detail.
 The first we've already used, and it's the only required argument. We need to give the
 expfactory builder a list of `experiments`. You can either [browse
 the table](https://expfactory.github.io/experiments/) or see a current library list with `list.`
+We also have some pre-generated commands in our [recipes portal](/experiments/recipes).
+Here is how to list all the experiments in the library:
 
 ```
 docker run vanessa/expfactory-builder list
@@ -118,7 +116,7 @@ docker run vanessa/expfactory-builder list | grep survey
 
 ## Recipe Generation
 To generate a Dockerfile to build our custom image, we need to run expfactory in the container,
-and mount a folder (`my-experiment`) to retrieve the image that is built. The folder
+and mount a folder (`my-experiment` in the example below) to retrieve the Dockerfile. The folder
 should not already contain a Dockerfile, and most appropriate is a new folder that you
 intend to set up with version control (a.k.a. Github). That looks like this:
 
@@ -139,10 +137,7 @@ Before you generate your recipe, in the case that you want "hard coded" defaults
 
 
 ## Container Generation
-Now we would go to the folder (`/tmp/my-experiment`) to bulid our experiments container. We
-could actually do this in the container for you, but it's better to generate the file first
-(and save to a repository like Github for version control) than not. You have a Dockerfile and a script to run 
-when it's used:
+Now we would go to the folder (`/tmp/my-experiment`) to bulid our experiments container. We recommend that you consider an [automated build from a Github repository to Docker Hub](https://docs.docker.com/docker-hub/builds/) - this would mean that you can push to the repository and have the build done automatically, or that you can manually trigger it. After we used the expfactory builder, we find a Dockerfile and startscript for it:
 
 ```
 cd /tmp/my-experiments
@@ -152,11 +147,11 @@ Dockerfile  startscript.sh
 
 At this point we recommend you add `LABELS` to your Dockerfile. A label can be any form of
 metadata to describe the image. Look at the [label.schema](http://label-schema.org/rc1/) for
-inspiration. Then build the image, and replace `vanessa/experiment` with whatever namespace/container you
+inspiration. Then build the image, and replace `expfactory/experiments` with whatever namespace/container you
 want to give to the image. It's easy to remember to correspond to your Github repository (`username/reponame`).
 
 ```
-docker build -t vanessa/experiment .
+docker build -t expfactory/experiments .
 
 # if you don't want to use cache
 docker build --no-cache -t vanessa/experiment .
@@ -170,14 +165,17 @@ After you do the above steps, your custom container will exist on your local mac
 First, let's pretend we haven't a clue what it does, and just run it:
 
 ```
-docker run vanessa/experiment
+$ docker run expfactory/experiments
 
-Usage:
+    Usage:
+
+
     
-         docker run vanessa/expfactory-builder [help|list|test-experiments|start]
-         docker run -p 80:80 -v /tmp/data:/scif/data vanessa/expfactory-builder start
+         docker run <container> [help|list|test-experiments|start]
+         docker run -p 80:80 -v /tmp/data:/scif/data <container> start
 
          Commands:
+
                 help: show help and exit
                 list: list experiments in the library
                 test: test experiments installed in container
@@ -187,11 +185,23 @@ Usage:
          *you are required to map port 80, otherwise you won't see the portal at localhost
 
          Options [start]:
-                --database: specify a database to override the default
-                --studyid: specify a studyid to override the default
+
+                --db: specify a database url to override the default filesystem
+                                 [sqlite|mysql|postgresql]:///
+
+                --studyid:  specify a studyid to override the default
+
+         Examples:
+
+              docker run <container> test
+              docker run <container> list
+              docker run <container> start
+              docker run -p 80:80 <container> --database mysql+pymysql://username:password@host/dbname start
+              docker run -p 80:80 <container> --database sqlite start
+              docker run -p 80:80 <container> --database postgresql://username:password@host/dbname start
 ```
 
-The important command is the second usage example - we want to start the server to run experiments. The important (Docker) arguments are the following:
+The command we are interested in is `start`, and the important (Docker) arguments are the following:
 
 - `port`: The `-p 80:80` is telling Docker to map port 80 (the nginx web server) in the container to port 80 on our local machine. If we don't do this, we won't see any experiments in the browser!
 - `volumes`: The second command `-v` is telling Docker we want to see the output in the container at `/scif/data` to appear in the folder `/tmp/data` on our local machine. If you are just testing and don't care about saving or seeing data, you don't need to specify this.
@@ -199,7 +209,7 @@ The important command is the second usage example - we want to start the server 
 For this first go, we aren't going to map the data folder. This way I can show you how to shell inside an interactive container.
 
 ```
-docker run -p 80:80 vanessa/experiment start
+docker run -p 80:80 expfactory/experiments start
 
 Starting Web Server
 

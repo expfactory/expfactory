@@ -3,9 +3,11 @@
 usage () {
 
     echo "Usage:
+
+
     
-         docker run vanessa/expfactory-builder [help|list|test-experiments|start]
-         docker run -p 80:80 -v /tmp/data:/scif/data vanessa/expfactory-builder start
+         docker run <container> [help|list|test-experiments|start]
+         docker run -p 80:80 -v /tmp/data:/scif/data <container> start
 
          Commands:
 
@@ -26,14 +28,13 @@ usage () {
 
          Examples:
 
-              docker run vanessa/expfactory-builder test
-              docker run vanessa/expfactory-builder list
-              docker run vanessa/expfactory-builder start
+              docker run <container> test
+              docker run <container> list
+              docker run <container> start
+              docker run -p 80:80 <container> --database mysql+pymysql://username:password@host/dbname start
+              docker run -p 80:80 <container> --database sqlite start
+              docker run -p 80:80 <container> --database postgresql://username:password@host/dbname start
 
-              docker run vanessa/expfactory-builder \
-                        --db mysql://username:password@server/mydatabase \
-                        --studyid dns \
-                         start
          "
 }
 

@@ -1,12 +1,17 @@
 #!/bin/bash
 
-if [ $# -eq 0 ]; then
-    echo "Usage:"
-    echo "
+usage () {
+
+    echo "Usage:
           docker run vanessa/expfactory-builder list
           docker run -v /tmp/data:/data vanessa/expfactory-builder build experiment-one experiment-two ...
           docker run -v experiments:/scif/apps vanessa/expfactory-builder test
-          docker run -v library:/scif/apps vanessa/expfactory-builder test-library"
+          docker run -v library:/scif/apps vanessa/expfactory-builder test-library
+         "
+}
+
+if [ $# -eq 0 ]; then
+    usage
     exit
 fi
 
@@ -57,10 +62,5 @@ if [ $1 == "build" ]; then
         exit
     fi
 else
-    echo "Usage:"
-    echo "
-          docker run vanessa/expfactory-builder list
-          docker run vanessa/expfactory-builder build experiment-one experiment-two ...
-          docker run -v experiments:/scif/apps vanessa/expfactory-builder test
-          docker run -v library:/scif/apps vanessa/expfactory-builder test-library"
+    usage
 fi
