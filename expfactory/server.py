@@ -29,7 +29,8 @@ from expfactory.experiment import (
 
 from expfactory.database import (
     init_db, 
-    generate_subid
+    generate_subid,
+    save_data
 )
 from flask import Flask
 from flask_wtf.csrf import (
@@ -126,6 +127,7 @@ class EFServer(Flask):
 
 
 EFServer.init_db = init_db
+EFServer.save_data = save_data
 EFServer.generate_subid = generate_subid
 app = EFServer(__name__)
 app.config.from_object('expfactory.config')

@@ -31,19 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
-from flask import (
-    flash,
-    jsonify,
-    render_template, 
-    request, 
-    redirect,
-    session
-)
-
 from expfactory.server import app
-from random import choice
-import os
-
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
