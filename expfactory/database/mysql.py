@@ -50,7 +50,7 @@ import json
 import sys
 
 
-# SQLITE3 FILE #################################################################
+# MYSQL DATABASE ###############################################################
 #
 # This is an Expfactory Flask Server database plugin. It implements common 
 # functions (generate_subid, save_data, init_db) that should prepare a 
@@ -58,6 +58,7 @@ import sys
 # to the main application upon initialization of the server.
 #
 ################################################################################
+
 
 def generate_subid(self, digits=5):
     '''generate a new user in the database, still session based so we
@@ -71,7 +72,8 @@ def generate_subid(self, digits=5):
     return p.id
 
 
-def save_data(self,session, exp_id, content):
+
+def save_data(self, session, exp_id, content):
     '''save data will obtain the current subid from the session, and save it
        depending on the database type. Currently we just support flat files'''
     from expfactory.database.models import (
@@ -94,32 +96,34 @@ def save_data(self,session, exp_id, content):
         bot.info("Participant: %s" %p)
         bot.info("Result: %s" %result)
 
-
 Base = declarative_base()
-
-
+    
 def init_db(self, database_url=None):
     '''initialize the database, with the default database path or custom of
        the format sqlite:////scif/data/expfactory.db
 
     '''
 
-    # Database Setup
+    # The user can provide a custom string
     if database_url is None:
-        db_path = os.path.join(EXPFACTORY_DATA, '%s.db' % EXPFACTORY_SUBID)
-        database_url = 'sqlite:///%s' % db_path
+        bot.error("You must provide a database uri for sql, exiting.")
+        sys.exit(1)
 
-    bot.info("Database located at %s" % database_url)
-    self.engine = create_engine(database_uri, convert_unicode=True)
+    if not database_url.startswith('mysql://'):
+        bot.error("Database uri must start with mysql, exiting.")
+        sys.exit(1)
+
+    self.engine = create_engine(databse_url, convert_unicode=True)
     self.session = scoped_session(sessionmaker(autocommit=False,
                                                autoflush=False,
                                                bind=self.engine))
-    
+
+    # Database Setup
     Base.query = self.session.query_property()
 
     # import all modules here that might define models so that
     # they will be registered properly on the metadata.  Otherwise
     # you will have to import them first before calling init_db()
     import expfactory.database.models
-    Base.metadata.create_all(bind=self.engine)
     self.Base = Base
+    self.Base.metadata.create_all(bind=self.engine)

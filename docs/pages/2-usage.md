@@ -12,7 +12,7 @@ If you've just finished [generating your experiments container](/expfactory/gene
 docker run -p 80:80 vanessa/expfactory-experiments start
 ```
 
-The above assumes that either we don't want to see files on the host, **or** that we are saving to a relational database external to the experiments container itself. For a filesystem or sqlite database, since the file is stored inside the container and we want access to it, we likely started with the location mapped:
+The above assumes that either we don't want to see files on the host, **or** if the image default is to save to a relational database external to the experiments container itself, we access data by querying this separate endpoint. For a filesystem or sqlite database, since the file is stored inside the container and we want access to it, we likely started with the location mapped:
 
 ```
 docker run -p 80:80 -v /tmp/data:/scif/data vanessa/expfactory-experiments start
@@ -60,8 +60,15 @@ When you finish, you will see a "congratulations" screen
     <img src="/expfactory/img/generate/finish.png"><br>
 </div>
 
+Generally, when you administer a battery of experiments you want to ensure that:
+
+ - if a database isn't external to the container, the folder is mapped (or the container kept running to retrieve results from) otherwise you will lose the results.
+ - if the container is being served on a server open to the world, you have added proper authorization (note this isn't developed yet, please file an issue if you need this)
+ - you have fully tested data collection and inspected the results before administering any kind of "production" battery.
+
 
 # Results 
+Now let's discuss what happens after participants interact with the portal. We have results!
 
 ## Databases
 
@@ -130,7 +137,20 @@ Each result row includes the table row id, the date, result content, and partici
 
 >>> res[2]  # data from experiment, json.loads needed
 >>> json.loads(res[2])
-[{'timing_post_trial': 100, 'exp_id': 'test-task', 'block_duration': 2000, 'trial_index': 0, 'possible_responses': [32], 'focus_shifts': 0, 'internal_node_id': '0.0-0.0', 'trial_id': 'test', 'addingOnTrial': 'added!', 'rt': 805, 'trial_type': 'poldrack-single-stim', 'stimulus': '<div class = "shapebox"><div id = "cross"></div></div>', 'stim_duration': 2000, 'full_screen': True, 'key_press': 32, 'time_elapsed': 2005}, {'timing_post_trial': 100, 'exp_id': 'test-task', 'block_duration': 2000, 'trial_index': 1, 'possible_responses': [32], 'focus_shifts': 0, 'internal_node_id': '0.0-1.0', 'trial_id': 'test', 'addingOnTrial': 'added!', 'rt': 331, 'trial_type': 'poldrack-single-stim', 'stimulus': '<div class = "shapebox"><div id = "cross"></div></div>', 'stim_duration': 2000, 'full_screen': True, 'key_press': 32, 'time_elapsed': 4111}, {'timing_post_trial': 100, 'exp_id': 'test-task', 'block_duration': 2000, 'trial_index': 2, 'possible_responses': [32], 'focus_shifts': 0, 'internal_node_id': '0.0-2.0', 'trial_id': 'test', 'addingOnTrial': 'added!', 'rt': 339, 'trial_type': 'poldrack-single-stim', 'stimulus': '<div class = "shapebox"><div id = "cross"></div></div>', 'added_Data?': 'success!', 'stim_duration': 2000, 'full_screen': True, 'key_press': 32, 'time_elapsed': 6213}, {'full_screen': True, 'trial_index': 3, 'trial_type': 'call-function', 'focus_shifts': 0, 'exp_id': 'test-task', 'internal_node_id': '0.0-3.0', 'time_elapsed': 6314}, {'responses': '{"Q0":"Stuff","Q1":"Nope"}', 'full_screen': True, 'exp_id': 'test-task', 'focus_shifts': 0, 'trial_type': 'survey-text', 'rt': 6169, 'trial_index': 4, 'trial_id': 'post task questions', 'internal_node_id': '0.0-5.0', 'time_elapsed': 12492}, {'performance_var': 661, 'timing_post_trial': 0, 'exp_id': 'test-task', 'text': '<div class = centerbox><p class = center-block-text>Thanks for completing this task!</p><p class = center-block-text>Press <strong>enter</strong> to continue.</p></div>', 'key_press': 13, 'trial_index': 5, 'focus_shifts': 0, 'internal_node_id': '0.0-6.0', 'trial_id': 'end', 'credit_var': True, 'trial_type': 'poldrack-text', 'rt': 1083, 'full_screen': True, 'block_duration': 1083, 'time_elapsed': 14579}]
+[{ 
+   'timing_post_trial': 100, 
+   'exp_id': 'test-task', 
+   'block_duration': 2000, 
+   'trial_index': 0,
+    ...
+
+   'key_press': 13,
+   'trial_index': 5,
+   'rt': 1083, 
+   'full_screen': True,
+   'block_duration': 1083, 
+   'time_elapsed': 14579
+}]
 
 >>> res[3] # experiment id (exp_id)
 'test-task'
@@ -210,7 +230,7 @@ A few questions for you!
  - Is a user allowed to redo an experiment? Meaning, if a session is started and the data is written (and the experiment done again) is it over-written? 
  - Is some higher level mechanism for generating user ids in advance, and then validating them with an individual, desired?
 
-Right now, this setup is optimized for a low volume of user's in a local lab. To best develop the software for different deployment, it's important to discuss these issues. Please [post an issue](https://www.github.com/expfactory/expfactory/issues) to give feedback.
+To best develop the software for different deployment, it's important to discuss these issues. Please [post an issue](https://www.github.com/expfactory/expfactory/issues) to give feedback.
 
 
 <br>

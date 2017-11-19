@@ -433,15 +433,30 @@ docker run -v /tmp/my-experiment:/data \
                       tower-of-london
 ```
 
-**sql**
-For labs that wish to deploy the container on a server, you are encouraged to use a more substantial database, such as a traditional relational database like sql. To use sql, you need to specify the database type for the Dockerfile, and then you will need to...
+**mysql/postgres**
+For labs that wish to deploy the container on a server, you are encouraged to use a more substantial database, such as a traditional relational database like MySQL or Postgres. To make either the  **default** for the container (not recommended), you would need to specify the database type for the Dockerfile, for example:
 
-#TODO: how to specify username and password? 
+```
+# mysql
+docker run -v /tmp/my-experiment:/data \
+              vanessa/expfactory-builder \
+              build --database mysql \
+                      tower-of-london
 
-**MySQL/Postgres/Mongo/Other**
+# postgres
+docker run -v /tmp/my-experiment:/data \
+              vanessa/expfactory-builder \
+              build --database postgres \
+                      tower-of-london
+```
+
+As we stated previously, when you specify these parameters to generate the Dockerfile, they will be defaults for the image, and you might have more flexibility specifying them at runtime. Also, for any of the above, if you generate a Dockerfile and then change your mind, you can easily edit the Dockerfile instead of re-generating with the builder. In fact, this applies to make **any changes** to the Dockerfile. You can clone your own repos not in the library, add different images, or change the templates.
+
+The particulars of the database (username, password, etc.) will not be saved with the image, but specified when you start it. 
+
+**CouchDB/MariaDB/Mongo/Other**
 We haven't yet developed this, and if you are interested, please [file an issue](https://github.com/expfactory/expfactory).
 
-For any of the above, if you generate a Dockerfile and then change your mind, you can easily edit the Dockerfile instead of re-generating with the builder. In fact, this applies to make **any changes** to the Dockerfile. You can clone your own repos not in the library, add different images, or change the templates.
 
 ## Identifiers
 

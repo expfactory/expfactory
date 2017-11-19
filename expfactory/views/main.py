@@ -50,10 +50,6 @@ from expfactory.utils import (
     get_post_fields
 )
 
-from expfactory.database import (
-    save_data,
-    generate_subid
-)
 from expfactory.views.utils import (
     perform_checks, 
     clear_session
@@ -107,7 +103,7 @@ def home():
  
             subid = session.get('subid')
             if subid is None:
-                subid = generate_subid()
+                subid = app.generate_subid()
                 session['subid'] = subid
                 app.logger.info('New session [subid] %s' %subid)
 
@@ -142,7 +138,7 @@ def save():
 
         if app.demo is False:
             fields = get_post_fields(request)
-            result_file = save_data(session=session, content=fields, exp_id=exp_id)
+            result_file = app.save_data(session=session, content=fields, exp_id=exp_id)
 
         experiments = app.finish_experiment(session, exp_id)
         app.logger.info('Finished %s, %s remaining.' % (exp_id, len(experiments)))

@@ -51,5 +51,5 @@ import os
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     # db_session will be None for filesystem database
-    if db_session is not None:
-        db_session.remove()
+    if app.session is not None:
+        app.session.remove()

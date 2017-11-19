@@ -43,10 +43,14 @@ import sys
 
 # DEFAULT FLAT #################################################################
 # Default "database" is flat files written to the system
+################################################################################
+# This is an Expfactory Flask Server database plugin. It implements common 
+# functions (generate_subid, save_data, init_db) that should prepare a 
+# database and perform actions to save data to it. The functions are added
+# to the main application upon initialization of the server.
 
-db_session = None
 
-def generate_subid(digits=5):
+def generate_subid(self, digits=5):
     '''assumes a flat (file system) database, organized by experiment id, and
        subject id, with data (json) organized by subject identifier
     ''' 
@@ -59,7 +63,7 @@ def generate_subid(digits=5):
     return "%s/%s" % (EXPFACTORY_SUBID, folder_id)
     
 
-def save_data(session, exp_id, content):
+def save_data(self, session, exp_id, content):
     '''save data will obtain the current subid from the session, and save it
        depending on the database type. Currently we just support flat files'''
 

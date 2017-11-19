@@ -16,8 +16,15 @@ if [ $# -eq 0 ]; then
          *you are required to map port 80, otherwise you won't see the portal at localhost
 
          Options [start]:
-                --database: specify a database to override the default
-                --studyid: specify a studyid to override the default
+                --database: specify a database to override the default filesystem
+                            [filesystem|sqlite|mysql|postgres]
+                --conn:     for mysql and postgres, a connection uri (examples below)
+                --studyid:  specify a studyid to override the default
+
+         Connection (--conn) examples:
+
+            --conn mysql://username:password@server/mydatabase start
+            --conn postgresql://username:password@server/mydatabase  start
          "
     exit
 fi
@@ -52,6 +59,13 @@ while true; do
             EXPFACTORY_DATABASE=${1:-}
             echo "Database selected as ${EXPFACTORY_DATABASE}"
             export EXPFACTORY_DATABASE
+            shift
+        ;;
+        --connection|--conn)
+            shift
+            EXPFACTORY_DATABASE_URI=${1:-}
+            echo "Database connection uri: ${EXPFACTORY_DATABASE_URI}"
+            export EXPFACTORY_DATABASE_URI
             shift
         ;;
         --studyid)

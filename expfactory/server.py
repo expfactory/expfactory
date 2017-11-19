@@ -48,7 +48,6 @@ from expfactory.utils import (
 )
 
 import jinja2
-import logging
 import tempfile
 import shutil
 import random
@@ -73,45 +72,51 @@ class EFServer(Flask):
         '''
         self.database_type = getenv('EXPFACTORY_DATABASE','filesystem') 
         bot.info("DATABASE: %s" %self.database_type)
-        self.demo = True
+
+        # Supported database options
+        valid = ('sqlite', 'postgres', 'mysql', 'filesystem')
+        if self.database_type not in valid:
+            bot.warning('%s is not yet a supported type, saving to filesystem.' % self.database_type)
+            self.database_type = 'filesystem'
+
+            if self.database is not None:
+                if not self.database.startswith(self.database_type):
+                   bot.error("Database connection must start with %s, using filesystem." % " or ".join(valid))
+                   self.database_type = "filesystem"
+
+        # Add functions specific to database type
+        from expfactory.database import *
+        self.init_db = init_db
+        self.generate_subid = generate_subid
+
 
         # Option 1: Filesystem
         if self.database_type == "filesystem":
-            self.database = getenv('EXPFACTORY_DATA','/scif/data')
+            self.study_id = getenv('EXPFACTORY_STUDY_ID', 'expfactory')
+            self.database = "%s/%s" %(self.data_base, self.study_id)
+            if not os.path.exists(self.database):
+                os.mkdir(self.database)
 
-            if not os.access(self.database, os.W_OK):
-                bot.warning("%s is not writable, running in demo mode." %self.data_base)
-
-            else:
-                self.study_id = getenv('EXPFACTORY_STUDY_ID', 'expfactory')
-                self.database = "%s/%s" %(self.database, self.study_id)
-                if not os.path.exists(self.database):
-                    os.mkdir(self.database)
-                self.demo = False
-         
-        # Option 2: sqlite
-        elif self.database_type == "sqlite":
-            from expfactory.database import init_db
-            self.database = init_db()
-            self.demo = False
-
+        # sqlite, mysql, or postgres         
         else:
-            bot.warning('%s is not yet a supported type. Running in demo mode.' % self.database_type)
-            
-        if self.demo is False:
-            bot.log("Data base: %s" % self.database)
+            address = os.environ.get('EXPFACTORY_DATABASE_URI')
+            self.init_db(address)
+            self.database = self.engine.url
+
+        bot.log("Data base: %s:%s" % (self.database_type, self.database))
 
 
     def setup(self):
 
         # Step 1: obtain installed and selected experiments (/scif/apps)
         self.selection = getenv('EXPFACTORY_EXPERIMENTS', [])
+        self.data_base = getenv('EXPFACTORY_DATA','/scif/data')
         self.base = getenv('EXPFACTORY_BASE')
 
         self.randomize = convert2boolean(getenv('EXPFACTORY_RANDOM', True))
         available = get_experiments("%s" % self.base)
         self.experiments = get_selection(available, self.selection)
-        bot.debug(self.experiments)
+        self.logger.debug(self.experiments)
         self.lookup = make_lookup(self.experiments)
         final = "\n".join(list(self.lookup.keys()))        
 
