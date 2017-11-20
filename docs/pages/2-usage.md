@@ -63,7 +63,7 @@ $ tree /tmp/data/dns/00000/
 If you stop the container, and the data will persist on the host. If you didn't mount to the host, then stopping the container means losing the data.
 
 #### How do I read it?
-For detailed information about how to read json strings (whether from file or database) see further down this page. For a filesystem save, the data is saved to a json object, regardless of the string output produced by the experiment. This means that you can load the data as json, and then look at the `data` key to find the result saved by the particular experiment. Typically you will find another string saved as json, but it could be the case that some experiments do this differently.
+For detailed information about how to read json strings (whether from file or database) see [working with JSON](#json). For a filesystem save, the data is saved to a json object, regardless of the string output produced by the experiment. This means that you can load the data as json, and then look at the `data` key to find the result saved by the particular experiment. Typically you will find another string saved as json, but it could be the case that some experiments do this differently.
 
 
 ### sqlite
@@ -355,7 +355,7 @@ Generally, when you administer a battery of experiments you want to ensure that:
 
 
 
-## Working with JSON
+<a name="json"></a>## Working with JSON
 Whether you find your json objects in a file (`filesystem`) or saved in a text field in a relational database (`sqlite`) you will reach some point where you have a bunch of json objects to parse to work with your data. Json means "JavaScript Object Notation," and natively is found in browsers (with JavaScript, of course). It's flexibility in structure (it's not a relational database) makes it well suited to saving experiments with many different organizations of results. This also makes it more challenging for you, the researcher, given that you have to parse many experiments with different formats. Generally, experiments that use the same paradigm (e.g., jspsych or phaser) will have similar structures, and we can show you easily how to read JSON into different programming languages. Here is python:
 
 ```python
