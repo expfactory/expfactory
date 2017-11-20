@@ -1,8 +1,8 @@
 # The Experiment Factory
 
-![expfactory/static/img/expfactoryticketyellow.png](expfactory/static/img/expfactoryticketyellow.png)
-
 [![DOI](https://zenodo.org/badge/108672186.svg)](https://zenodo.org/badge/latestdoi/108672186)
+
+![expfactory/static/img/expfactoryticketyellow.png](expfactory/static/img/expfactoryticketyellow.png)
 
 [documentation](https://expfactory.github.io/expfactory)
 
