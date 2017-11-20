@@ -34,7 +34,7 @@ docker run -v /tmp/my-experiment/data/:/scif/data \
            expfactory/experiments  --database sqlite start
 ```
 
-We will go into each database tyoe in some detail.
+We will go into each database type in some detail.
 
 
 ### filesystem
