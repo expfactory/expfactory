@@ -60,6 +60,8 @@ $ tree /tmp/data/dns/00000/
 0 directories, 1 file
 ```
 
+Participant folders will be created under the `studyid` folder.  These start at 00000 and are incremented with each participant you run.
+
 If you stop the container, and the data will persist on the host. If you didn't mount to the host, then stopping the container means losing the data.
 
 #### How do I read it?
