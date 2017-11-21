@@ -1,0 +1,58 @@
+---
+title: 'The Experiment Factory: Reproducible Experiment Containers'
+tags:
+  - containers
+  - docker
+  - psychology
+  - reproducibility
+  - Docker
+authors:
+ - name: Vanessa Sochat
+   orcid: 0000-0002-4387-3819
+   affiliation: 1
+affiliations:
+ - name: Stanford University Research Computing
+   index: 1
+date: 28 November 2017
+bibliography: paper.bib
+---
+
+# Summary
+
+The Experiment Factory is Open Source software that makes it easy to generate reproducible behavioral experiments. It offers a browsable, and tested library of experiments, games, and surveys, support for multiple kinds of databases, and robust documentation for the provided tools. A user interested in deploying a behavioral assessment can simply select a grouping of paradigms from the web interface, and build a container to serve them.
+
+![img/portal.png](img/portal.png)
+
+
+# Challenges with Behavioral Research
+
+The reproducibility crisis [@Moreews2015-dy, @Belmann2015-eb, @Boettiger2014-cz, @Santana-Perez2015-wo, @Wandell2015-yt] has been well met by many effots [CITE] to capture data and software dependencies required for a scientific analysis. Behavior research in particular is especially challenging historically due to the need to bring a study participant into the lab, and currently due to the need to develop and validate a well-tested set of paradigms. A common format for these paradigms has become a web-based experiment that can be delivered on a computer or tablet with an internet connection, or a lab computer with all resources provided locally. However, this current practice presents many problems:
+
+ - Dependencies such as software, experiment static files, and runtime variables must be captured for reproduciblity.
+ - Individual experiments and the library must be version controlled.
+ - Each experiment could benefit from being maintianed and tested in an Open Soure fashion. This means that those knowledgable about the paradigm can easily collaborate on code, and others can file issues and ask questions if needed.
+ - Any strategy to capture experiments must allow for flexibility in terms of the libraries (e.g., JavaScript-based or other) that are required.
+ - The final product should be easy to deploy exactly as the creator intended.
+
+The early version of the Experiment Factory [CITE] offered a small set of Python tools to generate local, static batteries from a massive, single repository of paradigms, but unfortunately was severely limited. The experiments were required to conform to specific set of software, the lack of containerization meant that installation was challenging and error prone, and importantly, it did not meet the complete set of goals outlined above. While the `expfactory-docker` [CITE] image offered a means to deploy to Amazon Mechanical Turk, it required substantial setup and was primarily developed to meet the specific needs of one lab.
+
+# The Experiment Factory (v2.0)
+
+![img/expfactory.png](img/expfactory.png)
+
+# Experiment Container Generation
+The software outlined here, "expfactory," shares little with the original implementation beyond the name. Specifically, it allows for encapsulation of all dependencies and static files required for behavioral experimentation, and flexibility to the user for configuration of the deployment. For usage of a pre-existing experiment container, the user simply needs to run the Docker image. For generation of a new, custom container the generation workflow is typically the following:
+ 
+ - The user browses a [library](https://expfactory.github.io/experiments/) of available experiments, surveys, and games. A preview is available directly in the browser, and data saved to the local machine for inspection. The preview reflects exactly what will be installed into the container.
+ - The user selects one or more paradigms to add to the container, and clicks "Generate." The user runs the command shown in the browser on his or her local machine to produce the custom recipe for the container, called a Dockerfile.
+ - The user builds the container (and optionally adds the Dockerfile to version control or automated building on Docker Hub) and uses it in production. The same container is then available for others that want to reproduce the experiment.
+
+At runtime, the user is then able to select deployment customization such as database (MySQL, PostgreSQL, sqlite3, or default of filesystem), and a study identifier. For more detailed walk throughs on container generation, we refer the reader to the Experiment Factory [documentation base](https://www.github.com/expfactory/expfactory).
+
+
+# Experiment Container Usage
+Once a container is generated and it's unique identifier and image layers served in a registry like Docker Hub, it can be cited in a paper with confidence that others can run and reproduce the work simply by using it.
+
+More information on experiment development and contribution to the expfactory tools, containers, or library is provided at the Experiment Factory  <a href="https://expfactory.github.io/expfactory/" target="_blank">official documentation</a>. This is an Open Source project, and so <a href="https://www.github.com/expfactory/expfactory/issues" target="_blank">feedback and contributions</a> are encouraged and welcome.
+
+# References
