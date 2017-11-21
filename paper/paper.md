@@ -19,14 +19,14 @@ bibliography: paper.bib
 
 # Summary
 
-The Experiment Factory is Open Source software that makes it easy to generate reproducible behavioral experiments. It offers a browsable, and tested library of experiments, games, and surveys, support for multiple kinds of databases, and robust documentation for the provided tools. A user interested in deploying a behavioral assessment can simply select a grouping of paradigms from the web interface, and build a container to serve them.
+The Experiment Factory [@vanessa_sochat_2017_1059119] is Open Source software that makes it easy to generate reproducible behavioral experiments. It offers a browsable, and tested [library](https://expfactory.github.io/experiments/) of experiments, games, and surveys, support for multiple kinds of databases, and robust documentation for the provided tools. A user interested in deploying a behavioral assessment can simply select a grouping of paradigms from the web interface, and build a container to serve them.
 
 ![img/portal.png](img/portal.png)
 
 
 # Challenges with Behavioral Research
 
-The reproducibility crisis [@Moreews2015-dy, @Belmann2015-eb, @Boettiger2014-cz, @Santana-Perez2015-wo, @Wandell2015-yt] has been well met by many effots [CITE] to capture data and software dependencies required for a scientific analysis. Behavior research in particular is especially challenging historically due to the need to bring a study participant into the lab, and currently due to the need to develop and validate a well-tested set of paradigms. A common format for these paradigms has become a web-based experiment that can be delivered on a computer or tablet with an internet connection, or a lab computer with all resources provided locally. However, this current practice presents many problems:
+The reproducibility crisis [Ram2013-km, Stodden2010-cu, noauthor_2015-ig, Sochat2016-pu, noauthor_undated-sn, Baker_undated-bx, Open_Science_Collaboration2015-hb] has been well met by many efforts [@Belmann2015-eb, Moreews2015-dy, @Boettiger2014-cz, @Santana-Perez2015-wo, @Wandell2015-yt] across scientific disciplines to capture data and software dependencies required for a scientific analysis. Behavior research is especially challenging historically due to the need to bring a study participant into the lab, and currently due to the need to develop and validate a well-tested set of paradigms. A common format for these paradigms has become a web-based experiment that can be delivered on a computer or tablet with an internet connection, or a lab computer with all resources provided locally. However, while many great tools exist for creating the web-based paradigms [De_Leeuw2015-zw, McDonnell2012-ns], still lacking is assurance that the generated paradigms will be reproducible. Specifically, the following challenges remain:
 
  - Dependencies such as software, experiment static files, and runtime variables must be captured for reproduciblity.
  - Individual experiments and the library must be version controlled.
@@ -34,7 +34,8 @@ The reproducibility crisis [@Moreews2015-dy, @Belmann2015-eb, @Boettiger2014-cz,
  - Any strategy to capture experiments must allow for flexibility in terms of the libraries (e.g., JavaScript-based or other) that are required.
  - The final product should be easy to deploy exactly as the creator intended.
 
-The early version of the Experiment Factory [CITE] offered a small set of Python tools to generate local, static batteries from a massive, single repository of paradigms, but unfortunately was severely limited. The experiments were required to conform to specific set of software, the lack of containerization meant that installation was challenging and error prone, and importantly, it did not meet the complete set of goals outlined above. While the `expfactory-docker` [CITE] image offered a means to deploy to Amazon Mechanical Turk, it required substantial setup and was primarily developed to meet the specific needs of one lab.
+The early version of the Experiment Factory [Sochat2016-pu] did a good job to develop somewhat modular paradigms, and offered a small set of Python tools to generate local, static batteries from a single repository. Unfortunately, it was severely limited in its ability to scale, and provide reproducible deployments via linux containers [Merkel2014-da]. The experiments were required to conform to specific set of software, the lack of containerization meant that installation was challenging and error prone, and importantly, it did not meet the complete set of goals outlined above. While the `expfactory-docker` [noauthor_undated-pi, Sochat2016-pu] image offered a means to deploy to Amazon Mechanical Turk, it required substantial setup and was primarily developed to meet the specific needs of one lab.
+
 
 # The Experiment Factory (v2.0)
 
