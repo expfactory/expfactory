@@ -31,7 +31,7 @@ The reproducibility crisis [@Ram2013-km, @Stodden2010-cu, @noauthor_2015-ig, @no
  - **Dependencies** such as software, experiment static files, and runtime variables must be captured for reproduciblity.
  - Individual experiments and the library must be **version controlled.**
  - Each experiment could benefit from being maintianed and tested in an **Open Soure** fashion. This means that those knowledgable about the paradigm can easily collaborate on code, and others can file issues and ask questions if needed.
- - Any strategy to capture experiments must allow for **flexibility** in terms of the libraries (e.g., JavaScript-based or other) that are required.
+ - Tools must allow for **flexibility** to allow different libraries (e.g., JavaScript).
  - The final product should be **easy to deploy** exactly as the creator intended.
 
 The early version of the Experiment Factory [@Sochat2016-pu] did a good job to develop somewhat modular paradigms, and offered a small set of Python tools to generate local, static batteries from a single repository. Unfortunately, it was severely limited in its ability to scale, and provide reproducible deployments via linux containers [@Merkel2014-da]. The experiments were required to conform to specific set of software, the lack of containerization meant that installation was challenging and error prone, and importantly, it did not meet the complete set of goals outlined above. While the `expfactory-docker` [@noauthor_undated-pi, @Sochat2016-pu] image offered a means to deploy experiments to Amazon Mechanical Turk, it required substantial setup and was primarily developed to meet the specific needs of one lab.
