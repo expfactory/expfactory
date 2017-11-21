@@ -30,7 +30,7 @@ The reproducibility crisis [@Ram2013-km, @Stodden2010-cu, @noauthor_2015-ig, @no
 
  - **Dependencies** such as software, experiment static files, and runtime variables must be captured for reproduciblity.
  - Individual experiments and the library must be **version controlled.**
- - Each experiment could benefit from being maintianed and tested in an **Open Soure** fashion. This means that those knowledgable about the paradigm can easily collaborate on code, and others can file issues and ask questions if needed.
+ - Each experiment could benefit from being maintianed and tested in an **Open Soure** fashion. This means that those knowledgable about the paradigm can easily collaborate on code, and others can file issues and ask questions.
  - Tools must allow for **flexibility** to allow different libraries (e.g., JavaScript).
  - The final product should be **easy to deploy** exactly as the creator intended.
 
@@ -45,7 +45,7 @@ The software outlined here, "expfactory," shares little with the original implem
  - **Generation** The user selects one or more paradigms to add to the container, and clicks "Generate." The user runs the command shown in the browser on his or her local machine to produce the custom recipe for the container, called a Dockerfile.
  - **Building** The user builds the container (and optionally adds the Dockerfile to version control or automated building on Docker Hub) and uses it in production. The same container is then available for others that want to reproduce the experiment.
 
-At runtime, the user is then able to select deployment customization such as database (MySQL, PostgreSQL, sqlite3, or default of filesystem), and a study identifier. For more detailed walk throughs on container generation, we refer the reader to the Experiment Factory [documentation base](https://www.github.com/expfactory/expfactory).
+At runtime, the user is then able to select deployment customization such as database (MySQL, PostgreSQL, sqlite3, or default of filesystem), and a study identifier.
 
 
 # Experiment Container Usage
