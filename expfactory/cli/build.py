@@ -85,8 +85,11 @@ def main(args,parser,subparser):
                 # If we aren't building in the experiment directory, we need to copy there
                 output_dir = "%s/%s" %(os.path.abspath(os.path.dirname(args.output)), exp_id)
                 experiment_dir = os.path.abspath(experiment)
+<<<<<<< HEAD
                 print(output_dir)
                 print(experiment_dir)
+=======
+>>>>>>> 1ba32f7d198c120fa62468fc66cb29ca32853e2b
                 if output_dir != experiment_dir:
                     copy_directory(experiment_dir, output_dir)
 
@@ -96,7 +99,11 @@ def main(args,parser,subparser):
 
     # Warn the user that local installs are not reproducible (from recipe)
     if local_installs > 0:
+<<<<<<< HEAD
         bot.warning("%s local installs detected: build recipe is not reproducible beyond this machine" %local_installs)
+=======
+        bot.warning("%s local installs detected: build is not reproducible without experiment folders" %local_installs)
+>>>>>>> 1ba32f7d198c120fa62468fc66cb29ca32853e2b
 
     # Build Image with Experiments
     for experiment in experiments:
@@ -113,8 +120,13 @@ def main(args,parser,subparser):
 
             # The final installation step, either from Github (url) or local folder
             if "local" in config:
+<<<<<<< HEAD
                 app = "%sADD %s /tmp\n" %(app, exp_id)
                 app = "%sWORKDIR /scif/apps\nRUN expfactory install /tmp/%s\n" %(app, exp_id)
+=======
+                app = "%sADD %s /scif/apps/%s\n" %(app, exp_id, exp_id)
+                app = "%sWORKDIR /scif/apps\nRUN expfactory install %s\n" %(app, exp_id)
+>>>>>>> 1ba32f7d198c120fa62468fc66cb29ca32853e2b
             else:
                 app = "%sWORKDIR /scif/apps\nRUN expfactory install %s\n" %(app, config['github'])  
             apps = "%s%s\n" %(apps,app)
