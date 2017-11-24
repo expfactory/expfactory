@@ -83,12 +83,7 @@ Usage:
 
 We will discuss each of these commands in more detail.
 
-<<<<<<< HEAD
-
-## Experiment Selection
-=======
 ## Library Experiment Selection
->>>>>>> 1ba32f7d198c120fa62468fc66cb29ca32853e2b
 The first we've already used, and it's the only required argument. We need to give the
 expfactory builder a list of `experiments`. You can either [browse
 the table](https://expfactory.github.io/experiments/) or see a current library list with `list.`
