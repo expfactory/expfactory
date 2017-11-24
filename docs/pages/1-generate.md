@@ -83,7 +83,7 @@ Usage:
 
 We will discuss each of these commands in more detail.
 
-## Experiment Selection
+## Library Experiment Selection
 The first we've already used, and it's the only required argument. We need to give the
 expfactory builder a list of `experiments`. You can either [browse
 the table](https://expfactory.github.io/experiments/) or see a current library list with `list.`
@@ -114,11 +114,20 @@ docker run vanessa/expfactory-builder list | grep survey
 6  dospert-rt-survey	https://www.github.com/expfactory-experiments/dospert-rt-survey
 ```
 
+## Local Experiment Selection
+If you have experiments on your local machine where an experiment is defined based on [these criteria](https://expfactory.github.io/expfactory/contribute.html#experiment-pre-reqs) or more briefly:
+
+ - the config.json has all required fields
+ - the folder is named according to the `exp_id`
+ - the experiment runs via a main index.html file
+ - on finish, it POSTS to `/save` and then proceeds to `/next`
+
+Then you can treat a local path to an experiment folder as an experiment in the list to give to build. Since we will be working from a mapped folder in a Docker container, this comes down to providing the experiment name under the folder it is mapped to, `/data`. Continue reading for an example
+
 ## Recipe Generation
 To generate a Dockerfile to build our custom image, we need to run expfactory in the container,
-and mount a folder (`my-experiment` in the example below) to retrieve the Dockerfile. The folder
-should not already contain a Dockerfile, and most appropriate is a new folder that you
-intend to set up with version control (a.k.a. Github). That looks like this:
+and mount a folder to write the Dockerfile. If we are installing local experiments, they should be in this folder. The folder
+should not already contain a Dockerfile, and we recommend that you set this folder up with version control (a.k.a. Github). That looks like this:
 
 ```
 mkdir -p /tmp/my-experiment/data
@@ -133,17 +142,91 @@ To build, cd to recipe and:
               docker build -t expfactory/experiments .
 ```
 
-Before you generate your recipe, in the case that you want "hard coded" defaults (e.g., set as defaults for future users) read the [custom build](#custom-build) section below to learn about the variables that you can customize. If not, then rest assured that these values can be specified when a built container is started.
+If you are building from local experiment folders, then it is recommended to generate the Dockerfile in the same folder as your experiments. You should (we hope!) also have this directory under version control (it should have a `.git` folder, as shown in the example below). For example, let's say I am installing local experiment `test-task-two` under a version controlled directory `experiments`, along with `test-task` from the library. The structure would look like this:
+
+```
+experiments/
+├── .git/
+└── test-task-two
+```
+
+I would then mount the present working directory (`experiments`) to `/data` in the container, and give the build command both the path to the directory in the container `data/test-task-two` and the exp_id for `test-task`, which will be retrieved from Github.
+
+```
+docker run -v $PWD:/data \
+              vanessa/expfactory-builder \
+              build test-task \
+                    /data/test-task-two
+
+Expfactory Version: 3.0
+local experiment /data/test-task-two found, validating...
+LOG Recipe written to /data/Dockerfile
+WARNING 1 local installs detected: build is not reproducible without experiment folders
+
+To build, cd to directory with Dockerfile and:
+              docker build -t expfactory/experiments .
+```
+
+Note that it gives you a warning about a local installation. This message is saying that if someone finds your Dockerfile without the rest of the content in the folder, it won't be buildable because it's not obtained from a version controlled repository (as the library experiments are). We can now see what was generated:
+
+```
+experiments/
+├── .git/
+├── Dockerfile
+├── startscript.sh
+└── test-task-two
+```
+
+This is really great! Now we can add the `Dockerfile` and `startscript.sh` to our repository, so even if we decide to not add our experiments to the official [library](https://expfactory.github.io/experiments/) others will still be able to build our container. We can also inspect the file to see the difference between a local install and a library install: 
+
+```
+########################################
+# Experiments
+########################################
+
+
+LABEL EXPERIMENT_test-task /scif/apps/test-task
+WORKDIR /scif/apps
+RUN expfactory install https://www.github.com/expfactory-experiments/test-task
+
+LABEL EXPERIMENT_test-task-two /scif/apps/test-task-two
+ADD test-task-two /scif/apps/test-task-two
+WORKDIR /scif/apps
+RUN expfactory install test-task-two
+```
+
+The library install (top) clones from Github, and the local install adds the entire experiment from your folder first. This is why it's recommended to do the build where you develop your experiments. While you aren't required to and could do the following to build in `/tmp/another_base`:
+
+```
+docker run -v /tmp/another_base:/data \
+              vanessa/expfactory-builder \
+              build test-task test-task-two
+```
+
+and your experiments will be copied fully there to still satisfy this condition, it is more redundant this way.
+
+Finally, before you generate your recipe, in the case that you want "hard coded" defaults (e.g., set as defaults for future users) read the [custom build](#custom-build) section below to learn about the variables that you can customize. If not, then rest assured that these values can be specified when a built container is started.
 
 
 ## Container Generation
-Now we would go to the folder (`/tmp/my-experiment`) to bulid our experiments container. We recommend that you consider an [automated build from a Github repository to Docker Hub](https://docs.docker.com/docker-hub/builds/) - this would mean that you can push to the repository and have the build done automatically, or that you can manually trigger it. After we used the expfactory builder, we find a Dockerfile and startscript for it:
+Starting from the folder where we generated our Dockerfile, we can now build the experiment container. Note that when you have a production container you don't need to build locally each time, yoiu can use an [automated build from a Github repository to Docker Hub](https://docs.docker.com/docker-hub/builds/) - this would mean that you can push to the repository and have the build done automatically, or that you can manually trigger it. For this tutorial, we will build locally:
 
 ```
-cd /tmp/my-experiments
-ls
-Dockerfile  startscript.sh
+experiments/
+├── Dockerfile
+└── startscript.sh
+
 ```
+
+and if we have local experiments, we would see them as well:
+
+```
+experiments/
+├── Dockerfile
+├── startscript.sh
+└── test-task-two
+```
+
 
 At this point we recommend you add `LABELS` to your Dockerfile. A label can be any form of
 metadata to describe the image. Look at the [label.schema](http://label-schema.org/rc1/) for
@@ -154,10 +237,10 @@ want to give to the image. It's easy to remember to correspond to your Github re
 docker build -t expfactory/experiments .
 
 # if you don't want to use cache
-docker build --no-cache -t vanessa/experiment .
+docker build --no-cache -t expfactory/experiments .
 ```
 
-Don't forget the `.` at the end! It references the present working directory with the Dockerfile.
+Don't forget the `.` at the end! It references the present working directory with the Dockerfile. If you are developing and need to update your container, the fastest thing to do is to change files locally, and build again (and removing --no-cache should be OK).
 
 
 ## Start your Container
