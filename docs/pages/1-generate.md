@@ -126,9 +126,8 @@ Then you can treat a local path to an experiment folder as an experiment in the 
 
 ## Recipe Generation
 To generate a Dockerfile to build our custom image, we need to run expfactory in the container,
-and mount a folder (`my-experiment` in the example below) to retrieve the Dockerfile. The folder
-should not already contain a Dockerfile, and most appropriate is a new folder that you
-intend to set up with version control (a.k.a. Github). That looks like this:
+and mount a folder to write the Dockerfile. If we are installing local experiments, they should be in this folder. The folder
+should not already contain a Dockerfile, and we recommend that you set this folder up with version control (a.k.a. Github). That looks like this:
 
 ```
 mkdir -p /tmp/my-experiment/data
@@ -151,7 +150,7 @@ experiments/
 └── test-task-two
 ```
 
-I would then mount the present working directory to `/data` in the container, and give the build command both the path to the directory in the container `data/test-task-two` and the exp_id for `test-task`, which will be retrieved from Github.
+I would then mount the present working directory (`experiments`) to `/data` in the container, and give the build command both the path to the directory in the container `data/test-task-two` and the exp_id for `test-task`, which will be retrieved from Github.
 
 ```
 docker run -v $PWD:/data \
@@ -191,9 +190,9 @@ WORKDIR /scif/apps
 RUN expfactory install https://www.github.com/expfactory-experiments/test-task
 
 LABEL EXPERIMENT_test-task-two /scif/apps/test-task-two
-ADD test-task-two /tmp
+ADD test-task-two /scif/apps/test-task-two
 WORKDIR /scif/apps
-RUN expfactory install /tmp/test-task-two
+RUN expfactory install test-task-two
 ```
 
 The library install (top) clones from Github, and the local install adds the entire experiment from your folder first. This is why it's recommended to do the build where you develop your experiments. While you aren't required to and could do the following to build in `/tmp/another_base`:
