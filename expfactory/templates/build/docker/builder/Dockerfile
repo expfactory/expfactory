@@ -10,7 +10,8 @@ ENV DEBIAN_FRONTEND noninteractive
 ###################################
 
 WORKDIR /opt
-RUN git clone https://www.github.com/expfactory/expfactory
+#RUN git clone https://www.github.com/expfactory/expfactory
+RUN git clone -b add/install-local https://www.github.com/expfactory/expfactory
 WORKDIR /opt/expfactory
 RUN python3 setup.py install
 RUN python3 -m pip install pyaml

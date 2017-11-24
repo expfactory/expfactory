@@ -85,8 +85,6 @@ def main(args,parser,subparser):
                 # If we aren't building in the experiment directory, we need to copy there
                 output_dir = "%s/%s" %(os.path.abspath(os.path.dirname(args.output)), exp_id)
                 experiment_dir = os.path.abspath(experiment)
-                print(output_dir)
-                print(experiment_dir)
                 if output_dir != experiment_dir:
                     copy_directory(experiment_dir, output_dir)
 
@@ -96,7 +94,7 @@ def main(args,parser,subparser):
 
     # Warn the user that local installs are not reproducible (from recipe)
     if local_installs > 0:
-        bot.warning("%s local installs detected: build recipe is not reproducible beyond this machine" %local_installs)
+        bot.warning("%s local installs detected: build is not reproducible without experiment folders" %local_installs)
 
     # Build Image with Experiments
     for experiment in experiments:
