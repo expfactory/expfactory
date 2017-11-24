@@ -241,7 +241,7 @@ docker build -t expfactory/experiments .
 docker build --no-cache -t expfactory/experiments .
 ```
 
-Don't forget the `.` at the end! It references the present working directory with the Dockerfile.
+Don't forget the `.` at the end! It references the present working directory with the Dockerfile. If you are developing and need to update your container, the fastest thing to do is to change files locally, and build again (and removing --no-cache should be OK).
 
 
 ## Start your Container

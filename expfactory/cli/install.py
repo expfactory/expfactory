@@ -60,9 +60,17 @@ def main(args,parser,subparser):
     cli = ExperimentValidator()
     valid = cli.validate(source, cleanup=False)
     exp_id = os.path.basename(source).replace('.git','')
+
     if valid is True:
-        config = load_experiment("%s/%s" %(cli.tmpdir,exp_id))
-        source = "%s/%s" %(cli.tmpdir,exp_id)
+
+        # Local Install
+        if os.path.exists(source):
+            config = load_experiment(source)
+            source = os.path.abspath(source)
+        else:
+            config = load_experiment("%s/%s" %(cli.tmpdir,exp_id))
+            source = "%s/%s" %(cli.tmpdir,exp_id)
+
         exp_id = config['exp_id']
         python_module = exp_id.replace('-','_').lower()
     else:
@@ -84,6 +92,9 @@ def main(args,parser,subparser):
         in_container = True
 
     if in_container is True:
+
+        # if in container, we always force
+        args.force = True
 
         bot.log("Preparing experiment routes...")
         template = get_template('experiments/template.py')
@@ -113,4 +124,6 @@ def main(args,parser,subparser):
             bot.error('%s is not empty! Use --force to delete and re-create.' %folder)
             sys.exit(1) 
 
-    os.system('cp -R %s/* %s' %(source, dest))
+    # We don't need to copy if experiment already there
+    if source != dest:
+        os.system('cp -R %s/* %s' %(source, dest))

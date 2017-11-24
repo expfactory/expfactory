@@ -111,8 +111,8 @@ def main(args,parser,subparser):
 
             # The final installation step, either from Github (url) or local folder
             if "local" in config:
-                app = "%sADD %s /tmp\n" %(app, exp_id)
-                app = "%sWORKDIR /scif/apps\nRUN expfactory install /tmp/%s\n" %(app, exp_id)
+                app = "%sADD %s /scif/apps/%s\n" %(app, exp_id, exp_id)
+                app = "%sWORKDIR /scif/apps\nRUN expfactory install %s\n" %(app, exp_id)
             else:
                 app = "%sWORKDIR /scif/apps\nRUN expfactory install %s\n" %(app, config['github'])  
             apps = "%s%s\n" %(apps,app)
