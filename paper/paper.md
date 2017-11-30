@@ -30,7 +30,7 @@ The reproducibility crisis [@Ram2013-km, @Stodden2010-cu, @noauthor_2015-ig, @no
 
  - **Dependencies** such as software, experiment static files, and runtime variables must be captured for reproduciblity.
  - Individual experiments and the library must be **version controlled.**
- - Each experiment could benefit from being maintianed and tested in an **Open Soure** fashion. This means that those knowledgable about the paradigm can easily collaborate on code, and others can file issues and ask questions.
+ - Each experiment could benefit from being maintianed and tested in an **Open Source** fashion. This means that those knowledgable about the paradigm can easily collaborate on code, and others can file issues and ask questions.
  - Tools must allow for **flexibility** to allow different libraries (e.g., JavaScript).
  - The final product should be **easy to deploy** exactly as the creator intended.
 
