@@ -103,16 +103,18 @@ def home():
                 session['subid'] = subid
                 app.logger.info('New session [subid] %s' %subid)
 
+            app.randomize = form.randomize.data
             session['username'] = username
             session['experiments'] = form.exp_ids.data.split(',') # list
-            flash('Participant ID: "%s" <br> Name %s <br> Experiments: %s' %
-                  (subid, username,
+            flash('Participant ID: "%s" <br> Name %s <br> Randomize: "%s" <br> Experiments: %s' %
+                  (subid, username, app.randomize,
                   str(form.exp_ids.data)))
             return redirect('/start')
 
         # Submit but not valid
         return render_template('portal/index.html', experiments=app.lookup,
                                                     base=app.base,
+                                                    randomize=app.randomize,
                                                     form=form, toggleform=True)
 
     # Not submit

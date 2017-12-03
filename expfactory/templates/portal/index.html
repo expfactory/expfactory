@@ -152,12 +152,16 @@
                                <span style="color: red;">You must select one or more experiments.</span>
                            {% endfor %}<br>
 
-                           <!--<div class="form-check">
+                           <div class="form-check">
                                <label class="form-check-label">
-                                   <input id="remember_me" name="remember_me" type="checkbox" value="y">
-                                      Remember Me
+                                   {% if randomize %}
+                                   <input id="randomize" name="randomize" type="checkbox" value="y" checked>
+                                   {% else %}
+                                   <input id="randomize" name="randomize" type="checkbox" value="y">
+                                   {% endif %}
+                                      Random Order
                                    </label>
-                           </div>-->
+                           </div>
                           <p style="margin-top:20px"><input type="submit" class="btn"></p>
                        </form>
 

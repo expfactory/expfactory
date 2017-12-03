@@ -112,10 +112,11 @@ class EFServer(Flask):
         if len(experiments) > 0:    
             if app.randomize is True:
                 next = random.choice(range(0,len(experiments)))
-                print(next)
-                print(experiments)
                 next = experiments[next]
+            else:
+                next = experiments.pop(0)
         return next
+
 
     def finish_experiment(self, session, exp_id):
         '''remove an experiment from the list after completion.
