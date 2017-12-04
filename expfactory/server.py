@@ -83,6 +83,7 @@ class EFServer(Flask):
         '''
 
         self.selection = EXPFACTORY_EXPERIMENTS
+        self.ordered = len(EXPFACTORY_EXPERIMENTS) > 0
         self.data_base = EXPFACTORY_DATA
         self.study_id = EXPFACTORY_SUBID
         self.base = EXPFACTORY_BASE
