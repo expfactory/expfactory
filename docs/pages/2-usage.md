@@ -15,7 +15,9 @@ Below, we will summarize the variables that can be set at runtime:
 | database      | the database to store response data | filesystem |
 | randomize     | present the experiments in random order  |  flag | 
 | no-randomize  | manually select the order of experiments  |  flag | 
+| experiments  | comma separated list of experiments (manual ordering)  |  [] | 
 | studyid | set the studyid at runtime  |  expfactory | * |
+
 
 
 ## Start the Container
@@ -41,6 +43,14 @@ Here is how to specify a different database, like sqlite
 docker run -v /tmp/my-experiment/data/:/scif/data \
            -d -p 80:80 \
            expfactory/experiments  --database sqlite start
+```
+
+Here is how to specify a "hard coded" ordering. If your container has experiments that you don't list, they will not be included:
+
+```
+docker run -v /tmp/my-experiment/data/:/scif/data \
+           -d -p 80:80 \
+           expfactory/experiments  --experiments test-test,tower-of-london start
 ```
 
 We will go into each database type in some detail.

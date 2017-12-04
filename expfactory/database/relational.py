@@ -85,7 +85,13 @@ def save_data(self,session, exp_id, content):
     # We only attempt save if there is a subject id, set at start
     if subid is not None:
         p = Participant.query.filter(Participant.id == subid).first() # better query here
-        result = Result(data=content['data'],
+
+        # Preference is to save data under 'data', otherwise do all of it
+        data = content['data']
+        if "data" in content:
+            data = content['data']
+
+        result = Result(data=data,
                         exp_id=exp_id,
                         participant_id=p.id) # check if changes from str/int
         self.session.add(result)
