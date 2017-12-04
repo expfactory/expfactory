@@ -87,9 +87,8 @@ def save_data(self,session, exp_id, content):
         p = Participant.query.filter(Participant.id == subid).first() # better query here
 
         # Preference is to save data under 'data', otherwise do all of it
-        data = content['data']
         if "data" in content:
-            data = content['data']
+            content = content['data']
 
         result = Result(data=data,
                         exp_id=exp_id,
