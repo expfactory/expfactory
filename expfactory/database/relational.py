@@ -92,7 +92,7 @@ def save_data(self,session, exp_id, content):
             content = content['data']
 
         print(content)
-        pickle.dump(content. open('/data/content.pkl','wb'))
+        pickle.dump(content, open('/data/content.pkl','wb'))
         result = Result(data=content,
                         exp_id=exp_id,
                         participant_id=p.id) # check if changes from str/int
