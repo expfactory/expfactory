@@ -26,6 +26,8 @@ usage () {
                                  [sqlite|mysql|postgresql]:///
 
                 --studyid:  specify a studyid to override the default
+                --randomize: select experiment order at random
+                --no-randomize: select experiment order manually
 
          Examples:
 
@@ -80,6 +82,18 @@ while true; do
             ls /scif/apps -1
             echo
             exit
+        ;;
+        --randomize)
+            shift
+            EXPFACTORY_RANDOM="true"
+            export EXPFACTORY_RANDOM
+            shift
+        ;;
+        --no-randomize)
+            shift
+            EXPFACTORY_RANDOM="false"
+            export EXPFACTORY_RANDOM
+            shift
         ;;
         --lib)
             echo "Experiments in the library:"

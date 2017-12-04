@@ -114,7 +114,7 @@ class EFServer(Flask):
                 next = random.choice(range(0,len(experiments)))
                 next = experiments[next]
             else:
-                next = experiments.pop(0)
+                next = experiments[0]
         return next
 
 

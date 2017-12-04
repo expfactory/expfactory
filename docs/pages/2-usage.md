@@ -8,6 +8,15 @@ permalink: /usage
 # Using your Experiments Container
 If you've just finished [generating your experiments container](/expfactory/generate.html) (whether a custom build or pull of an already existing container) then you are ready to use it! 
 
+Below, we will summarize the variables that can be set at runtime:
+
+| Variable        | Description           | Default  | Options |
+| ------------- |:-------------:| -----:|
+| database      | the database to store response data | filesystem |
+| randomize     | present the experiments in random order  |  flag | 
+| no-randomize  | manually select the order of experiments  |  flag | 
+| studyid | set the studyid at runtime  |  expfactory | * |
+
 
 ## Start the Container
 It's most likely the case that your container's default is to save data to the file system, and use a study id of expfactory. This coincides to running with no extra arguments, but perhaps mapping the data folder:
