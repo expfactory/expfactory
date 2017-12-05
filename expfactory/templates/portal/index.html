@@ -105,7 +105,10 @@
                     <div class="col-xs-6">
                         <div>
                             <a class="btn" style="float:left" id="select-button"><i class="fa fa-check"></i></a>
-                            <a class="btn text-right" style="float:right" data-toggle="modal" data-target="#ticket-details">PROCEED</a>
+                            <a class="btn text-right" 
+                               style="float:right"
+                               data-toggle="modal"
+                               data-target="#ticket-details">PROCEED</a>
                         </div>
                     </div>
                 </div>
@@ -175,6 +178,8 @@
 <script>
 $(document).ready(function(){
 
+    var order = 0;
+
     function unselect_experiment(button) {
         $(button).removeClass('experiment-selected')
         $(button).addClass('experiment-unselected');
@@ -233,12 +238,17 @@ $(document).ready(function(){
     $(".experiment-select-button").click(function(){
         if ($(this).hasClass('experiment-selected')){
             unselect_experiment(this);
+            $(this).attr('data-order', 0)
+            console.log('Experiment unselected, order is ' + order)
+            order=order-1;
         } else {
+            order = order + 1;
+            $(this).attr('data-order', order)
+            console.log('Experiment selected, order is ' + order)
             select_experiment(this);
        }
 
        update_form()
-
     })
 })
 </script>
