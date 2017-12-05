@@ -336,7 +336,20 @@ When you start your container instance, browsing to your localhost will show the
 </div>
 
 
-This is where the experiment administrator would select one or more experiments, either with the single large checkbox ("select all") or smaller individual checkboxes. If you care about order, the order that you select the boxes is important, and will be maintained for the session:
+This is where the experiment administrator would select one or more experiments, either with the single large checkbox ("select all") or smaller individual checkboxes. 
+ When you make a selection, the estimated time and experiment count on the bottom of the page are adjusted, and you can inspect individual experiment times: 
+
+<div>
+    <img src="/expfactory/img/generate/selected.png"><br>
+</div>
+
+You can make a selection and then start your session. I would recommend the `test-task` as a first try, because it finishes quickly. When you click on `proceed` a panel will pop up that gives you choices for ordering and an (optional) Participant name. 
+
+<div>
+    <img src="/expfactory/img/generate/proceed.png"><br>
+</div>
+
+If you care about order, the order that you selected the boxes will be maintained for the session:
 
 <div>
     <img src="/expfactory/img/generate/order-manual.png"><br>
@@ -346,18 +359,6 @@ or if you want random selection, just check the box. This is the default setting
 
 <div>
     <img src="/expfactory/img/generate/order-random.png"><br>
-</div>
-
-When you make a selection, the estimated time and exeperiment count on the bottom of the page are adjusted. 
-
-<div>
-    <img src="/expfactory/img/generate/selected.png"><br>
-</div>
-
-You can make a selection and then start your session. I would recommend the `test-task` as a first try, because it finishes quickly. When you click on `proceed` you can (optionally) enter a subject name:
-
-<div>
-    <img src="/expfactory/img/generate/proceed.png"><br>
 </div>
 
 This name is currently is only used to say hello to the participant. The actual experiment identifier is based on a study id defined in the build recipe.  After proceeding, there is a default "consent" screen that you must agree to (or disagree to return to the portal):
