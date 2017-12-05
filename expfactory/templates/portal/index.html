@@ -155,7 +155,7 @@
                                <span style="color: red;">You must select one or more experiments.</span>
                            {% endfor %}<br>
 
-                           <div class="form-check">
+                           <div class="form-check" style='padding-bottom:20px'>
                                <label class="form-check-label">
                                    {% if randomize %}
                                    <input id="randomize" name="randomize" type="checkbox" value="y" checked>
@@ -165,6 +165,10 @@
                                       Random Order
                                    </label>
                            </div>
+
+                           <!-- Interactive changing of order -->
+                           <ul class="list-group" id="order-list">
+                           </ul>
                           <p style="margin-top:20px"><input type="submit" class="btn"></p>
                        </form>
 
@@ -193,12 +197,19 @@ $(document).ready(function(){
     }
 
     function update_form() {
-        // Update exp_ids in form with selected experiments
 
-        var selected = $('.experiment-selected');
+        // Update exp_ids in form with selected experiments
+        var ordered = $('.experiment-selected').sort(function (a, b) {
+            var contentA = parseInt( $(a).attr('data-order'));
+            var contentB = parseInt( $(b).attr('data-order'));
+            return (contentA < contentB) ? -1 : (contentA > contentB) ? 1 : 0;
+        })
+
+        $('#order-list').html('');
+
         var experiments = ""
         var total_time = 0
-        $.each(selected, function(e,i){
+        $.each(ordered, function(e,i){
             new_experiment = $(i).attr('id');
             new_time = parseInt($(i).attr('data-time'),10);
             if (new_experiment != "select-button") {
@@ -207,6 +218,12 @@ $(document).ready(function(){
                 } else {
                     experiments =  experiments + "," + new_experiment;
                 }
+
+            // Update the ordered list for the user
+            new_listing = '<li class="list-group-item justify-content-between">' + new_experiment
+            new_listing += '<span class="ordering badge badge-default badge-pill"' 
+            new_listing += '>' + e + '</span></li>'
+            $('#order-list').append(new_listing)
 
             total_time = total_time + new_time;
             }
@@ -226,7 +243,6 @@ $(document).ready(function(){
             select_experiment(this);
             select_experiment(choices)
        }
-
        update_form()
 
     });
