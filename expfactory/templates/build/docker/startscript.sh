@@ -71,7 +71,6 @@ while true; do
             EXPFACTORY_EXPERIMENTS="${1:-}"
             shift
             export EXPFACTORY_EXPERIMENTS
-            exit
         ;;
         --database|--db)
             shift
