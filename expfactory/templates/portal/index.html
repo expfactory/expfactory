@@ -197,11 +197,11 @@ $(document).ready(function(){
     }
 
     // When randomize selected, hide ordering
-    $('#randomize').click(function(){
+    $('#randomize').change(function(){
        if ($('#randomize:checked').length > 0) {
-         $('order-list').show();
+         $('#order-list').hide();
        } else {
-         $('order-list').hide();
+         $('#order-list').show();
        }
     })
 
