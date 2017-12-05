@@ -121,14 +121,14 @@ for row in results:
 Each result row includes the table row id, the date, result content, and participant id.
 
 ```
->>> res[0]  # table result row index
+>>> row[0]  # table result row index
 1
 
->>> res[1]  # date
+>>> row[1]  # date
 '2017-11-18 17:26:30'
 
->>> res[2]  # data from experiment, json.loads needed
->>> json.loads(res[2])
+>>> row[2]  # data from experiment, json.loads needed
+>>> json.loads(row[2])
 [{ 
    'timing_post_trial': 100, 
    'exp_id': 'test-task', 
