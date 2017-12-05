@@ -10,13 +10,13 @@ If you've just finished [generating your experiments container](/expfactory/gene
 
 Below, we will summarize the variables that can be set at runtime:
 
-| Variable        | Description           | Default  | Options |
+| Variable        | Description           | Default  |
 | ------------- |:-------------:| -----:|
 | database      | the database to store response data | filesystem |
 | randomize     | present the experiments in random order  |  flag | 
 | no-randomize  | manually select the order of experiments  |  flag | 
 | experiments  | comma separated list of experiments to expose |  [] | 
-| studyid | set the studyid at runtime  |  expfactory | * |
+| studyid | set the studyid at runtime  |  expfactory |
 
 
 
@@ -329,14 +329,26 @@ docker run -p 80:80 -v /tmp/data:/scif/data vanessa/expfactory-experiments start
 First, let's discuss the portal - what you see when you go to [127.0.0.1](http://127.0.0.1).
 
 ## The Experiment Factory Portal
-When you start your container instance, browsing to your localhost will show the entrypoint, a user portal that lists all experiments installed in the container:
+When you start your container instance, browsing to your localhost will show the entrypoint, a user portal that lists all experiments installed in the container. If you have defined a limited subset with `--experiments` you will only see that set here:
 
 <div>
     <img src="/expfactory/img/generate/portal.png"><br>
 </div>
 
 
-This is where the experiment administrator would select one or more experiments, either with the single large checkbox ("select all") or smaller individual checkboxes. When you make a selection, the estimated time and exeperiment count on the bottom of the page are adjusted. 
+This is where the experiment administrator would select one or more experiments, either with the single large checkbox ("select all") or smaller individual checkboxes. If you care about order, the order that you select the boxes is important, and will be maintained for the session:
+
+<div>
+    <img src="/expfactory/img/generate/order-manual.png"><br>
+</div>
+
+or if you want random selection, just check the box. This is the default setting.
+
+<div>
+    <img src="/expfactory/img/generate/order-random.png"><br>
+</div>
+
+When you make a selection, the estimated time and exeperiment count on the bottom of the page are adjusted. 
 
 <div>
     <img src="/expfactory/img/generate/selected.png"><br>
