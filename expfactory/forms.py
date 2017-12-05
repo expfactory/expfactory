@@ -42,4 +42,4 @@ from wtforms.validators import DataRequired
 class ParticipantForm(FlaskForm):
     openid = StringField('openid')
     exp_ids = StringField('exp_ids', validators=[DataRequired()])
-    #remember_me = BooleanField('remember_me', default=False)
+    randomize = BooleanField('randomize', default=True)

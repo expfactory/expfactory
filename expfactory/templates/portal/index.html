@@ -105,7 +105,10 @@
                     <div class="col-xs-6">
                         <div>
                             <a class="btn" style="float:left" id="select-button"><i class="fa fa-check"></i></a>
-                            <a class="btn text-right" style="float:right" data-toggle="modal" data-target="#ticket-details">PROCEED</a>
+                            <a class="btn text-right" 
+                               style="float:right"
+                               data-toggle="modal"
+                               data-target="#ticket-details">PROCEED</a>
                         </div>
                     </div>
                 </div>
@@ -152,12 +155,20 @@
                                <span style="color: red;">You must select one or more experiments.</span>
                            {% endfor %}<br>
 
-                           <!--<div class="form-check">
+                           <div class="form-check" style='padding-bottom:20px'>
                                <label class="form-check-label">
-                                   <input id="remember_me" name="remember_me" type="checkbox" value="y">
-                                      Remember Me
+                                   {% if randomize %}
+                                   <input id="randomize" name="randomize" type="checkbox" value="y" checked>
+                                   {% else %}
+                                   <input id="randomize" name="randomize" type="checkbox" value="y">
+                                   {% endif %}
+                                      Random Order
                                    </label>
-                           </div>-->
+                           </div>
+
+                           <!-- Interactive changing of order -->
+                           <ul class="list-group" id="order-list">
+                           </ul>
                           <p style="margin-top:20px"><input type="submit" class="btn"></p>
                        </form>
 
@@ -171,6 +182,8 @@
 <script>
 $(document).ready(function(){
 
+    var order = 0;
+
     function unselect_experiment(button) {
         $(button).removeClass('experiment-selected')
         $(button).addClass('experiment-unselected');
@@ -183,13 +196,29 @@ $(document).ready(function(){
         $(button).css('background-color',"#2dc330");
     }
 
-    function update_form() {
-        // Update exp_ids in form with selected experiments
+    // When randomize selected, hide ordering
+    $('#randomize').change(function(){
+       if ($('#randomize:checked').length > 0) {
+         $('#order-list').hide();
+       } else {
+         $('#order-list').show();
+       }
+    })
 
-        var selected = $('.experiment-selected');
+    function update_form() {
+
+        // Update exp_ids in form with selected experiments
+        var ordered = $('.experiment-selected').sort(function (a, b) {
+            var contentA = parseInt( $(a).attr('data-order'));
+            var contentB = parseInt( $(b).attr('data-order'));
+            return (contentA < contentB) ? -1 : (contentA > contentB) ? 1 : 0;
+        })
+
+        $('#order-list').html('');
+
         var experiments = ""
         var total_time = 0
-        $.each(selected, function(e,i){
+        $.each(ordered, function(e,i){
             new_experiment = $(i).attr('id');
             new_time = parseInt($(i).attr('data-time'),10);
             if (new_experiment != "select-button") {
@@ -199,11 +228,17 @@ $(document).ready(function(){
                     experiments =  experiments + "," + new_experiment;
                 }
 
+            // Update the ordered list for the user
+            new_listing = '<li class="list-group-item justify-content-between">' + new_experiment
+            new_listing += '<span class="ordering badge badge-default badge-pill"' 
+            new_listing += '>' + parseInt(e+1) + '</span></li>'
+            $('#order-list').append(new_listing)
+
             total_time = total_time + new_time;
             }
         })
         $("#exp_ids").val(experiments);
-        $('.ticket-count').text(selected.length);
+        $('.ticket-count').text(ordered.length);
         $('.total-amount').text(total_time + ' min');
 
     }
@@ -217,7 +252,6 @@ $(document).ready(function(){
             select_experiment(this);
             select_experiment(choices)
        }
-
        update_form()
 
     });
@@ -229,12 +263,17 @@ $(document).ready(function(){
     $(".experiment-select-button").click(function(){
         if ($(this).hasClass('experiment-selected')){
             unselect_experiment(this);
+            $(this).attr('data-order', 0)
+            console.log('Experiment unselected, order is ' + order)
+            order=order-1;
         } else {
+            order = order + 1;
+            $(this).attr('data-order', order)
+            console.log('Experiment selected, order is ' + order)
             select_experiment(this);
        }
 
        update_form()
-
     })
 })
 </script>

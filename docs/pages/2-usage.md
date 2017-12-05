@@ -8,6 +8,17 @@ permalink: /usage
 # Using your Experiments Container
 If you've just finished [generating your experiments container](/expfactory/generate.html) (whether a custom build or pull of an already existing container) then you are ready to use it! 
 
+Below, we will summarize the variables that can be set at runtime:
+
+| Variable        | Description           | Default  | Options |
+| ------------- |:-------------:| -----:|
+| database      | the database to store response data | filesystem |
+| randomize     | present the experiments in random order  |  flag | 
+| no-randomize  | manually select the order of experiments  |  flag | 
+| experiments  | comma separated list of experiments to expose |  [] | 
+| studyid | set the studyid at runtime  |  expfactory | * |
+
+
 
 ## Start the Container
 It's most likely the case that your container's default is to save data to the file system, and use a study id of expfactory. This coincides to running with no extra arguments, but perhaps mapping the data folder:
@@ -34,7 +45,15 @@ docker run -v /tmp/my-experiment/data/:/scif/data \
            expfactory/experiments  --database sqlite start
 ```
 
-We will go into each database type in some detail.
+Here is how to limit the experiments exposed in the portal. For example, you may have 30 installed in the container, but only want to reveal 3 for a session:
+
+```
+docker run -v /tmp/my-experiment/data/:/scif/data \
+           -d -p 80:80 \
+           expfactory/experiments  --experiments test-test,tower-of-london start
+```
+
+We are currently working on a "headless" start up that will allow for a pre-set ordering an other variables, and then skipping over the portal. Please let us know if you have feedback on this. We will go into each database type in some detail.
 
 
 ### filesystem
@@ -102,14 +121,14 @@ for row in results:
 Each result row includes the table row id, the date, result content, and participant id.
 
 ```
->>> res[0]  # table result row index
+>>> row[0]  # table result row index
 1
 
->>> res[1]  # date
+>>> row[1]  # date
 '2017-11-18 17:26:30'
 
->>> res[2]  # data from experiment, json.loads needed
->>> json.loads(res[2])
+>>> row[2]  # data from experiment, json.loads needed
+>>> json.loads(row[2])
 [{ 
    'timing_post_trial': 100, 
    'exp_id': 'test-task', 

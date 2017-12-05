@@ -205,7 +205,7 @@ docker run -v /tmp/another_base:/data \
 
 and your experiments will be copied fully there to still satisfy this condition, it is more redundant this way.
 
-Finally, before you generate your recipe, in the case that you want "hard coded" defaults (e.g., set as defaults for future users) read the [custom build](#custom-build) section below to learn about the variables that you can customize. If not, then rest assured that these values can be specified when a built container is started.
+Finally, before you generate your recipe, in the case that you want "hard coded" defaults (e.g., set as defaults for future users) read the [custom build](#custom-conriguration) section below to learn about the variables that you can customize. If not, then rest assured that these values can be specified when a built container is started.
 
 
 ## Container Generation
@@ -481,7 +481,8 @@ If you change the defaults, this means that any users that run your container (w
 
 If you leave these defaults, you (and the future users of your container) can then easily customize these variables when the container is started in the future. The risk of setting a default database like `sql` or `postgres` is that a user that doesn't know some credential needs to be defined won't be able to use the container. 
 
-The choice is up to you! For settings defaults, see the first section [default variables](#default-variables). For setting at runtime, see the second section [runtime variables](#runtime-variables).
+The choice is up to you! For settings defaults at build time, see the next section [default variables](#default-variables). For setting at runtime, see the next page for [starting your container](/expfactory/usage.html#start-the-container).
+
  
 ## Default Variables
 When you run a build with `vanessa/expfactory-builder` image, there are other command line options available pertaining to the database and study id. Try running `docker run vanessa/expfactory-builder build --help` to see usage. If you customize these variables, the container recipe generated will follow suit.
@@ -498,10 +499,18 @@ docker run -v /tmp/my-experiment:/data \
 
 Your other options are **sqlite**, **mysql**, and **postgres** all of which we recommend you specify when you start the image.
 
+### randomize
+By default, experiments will be selected in random order, and it's recommended to keep this. The other option will use the ordering of experiments as you've selected them. If you want a manually set order, then after you use the `expfactory-builder`, edit your Dockerfile by adding the following environment variable:
 
-## Identifiers
+```
+ENV EXPFACTORY_RANDOM true
+```
 
-**studyid**
+This variable can be easily changed at runtime via a checkbox, so it's not hugely important to set here.
+
+
+### studyid
+
 The Experiment Factory will generate a new unique ID for each participant with some study idenitifier prefix. The default is `expfactory`, meaning that my participants will be given identifiers `expfactory/0` through `expfactory/n`, and for a filesystem database, it will produce output files according to that schema:
 
 ```
@@ -523,12 +532,13 @@ docker run -v /tmp/my-experiment:/data \
 Again, we recommend that you leave this as general (or the default) and specify the study identifier at runtime. If you want to preserve a container to be integrated into an analysis exactly as is, then you would want to specify it at build.
 
 
-**output**
+### output
+
 You actually **don't** want to edit the recipe output file, since this happens inside the container
 (and you map a folder of your choice to it.) Note that it is a variable, however, if you need to use expfactory natively and want to specify a different location.
 
 
-### Expfactory wants Your Feedback!
+## Expfactory wants Your Feedback!
 The customization process is very important, because it will mean allowing you to select variable stimuli, lengths, or anything to make a likely general experiment specific to your use case. To help with this, @vsoch is looking for feedback about:
 
  - what kind of experiments (those provided in the library? generated with a build tool?) do you want to use

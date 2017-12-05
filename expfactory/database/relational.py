@@ -46,6 +46,7 @@ from expfactory.defaults import (
 )
 from glob import glob
 import os
+import pickle
 import json
 import sys
 
@@ -85,7 +86,14 @@ def save_data(self,session, exp_id, content):
     # We only attempt save if there is a subject id, set at start
     if subid is not None:
         p = Participant.query.filter(Participant.id == subid).first() # better query here
-        result = Result(data=content['data'],
+
+        # Preference is to save data under 'data', otherwise do all of it
+        if "data" in content:
+            content = content['data']
+
+        print(content)
+        pickle.dump(content, open('/data/content.pkl','wb'))
+        result = Result(data=content,
                         exp_id=exp_id,
                         participant_id=p.id) # check if changes from str/int
         self.session.add(result)
