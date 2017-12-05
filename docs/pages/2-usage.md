@@ -15,7 +15,7 @@ Below, we will summarize the variables that can be set at runtime:
 | database      | the database to store response data | filesystem |
 | randomize     | present the experiments in random order  |  flag | 
 | no-randomize  | manually select the order of experiments  |  flag | 
-| experiments  | comma separated list of experiments (manual ordering)  |  [] | 
+| experiments  | comma separated list of experiments to expose |  [] | 
 | studyid | set the studyid at runtime  |  expfactory | * |
 
 
@@ -45,7 +45,7 @@ docker run -v /tmp/my-experiment/data/:/scif/data \
            expfactory/experiments  --database sqlite start
 ```
 
-Here is how to specify a "hard coded" ordering. If your container has experiments that you don't list, they will not be included:
+Here is how to limit the experiments exposed in the portal. For example, you may have 30 installed in the container, but only want to reveal 3 for a session:
 
 ```
 docker run -v /tmp/my-experiment/data/:/scif/data \
@@ -53,7 +53,7 @@ docker run -v /tmp/my-experiment/data/:/scif/data \
            expfactory/experiments  --experiments test-test,tower-of-london start
 ```
 
-We will go into each database type in some detail.
+We are currently working on a "headless" start up that will allow for a pre-set ordering an other variables, and then skipping over the portal. Please let us know if you have feedback on this. We will go into each database type in some detail.
 
 
 ### filesystem
