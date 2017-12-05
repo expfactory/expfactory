@@ -196,6 +196,15 @@ $(document).ready(function(){
         $(button).css('background-color',"#2dc330");
     }
 
+    // When randomize selected, hide ordering
+    $('#randomize').click(function(){
+       if ($('#randomize:checked').length > 0) {
+         $('order-list').show();
+       } else {
+         $('order-list').hide();
+       }
+    })
+
     function update_form() {
 
         // Update exp_ids in form with selected experiments
@@ -222,7 +231,7 @@ $(document).ready(function(){
             // Update the ordered list for the user
             new_listing = '<li class="list-group-item justify-content-between">' + new_experiment
             new_listing += '<span class="ordering badge badge-default badge-pill"' 
-            new_listing += '>' + e + '</span></li>'
+            new_listing += '>' + parseInt(e+1) + '</span></li>'
             $('#order-list').append(new_listing)
 
             total_time = total_time + new_time;
