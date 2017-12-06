@@ -74,7 +74,8 @@ def validate_token(self, token):
        invalid means we return None
     '''
     subid = self.generate_subid(token=token)
-    if not os.path.exists(subid):
+    data_base = "%s/%s" %(self.data_base, subid)
+    if not os.path.exists(data_base):
         subid = None
     return subid
 
