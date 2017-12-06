@@ -110,7 +110,7 @@ def get_parser():
 
     parser.add_argument("--headless", dest='headless', 
                          help="headless runtime will require generation of tokens or ids.",
-                         type=bool, default=False, action="store_true")
+                         default=False, action="store_true")
 
     parser.add_argument('--no-random', dest="disable_randomize",
                          help="present experiments serially",
