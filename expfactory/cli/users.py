@@ -38,14 +38,13 @@ import os
 
 def main(args,parser,subparser):
 
-    # We assume that gunicorn is running here
-
     # The user wants to add new subjects
     number = args.new
     if number is not None:
-        bot.debug('Generating tokens for %s new users' %number)
-        users = []
+        print('FOLDER\tTOKEN')
         for i in range(number):
             user = app.generate_user()
-            print(user)
-            users.append(user)
+            token = os.path.basename(user)
+            print('%s\t%s' %(user,token))
+    else:
+        print('Specify number of new users:\n\texpfactory users --new 1')

@@ -50,12 +50,12 @@ def get_parser():
                                        description='actions for expfactory tools',
                                        dest="command")
 
-    # Manager
-    manager = subparsers.add_parser("users",
+    # Users manager
+    users = subparsers.add_parser("users",
                                      help="Manager for interacting with users")
-    manager.add_argument('--new', dest="new",
-                         help="generate new user tokens, recommended for headless runtime.",
-                         default=1, type=int)
+    users.add_argument('--new', dest="new",
+                       help="generate new user tokens, recommended for headless runtime.",
+                       default=None, type=int)
 
     # List
     listy = subparsers.add_parser("list", 
@@ -140,10 +140,6 @@ def get_subparsers(parser):
 
 def main():
 
-    from expfactory.logger import bot
-    from expfactory.version import __version__
-    bot.info("Expfactory Version: %s" % __version__)
-
     parser = get_parser()
     subparsers = get_subparsers(parser)
 
@@ -154,6 +150,15 @@ def main():
 
     # Does the use want to install?
     command = args.command
+
+    # Options that shouldn't produce output
+    if command in ['users']:
+        os.environ['MESSAGELEVEL'] = 0
+
+    from expfactory.logger import bot
+    from expfactory.version import __version__
+    bot.info("Expfactory Version: %s" % __version__)
+
     if command == "install":
         from .install import main
 

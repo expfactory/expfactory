@@ -54,19 +54,23 @@ import sys
 # to the main application upon initialization of the server.
 
 
-def generate_subid(self, digits=5, token=None):
+def generate_subid(self, token=None):
     '''assumes a flat (file system) database, organized by experiment id, and
        subject id, with data (json) organized by subject identifier
     ''' 
-    folder_id = 0
-    folders = glob('%s/*' %(self.database))
-    folders.sort()
-    if len(folders) > 0:
-        folder_id = int(os.path.basename(folders[-1])) + 1
-    folder_id = str(folder_id).zfill(digits)
-    if not token:
+
+    # Not headless auto-increments
+    if not self.headless:
+        folder_id = 0
+        folders = glob('%s/*' %(self.database))
+        folders.sort()
+        if len(folders) > 0:
+            folder_id = int(os.path.basename(folders[-1])) + 1
+        folder_id = str(folder_id).zfill(digits)
         return "%s/%s" % (self.study_id, folder_id)
-    return "%s/%s/%s" % (self.study_id, folder_id, token)
+
+    # Headless doesn't use any folder_id, just generated token folder
+    return "%s/%s" % (self.study_id, token)
 
 
 def validate_token(self, token):
