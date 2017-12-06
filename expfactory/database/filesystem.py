@@ -37,6 +37,7 @@ from expfactory.defaults import (
     EXPFACTORY_DATA
 )
 from glob import glob
+import uuid
 import os
 import sys
 

@@ -11,8 +11,8 @@ usage () {
 
          Headless Mode (requires token)
 
-         docker run -p 80:80 -d --name experiments -v /tmp/data:/scif/data <container> start
-         docker exec experiments users 3
+         docker run -p 80:80 -d --name experiments -v /tmp/data:/scif/data <container> --headless start
+         docker exec experiments expfactory users 3
 
 
          Commands:
@@ -62,10 +62,10 @@ while true; do
             usage
             exit
         ;;
-        -test-experiments|--te|test)
-            cd /opt/expfactory/expfactory/templates/build
-            exec python3 -m unittest tests.test_experiment
-            exit
+        --database|--db)
+            shift
+            EXPFACTORY_DATABASE=${1:-}
+            shift
         ;;
         --env|env)
             shift
@@ -78,10 +78,23 @@ while true; do
             shift
             export EXPFACTORY_EXPERIMENTS
         ;;
-        --database|--db)
+        --headless|headless)
             shift
-            EXPFACTORY_DATABASE=${1:-}
+            EXPFACTORY_HEADLESS="true"
             shift
+            export EXPFACTORY_HEADLESS
+        ;;
+        --lib)
+            echo "Experiments in the library:"
+            expfactory list
+            echo
+            exit
+        ;;
+        -ls|--list|list)
+            echo "Experiments in this image:"
+            ls /scif/apps -1
+            echo
+            exit
         ;;
         --studyid)
             shift
@@ -89,12 +102,6 @@ while true; do
             echo "Study ID selected as ${EXPFACTORY_STUDYID}"
             export EXPFACTORY_STUDY_ID
             shift
-        ;;
-        -ls|--list|list)
-            echo "Experiments in this image:"
-            ls /scif/apps -1
-            echo
-            exit
         ;;
         --randomize)
             shift
@@ -106,26 +113,13 @@ while true; do
             EXPFACTORY_RANDOM="false"
             export EXPFACTORY_RANDOM
         ;;
-        --lib)
-            echo "Experiments in the library:"
-            expfactory list
-            echo
-            exit
-        ;;
         -s|--start|start)
             EXPFACTORY_START="yes"
             shift
         ;;
-        --users|users)
-
-             # Check that gunicorn is running
-            if ! pgrep -x "gunicorn" > /dev/null
-               then
-                   echo "You must start the experiment container before adding users."
-                   echo "docker run -p 80:80 -d <container> start"
-                   exit
-            fi
-            expfactory users "$@"
+        -test-experiments|--te|test)
+            cd /opt/expfactory/expfactory/templates/build
+            exec python3 -m unittest tests.test_experiment
             exit
         ;;
         -*)
