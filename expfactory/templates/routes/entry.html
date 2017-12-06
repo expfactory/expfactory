@@ -24,7 +24,8 @@
                          {% include "routes/entry_message.html" %}
 
 
-                         <form action="" method="POST" name='form'>
+                         <br>
+                         <form action="/login" method="POST" name='form'>
                             {{ form.hidden_tag() }}
 
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
@@ -45,20 +46,14 @@
                                <span style="color: red;">[{{ message }}]</span>
                            {% endif %}<br>
 
-                          <p style="margin-top:20px"><input type="submit" class="btn"></p>
-                         </form>
-
-                         <br><br>
-                         <a href="/finish"><button id="disagree_button" 
-                                                   type="button" 
-                                                   class="btn btn-default">Disagree</button></a>
-                        </div>
-                        <div class="modal-footer">
-                             <a href="/login"><button type="button" 
-                                id="next_button" 
-                                class="btn btn-default js-btn-step" 
-                                data-orientation="next">Start</button></a>
-                 </div>
+                         <br>
+                         </div>
+                         <div class="modal-footer">
+                             <button type="submit"
+                                     class="btn btn-default js-btn-step" 
+                                     data-orientation="next">Start</button>
+                         </div>
+                      </form>
              </div>
          </div>
      </div>

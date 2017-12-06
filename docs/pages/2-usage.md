@@ -54,20 +54,15 @@ docker run -v /tmp/my-experiment/data/:/scif/data \
 ```
 
 ### Start a Headless Experiment Container
-"Headless" refers to the idea that you going to be running your experiment with remote participants, and you will need to send them to a different portal that has them login first. In order to do this, after starting the container, you need to pre-generate these users. You can do this with the "users" command to the container, but it has to already be started. If you run the command and the container isn't started, it will tell you to start it:
+"Headless" refers to the idea that you going to be running your experiment with remote participants, and you will need to send them to a different portal that has them login first. In order to do this, you need to start the container with the `--headless` flag, and then issue a command to pre-generate these users.
+
+First we can start the container (notice that we are giving it a name to easily reference it by) with `--headless` mode.
 
 ```
-docker run vanessa/experiment users
-You must start the experiment container before adding users.
-docker run -p 80:80 -d <container> start
-```
-First we can start the container (notice that we are giving it a name to easily reference it by) and then generate a user.
-
-```
-docker run -p 80:80 -d --name experiments -v /tmp/data:/scif/data <container> start
+docker run -p 80:80 -d --name experiments -v /tmp/data:/scif/data <container> --headless start
 4f6826329e9e366c4d2fb56d64956f599861d1f0439d39d7bcacece3e88c7473
 ```
-Now we can use `exec` to execute the specific command to the container:
+Now we can use `exec` to execute the specific command to the container. In the example below, we are just creating one user:
 
 ```
 docker exec experiments expfactory users --new

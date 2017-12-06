@@ -81,7 +81,6 @@ while true; do
         --headless|headless)
             shift
             EXPFACTORY_HEADLESS="true"
-            shift
             export EXPFACTORY_HEADLESS
         ;;
         --lib)
