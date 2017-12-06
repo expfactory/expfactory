@@ -51,7 +51,7 @@ def generate_user(self, digits=5):
        entrypoint, and it assumes we want a user generated with a token.
     '''
     subid = self.generate_subid(digits=digits)
-    token = str(uuid4())
+    token = str(uuid.uuid4())
     from .models import Participant
     p = Participant(id=subid, token=token)
     self.session.add(p)
