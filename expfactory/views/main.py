@@ -56,7 +56,10 @@ import logging
 import os
 import json
 
-from expfactory.forms import ParticipantForm
+from expfactory.forms import (
+    ParticipantForm,
+    EntryForm
+)
 
 
 # LOGGING ######################################################################
@@ -84,6 +87,13 @@ def experiment_base():
 # Home portal to start experiments
 @app.route('/', methods=['GET', 'POST'])
 def home():
+
+    # A headless app can only be entered with a user token
+    if app.headless:
+        if "token" not in session:
+            form = EntryForm()
+            return render_template('routes/entry.html', form=form)
+        return redirect('/login')
 
     form = ParticipantForm()
 
@@ -145,8 +155,42 @@ def save():
     return json.dumps({'success':False}), 403, {'ContentType':'application/json'} 
 
 
+# HEADLESS LOGIN ###############################################################
+
+@app.route('/login', methods=['POST'])
+def login():
+
+    # Only allowed to login via post from entry (headless) url
+    from expfactory.database.models import Participant
+    form = EntryForm()
+
+    # If not headless, we don't need to login
+    if not app.headless:
+        redirect('/start')
+
+    subid = session.get('subid')
+    if not subid:
+        if form.validate_on_submit():
+            token = form.token.data 
+            p = Participant.query.filter(Participant.token == token).first()
+
+            # The token doesn't exist, user is denied
+            if p is None:
+                return headless_denied(form=form)
+
+            session['subid'] = p.id
+            session['token'] = p.token
+
+            app.logger.info('Logged in user [subid] %s' %p.id)
+    return redirect('/next')
+
+
 @app.route('/next', methods=['POST', 'GET'])
 def next():
+
+    # Headless mode requires logged in user with token
+    if app.headless and "token" not in session:
+        return headless_denied()
 
     # Redirects to another template view
     experiment = app.get_next(session)
@@ -154,6 +198,15 @@ def next():
         app.logger.info('Next experiment is %s' % experiment)
     return perform_checks('/experiments/%s' % experiment, do_redirect=True)
 
+
+# Denied Entry for Headless
+def headless_denied(form=None):
+    if form is None:
+        form = EntryForm()
+    message = "A valid token is required. Contact the experiment administrator if you believe this to be a mistake."
+    return render_template('routes/entry.html', form=form,
+                                                message=message)
+   
 
 # Reset/Logout
 @app.route('/logout', methods=['POST', 'GET'])

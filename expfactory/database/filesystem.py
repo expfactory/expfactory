@@ -63,6 +63,7 @@ def generate_subid(self, digits=5):
     return "%s/%s" % (self.study_id, folder_id)
     
 
+
 def save_data(self, session, exp_id, content):
     '''save data will obtain the current subid from the session, and save it
        depending on the database type. Currently we just support flat files'''

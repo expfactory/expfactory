@@ -1,5 +1,4 @@
 '''
-views.py: part of expfactory package
 
 Copyright (c) 2017, Vanessa Sochat
 All rights reserved.
@@ -31,25 +30,22 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
-from flask_wtf import FlaskForm
-from wtforms import (
-    StringField, 
-    BooleanField
-)
+from expfactory.logger import bot
+from expfactory.server import app
+import sys
+import os
 
-from wtforms.validators import DataRequired
 
-class ParticipantForm(FlaskForm):
-    '''the participant form is shown in the portal given an interactive
-       (non headless) runtime. We collection an (optional) participant name,
-       along with the experiments to run.
-    '''
-    openid = StringField('openid')
-    exp_ids = StringField('exp_ids', validators=[DataRequired()])
-    randomize = BooleanField('randomize', default=True)
+def main(args,parser,subparser):
 
-class EntryForm(FlaskForm):
-    '''the entry form is shown for a headless install. The user is required to
-       enter a pre-generated token, otherwise entry is denied
-    '''
-    token = StringField('token', validators=[DataRequired()])
+    # We assume that gunicorn is running here
+
+    # The user wants to add new subjects
+    number = args.new
+    if number is not None:
+        bot.debug('Generating tokens for %s new users' %number)
+        users = []
+        for i in range(number):
+            user = app.generate_user()
+            print(user)
+            users.append(user)

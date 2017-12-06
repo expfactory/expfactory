@@ -55,6 +55,11 @@ def perform_checks(template, do_redirect=False, context=None):
     next = app.get_next(session)
     session['exp_id'] = next
 
+    # Headless mode requires token
+    if "token" not in session and app.headless:
+        flash('A token is required for these experiments.')
+        return redirect('/')
+
     # Update the user / log
     app.logger.info("<current:%s><next:%s> for <%s, %s>" %(last, next, subid, username))
 
@@ -83,3 +88,5 @@ def clear_session():
     del session['username']
     del session['experiments']
     del session['exp_id']
+    if "token" in session:
+        del session['token']

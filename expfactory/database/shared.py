@@ -1,7 +1,7 @@
 '''
-views.py: part of expfactory package
 
 Copyright (c) 2017, Vanessa Sochat
+
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -31,25 +31,30 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
-from flask_wtf import FlaskForm
-from wtforms import (
-    StringField, 
-    BooleanField
-)
+from expfactory.logger import bot
+from glob import glob
+import os
+import uuid
+import json
+import sys
 
-from wtforms.validators import DataRequired
 
-class ParticipantForm(FlaskForm):
-    '''the participant form is shown in the portal given an interactive
-       (non headless) runtime. We collection an (optional) participant name,
-       along with the experiments to run.
+# SHARED #######################################################################
+#
+# These general functions are shared between all database types.
+#
+################################################################################
+
+def generate_user(self, digits=5):
+    '''generate a new user in the database, still session based so we
+       create a new identifier. This function is called from the users new 
+       entrypoint, and it assumes we want a user generated with a token.
     '''
-    openid = StringField('openid')
-    exp_ids = StringField('exp_ids', validators=[DataRequired()])
-    randomize = BooleanField('randomize', default=True)
-
-class EntryForm(FlaskForm):
-    '''the entry form is shown for a headless install. The user is required to
-       enter a pre-generated token, otherwise entry is denied
-    '''
-    token = StringField('token', validators=[DataRequired()])
+    subid = self.generate_subid(digits=digits)
+    token = str(uuid4())
+    from .models import Participant
+    p = Participant(id=subid, token=token)
+    self.session.add(p)
+    self.session.commit()
+    print(p)
+    return p

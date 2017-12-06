@@ -50,6 +50,12 @@ def get_parser():
                                        description='actions for expfactory tools',
                                        dest="command")
 
+    # Manager
+    manager = subparsers.add_parser("users",
+                                     help="Manager for interacting with users")
+    manager.add_argument('--new', dest="new",
+                         help="generate new user tokens, recommended for headless runtime.",
+                         default=1, type=int)
 
     # List
     listy = subparsers.add_parser("list", 
@@ -102,6 +108,10 @@ def get_parser():
                          help="subject id for saving database",
                          type=str, default=None)
 
+    parser.add_argument("--headless", dest='headless', 
+                         help="headless runtime will require generation of tokens or ids.",
+                         type=bool, default=False, action="store_true")
+
     parser.add_argument('--no-random', dest="disable_randomize",
                          help="present experiments serially",
                          default=True, action='store_false')
@@ -149,6 +159,9 @@ def main():
 
     elif command == "list":
         from .list import main
+
+    elif command == "users":
+        from .users import main
 
     elif command == "build":
         from .build import main

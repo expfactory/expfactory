@@ -58,9 +58,14 @@ def main(args,parser,subparser):
     database = args.database
     studyid = args.studyid
     experiments = args.experiments
+    headless = args.headless
     
     template = sub_template(template,"{{studyid}}",studyid)
     template = sub_template(template,"{{database}}",database)
+    template = sub_template(template,"{{headless}}",headless)
+
+    if args.headless is True:
+        bot.info("Headless build detected, you will need to generate tokens for application entry with expfactory users --new")
 
     library = get_library(key='name')
 

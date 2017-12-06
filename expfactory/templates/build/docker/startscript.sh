@@ -110,8 +110,20 @@ while true; do
             EXPFACTORY_START="yes"
             shift
         ;;
+        --users|users)
+
+             # Check that gunicorn is running
+            if ! pgrep -x "gunicorn" > /dev/null
+               then
+                   echo "You must start the experiment container before adding users."
+                   echo "docker run -p 80:80 -d <container> start"
+                   #exit
+            fi
+            expfactory users "$@"
+            exit
+        ;;
         -*)
-            echo "Unknown option: ${1:-}\n"
+            echo "Unknown option: ${1:-}"
             exit 1
         ;;
         *)

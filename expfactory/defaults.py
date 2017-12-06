@@ -80,7 +80,7 @@ EXPFACTORY_DATA = os.environ.get('EXPFACTORY_DATA', '/scif/data')
 EXPFACTORY_SUBID = os.environ.get('EXPFACTORY_STUDY_ID', 'expfactory')
 EXPFACTORY_EXPERIMENTS = getenv('EXPFACTORY_EXPERIMENTS', [])
 EXPFACTORY_RANDOMIZE = convert2boolean(getenv('EXPFACTORY_RANDOM', True))
-
+EXPFACTORY_HEADLESS = convert2boolean(getenv('EXPFACTORY_HEADLESS', False))
 
 #######################################################################
 # Formatting
