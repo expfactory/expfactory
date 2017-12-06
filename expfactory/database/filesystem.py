@@ -60,7 +60,7 @@ def generate_subid(self, token=None, digits=5):
     ''' 
 
     # Not headless auto-increments
-    if not self.headless:
+    if not token:
         folder_id = 0
         folders = glob('%s/*' %(self.database))
         folders.sort()

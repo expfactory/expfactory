@@ -62,11 +62,33 @@ First we can start the container (notice that we are giving it a name to easily 
 docker run -p 80:80 -d --name experiments -v /tmp/data:/scif/data <container> --headless start
 4f6826329e9e366c4d2fb56d64956f599861d1f0439d39d7bcacece3e88c7473
 ```
-Now we can use `exec` to execute the specific command to the container. In the example below, we are just creating one user:
+
+If we go to the portal at [127.0.0.1](http://127.0.0.1) we will see a different entrypoint, one that requires a token.
+
+<div>
+    <img src="/expfactory/img/headless/portal.png"><br>
+</div>
+
+A "token" is basically a subject id that is intended to be used once, and can be sent securely to your participants to access the experiments. You will need to generate them, and we can use `exec` to execute a command to the container to do this. If we just run the general users command, we learn better how to use it:
+
+```
+docker exec experiments expfactory users
+
+```
+
+
+In the example below, we are just creating one user:
 
 ```
 docker exec experiments expfactory users --new
 ```
+
+
+And of course it follows that if you enter a bad token, you cannot enter.
+
+<div>
+    <img src="/expfactory/img/headless/bad-token.png"><br>
+</div>
 
 We are currently working on a "headless" start up that will allow for a pre-set ordering an other variables, and then skipping over the portal. Please let us know if you have feedback on this. We will go into each database type in some detail.
 
