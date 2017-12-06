@@ -66,7 +66,7 @@ def generate_subid(self, digits=5, token=None):
     folder_id = str(folder_id).zfill(digits)
     if not token:
         return "%s/%s" % (self.study_id, folder_id)
-    return "%s/%s/%s" % (self.study_id, token, folder_id)
+    return "%s/%s/%s" % (self.study_id, folder_id, token)
 
 
 def validate_token(self, token):
