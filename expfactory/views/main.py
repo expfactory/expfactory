@@ -95,42 +95,7 @@ def home():
             return render_template('routes/entry.html', form=form)
         return redirect('/login')
 
-    form = ParticipantForm()
-
-    if request.method == "POST":   
-
-        # Submit and valid
-        if form.validate_on_submit():
-
-            # User name is not required
-            username = 'You'
-            if form.openid.data not in [None,""]:
-                username = form.openid.data
- 
-            subid = session.get('subid')
-            if subid is None:
-                subid = app.generate_subid()
-                session['subid'] = subid
-                app.logger.info('New session [subid] %s' %subid)
-
-            app.randomize = form.randomize.data
-            session['username'] = username
-            session['experiments'] = form.exp_ids.data.split(',') # list
-            flash('Participant ID: "%s" <br> Name %s <br> Randomize: "%s" <br> Experiments: %s' %
-                  (subid, username, app.randomize,
-                  str(form.exp_ids.data)))
-            return redirect('/start')
-
-        # Submit but not valid
-        return render_template('portal/index.html', experiments=app.lookup,
-                                                    base=app.base,
-                                                    randomize=app.randomize,
-                                                    form=form, toggleform=True)
-
-    # Not submit
-    return render_template('portal/index.html', experiments=app.lookup,
-                                                base=app.base,
-                                                form=form)
+    return _home()
 
 
 # EXPERIMENT ROUTER ############################################################
@@ -155,34 +120,6 @@ def save():
     return json.dumps({'success':False}), 403, {'ContentType':'application/json'} 
 
 
-# HEADLESS LOGIN ###############################################################
-
-@app.route('/login', methods=['POST'])
-def login():
-
-    # Only allowed to login via post from entry (headless) url
-    from expfactory.database.models import Participant
-    form = EntryForm()
-
-    # If not headless, we don't need to login
-    if not app.headless:
-        redirect('/start')
-
-    subid = session.get('subid')
-    if not subid:
-        if form.validate_on_submit():
-            token = form.token.data
-
-            p = app.validate_token(token)
-            if p is None:
-                return headless_denied(form=form)
-
-            session['subid'] = p.id
-            session['token'] = p.token
-
-            app.logger.info('Logged in user [subid] %s' %p.id)
-    return redirect('/next')
-
 
 @app.route('/next', methods=['POST', 'GET'])
 def next():
@@ -190,21 +127,7 @@ def next():
     # Headless mode requires logged in user with token
     if app.headless and "token" not in session:
         return headless_denied()
-
-    # Redirects to another template view
-    experiment = app.get_next(session)
-    if experiment is not None:
-        app.logger.info('Next experiment is %s' % experiment)
-    return perform_checks('/experiments/%s' % experiment, do_redirect=True)
-
-
-# Denied Entry for Headless
-def headless_denied(form=None):
-    if form is None:
-        form = EntryForm()
-    message = "A valid token is required. Contact the experiment administrator if you believe this to be a mistake."
-    return render_template('routes/entry.html', form=form,
-                                                message=message)
+    return _next()
    
 
 # Reset/Logout
