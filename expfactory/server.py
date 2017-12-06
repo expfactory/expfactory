@@ -90,6 +90,7 @@ class EFServer(Flask):
         self.study_id = EXPFACTORY_SUBID
         self.base = EXPFACTORY_BASE
         self.randomize = EXPFACTORY_RANDOMIZE
+        self.headless = EXPFACTORY_HEADLESS
 
         available = get_experiments("%s" % self.base)
         self.experiments = get_selection(available, self.selection)
@@ -97,6 +98,7 @@ class EFServer(Flask):
         self.lookup = make_lookup(self.experiments)
         final = "\n".join(list(self.lookup.keys()))        
 
+        bot.log("Headless mode: %s" % self.headless)
         bot.log("User has selected: %s" % self.selection)
         bot.log("Experiments Available: %s" %"\n".join(available))
         bot.log("Randomize: %s" % self.randomize)
