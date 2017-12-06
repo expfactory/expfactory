@@ -96,7 +96,7 @@ def home():
         if "token" not in session:
             form = EntryForm()
             return render_template('routes/entry.html', form=form)
-        return redirect('/login')
+        return redirect('/next')
 
     return portal()
 
