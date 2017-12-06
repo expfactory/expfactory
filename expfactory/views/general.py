@@ -54,6 +54,7 @@ def router():
 
     # Redirects to another template view
     experiment = app.get_next(session)
+    print('EXPERIMENT IS %s' %experiment)
     if experiment is not None:
         app.logger.info('Next experiment is %s' % experiment)
     return perform_checks('/experiments/%s' % experiment, do_redirect=True)
