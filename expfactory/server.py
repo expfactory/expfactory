@@ -132,7 +132,7 @@ class EFServer(Flask):
 EFServer.init_db = init_db
 EFServer.save_data = save_data
 EFServer.generate_subid = generate_subid
-EFserver.generate_user = generate_user
+EFServer.generate_user = generate_user
 app = EFServer(__name__)
 app.config.from_object('expfactory.config')
 
