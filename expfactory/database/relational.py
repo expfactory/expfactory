@@ -46,6 +46,7 @@ from expfactory.defaults import (
 )
 from glob import glob
 import os
+import uuid
 import pickle
 import json
 import sys
@@ -73,6 +74,21 @@ def generate_subid(self, digits=5):
     return p.id
 
 
+def generate_user(self, digits=5):
+    '''generate a new user in the database, still session based so we
+       create a new identifier. This function is called from the users new 
+       entrypoint, and it assumes we want a user generated with a token.
+    '''
+    from expfactory.database.models import Participant
+    subid = self.generate_subid(digits=digits)
+    token = str(uuid.uuid4())
+    p = Participant(id=subid, token=token)
+    self.session.add(p)
+    self.session.commit()
+    print(p)
+    return p
+
+
 def save_data(self,session, exp_id, content):
     '''save data will obtain the current subid from the session, and save it
        depending on the database type. Currently we just support flat files'''
@@ -80,26 +96,37 @@ def save_data(self,session, exp_id, content):
         Participant,
         Result
     )
-    subid = session.get('subid') 
+    subid = session.get('subid')
+    token = session.get('token') 
+
     bot.info('Saving data for subid %s' % subid)    
 
     # We only attempt save if there is a subject id, set at start
     if subid is not None:
         p = Participant.query.filter(Participant.id == subid).first() # better query here
 
-        # Preference is to save data under 'data', otherwise do all of it
-        if "data" in content:
-            content = content['data']
+        # Either will be defined, or None if not used
+        do_save = True
+        if self.headless and p.token != token:
+            do_save = False
 
-        result = Result(data=content,
-                        exp_id=exp_id,
-                        participant_id=p.id) # check if changes from str/int
-        self.session.add(result)
-        p.results.append(result)
-        self.session.commit()
+        if not do_save:
+            bot.info("Headless and mismatched token, skipping save: %s" %p)
+ 
+        else:
+            # Preference is to save data under 'data', otherwise do all of it
+            if "data" in content:
+                content = content['data']
 
-        bot.info("Participant: %s" %p)
-        bot.info("Result: %s" %result)
+            result = Result(data=content,
+                            exp_id=exp_id,
+                            participant_id=p.id) # check if changes from str/int
+            self.session.add(result)
+            p.results.append(result)
+            self.session.commit()
+
+            bot.info("Participant: %s" %p)
+            bot.info("Result: %s" %result)
 
 
 

@@ -7,6 +7,3 @@ else:
     from .relational import *
     if EXPFACTORY_DATABASE.startswith('sqlite'):
         from .sqlite import *
-
-# Shared functions across database types
-from .shared import *

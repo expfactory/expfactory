@@ -50,7 +50,7 @@ import sys
 # to the main application upon initialization of the server.
 
 
-def generate_subid(self, digits=5):
+def generate_subid(self, digits=5, token=None):
     '''assumes a flat (file system) database, organized by experiment id, and
        subject id, with data (json) organized by subject identifier
     ''' 
@@ -60,26 +60,49 @@ def generate_subid(self, digits=5):
     if len(folders) > 0:
         folder_id = int(os.path.basename(folders[-1])) + 1
     folder_id = str(folder_id).zfill(digits)
-    return "%s/%s" % (self.study_id, folder_id)
-    
+    if not token:
+        return "%s/%s" % (self.study_id, folder_id)
+    return "%s/%s/%s" % (self.study_id, token, folder_id)
+
+
+def generate_user(self, subid=None, digits=5):
+    '''generate a new user on the filesystem, still session based so we
+       create a new identifier. This function is called from the users new 
+       entrypoint, and it assumes we want a user generated with a token.
+       since we don't have a database proper, we write the folder name to 
+       the filesystem
+    '''
+
+    # Only generate token if subid being created
+    if subid is None:
+        token = str(uuid.uuid4())
+        subid = self.generate_subid(digits=digits, token=token)
+
+    if os.path.exists(self.data_base):    # /scif/data
+        data_base = "%s/%s" %(self.data_base, subid)
+        # expfactory/00001
+        if not os.path.exists(data_base):
+            os.mkdir(data_base)
+
+    return data_base
+
 
 
 def save_data(self, session, exp_id, content):
     '''save data will obtain the current subid from the session, and save it
        depending on the database type. Currently we just support flat files'''
 
-    subid = session.get('subid') 
+    subid = session.get('subid')
 
     # We only attempt save if there is a subject id, set at start
     data_file = None
     if subid is not None:
 
-        if os.path.exists(self.data_base):    # /scif/data
-            data_base = "%s/%s" %(self.data_base, subid)
-            # expfactory/00001
-            if not os.path.exists(data_base):
-                os.mkdir(data_base)
-            data_file = "%s/%s/%s-results.json" %(self.data_base, subid, exp_id)
+        data_base = "%s/%s" %(self.data_base, subid)
+
+        # If headless, and token not pre-generated, don't save, otherwise save
+        if self.headless and os.path.exists(data_base) or not self.headless:
+            data_file = "%s/%s-results.json" %(data_base, exp_id)
             if os.path.exists(data_file):
                 bot.warning('%s exists, and is being overwritten.' %data_file)
             write_json(content, data_file)
