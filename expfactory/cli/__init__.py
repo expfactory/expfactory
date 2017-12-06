@@ -153,7 +153,7 @@ def main():
 
     # Options that shouldn't produce output
     if command in ['users']:
-        os.environ['MESSAGELEVEL'] = 0
+        os.environ['MESSAGELEVEL'] = "0"
 
     from expfactory.logger import bot
     from expfactory.version import __version__
