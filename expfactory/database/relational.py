@@ -88,6 +88,16 @@ def generate_user(self, digits=5):
     print(p)
     return p
 
+def validate_token(self, token):
+    '''retrieve a subject based on a token. Valid means we return a participant
+       invalid means we return None
+    '''
+    from expfactory.database.models import Participant
+    p = Participant.query.filter(Participant.token == token).first()
+    if p is not None:
+        p = p.id
+    return p
+
 
 def save_data(self,session, exp_id, content):
     '''save data will obtain the current subid from the session, and save it

@@ -31,7 +31,8 @@ from expfactory.database import (
     init_db, 
     generate_subid,
     save_data,
-    generate_user
+    generate_user,
+    validate_token
 )
 from flask import Flask
 from flask_wtf.csrf import (
@@ -133,6 +134,7 @@ EFServer.init_db = init_db
 EFServer.save_data = save_data
 EFServer.generate_subid = generate_subid
 EFServer.generate_user = generate_user
+EFServer.validate_token = validate_token
 app = EFServer(__name__)
 app.config.from_object('expfactory.config')
 

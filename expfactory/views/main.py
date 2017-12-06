@@ -171,10 +171,9 @@ def login():
     subid = session.get('subid')
     if not subid:
         if form.validate_on_submit():
-            token = form.token.data 
-            p = Participant.query.filter(Participant.token == token).first()
+            token = form.token.data
 
-            # The token doesn't exist, user is denied
+            p = app.validate_token(token)
             if p is None:
                 return headless_denied(form=form)
 

@@ -65,6 +65,16 @@ def generate_subid(self, digits=5, token=None):
     return "%s/%s/%s" % (self.study_id, token, folder_id)
 
 
+def validate_token(self, token):
+    '''retrieve a subject based on a token. Valid means we return a participant
+       invalid means we return None
+    '''
+    subid = self.generate_subid(token=token)
+    if not os.path.exists(subid):
+        subid = None
+    return subid
+
+
 def generate_user(self, subid=None, digits=5):
     '''generate a new user on the filesystem, still session based so we
        create a new identifier. This function is called from the users new 
