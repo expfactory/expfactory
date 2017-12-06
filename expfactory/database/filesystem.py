@@ -54,7 +54,7 @@ import sys
 # to the main application upon initialization of the server.
 
 
-def generate_subid(self, token=None):
+def generate_subid(self, token=None, digits=5):
     '''assumes a flat (file system) database, organized by experiment id, and
        subject id, with data (json) organized by subject identifier
     ''' 
@@ -91,11 +91,10 @@ def generate_user(self, subid=None, digits=5):
        since we don't have a database proper, we write the folder name to 
        the filesystem
     '''
-
     # Only generate token if subid being created
     if subid is None:
         token = str(uuid.uuid4())
-        subid = self.generate_subid(digits=digits, token=token)
+        subid = self.generate_subid(token=token)
 
     if os.path.exists(self.data_base):    # /scif/data
         data_base = "%s/%s" %(self.data_base, subid)
