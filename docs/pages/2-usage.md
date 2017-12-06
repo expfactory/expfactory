@@ -21,7 +21,7 @@ Below, we will summarize the variables that can be set at runtime:
 
 
 ## Start the Container
-It's most likely the case that your container's default is to save data to the file system, and use a study id of expfactory. This coincides to running with no extra arguments, but perhaps mapping the data folder:
+The first thing you should do is start the container. The variables listed above can be set when you do this. It's most likely the case that your container's default is to save data to the file system, and use a study id of expfactory. This coincides to running with no extra arguments, but perhaps mapping the data folder:
 
 ```
 docker run -v /tmp/my-experiment/data/:/scif/data \
@@ -51,6 +51,26 @@ Here is how to limit the experiments exposed in the portal. For example, you may
 docker run -v /tmp/my-experiment/data/:/scif/data \
            -d -p 80:80 \
            expfactory/experiments  --experiments test-test,tower-of-london start
+```
+
+### Start a Headless Experiment Container
+"Headless" refers to the idea that you going to be running your experiment with remote participants, and you will need to send them to a different portal that has them login first. In order to do this, after starting the container, you need to pre-generate these users. You can do this with the "users" command to the container, but it has to already be started. If you run the command and the container isn't started, it will tell you to start it:
+
+```
+docker run vanessa/experiment users
+You must start the experiment container before adding users.
+docker run -p 80:80 -d <container> start
+```
+First we can start the container (notice that we are giving it a name to easily reference it by) and then generate a user.
+
+```
+docker run -p 80:80 -d --name experiments -v /tmp/data:/scif/data <container> start
+4f6826329e9e366c4d2fb56d64956f599861d1f0439d39d7bcacece3e88c7473
+```
+Now we can use `exec` to execute the specific command to the container:
+
+```
+docker exec experiments expfactory users --new
 ```
 
 We are currently working on a "headless" start up that will allow for a pre-set ordering an other variables, and then skipping over the portal. Please let us know if you have feedback on this. We will go into each database type in some detail.

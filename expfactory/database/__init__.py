@@ -9,4 +9,4 @@ else:
         from .sqlite import *
 
 # Shared functions across database types
-from shared import *
+from .shared import *

@@ -9,6 +9,12 @@ usage () {
          docker run <container> [help|list|test-experiments|start]
          docker run -p 80:80 -v /tmp/data:/scif/data <container> start
 
+         Headless Mode (requires token)
+
+         docker run -p 80:80 -d --name experiments -v /tmp/data:/scif/data <container> start
+         docker exec experiments users 3
+
+
          Commands:
 
                 help: show help and exit
@@ -117,7 +123,7 @@ while true; do
                then
                    echo "You must start the experiment container before adding users."
                    echo "docker run -p 80:80 -d <container> start"
-                   #exit
+                   exit
             fi
             expfactory users "$@"
             exit
