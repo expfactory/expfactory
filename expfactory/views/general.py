@@ -43,6 +43,7 @@ from expfactory.utils import get_post_fields
 
 from expfactory.views.utils import perform_checks
 from expfactory.server import app
+from expfactory.forms import ParticipantForm
 import os
 import json
 
