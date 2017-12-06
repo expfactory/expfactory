@@ -51,6 +51,8 @@ from expfactory.views.utils import (
     clear_session
 )
 from expfactory.server import app
+from .general import *
+
 from random import choice
 import logging
 import os
@@ -95,7 +97,7 @@ def home():
             return render_template('routes/entry.html', form=form)
         return redirect('/login')
 
-    return _home()
+    return portal()
 
 
 # EXPERIMENT ROUTER ############################################################
@@ -127,7 +129,7 @@ def next():
     # Headless mode requires logged in user with token
     if app.headless and "token" not in session:
         return headless_denied()
-    return _next()
+    return router()
    
 
 # Reset/Logout

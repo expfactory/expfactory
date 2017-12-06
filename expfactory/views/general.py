@@ -49,7 +49,7 @@ import json
 
 # EXPERIMENT ROUTER ############################################################
 
-def _next():
+def router():
 
     # Redirects to another template view
     experiment = app.get_next(session)
@@ -59,7 +59,7 @@ def _next():
 
 
 # Home portal to start experiments
-def _home():
+def portal():
 
     form = ParticipantForm()
 
