@@ -76,14 +76,14 @@ def login():
         if form.validate_on_submit():
             token = form.token.data
 
-            p = app.validate_token(token)
-            if p is None:
+            subid = app.validate_token(token)
+            if subid is None:
                 return headless_denied(form=form)
 
-            session['subid'] = p.id
-            session['token'] = p.token
+            session['subid'] = subid
+            session['token'] = token
 
-            app.logger.info('Logged in user [subid] %s' %p.id)
+            app.logger.info('Logged in user [subid] %s' %subid)
     return redirect('/next')
 
 

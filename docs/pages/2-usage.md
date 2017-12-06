@@ -53,7 +53,7 @@ docker run -v /tmp/my-experiment/data/:/scif/data \
            expfactory/experiments  --experiments test-test,tower-of-london start
 ```
 
-### Start a Headless Experiment Container
+## Start a Headless Experiment Container
 "Headless" refers to the idea that you going to be running your experiment with remote participants, and you will need to send them to a different portal that has them login first. In order to do this, you need to start the container with the `--headless` flag, and then issue a command to pre-generate these users.
 
 First we can start the container (notice that we are giving it a name to easily reference it by) with `--headless` mode.
@@ -69,19 +69,37 @@ If we go to the portal at [127.0.0.1](http://127.0.0.1) we will see a different 
     <img src="/expfactory/img/headless/portal.png"><br>
 </div>
 
+### Generate tokens
 A "token" is basically a subject id that is intended to be used once, and can be sent securely to your participants to access the experiments. You will need to generate them, and we can use `exec` to execute a command to the container to do this. If we just run the general users command, we learn better how to use it:
 
 ```
 docker exec experiments expfactory users
-
+Specify number of new users:
+	expfactory users --new 1
 ```
 
-
-In the example below, we are just creating one user:
+Let's try creating three users:
 
 ```
-docker exec experiments expfactory users --new
+docker exec experiments expfactory users --new 3
+FOLDER	TOKEN
+/scif/data/expfactory/c4f58f85-bda0-47ee-9625-e6f70c3459e6	c4f58f85-bda0-47ee-9625-e6f70c3459e6
+/scif/data/expfactory/c058ac0d-9c0a-426c-b646-3b2f29abf555	c058ac0d-9c0a-426c-b646-3b2f29abf555
+/scif/data/expfactory/c65978e2-c5ce-41ff-92c8-d16edc499444	c65978e2-c5ce-41ff-92c8-d16edc499444
 ```
+
+The result here will depend on the database type. The above shows a filesystem save, so a `FOLDER` is included, and remember this is internal to the container, so you might have `/scif/data` mapped to a different folder on your host. A relational database would just show the `TOKEN`. You can copy paste this from the terminal, or pipe into a file instead:
+
+```
+docker exec experiments expfactory users --new 3 >> participants.tsv
+```
+
+### Use tokens
+It's up to you to maintain the linking of anonymous tokens to actual participants. What you would do is issue a token to each participant, and have him or her enter it into the web interface.
+
+<div>
+    <img src="/expfactory/img/headless/enter-token.png"><br>
+</div>
 
 
 And of course it follows that if you enter a bad token, you cannot enter.
