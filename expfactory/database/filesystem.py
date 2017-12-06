@@ -110,7 +110,11 @@ def save_data(self, session, exp_id, content):
 
         data_base = "%s/%s" %(self.data_base, subid)
 
-        # If headless, and token not pre-generated, don't save, otherwise save
+        # If not running in headless, ensure path exists
+        if not self.headless and not os.path.exists(data_base):
+            os.mkdir(data_base)
+
+        # If headless with token pre-generated OR not headless
         if self.headless and os.path.exists(data_base) or not self.headless:
             data_file = "%s/%s-results.json" %(data_base, exp_id)
             if os.path.exists(data_file):
