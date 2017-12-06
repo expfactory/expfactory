@@ -31,7 +31,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 from flask import session
 from expfactory.logger import bot
-from expfactory.utils import write_json
+from expfactory.utils import (
+    write_json,
+    mkdir_p
+)
 from expfactory.defaults import (
     EXPFACTORY_SUBID,
     EXPFACTORY_DATA
@@ -93,7 +96,7 @@ def generate_user(self, subid=None, digits=5):
         data_base = "%s/%s" %(self.data_base, subid)
         # expfactory/00001
         if not os.path.exists(data_base):
-            os.mkdir(data_base)
+            mkdir_p(data_base)
 
     return data_base
 
@@ -113,7 +116,7 @@ def save_data(self, session, exp_id, content):
 
         # If not running in headless, ensure path exists
         if not self.headless and not os.path.exists(data_base):
-            os.mkdir(data_base)
+            mkdir_p(data_base)
 
         # If headless with token pre-generated OR not headless
         if self.headless and os.path.exists(data_base) or not self.headless:
@@ -132,8 +135,8 @@ def init_db(self):
     self.session = None
 
     if not os.path.exists(self.data_base):
-        os.mkdir(self.data_base)
+        mkdir_p(self.data_base)
 
     self.database = "%s/%s" %(self.data_base, self.study_id)
     if not os.path.exists(self.database):
-        os.mkdir(self.database)
+        mkdir_p(self.database)

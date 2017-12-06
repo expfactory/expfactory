@@ -108,6 +108,20 @@ def copy_directory(src, dest, force=False):
             sys.exit(1)
 
 
+def mkdir_p(path):
+    '''mkdir_p attempts to get the same functionality as mkdir -p
+    :param path: the path to create.
+    '''
+    try:
+        os.makedirs(path)
+    except OSError as e:
+        if e.errno == errno.EEXIST and os.path.isdir(path):
+            pass
+        else:
+            bot.error("Error creating path %s, exiting." % path)
+            sys.exit(1)
+
+
 def clone(url, tmpdir=None):
     '''clone a repository from Github'''
     if tmpdir is None:
