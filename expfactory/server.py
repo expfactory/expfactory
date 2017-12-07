@@ -29,6 +29,7 @@ from expfactory.experiment import (
 
 from expfactory.database import (
     init_db, 
+    list_users,
     generate_subid,
     save_data,
     generate_user,
@@ -137,6 +138,7 @@ EFServer.save_data = save_data
 EFServer.generate_subid = generate_subid
 EFServer.generate_user = generate_user
 EFServer.validate_token = validate_token
+EFServer.list_users = list_users
 app = EFServer(__name__)
 app.config.from_object('expfactory.config')
 
