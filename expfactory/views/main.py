@@ -95,7 +95,7 @@ def home():
     if app.headless:
         if "token" not in session:
             form = EntryForm()
-            session['experiments'] = app.experiments # list
+            session['experiments'] = [os.path.basename(x) for x in app.experiments] # list
             return render_template('routes/entry.html', form=form)
         return redirect('/next')
 

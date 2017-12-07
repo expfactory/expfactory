@@ -56,14 +56,12 @@ def perform_checks(template, do_redirect=False, context=None):
     session['exp_id'] = next
 
     # Headless mode requires token
-    print('In perform_checks: SESSION: %s' %list(session.keys()))
-    print('APP HEADLESS %s' %app.headless)
     if "token" not in session and app.headless:
         flash('A token is required for these experiments.')
         return redirect('/')
 
     # Update the user / log
-    app.logger.info("<current:%s><next:%s> for <%s, %s>" %(last, next, subid, username))
+    app.logger.info("<current:%s><next:%s> for <subid:%s, username:%s>" %(last, next, subid, username))
 
     if username is None and app.headless is False:
         flash('You must start a session before doing experiments.')
