@@ -65,7 +65,7 @@ def perform_checks(template, do_redirect=False, context=None):
     # Update the user / log
     app.logger.info("<current:%s><next:%s> for <%s, %s>" %(last, next, subid, username))
 
-    if username is None:
+    if username is None and app.headless is False:
         flash('You must start a session before doing experiments.')
         return redirect('/')
 

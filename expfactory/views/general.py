@@ -56,10 +56,6 @@ def router():
     experiment = app.get_next(session)
     print('EXPERIMENT IS %s' %experiment)
  
-    # Stopped here - this is 
-    #Logged in user [subid] expfactory/513ac67c-1fb5-4323-a1f0-7484c719a92c
-    #<current:None><next:None> for <expfactory/513ac67c-1fb5-4323-a1f0-7484c719a92c, None>
-
     if experiment is not None:
         app.logger.info('Next experiment is %s' % experiment)
     return perform_checks('/experiments/%s' % experiment, do_redirect=True)
