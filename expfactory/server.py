@@ -35,7 +35,7 @@ from expfactory.database import (
     validate_token
 )
 
-from flask import Flask, session
+from flask import Flask
 from flask_wtf.csrf import (
     CSRFProtect, 
     generate_csrf
@@ -97,16 +97,13 @@ class EFServer(Flask):
         self.experiments = get_selection(available, self.selection)
         self.logger.debug(self.experiments)
         self.lookup = make_lookup(self.experiments)
-        final = "\n".join(list(self.lookup.keys()))        
-        session['experiments'] = self.experiments
+        final = "\n".join(list(self.lookup.keys()))       
 
         bot.log("Headless mode: %s" % self.headless)
         bot.log("User has selected: %s" % self.selection)
         bot.log("Experiments Available: %s" %"\n".join(available))
         bot.log("Randomize: %s" % self.randomize)
         bot.log("Final Set \n%s" % final)
-
-        #TODO: experiments not being set in session, figure out why/where
 
     def get_next(self, session):
         '''return the name of the next experiment, depending on the user's
