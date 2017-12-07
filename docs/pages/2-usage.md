@@ -66,7 +66,7 @@ docker run -p 80:80 -d --name experiments -v /tmp/data:/scif/data <container> --
 If we go to the portal at [127.0.0.1](http://127.0.0.1) we will see a different entrypoint, one that requires a token.
 
 <div>
-    <img src="/expfactory/img/headless/portal.png"><br>
+    <img src="../expfactory/img/headless/portal.png"><br>
 </div>
 
 ### Generate tokens
@@ -98,14 +98,14 @@ docker exec experiments expfactory users --new 3 >> participants.tsv
 It's up to you to maintain the linking of anonymous tokens to actual participants. What you would do is issue a token to each participant, and have him or her enter it into the web interface.
 
 <div>
-    <img src="/expfactory/img/headless/enter-token.png"><br>
+    <img src="../img/headless/enter-token.png"><br>
 </div>
 
 
 And of course it follows that if you enter a bad token, you cannot enter.
 
 <div>
-    <img src="/expfactory/img/headless/bad-token.png"><br>
+    <img src="../img/headless/bad-token.png"><br>
 </div>
 
 We are currently working on a "headless" start up that will allow for a pre-set ordering an other variables, and then skipping over the portal. Please let us know if you have feedback on this. We will go into each database type in some detail.
