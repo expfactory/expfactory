@@ -42,7 +42,7 @@ from expfactory.logger import bot
 import os
 
 
-def perform_checks(template, do_redirect=False, context=None):
+def perform_checks(template, do_redirect=False, context=None, next=None):
     '''return all checks for required variables before returning to 
        desired view
     '''
@@ -52,7 +52,8 @@ def perform_checks(template, do_redirect=False, context=None):
     username = session.get('username')
     subid = session.get('subid')
     last = session.get('exp_id')
-    next = app.get_next(session)
+    if next is None:
+        next = app.get_next(session)
     session['exp_id'] = next
 
     # Headless mode requires token
