@@ -34,7 +34,8 @@ from expfactory.database import (
     generate_user,
     validate_token
 )
-from flask import Flask
+
+from flask import Flask, session
 from flask_wtf.csrf import (
     CSRFProtect, 
     generate_csrf
