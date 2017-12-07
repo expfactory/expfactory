@@ -62,12 +62,15 @@ import sys
 #
 ################################################################################
 
-def generate_subid(self, digits=5):
+def generate_subid(self, token=None, digits=5):
     '''generate a new user in the database, still session based so we
        create a new identifier.
     '''    
     from expfactory.database.models import Participant
-    p = Participant()
+    if not token:
+        p = Participant()
+    else:
+
     self.session.add(p)
     self.session.commit()
     print('Session Participant id: %s' % p.id)
@@ -80,20 +83,23 @@ def generate_user(self, digits=5):
        entrypoint, and it assumes we want a user generated with a token.
     '''
     from expfactory.database.models import Participant
-    subid = self.generate_subid(digits=digits)
     token = str(uuid.uuid4())
+    subid = self.generate_subid(digits=digits, token=token)
     p = Participant(id=subid, token=token)
     self.session.add(p)
     self.session.commit()
-    print(p)
+    print('RELATIONAL: generating user %s' %p)
     return p
+
 
 def validate_token(self, token):
     '''retrieve a subject based on a token. Valid means we return a participant
        invalid means we return None
     '''
     from expfactory.database.models import Participant
+    print('RELATIONAL: validating token %s' %token)
     p = Participant.query.filter(Participant.token == token).first()
+    print(p)
     if p is not None:
         p = p.id
     return p

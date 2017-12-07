@@ -65,6 +65,7 @@ while true; do
         --database|--db)
             shift
             EXPFACTORY_DATABASE=${1:-}
+            export EXPFACTORY_DATABASE
             shift
         ;;
         --env|env)

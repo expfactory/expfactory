@@ -108,11 +108,32 @@ And of course it follows that if you enter a bad token, you cannot enter.
     <img src="../img/headless/bad-token.png"><br>
 </div>
 
-We are currently working on a "headless" start up that will allow for a pre-set ordering an other variables, and then skipping over the portal. Please let us know if you have feedback on this. We will go into each database type in some detail.
+Once entry is given, the user can continue normally to complete the experiments in the protocol.
+
+### Pre-set Experiments
+For a headless experiment, you don't have the web interface to filter experiments in advance, or as for random (or not random) ordering. By default, not giving the `--experiments` argument will serve all experiments found installed in the container. If you want to limit to a smaller subset, do that with the experiments argument:
+
+```
+docker run -p 80:80 -d \
+           --name experiments \ 
+           -v /tmp/data:/scif/data <container> --experiments tower-of-london,test-task --headless start
+```
+
+and if you want the order typed to be maintained (and not random) add the `--no-randomize` flag.
+
+
+```
+docker run -p 80:80 -d \
+           --name experiments \ 
+           -v /tmp/data:/scif/data <container> --experiments tower-of-london,test-task --headless --no-randomize start
+```
+
+## Saving Data
+Whether you choose a headless or interactive start, in both cases you can choose how your data is saved. The subtle difference for each saving method that result when you choose headless or interactive will be discussed below.
 
 
 ### filesystem
-Saving to the filesytem is the default (what you get when you don't specify a particular database) and means saving to a folder called `/scif/data` in the Docker image. If you are saving data to the filesystem (`filesystem` database), given that you've mounted the container data folder `/scif/data` to the host, this means that the data will be found on the host in that location. In the example below, we have mounted `/tmp/data` to `/scif/data` in the container:
+Saving to the filesytem is the default (what you get when you don't specify a particular database) and means saving to a folder called `/scif/data` in the Docker image. If you are saving data to the filesystem (`filesystem` database), given that you've mounted the container data folder `/scif/data` to the host, this means that the data will be found on the host in that location. In the example below, we have mounted `/tmp/data` to `/scif/data` in the container, and we are running interactive experiments (meaning without pre-generated tokens for login):
 
 ```
 $ tree /tmp/data/expfactory/00000/
@@ -134,9 +155,20 @@ $ tree /tmp/data/dns/00000/
 0 directories, 1 file
 ```
 
-Participant folders will be created under the `studyid` folder.  These start at 00000 and are incremented with each participant you run. If you stop the container and had mounted a volume to the host, the data will persist on the host. If you didn't mount a volume, then you will not see the data on the host.
+The subtle difference if we had done a headless start comes down to the subject identifier. If we look at output folders generated for headless start with pre-generated tokens, we see tokens instead:
 
+```
+$ tree /tmp/data/expfactory/
 
+   /tmp/data/expfactory/745cb6ad-a0b7-4610-b4d2-4ca5acd8b6f9
+    └── tower-of-london-results.json
+```
+
+In both cases, participant folders are created under the `studyid` folder.  These start at 00000 and are incremented with each participant you run. If you stop the container and had mounted a volume to the host, the data will persist on the host. If you didn't mount a volume, then you will not see the data on the host.
+
+>> **Protip**  We generally don't recommend serving token (headless) and interactive experiments from the same container. If a study identifier can be predicted (e.g., 00001) then it also could be used as a token, and someone's previous result could be maliciously changed.
+
+Now we will talk about interaction with the data.
 
 #### How do I read it?
 For detailed information about how to read json strings (whether from file or database) see [working with JSON](#working-with-json). For a filesystem save, the data is saved to a json object, regardless of the string output produced by the experiment. This means that you can load the data as json, and then look at the `data` key to find the result saved by the particular experiment. Typically you will find another string saved as json, but it could be the case that some experiments do this differently.

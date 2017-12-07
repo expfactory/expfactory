@@ -37,14 +37,22 @@ import os
 
 
 def main(args,parser,subparser):
+  
+    # Only filesystem database has FOLDER
+    header = 'TOKEN'
+    if args.database == "filesystem":
+        header = 'FOLDER\tTOKEN' 
 
     # The user wants to add new subjects
     number = args.new
     if number is not None:
-        print('FOLDER\tTOKEN')
+        print(header)
         for i in range(number):
             user = app.generate_user()
             token = os.path.basename(user)
-            print('%s\t%s' %(user,token))
+            if args.database == "filesystem":
+                print('%s\t%s' %(user,token))
+            else:
+                print(token)
     else:
         print('Specify number of new users:\n\texpfactory users --new 1')
