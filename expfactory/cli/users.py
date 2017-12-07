@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from expfactory.logger import bot
 from expfactory.server import app
+from expfactory.defaults import EXPFACTORY_DATABASE
 import sys
 import os
 
@@ -40,7 +41,7 @@ def main(args,parser,subparser):
   
     # Only filesystem database has FOLDER
     header = 'TOKEN'
-    if args.database == "filesystem":
+    if EXPFACTORY_DATABASE == "filesystem":
         header = 'FOLDER\tTOKEN' 
 
     # The user wants to add new subjects
@@ -50,7 +51,7 @@ def main(args,parser,subparser):
         for i in range(number):
             user = app.generate_user()
             token = os.path.basename(user)
-            if args.database == "filesystem":
+            if EXPFACTORY_DATABASE == "filesystem":
                 print('%s\t%s' %(user,token))
             else:
                 print(token)
