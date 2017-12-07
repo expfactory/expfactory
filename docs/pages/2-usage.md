@@ -66,7 +66,7 @@ docker run -p 80:80 -d --name experiments -v /tmp/data:/scif/data <container> --
 If we go to the portal at [127.0.0.1](http://127.0.0.1) we will see a different entrypoint, one that requires a token.
 
 <div>
-    <img src="../expfactory/img/headless/portal.png"><br>
+    <img src="../img/headless/portal.png"><br>
 </div>
 
 ### Generate tokens
@@ -387,7 +387,7 @@ First, let's discuss the portal - what you see when you go to [127.0.0.1](http:/
 When you start your container instance, browsing to your localhost will show the entrypoint, a user portal that lists all experiments installed in the container. If you have defined a limited subset with `--experiments` you will only see that set here:
 
 <div>
-    <img src="/expfactory/img/generate/portal.png"><br>
+    <img src="../img/generate/portal.png"><br>
 </div>
 
 
@@ -395,45 +395,45 @@ This is where the experiment administrator would select one or more experiments,
  When you make a selection, the estimated time and experiment count on the bottom of the page are adjusted, and you can inspect individual experiment times: 
 
 <div>
-    <img src="/expfactory/img/generate/selected.png"><br>
+    <img src="../img/generate/selected.png"><br>
 </div>
 
 You can make a selection and then start your session. I would recommend the `test-task` as a first try, because it finishes quickly. When you click on `proceed` a panel will pop up that gives you choices for ordering and an (optional) Participant name. 
 
 <div>
-    <img src="/expfactory/img/generate/proceed.png"><br>
+    <img src="../img/generate/proceed.png"><br>
 </div>
 
 If you care about order, the order that you selected the boxes will be maintained for the session:
 
 <div>
-    <img src="/expfactory/img/generate/order-manual.png"><br>
+    <img src="../img/generate/order-manual.png"><br>
 </div>
 
 or if you want random selection, just check the box. This is the default setting.
 
 <div>
-    <img src="/expfactory/img/generate/order-random.png"><br>
+    <img src="../img/generate/order-random.png"><br>
 </div>
 
 This name is currently is only used to say hello to the participant. The actual experiment identifier is based on a study id defined in the build recipe.  After proceeding, there is a default "consent" screen that you must agree to (or disagree to return to the portal):
 
 <div>
-    <img src="/expfactory/img/generate/welcome.png"><br>
+    <img src="../img/generate/welcome.png"><br>
 </div>
 
 
 Once the session is started, the user is guided through each experiment (with random selection) until no more are remaining.
 
 <div>
-    <img src="/expfactory/img/generate/preview.png"><br>
+    <img src="../img/generate/preview.png"><br>
 </div>
 
 
 When you finish, you will see a "congratulations" screen
 
 <div>
-    <img src="/expfactory/img/generate/finish.png"><br>
+    <img src="../img/generate/finish.png"><br>
 </div>
 
 Generally, when you administer a battery of experiments you want to ensure that:
