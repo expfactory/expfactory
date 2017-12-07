@@ -102,6 +102,22 @@ def validate_token(self, token):
     return p
 
 
+def list_users(self):
+    '''list users, each having a model in the database. A headless experiment
+       will use protected tokens, and interactive will be based on auto-
+       incremented ids.
+    ''' 
+    from expfactory.database.models import Participant
+    participants = Participant.query.all()
+    users = []
+    for participant in participants:
+        subid = participant.id
+        if participant.token is not None:
+            subid = participant.token
+        users.append(subid)
+    return users
+
+
 def save_data(self,session, exp_id, content):
     '''save data will obtain the current subid from the session, and save it
        depending on the database type. Currently we just support flat files'''

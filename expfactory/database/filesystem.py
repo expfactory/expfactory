@@ -73,6 +73,14 @@ def generate_subid(self, token=None, digits=5):
     return "%s/%s" % (self.study_id, token)
 
 
+def list_users(self):
+    '''list users, each associated with a filesystem folder
+    ''' 
+    folders = glob('%s/*' %(self.database))
+    folders.sort()
+    return ['%s\t%s' %(x,os.path.basename(x)) for x in folders]
+
+
 def validate_token(self, token):
     '''retrieve a subject based on a token. Valid means we return a participant
        invalid means we return None

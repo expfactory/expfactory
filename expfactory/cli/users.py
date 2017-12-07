@@ -43,11 +43,18 @@ def main(args,parser,subparser):
     header = 'TOKEN'
     if EXPFACTORY_DATABASE == "filesystem":
         header = 'FOLDER\tTOKEN' 
+    print(header)
+
+    # The user wants to list active subjects
+    if args.list is True:
+        tokens = app.list_users() # returns token or folder\ttoken
+        for token in tokens:
+            print(token)
+        sys.exit(0)
 
     # The user wants to add new subjects
     number = args.new
     if number is not None:
-        print(header)
         for i in range(number):
             user = app.generate_user()
             token = os.path.basename(user)

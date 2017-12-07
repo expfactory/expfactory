@@ -57,6 +57,10 @@ def get_parser():
                        help="generate new user tokens, recommended for headless runtime.",
                        default=None, type=int)
 
+    users.add_argument('--list', dest="list",
+                        help="list current tokens, for a headless install",
+                        default=False, action='store_true')
+
     # List
     listy = subparsers.add_parser("list", 
                                    help="List available Expfactory Experiments from Github")
