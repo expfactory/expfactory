@@ -84,9 +84,12 @@ def perform_checks(template, do_redirect=False, context=None):
 
 
 def clear_session():
-    del session['subid']
-    del session['username']
-    del session['experiments']
-    del session['exp_id']
-    if "token" in session:
-        del session['token']
+
+    def clear_variables(variables):
+        for var in variables:
+            if var in session:
+                del session[var]
+
+    clear_variables(['subid', 'experiments', 'exp_id'])
+    clear_variables(['username', 'token'])
+
