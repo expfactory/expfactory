@@ -70,7 +70,7 @@ def generate_subid(self, token=None, digits=5):
     if not token:
         p = Participant()
     else:
-
+        p = Participant(token=token)
     self.session.add(p)
     self.session.commit()
     print('Session Participant id: %s' % p.id)
@@ -85,11 +85,8 @@ def generate_user(self, digits=5):
     from expfactory.database.models import Participant
     token = str(uuid.uuid4())
     subid = self.generate_subid(digits=digits, token=token)
-    p = Participant(id=subid, token=token)
-    self.session.add(p)
-    self.session.commit()
-    print('RELATIONAL: generating user %s' %p)
-    return p
+    print('RELATIONAL: generating user %s' %subid)
+    return subid
 
 
 def validate_token(self, token):
