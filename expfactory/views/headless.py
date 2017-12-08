@@ -69,6 +69,7 @@ def login():
 
     # If not headless, we don't need to login
     if not app.headless:
+        app.logger.debug('Not running in headless mode, redirect to /start.')
         redirect('/start')
 
     subid = session.get('subid')

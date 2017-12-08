@@ -55,7 +55,7 @@ def perform_checks(template, do_redirect=False, context=None, next=None):
     session['exp_id'] = next
 
     # Headless mode requires token
-    if "token" not in session and app.headless:
+    if "token" not in session and app.headless is True:
         flash('A token is required for these experiments.')
         return redirect('/')
 
@@ -93,4 +93,3 @@ def clear_session():
 
     clear_variables(['subid', 'experiments', 'exp_id'])
     clear_variables(['username', 'token'])
-
