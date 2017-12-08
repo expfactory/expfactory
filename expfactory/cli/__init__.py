@@ -53,6 +53,12 @@ def get_parser():
     # Users manager
     users = subparsers.add_parser("users",
                                    help="Manager for interacting with users")
+
+    users.add_argument("--database", dest='database', 
+                        choices=['fllesystem', 'sqlite'],
+                        help="database for application (default filesystem)",
+                        type=str, default="filesystem")
+
     users.add_argument('--new', dest="new",
                        help="generate new user tokens, recommended for headless runtime.",
                        default=None, type=int)

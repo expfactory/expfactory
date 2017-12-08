@@ -31,7 +31,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
 from expfactory.logger import bot
-from expfactory.server import app
 from expfactory.defaults import EXPFACTORY_DATABASE
 import sys
 import os
@@ -39,6 +38,10 @@ import os
 
 def main(args, parser, subparser):
   
+    if args.database is not None:
+        os.environ['EXPFACTORY_DATABASE'] = args.database
+    
+    from expfactory.server import app
     header = 'DATABASE\tTOKEN' 
 
     # The user wants to list active subjects

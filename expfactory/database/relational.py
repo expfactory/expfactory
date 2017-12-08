@@ -84,17 +84,13 @@ def print_user(self, user):
     status = "active"
     token = user.token
 
-    if token.endswith('_finished'):
-        status = "finished"
+    if token in ['finished', 'revoked']:
+        status = token
 
-    elif token.endswith('_revoked'):
-        status = "revoked"
-
-    subid = os.path.basename(token)
-    for ext in ['_revoked','_finished']:
-        subid = subid.replace(ext, '')
+    if token is None:
+        token = ''
   
-    subid = "%s\t%s[%s]" %(user.id, subid, status)
+    subid = "%s\t%s[%s]" %(user.id, token, status)
     print(subid)
     return subid
 
