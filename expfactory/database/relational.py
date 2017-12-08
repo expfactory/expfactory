@@ -85,8 +85,7 @@ def generate_user(self, digits=5):
        entrypoint, and it assumes we want a user generated with a token.
     '''
     token = str(uuid.uuid4())
-    user = self.generate_subid(digits=digits, token=token, return_user=True)
-    return "%s\t%s" %(user.id, user.token)
+    return self.generate_subid(digits=digits, token=token, return_user=True)
 
 
 def validate_token(self, token):

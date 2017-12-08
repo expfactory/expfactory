@@ -58,6 +58,6 @@ def main(args,parser,subparser):
                 token = os.path.basename(user)
                 print('%s\t%s' %(user,token))
             else:
-                print('%s\t%s' %(user.id,user.token))
+                print(user)
     else:
         print('Specify number of new users:\n\texpfactory users --new 1')
