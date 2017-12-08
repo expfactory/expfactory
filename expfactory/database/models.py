@@ -55,8 +55,9 @@ class Participant(Base):
     token = Column(String(36))
     results = relationship('Result', lazy='select',
                            backref=backref('participant', lazy='joined'))
-    def __init__(self, name=None):
+    def __init__(self, name=None, token=None):
         self.name = name
+        self.token = token
 
     def __repr__(self):
         return '<Participant %r>' % (self.name)

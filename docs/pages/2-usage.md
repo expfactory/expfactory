@@ -94,6 +94,22 @@ The result here will depend on the database type. The above shows a filesystem s
 docker exec experiments expfactory users --new 3 >> participants.tsv
 ```
 
+If you ever need to list the tokens you've generated, you can use the `users --list` command. Be careful that you specify the kind of database if you have changed from the default. In the example below, we list users saved as folders on the filesystem, and note that the command can be used for headless (token-named) users as well as traditional.
+
+```
+ expfactory users --list
+FOLDER	TOKEN
+/scif/data/expfactory/398f9f05-2f85-462b-8042-1b020b9c006a	398f9f05-2f85-462b-8042-1b020b9c006a
+/scif/data/expfactory/50d49c45-2ca9-4797-a8e6-df41921e5ee4	50d49c45-2ca9-4797-a8e6-df41921e5ee4
+/scif/data/expfactory/513ac67c-1fb5-4323-a1f0-7484c719a92c	513ac67c-1fb5-4323-a1f0-7484c719a92c
+
+ expfactory users --list
+FOLDER	TOKEN
+/scif/data/expfactory/00000	00000
+/scif/data/expfactory/00001	00001
+/scif/data/expfactory/00002	00002
+``` 
+
 ### Use tokens
 It's up to you to maintain the linking of anonymous tokens to actual participants. What you would do is issue a token to each participant, and have him or her enter it into the web interface.
 
