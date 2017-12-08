@@ -256,7 +256,7 @@ DATABASE	TOKEN
 
 
 ### Restart User
-If a user finishes and you want to restart, you have two options. You can either issue a new identifier (this preserves previous data, and you will still need to keep track of both identifiers). For the examples belows, since we are using a filesystems database, the participant id *is* the token. For relational databases, the participant id is the database index:
+If a user finishes and you want to restart, you have two options. You can either issue a new identifier (this preserves previous data, and you will still need to keep track of both identifiers):
 
 ```
 expfactory users --new 1
@@ -264,7 +264,7 @@ DATABASE	TOKEN
 /scif/data/expfactory/1753bfb5-a230-472c-aa04-ecdc118c1922	1753bfb5-a230-472c-aa04-ecdc118c1922[active]
 ```
 
-or you can restart the user, meaning that any status of `finished` or `revoked` is cleared, and the participant can again write (or over-write) data to his or her folder. Here we show the folder with list before and after a restart:
+or you can restart the user, meaning that any status of `finished` or `revoked` is cleared, and the participant can again write (or over-write) data to his or her folder. You would need to restart a user if you intend to refresh a token. Here we show the folder with list before and after a restart:
 
 
 ```
@@ -295,62 +295,31 @@ $ expfactory users --list
 /scif/data/expfactory/04a144da-97f5-4734-b5ea-1658aa2170ce_revoked	04a144da-97f5-4734-b5ea-1658aa2170ce[revoked]
 ```
 
-### Refresh User
-A refresh means issuing a completely new token, and you should be careful with this because the folder is renamed (for filesystem) commands:
+### Refresh User Token
+A refresh means issuing a completely new token, and this is only possible for status `[active]`. You should be careful with this because the folder is renamed (for filesystem) commands. If you have a finished or revoked folder and want to refresh a user token, you need to restart first. Here is what it looks like to refresh an active user token:
 
 ```
-
+expfactory users --refresh 1320a84f-2e70-456d-91dc-083d36c68e17
+[refreshing] 1320a84f-2e70-456d-91dc-083d36c68e17 --> /scif/data/expfactory/fecad5cd-b044-4b1a-8fd1-37aafdbf8ed7
 ```
 
-This ensures that a participant, under headless mode, cannot go back and retake the experiments unless you explicitly allow them, either by way of a new token or an updated one. 
+A completely new identifier is issued, and at this point you would need to update your participant logs with this change. 
 
-If you want to allow him or her to do so, then you need to generate a new token. You can use these methods to either revoke or refresh tokens.
+**Important** For the examples above, since we are using a filesystems database, the participant id *is* the token. For relational databases, the participant id is the database index.
 
-```
-```
-
-
-
-
-Here we are running a filesystem database and we can observe the change in the folder name from before the user completes the experiments:
-
-
-```
- expfactory users --list
-/scif/data/expfactory/1f5862a8-fa8f-4456-a519-e82ffbc7657e	1f5862a8-fa8f-4456-a519-e82ffbc7657e[active]
-
-```
-to after:
-
-```
- expfactory users --list
-/scif/data/expfactory/1f5862a8-fa8f-4456-a519-e82ffbc7657e_finished	1f5862a8-fa8f-4456-a519-e82ffbc7657e[finished]
-
-```
-
-If the user tried to complete the experiment again, a message is shown that a valid token is required. If the user reads these documents and adds a `_finished` extension, it's still denied. For more information about managing users (e.g., revoking, refreshing, tokens) see [user management](#user-management) below.
+Having these status and commands ensures that a participant, under headless mode, cannot go back and retake the experiments unless you explicitly allow them, either by way of a new token or an updated one. If a user tried to complete the experiment again after finish or revoke, a message is shown that a valid token is required. If the user reads these documents and adds a `_finished` extension, it's still denied.
 
 
 ## Saving Data
 Whether you choose a headless or interactive start, in both cases you can choose how your data is saved. The subtle difference for each saving method that result when you choose headless or interactive will be discussed below.
 
-
-##TODO: talk about saving data for each
-
-        # If headless with token pre-generated OR not headless
-        if self.headless and os.path.exists(data_base) or not self.headless:
-            do_save = True
-        if data_base.endswith(('revoked','finished')):
-            do_save = False  
-
-
 ### filesystem
 Saving to the filesytem is the default (what you get when you don't specify a particular database) and means saving to a folder called `/scif/data` in the Docker image. If you are saving data to the filesystem (`filesystem` database), given that you've mounted the container data folder `/scif/data` to the host, this means that the data will be found on the host in that location. In the example below, we have mounted `/tmp/data` to `/scif/data` in the container, and we are running interactive experiments (meaning without pre-generated tokens for login):
 
 ```
-$ tree /tmp/data/expfactory/00000/
+$ tree /tmp/data/expfactory/xxxx-xxxx-xxxx/
 
-    /tmp/data/expfactory/00000/
+    /tmp/data/expfactory/xxxx-xxxx-xxxx/
        └── tower-of-london-results.json
 
 0 directories, 1 file
@@ -359,26 +328,15 @@ $ tree /tmp/data/expfactory/00000/
 If we had changed our studyid to something else (e.g., `dns`), we might see:
 
 ```
-$ tree /tmp/data/dns/00000/
+$ tree /tmp/data/dns/xxxx-xxxx-xxxx/
 
-    /tmp/data/dns/00000/
+    /tmp/data/dns/xxxx-xxxx-xxxx/
        └── tower-of-london-results.json
 
 0 directories, 1 file
 ```
 
-The subtle difference if we had done a headless start comes down to the subject identifier. If we look at output folders generated for headless start with pre-generated tokens, we see tokens instead:
-
-```
-$ tree /tmp/data/expfactory/
-
-   /tmp/data/expfactory/745cb6ad-a0b7-4610-b4d2-4ca5acd8b6f9
-    └── tower-of-london-results.json
-```
-
-In both cases, participant folders are created under the `studyid` folder.  These start at 00000 and are incremented with each participant you run. If you stop the container and had mounted a volume to the host, the data will persist on the host. If you didn't mount a volume, then you will not see the data on the host.
-
->> **Protip**  We generally don't recommend serving token (headless) and interactive experiments from the same container. If a study identifier can be predicted (e.g., 00001) then it also could be used as a token, and someone's previous result could be maliciously changed.
+Participant folders are created under the `studyid` folder. If you stop the container and had mounted a volume to the host, the data will persist on the host. If you didn't mount a volume, then you will not see the data on the host.
 
 Now we will talk about interaction with the data.
 

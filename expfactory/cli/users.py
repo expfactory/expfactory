@@ -78,9 +78,14 @@ def main(args, parser, subparser):
     if action is not None:
         bot.info('%s %s' %(action, subid))
         result = func(subid=subid)
-        print("[%s] %s --> %s" %(action.lower(), 
-                                 subid,
-                                 result))
+        if result is not None:
+            print("[%s] %s --> %s" %(action.lower(), 
+                                     subid,
+                                     result))
+        else:
+            print("[%s] %s not successful. See logs for details." %(action.lower()))
+            print("Commands may only possible for [active] status." %(action))
+
         sys.exit(0)
 
     print('See expfactory users --help for usage')
