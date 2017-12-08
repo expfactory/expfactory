@@ -118,26 +118,33 @@ def finish_user(self, subid, ext='finished'):
        For headless, this means that the session is ended and the token 
        will not work again to rewrite the result. If the user needs to update
        or redo an experiment, this can be done with a new session'''        
-    finished = None
-    if os.path.exists(self.data_base):    # /scif/data
+    if os.path.exists(self.database):    # /scif/data/<study_id>
         data_base = "%s/%s" %(self.data_base, subid)
         if os.path.exists(data_base):
             finished = "%s_%s" % (data_base,ext)
             os.rename(data_base, finished)
-    return finished    
+            return finished
+        self.logger.warning('%s does not exist, cannot finish. %s' % (data_base, subid))
+
+    self.logger.warning('%s does not exist, cannot finish. %s' % (self.database, subid))
 
 
 def restart_user(self, subid):
     '''restart user will remove any "finished" or "revoked" extensions from 
     the user folder to restart the session'''        
-    if os.path.exists(self.data_base):    # /scif/data
-        data_base = "%s/%s" %(self.data_base, subid)
+    if os.path.exists(self.database): # /scif/data/<study_id>
+        data_base = "%s/%s" %(self.database, subid)
         for ext in ['revoked','finished']:
             folder = "%s_%s" % (data_base, ext)
             if os.path.exists(folder):
                 os.rename(folder, data_base)
                 self.logger.info('Restarting %s, folder is %s.' % (subid, data_base))
                 return folder
+
+        self.logger.warning('%s does not have revoked or finished folder, no changes necessary.' % (subid))
+        return data_base    
+
+    self.logger.warning('%s does not exist, cannot restart. %s' % (self.database, subid))
 
 
 # Tokens #######################################################################
@@ -156,13 +163,15 @@ def validate_token(self, token):
 def refresh_token(self, subid):
     '''refresh or generate a new token for a user. If the user is finished,
        this will also make the folder available again for using.'''
-    refreshed = None
-    if os.path.exists(self.data_base):    # /scif/data
+    if os.path.exists(self.database):    # /scif/data/<study_id>
         data_base = "%s/%s" %(self.data_base, subid)
         if os.path.exists(data_base):
             refreshed = "%s/%s" %(self.data_base, str(uuid.uuid4()))
             os.rename(data_base, refreshed)
-    return refreshed
+            return renamed
+        self.logger.warning('%s does not exist, cannot rename %s' % (data_base, subid))
+    else:
+        self.logger.warning('%s does not exist, cannot rename %s' % (self.database, subid))
 
 
 def revoke_token(self, subid):

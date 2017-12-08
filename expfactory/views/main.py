@@ -96,8 +96,6 @@ def home():
         if "token" not in session:
             form = EntryForm()
             session['experiments'] = [os.path.basename(x) for x in app.experiments] # list
-            print(session.keys())
-            print(session['experiments'])
             return render_template('routes/entry.html', form=form)
         return redirect('/next')
 
@@ -137,7 +135,6 @@ def next():
 
     # To generate redirect to experiment
     experiment = app.get_next(session)
-    app.logger.debug("Selected experiment is %s" %experiment)
  
     if experiment is not None:
         app.logger.debug('Next experiment is %s' % experiment)

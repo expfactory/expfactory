@@ -52,10 +52,9 @@ import os
 @{{ exp_id_python }}.route('/experiments/{{ exp_id }}/')
 def {{ exp_id_python }}_base():
     context = {'experiment': '{{ exp_id }}/index.html'}
-    if context['experiment'] is not None:
-        return perform_checks('experiments/experiment.html', context=context,
-                                                             next="{{ exp_id }}")
-    return redirect('/next')
+    return perform_checks('experiments/experiment.html', quiet=True,
+                                                         context=context,
+                                                         next="{{ exp_id }}")
 
 {{ exp_id_python }}.before_request(csrf.protect)
 app.register_blueprint({{ exp_id_python }})

@@ -121,10 +121,8 @@ class EFServer(Flask):
         '''
         self.logger.debug('Finishing %s' %exp_id)
         experiments = session.get('experiments', [])
-        self.logger.debug('Experiments %s' %experiments)
         experiments = [x for x in experiments if x != exp_id]
         session['experiments'] = experiments
-        self.logger.debug('Experiments %s' %experiments)
         return experiments
 
 

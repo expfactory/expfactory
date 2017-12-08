@@ -42,13 +42,16 @@ from expfactory.logger import bot
 import os
 
 
-def perform_checks(template, do_redirect=False, context=None, next=None):
+def perform_checks(template, do_redirect=False, context=None, next=None, quiet=False):
     '''return all checks for required variables before returning to 
        desired view
     '''
     from expfactory.server import app
     username = session.get('username')
     subid = session.get('subid')
+
+    # If redirect, "last" is currently active (about to start)
+    # If render, "last" is last completed / active experiment (just finished)
     last = session.get('exp_id')
     if next is None:
         next = app.get_next(session)
@@ -60,7 +63,8 @@ def perform_checks(template, do_redirect=False, context=None, next=None):
         return redirect('/')
 
     # Update the user / log
-    app.logger.info("[previous] %s [next] %s for [subid] %s [username] %s" %(last, next, subid, username))
+    if quiet is False:
+        app.logger.info("[router] %s --> %s for [subid] %s [username] %s" %(last, next, subid, username))
 
     if username is None and app.headless is False:
         flash('You must start a session before doing experiments.')
