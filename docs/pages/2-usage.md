@@ -119,15 +119,8 @@ DATABASE	TOKEN
 7	a98e63c4-2ed1-4de4-a315-a9291502dd26
 8	f524e1cc-6841-4417-9529-80874cf30b74
 ```
-**Important** remember that the token is not the participant id, as it will be cleared when the participant finished the experiments:
+**Important** remember that the token is not the participant id, as it will be cleared when the participant finished the experiments. In the example above, we would care about matching the `DATABASE` id to the participant.
 
-```
-```
-
-This ensures that a participant, under headless mode, cannot go back and retake the experiments. If you want to allow him or her to do so, then you need to generate a new token. You can use these methods to either revoke or refresh tokens.
-
-```
-```
 
 ### Use tokens
 It's up to you to maintain the linking of anonymous tokens to actual participants. What you would do is issue a token to each participant, and have him or her enter it into the web interface.
@@ -144,6 +137,7 @@ And of course it follows that if you enter a bad token, you cannot enter.
 </div>
 
 Once entry is given, the user can continue normally to complete the experiments in the protocol.
+
 
 ### Pre-set Experiments
 For a headless experiment, you don't have the web interface to filter experiments in advance, or as for random (or not random) ordering. By default, not giving the `--experiments` argument will serve all experiments found installed in the container. If you want to limit to a smaller subset, do that with the experiments argument:
@@ -164,6 +158,22 @@ docker run -p 80:80 -d \
 ```
 
 ## User Management
+The flow for a user session is the following:
+
+**Headless**
+ - You generate an id and token for the user in advance
+ - The user starts and completes the experiments with the token associated with the id
+ - The token is revoked upon finish, meaning that the user cannot go back without you refreshing it.
+
+**Interactive**
+ - The user is issued an id upon starting the experiment, without a token
+ - When the user finishes, `_finished` is appended to the session folder, and so restarting the session will create a new folder.
+ - If the user is revoked, the folder is appended with `_revoked`
+
+This ensures that a participant, under headless mode, cannot go back and retake the experiments. If you want to allow him or her to do so, then you need to generate a new token. You can use these methods to either revoke or refresh tokens.
+
+```
+```
 
 
 ## Saving Data

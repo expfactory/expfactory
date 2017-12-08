@@ -37,7 +37,7 @@ import sys
 import os
 
 
-def main(args,parser,subparser):
+def main(args, parser, subparser):
   
     header = 'DATABASE\tTOKEN' 
 
@@ -74,5 +74,6 @@ def main(args,parser,subparser):
         for i in range(number):
             user = app.generate_user()
             app.print_user(user)
-    else:
-        print('Specify number of new users:\n\texpfactory users --new 1')
+        sys.exit(0)
+
+    subparser.format_help()
