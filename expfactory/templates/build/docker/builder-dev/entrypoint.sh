@@ -58,6 +58,7 @@ if [ $1 == "build" ]; then
 
     shift
     recipe="/data/Dockerfile"
+    template="build/docker/Dockerfile.dev"
 
     if [ $# -eq 0 ]; then
         expfactory build --help
@@ -70,7 +71,7 @@ if [ $1 == "build" ]; then
         exit
     fi
 
-    expfactory build  --output ${recipe} "$@" 
+    expfactory build  --output ${recipe} --input ${template} "$@" 
 
     if [ -f "${recipe}" ]; then
         cp /opt/expfactory/expfactory/templates/build/docker/startscript.sh /data

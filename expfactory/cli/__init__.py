@@ -121,6 +121,10 @@ def get_parser():
                          help="output name for Dockerfile (if you want a custom path)", 
                          type=str, required=True)
 
+    build.add_argument("--input",'-i', dest='input', 
+                         help="use custom Dockerflie template", 
+                         type=str, required=True)
+
     build.add_argument('experiments', nargs="+",
                         help='experiments to build in image')
 

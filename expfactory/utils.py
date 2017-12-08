@@ -155,9 +155,13 @@ def run_command(cmd):
 def get_template(name, base=None):
     '''read in and return a template file
     '''
-    if base is None:
-        base = get_templatedir()
-    template_file = "%s/%s" %(base, name)
+    # If the file doesn't exist, assume relative to base
+    if not os.path.exists(template_file):
+        if base is None:
+            base = get_templatedir()
+        template_file = "%s/%s" %(base, name)
+
+    # Then try again, if it still doesn't exist, bad input
     if os.path.exists(template_file):
         with open(template_file,"r") as filey:
             template = "".join(filey.readlines())

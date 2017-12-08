@@ -51,8 +51,13 @@ import os
 
 def main(args,parser,subparser):
 
-    # List of experiments is required
-    template = get_template('build/docker/Dockerfile.template')
+    template = 'build/docker/Dockerfile.template'
+
+    # Full path to template is required if provided via input
+    if args.input is not None:
+        template = args.input
+
+    template = get_template(template)
     
     # For now, only one database provided
     database = args.database
