@@ -38,7 +38,7 @@ def main(args,parser,subparser):
 
     logs = "%s/expfactory.log" % EXPFACTORY_LOGS
     if os.path.exists(logs):
-        if args.tail is True:
+        if not args.tail:
             os.system("cat %s" %logs)
         else:
             os.system("tail -f %s" %logs)

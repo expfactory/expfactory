@@ -101,6 +101,7 @@ def print_user(self, user):
         subid = subid.replace(ext, '')
   
     subid = '%s\t%s[%s]' %(user, subid, status)
+    print(subid)
     return subid
 
 
