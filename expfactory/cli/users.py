@@ -40,7 +40,6 @@ import os
 def main(args,parser,subparser):
   
     header = 'DATABASE\tTOKEN' 
-    print(header)
 
     # The user wants to list active subjects
     if args.list is True:
@@ -71,6 +70,7 @@ def main(args,parser,subparser):
     # The user wants to add new subjects
     number = args.new
     if number is not None:
+        print(header)
         for i in range(number):
             user = app.generate_user()
             app.print_user(user)

@@ -163,6 +163,9 @@ docker run -p 80:80 -d \
            -v /tmp/data:/scif/data <container> --experiments tower-of-london,test-task --headless --no-randomize start
 ```
 
+## User Management
+
+
 ## Saving Data
 Whether you choose a headless or interactive start, in both cases you can choose how your data is saved. The subtle difference for each saving method that result when you choose headless or interactive will be discussed below.
 

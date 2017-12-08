@@ -167,7 +167,7 @@ def refresh_token(self, subid):
 
 def revoke_token(self, subid):
     '''revoke a presently active token, meaning append _revoked to it.'''
-    return self.finish_user(subid, ext='revoked'):
+    return self.finish_user(subid, ext='revoked')
 
 
 def save_data(self, session, exp_id, content):
