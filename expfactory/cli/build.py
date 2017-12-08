@@ -63,10 +63,9 @@ def main(args,parser,subparser):
     database = args.database
     studyid = args.studyid
     experiments = args.experiments
-    do_headless = args.headless
-    
+
     headless = "false"
-    if do_headless is True:
+    if args.headless is True:
         headless = "true"
 
     template = sub_template(template,"{{studyid}}",studyid)
