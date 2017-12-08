@@ -263,7 +263,15 @@ expfactory users --new 1
 or you can restart the user, meaning that any status of `finished` or `revoked` is cleared, and the participant can again write (or over-write) data to his or her folder:
 
 ```
-TODO: revoke and refresh examples
+users --restart 04a144da-97f5-4734-b5ea-1658aa2170ce
+[finishing] 04a144da-97f5-4734-b5ea-1658aa2170ce --> /scif/data/expfactory/04a144da-97f5-4734-b5ea-1658aa2170ce_finished
+
+```
+You can also change your mind and put the user back in `finished` status:
+
+```
+users --finish 04a144da-97f5-4734-b5ea-1658aa2170ce
+[finishing] 04a144da-97f5-4734-b5ea-1658aa2170ce --> /scif/data/expfactory/04a144da-97f5-4734-b5ea-1658aa2170ce_finished
 ```
 
 
