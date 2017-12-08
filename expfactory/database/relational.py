@@ -81,7 +81,20 @@ def generate_subid(self, token=None, digits=5, return_user=False):
 def print_user(self, user):
     '''print a relational database user
     ''' 
-    subid = "%s\t%s" %(user.id, user.token)
+    status = "active"
+    token = user.token
+
+    if token.endswith('_finished'):
+        status = "finished"
+
+    elif token.endswith('_revoked'):
+        status = "revoked"
+
+    subid = os.path.basename(token)
+    for ext in ['_revoked','_finished']:
+        subid = subid.replace(ext, '')
+  
+    subid = "%s\t%s[%s]" %(user.id, subid, status)
     print(subid)
     return subid
 
@@ -115,6 +128,8 @@ def finish_user(self, subid):
        accesible if running in headless model'''        
 
     p = self.revoke_token(subid)
+    p.token = "finished"
+    self.session.commit()
     return p
 
 
@@ -135,7 +150,10 @@ def validate_token(self, token):
     from expfactory.database.models import Participant
     p = Participant.query.filter(Participant.token == token).first()
     if p is not None:
-        p = p.id
+        if p.token.endswith(('finished','revoked')):
+            p = None
+        else:
+            p = p.id
     return p
 
 
@@ -145,7 +163,7 @@ def revoke_token(self, subid):
     from expfactory.database.models import Participant
     p = Participant.query.filter(Participant.id == subid).first()
     if p is not None:
-        p.token = None
+        p.token = 'revoked'
     self.session.commit()
     return p
 
@@ -176,17 +194,13 @@ def save_data(self,session, exp_id, content):
     if subid is not None:
         p = Participant.query.filter(Participant.id == subid).first() # better query here
 
-        # Either will be defined, or None if not used
-        do_save = True
+        # Does 
         if self.headless and p.token != token:
-            do_save = False
-        elif self.headless and token is None:
-            do_save = False
-
-        if not do_save:
-            self.logger.info("Headless and finished or mismatched token, skipping save: %s" %p)
- 
+            self.logger.warning('%s attempting to use mismatched token [%s] skipping save' %(p.id, token))
+        elif self.headless and p.token.endswith(('finished','revoked')):
+            self.logger.warning('%s attempting to use expired token [%s] skipping save' %(p.id, token))
         else:
+
             # Preference is to save data under 'data', otherwise do all of it
             if "data" in content:
                 content = content['data']
@@ -194,12 +208,13 @@ def save_data(self,session, exp_id, content):
             result = Result(data=content,
                             exp_id=exp_id,
                             participant_id=p.id) # check if changes from str/int
+
+            # Create and save the result
             self.session.add(result)
             p.results.append(result)
             self.session.commit()
 
-            self.logger.info("Participant: %s" %p)
-            self.logger.info("Result: %s" %result)
+            self.logger.info("Save [participant] %s [result] %s" %(p, result))
 
 
 Base = declarative_base()

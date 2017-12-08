@@ -81,10 +81,26 @@ def list_users(self):
 
 
 def print_user(self, user):
-    '''print a relational database user
+    '''print a filesystem database user. A "database" folder that might end with
+       the participant status (e.g. _finished) is extracted to print in format
+ 
+       [folder]                        [identifier][studyid]
+       /scif/data/expfactory/xxxx-xxxx   xxxx-xxxx[studyid]
+       
     ''' 
-    subid = '%s\t%s' %(user, os.path.basename(user))
-    print(subid)
+    status = "active"
+
+    if user.endswith('_finished'):
+        status = "finished"
+
+    elif user.endswith('_revoked'):
+        status = "revoked"
+
+    subid = os.path.basename(user)
+    for ext in ['_revoked','_finished']:
+        subid = subid.replace(ext, '')
+  
+    subid = '%s\t%s[%s]' %(user, subid, status)
     return subid
 
 
@@ -121,7 +137,7 @@ def finish_user(self, subid, ext='finished'):
     if os.path.exists(self.database):    # /scif/data/<study_id>
         data_base = "%s/%s" %(self.data_base, subid)
         if os.path.exists(data_base):
-            finished = "%s_%s" % (data_base,ext)
+            finished = "%s_%s" % (data_base, ext)
             os.rename(data_base, finished)
             return finished
         self.logger.warning('%s does not exist, cannot finish. %s' % (data_base, subid))
@@ -153,10 +169,13 @@ def validate_token(self, token):
     '''retrieve a subject based on a token. Valid means we return a participant
        invalid means we return None
     '''
-    subid = self.generate_subid(token=token)
-    data_base = "%s/%s" %(self.data_base, subid)
-    if not os.path.exists(data_base):
-        subid = None
+    # A token that is finished or revoked is not valid
+    subid = None
+    if not token.endswith(('finished','revoked')):
+        subid = self.generate_subid(token=token)
+        data_base = "%s/%s" %(self.data_base, subid)
+        if not os.path.exists(data_base):
+            subid = None
     return subid
 
 

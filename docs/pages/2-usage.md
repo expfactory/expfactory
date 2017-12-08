@@ -77,7 +77,7 @@ docker run -p 80:80 -d --name experiments -v /tmp/data:/scif/data <container> \
                     --experiments test-task,tower-of-london start
 ```
 
-If you ask for non random order without giving a list, you will present the experiments in the order listed on the filesystem.
+If you ask for non random order without giving a list, you will present the experiments in the order listed on the filesystem. See [pre-set-experiments](#pre-set-experiments) for more information.
 
 
 ### Generate tokens
@@ -177,7 +177,35 @@ And of course it follows that if you enter a bad token, you cannot enter.
     <img src="../img/headless/bad-token.png"><br>
 </div>
 
-Once entry is given, the user can continue normally to complete the experiments in the protocol.
+Once entry is given, the user can continue normally to complete the experiments in the protocol. 
+
+
+### Headless Finish
+When the user finishes the protocol, the user will have the token revoked so an additional attempt to do the experiments will not work. Here we are running a filesystem database and we can observe the change in the folder name from before the user completes the experiments:
+
+
+```
+ expfactory users --list
+/scif/data/expfactory/1f5862a8-fa8f-4456-a519-e82ffbc7657e	1f5862a8-fa8f-4456-a519-e82ffbc7657e
+
+```
+to after:
+
+```
+ expfactory users --list
+/scif/data/expfactory/1f5862a8-fa8f-4456-a519-e82ffbc7657e_finished	1f5862a8-fa8f-4456-a519-e82ffbc7657e_finished
+
+```
+
+If the user tried to complete the experiment again, a message is shown that a valid token is required. If the user reads these documents and adds a `_finished` extension, it's still denied.
+
+##TODO: need to make sure this doesn't work.
+
+If a user finishes and you want to restart, you have two options. You can either issue a new identifier (this preserves previous data, and you will still need to keep track of both identifiers):
+
+```
+TODO: revoke and refresh examples
+```
 
 
 ### Pre-set Experiments
@@ -197,6 +225,11 @@ docker run -p 80:80 -d \
            --name experiments \ 
            -v /tmp/data:/scif/data <container> --experiments tower-of-london,test-task --headless --no-randomize start
 ```
+
+## Container Logs
+
+TODO: write examples here.
+
 
 ## User Management
 The flow for a user session is the following:

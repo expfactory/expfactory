@@ -81,6 +81,14 @@ def get_parser():
     listy = subparsers.add_parser("list", 
                                    help="List available Expfactory Experiments from Github")
 
+    # List
+    logs = subparsers.add_parser("logs", 
+                                 help="Print expfactory logs to terminal.")
+
+    logs.add_argument('--tail',dest="tail",
+                      help="keep the log open and update in real time.",
+                      default=False, action='store_true')
+
     # Install
     install = subparsers.add_parser("install", 
                                      help="install an Experiment from Github")
@@ -184,6 +192,9 @@ def main():
 
     elif command == "list":
         from .list import main
+
+    elif command == "logs":
+        from .logs import main
 
     elif command == "users":
         from .users import main

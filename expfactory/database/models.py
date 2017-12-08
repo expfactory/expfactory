@@ -47,12 +47,14 @@ from expfactory.database import Base
 
 
 class Participant(Base):
-    '''A participant in a local assessment. id must be unique.
+    '''A participant in a local assessment. id must be unique. If a token is
+       revoked or finished, it will end with `_revoked` or `_finished`. A
+       user generated without a token will have value of None
     '''
     __tablename__ = 'participant'
     id = Column(Integer, primary_key=True)
     name = Column(String(150))
-    token = Column(String(36))
+    token = Column(String(50))
     results = relationship('Result', lazy='select',
                            backref=backref('participant', lazy='joined'))
     def __init__(self, name=None, token=None):

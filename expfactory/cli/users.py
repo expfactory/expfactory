@@ -46,27 +46,6 @@ def main(args, parser, subparser):
         users = app.list_users() # returns id\ttoken
         sys.exit(0)
 
-    if args.revoke is not None:
-        bot.info('Revoking token %s' %args.revoke)
-        result = app.revoke_token(subid=args.revoke)
-        print(result)
-        sys.exit(0)
-    elif args.refresh is not None:
-        bot.info('Refreshing token %s' %args.refresh)
-        result = app.refresh_token(subid=args.refresh)
-        print(result)
-        sys.exit(0)
-    elif args.restart is not None:
-        bot.info('Restarting %s' %args.restart)
-        result = app.restart_user(subid=args.restart)
-        print(result)
-        sys.exit(0)
-    elif args.finish is not None:
-        bot.info('Finishing %s' %args.finish)
-        result = app.finish_user(subid=args.finish)
-        print(result)
-        sys.exit(0)
-
     # The user wants to add new subjects
     number = args.new
     if number is not None:
@@ -76,4 +55,38 @@ def main(args, parser, subparser):
             app.print_user(user)
         sys.exit(0)
 
+    # The user wants to manage user token
+    action = None
+    if args.revoke is not None:
+        subid = clean(args.revoke)
+        func = app.revoke_token
+        action = "Revoking"
+    elif args.refresh is not None:
+        func = app.refresh_token
+        action = "Refreshing"
+    elif args.restart is not None:
+        subid = clean(args.restart)
+        func = app.restart_user
+        action = "Restarting"
+    elif args.finish is not None:
+        subid = clean(args.finish)
+        action = "Finishing"
+        func = app.finish_user
+
+    # Perform the action
+    if action is not None:
+        bot.info('%s %s' %(action, subid))
+        result = func(subid=subid)
+        print(result)
+        sys.exit(0)
+
     print('See expfactory users --help for usage')
+
+
+def clean(subid):
+    '''clean a subid, removing any folder extensions (_revoked or _finished)
+       for the functions
+    '''
+    for ext in ['_revoked','_revoked']:
+        subid = subid.replace(ext,'')
+    return subid
