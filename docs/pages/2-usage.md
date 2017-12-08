@@ -13,11 +13,11 @@ Below, we will summarize the variables that can be set at runtime:
 | Variable        | Description           | Default  |
 | ------------- |:-------------:| -----:|
 | database      | the database to store response data | filesystem |
+| headless  | require pre-generated tokens for headless use  |  flag | 
 | randomize     | present the experiments in random order  |  flag | 
-| no-randomize  | manually select the order of experiments  |  flag | 
-| experiments  | comma separated list of experiments to expose |  [] | 
+| no-randomize     | present the experiments in random order  |  flag | 
+| experiments  | comma separated list of experiments to expose. With  |  [] | 
 | studyid | set the studyid at runtime  |  expfactory |
-
 
 
 ## Start the Container
@@ -68,6 +68,17 @@ If we go to the portal at [127.0.0.1](http://127.0.0.1) we will see a different 
 <div>
     <img src="../img/headless/portal.png"><br>
 </div>
+
+You can also start and specify to not randomize, and present experiments in a particular order:
+
+```
+docker run -p 80:80 -d --name experiments -v /tmp/data:/scif/data <container> \
+                    --headless --no-randomize \
+                    --experiments test-task,tower-of-london start
+```
+
+If you ask for non random order without giving a list, you will present the experiments in the order listed on the filesystem.
+
 
 ### Generate tokens
 A "token" is basically a subject id that is intended to be used once, and can be sent securely to your participants to access the experiments. You will need to generate them, and we can use `exec` to execute a command to the container to do this. If we just run the general users command, we learn better how to use it:
