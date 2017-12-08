@@ -47,8 +47,6 @@ def perform_checks(template, do_redirect=False, context=None, next=None):
        desired view
     '''
     from expfactory.server import app
-
-    app.logger.debug('Performing checks...')
     username = session.get('username')
     subid = session.get('subid')
     last = session.get('exp_id')
@@ -77,9 +75,11 @@ def perform_checks(template, do_redirect=False, context=None, next=None):
         return redirect('/finish')
 
     if do_redirect is True:
+        app.logger.debug('Redirecting to %s' %template)
         return redirect(template)
 
     if context is not None and isinstance(context,dict):
+        app.logger.debug('Rendering %s' %template)
         return render_template(template, **context)
     return render_template(template)
 
