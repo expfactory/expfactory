@@ -53,7 +53,8 @@ import os
 def {{ exp_id_python }}_base():
     context = {'experiment': '{{ exp_id }}/index.html'}
     if context['experiment'] is not None:
-        return perform_checks('experiments/experiment.html', context=context)
+        return perform_checks('experiments/experiment.html', context=context,
+                                                             next="{{ exp_id }}")
     return redirect('/next')
 
 {{ exp_id_python }}.before_request(csrf.protect)
