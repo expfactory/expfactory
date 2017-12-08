@@ -181,7 +181,7 @@ def refresh_token(self, subid):
         if os.path.exists(data_base):
             refreshed = "%s/%s" %(self.database, str(uuid.uuid4()))
             os.rename(data_base, refreshed)
-            return renamed
+            return refreshed
         self.logger.warning('%s does not exist, cannot rename %s' % (data_base, subid))
     else:
         self.logger.warning('%s does not exist, cannot rename %s' % (self.database, subid))
