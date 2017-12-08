@@ -140,7 +140,7 @@ EFServer.generate_subid = generate_subid
 EFServer.generate_user = generate_user
 EFServer.validate_token = validate_token
 EFServer.list_users = list_users
-EFServer.print_user = print_users
+EFServer.print_user = print_user
 app = EFServer(__name__)
 app.config.from_object('expfactory.config')
 
