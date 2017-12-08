@@ -30,7 +30,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 from flask import session
-from expfactory.logger import bot
 from expfactory.utils import (
     write_json,
     mkdir_p
@@ -89,15 +88,7 @@ def print_user(self, user):
     return subid
 
 
-def validate_token(self, token):
-    '''retrieve a subject based on a token. Valid means we return a participant
-       invalid means we return None
-    '''
-    subid = self.generate_subid(token=token)
-    data_base = "%s/%s" %(self.data_base, subid)
-    if not os.path.exists(data_base):
-        subid = None
-    return subid
+# Actions ######################################################################
 
 
 def generate_user(self, subid=None, digits=5):
@@ -121,6 +112,63 @@ def generate_user(self, subid=None, digits=5):
     return data_base
 
 
+def finish_user(self, subid, ext='finished'):
+    '''finish user will append "finished" (or other) to the data folder when
+       the user has completed (or been revoked from) the battery. 
+       For headless, this means that the session is ended and the token 
+       will not work again to rewrite the result. If the user needs to update
+       or redo an experiment, this can be done with a new session'''        
+    finished = None
+    if os.path.exists(self.data_base):    # /scif/data
+        data_base = "%s/%s" %(self.data_base, subid)
+        if os.path.exists(data_base):
+            finished = "%s_%s" % (data_base,ext)
+            os.rename(data_base, finished)
+    return finished    
+
+
+def restart_user(self, subid):
+    '''restart user will remove any "finished" or "revoked" extensions from 
+    the user folder to restart the session'''        
+    if os.path.exists(self.data_base):    # /scif/data
+        data_base = "%s/%s" %(self.data_base, subid)
+        for ext in ['revoked','finished']:
+            folder = "%s_%s" % (data_base, ext)
+            if os.path.exists(folder):
+                os.rename(folder, data_base)
+                self.logger.info('Restarting %s, folder is %s.' % (subid, data_base))
+                return folder
+
+
+# Tokens #######################################################################
+
+def validate_token(self, token):
+    '''retrieve a subject based on a token. Valid means we return a participant
+       invalid means we return None
+    '''
+    subid = self.generate_subid(token=token)
+    data_base = "%s/%s" %(self.data_base, subid)
+    if not os.path.exists(data_base):
+        subid = None
+    return subid
+
+
+def refresh_token(self, subid):
+    '''refresh or generate a new token for a user. If the user is finished,
+       this will also make the folder available again for using.'''
+    refreshed = None
+    if os.path.exists(self.data_base):    # /scif/data
+        data_base = "%s/%s" %(self.data_base, subid)
+        if os.path.exists(data_base):
+            refreshed = "%s/%s" %(self.data_base, str(uuid.uuid4()))
+            os.rename(data_base, refreshed)
+    return refreshed
+
+
+def revoke_token(self, subid):
+    '''revoke a presently active token, meaning append _revoked to it.'''
+    return self.finish_user(subid, ext='revoked'):
+
 
 def save_data(self, session, exp_id, content):
     '''save data will obtain the current subid from the session, and save it
@@ -138,11 +186,20 @@ def save_data(self, session, exp_id, content):
         if not self.headless and not os.path.exists(data_base):
             mkdir_p(data_base)
 
+        # Conditions for saving:
+        do_save = False
+
         # If headless with token pre-generated OR not headless
         if self.headless and os.path.exists(data_base) or not self.headless:
+            do_save = True
+        if data_base.endswith(('revoked','finished')):
+            do_save = False  
+
+        # If headless with token pre-generated OR not headless
+        if do_save is True:
             data_file = "%s/%s-results.json" %(data_base, exp_id)
             if os.path.exists(data_file):
-                bot.warning('%s exists, and is being overwritten.' %data_file)
+                self.logger.warning('%s exists, and is being overwritten.' %data_file)
             write_json(content, data_file)
 
     return data_file

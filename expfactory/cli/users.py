@@ -47,6 +47,27 @@ def main(args,parser,subparser):
         users = app.list_users() # returns id\ttoken
         sys.exit(0)
 
+    if args.revoke is not None:
+        bot.info('Revoking token %s' %args.revoke)
+        result = app.revoke_token(subid=args.revoke)
+        print(result)
+        sys.exit(0)
+    elif args.refresh is not None:
+        bot.info('Refreshing token %s' %args.refresh)
+        result = app.refresh_token(subid=args.refresh)
+        print(result)
+        sys.exit(0)
+    elif args.restart is not None:
+        bot.info('Restarting %s' %args.restart)
+        result = app.restart_user(subid=args.restart)
+        print(result)
+        sys.exit(0)
+    elif args.finish is not None:
+        bot.info('Finishing %s' %args.finish)
+        result = app.finish_user(subid=args.finish)
+        print(result)
+        sys.exit(0)
+
     # The user wants to add new subjects
     number = args.new
     if number is not None:

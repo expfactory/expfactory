@@ -151,6 +151,10 @@ def finish():
 
     # If the user has finished, clear session
     if subid is not None:
+
+        # Filesystem will rename folder to _finished
+        # Relational removes token so not accessible
+        app.finish_user(user)
         clear_session()
         return render_template('routes/finish.html')
     return redirect('/')

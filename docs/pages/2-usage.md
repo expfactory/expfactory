@@ -98,17 +98,36 @@ If you ever need to list the tokens you've generated, you can use the `users --l
 
 ```
  expfactory users --list
-FOLDER	TOKEN
+DATABASE	TOKEN
 /scif/data/expfactory/398f9f05-2f85-462b-8042-1b020b9c006a	398f9f05-2f85-462b-8042-1b020b9c006a
 /scif/data/expfactory/50d49c45-2ca9-4797-a8e6-df41921e5ee4	50d49c45-2ca9-4797-a8e6-df41921e5ee4
 /scif/data/expfactory/513ac67c-1fb5-4323-a1f0-7484c719a92c	513ac67c-1fb5-4323-a1f0-7484c719a92c
 
  expfactory users --list
-FOLDER	TOKEN
+DATABASE	TOKEN
 /scif/data/expfactory/00000	00000
 /scif/data/expfactory/00001	00001
 /scif/data/expfactory/00002	00002
 ``` 
+
+If we were to list a relational database, we would see the database index in the `DATABASE` column instead:
+
+```
+expfactory users --list
+DATABASE	TOKEN
+6	a2d266f7-52a5-497b-9b85-1e98febef6dc
+7	a98e63c4-2ed1-4de4-a315-a9291502dd26
+8	f524e1cc-6841-4417-9529-80874cf30b74
+```
+**Important** remember that the token is not the participant id, as it will be cleared when the participant finished the experiments:
+
+```
+```
+
+This ensures that a participant, under headless mode, cannot go back and retake the experiments. If you want to allow him or her to do so, then you need to generate a new token. You can use these methods to either revoke or refresh tokens.
+
+```
+```
 
 ### Use tokens
 It's up to you to maintain the linking of anonymous tokens to actual participants. What you would do is issue a token to each participant, and have him or her enter it into the web interface.
@@ -146,6 +165,15 @@ docker run -p 80:80 -d \
 
 ## Saving Data
 Whether you choose a headless or interactive start, in both cases you can choose how your data is saved. The subtle difference for each saving method that result when you choose headless or interactive will be discussed below.
+
+
+##TODO: talk about saving data for each
+
+        # If headless with token pre-generated OR not headless
+        if self.headless and os.path.exists(data_base) or not self.headless:
+            do_save = True
+        if data_base.endswith(('revoked','finished')):
+            do_save = False  
 
 
 ### filesystem

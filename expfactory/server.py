@@ -27,16 +27,7 @@ from expfactory.experiment import (
     get_selection
 )
 
-from expfactory.database import (
-    init_db, 
-    list_users,
-    generate_subid,
-    print_user,
-    save_data,
-    generate_user,
-    validate_token
-)
-
+from expfactory.database import *
 from flask import Flask
 from flask_wtf.csrf import (
     CSRFProtect, 
@@ -138,9 +129,18 @@ EFServer.init_db = init_db
 EFServer.save_data = save_data
 EFServer.generate_subid = generate_subid
 EFServer.generate_user = generate_user
+
+# Tokens
 EFServer.validate_token = validate_token
+EFServer.refresh_token = refresh_token
+EFServer.revoke_token = revoke_token
+
+# User Actions
 EFServer.list_users = list_users
 EFServer.print_user = print_user
+EFServer.finish_user = finish_user
+EFServer.restart_user = restart_user
+
 app = EFServer(__name__)
 app.config.from_object('expfactory.config')
 

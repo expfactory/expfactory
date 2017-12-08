@@ -61,6 +61,22 @@ def get_parser():
                         help="list current tokens, for a headless install",
                         default=False, action='store_true')
 
+    users.add_argument('--revoke', dest="revoke",
+                        help="revoke token for a user id, ending the experiments",
+                        default=None, type=str)
+
+    users.add_argument('--refresh', dest="refresh",
+                        help="refresh a token for a user",
+                        default=None, type=str)
+
+    users.add_argument('--restart', dest="restart",
+                        help="restart a user, revoking and then refresing the token",
+                        default=None, type=str)
+
+    users.add_argument('--finish', dest="finish",
+                        help="finish a user session by removing the token",
+                        default=None, type=str)
+
     # List
     listy = subparsers.add_parser("list", 
                                    help="List available Expfactory Experiments from Github")
