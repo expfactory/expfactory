@@ -179,7 +179,7 @@ def refresh_token(self, subid):
     if os.path.exists(self.database):    # /scif/data/<study_id>
         data_base = "%s/%s" %(self.database, subid)
         if os.path.exists(data_base):
-            refreshed = "%s/%s" %(data_base, str(uuid.uuid4()))
+            refreshed = "%s/%s" %(self.database, str(uuid.uuid4()))
             os.rename(data_base, refreshed)
             return renamed
         self.logger.warning('%s does not exist, cannot rename %s' % (data_base, subid))

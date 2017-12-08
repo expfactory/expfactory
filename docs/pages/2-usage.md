@@ -201,6 +201,8 @@ optional arguments:
   --finish FINISH    finish a user session by removing the token
 ```
 
+**Important** For filesystem databases, the token coincides with the data folder, and *is* the user id. When you reference an id for a filesystem save, you reference the token (e.g., `41a451cc-7416-4fab-9247-59b1d65e33a2`) however when you reference a relational database id, you reference the index. You should keep track of these corresponding values to keep track of your participants, and be careful when you [refresh tokens](#refresh-tokens) as the filesystem folder (and thus participant id) will be renamed.
+
 ### New Users
 As shown previously, we can use `exec` to execute a command to the container to create new users:
 
@@ -254,28 +256,55 @@ DATABASE	TOKEN
 
 
 ### Restart User
-If a user finishes and you want to restart, you have two options. You can either issue a new identifier (this preserves previous data, and you will still need to keep track of both identifiers):
+If a user finishes and you want to restart, you have two options. You can either issue a new identifier (this preserves previous data, and you will still need to keep track of both identifiers). For the examples belows, since we are using a filesystems database, the participant id *is* the token. For relational databases, the participant id is the database index:
 
 ```
 expfactory users --new 1
+DATABASE	TOKEN
+/scif/data/expfactory/1753bfb5-a230-472c-aa04-ecdc118c1922	1753bfb5-a230-472c-aa04-ecdc118c1922[active]
 ```
 
-or you can restart the user, meaning that any status of `finished` or `revoked` is cleared, and the participant can again write (or over-write) data to his or her folder:
+or you can restart the user, meaning that any status of `finished` or `revoked` is cleared, and the participant can again write (or over-write) data to his or her folder. Here we show the folder with list before and after a restart:
+
 
 ```
-users --restart 04a144da-97f5-4734-b5ea-1658aa2170ce
-[finishing] 04a144da-97f5-4734-b5ea-1658aa2170ce --> /scif/data/expfactory/04a144da-97f5-4734-b5ea-1658aa2170ce_finished
+$ expfactory users --list
+/scif/data/expfactory/04a144da-97f5-4734-b5ea-1658aa2170ce_finished	04a144da-97f5-4734-b5ea-1658aa2170ce[finished]
 
+$ expfactory users --restart 04a144da-97f5-4734-b5ea-1658aa2170ce
+[restarting] 04a144da-97f5-4734-b5ea-1658aa2170ce --> /scif/data/expfactory/04a144da-97f5-4734-b5ea-1658aa2170ce
+
+$ expfactory users --list
+/scif/data/expfactory/04a144da-97f5-4734-b5ea-1658aa2170ce	04a144da-97f5-4734-b5ea-1658aa2170ce[active]
 ```
+
 You can also change your mind and put the user back in `finished` status:
 
 ```
-users --finish 04a144da-97f5-4734-b5ea-1658aa2170ce
+$ expfactory users --finish 04a144da-97f5-4734-b5ea-1658aa2170ce
 [finishing] 04a144da-97f5-4734-b5ea-1658aa2170ce --> /scif/data/expfactory/04a144da-97f5-4734-b5ea-1658aa2170ce_finished
 ```
 
+or revoke the token entirely, which is akin to a finish, but implies a different status.
 
-This ensures that a participant, under headless mode, cannot go back and retake the experiments. If you want to allow him or her to do so, then you need to generate a new token. You can use these methods to either revoke or refresh tokens.
+```
+$ expfactory users --revoke 04a144da-97f5-4734-b5ea-1658aa2170ce
+[revoking] 04a144da-97f5-4734-b5ea-1658aa2170ce --> /scif/data/expfactory/04a144da-97f5-4734-b5ea-1658aa2170ce_revoked
+
+$ expfactory users --list                                       
+/scif/data/expfactory/04a144da-97f5-4734-b5ea-1658aa2170ce_revoked	04a144da-97f5-4734-b5ea-1658aa2170ce[revoked]
+```
+
+### Refresh User
+A refresh means issuing a completely new token, and you should be careful with this because the folder is renamed (for filesystem) commands:
+
+```
+
+```
+
+This ensures that a participant, under headless mode, cannot go back and retake the experiments unless you explicitly allow them, either by way of a new token or an updated one. 
+
+If you want to allow him or her to do so, then you need to generate a new token. You can use these methods to either revoke or refresh tokens.
 
 ```
 ```
