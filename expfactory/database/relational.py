@@ -101,7 +101,15 @@ def validate_token(self, token):
     return p
 
 
-def list_users(self):
+def print_user(self, user):
+    '''print a relational database user
+    ''' 
+    subid = "%s\t%s" %(user.id, user.token)
+    print(subid)
+    return subid
+
+
+def list_users(self, user=None):
     '''list users, each having a model in the database. A headless experiment
        will use protected tokens, and interactive will be based on auto-
        incremented ids.
@@ -109,9 +117,8 @@ def list_users(self):
     from expfactory.database.models import Participant
     participants = Participant.query.all()
     users = []
-    for participant in participants:
-        subid = "%s\t%s" %(participant.id, participant.token)
-        users.append(subid)
+    for user in participants:
+        users.append(self.print_user(user))
     return users
 
 

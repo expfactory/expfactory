@@ -78,7 +78,15 @@ def list_users(self):
     ''' 
     folders = glob('%s/*' %(self.database))
     folders.sort()
-    return ['%s\t%s' %(x,os.path.basename(x)) for x in folders]
+    return [self.print_user(x) for x in folders]
+
+
+def print_user(self, user):
+    '''print a relational database user
+    ''' 
+    subid = '%s\t%s' %(user, os.path.basename(user))
+    print(subid)
+    return subid
 
 
 def validate_token(self, token):

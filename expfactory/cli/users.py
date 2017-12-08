@@ -45,8 +45,6 @@ def main(args,parser,subparser):
     # The user wants to list active subjects
     if args.list is True:
         users = app.list_users() # returns id\ttoken
-        for user in users:
-            print(user)
         sys.exit(0)
 
     # The user wants to add new subjects
@@ -54,10 +52,6 @@ def main(args,parser,subparser):
     if number is not None:
         for i in range(number):
             user = app.generate_user()
-            if EXPFACTORY_DATABASE == "filesystem":
-                token = os.path.basename(user)
-                print('%s\t%s' %(user,token))
-            else:
-                print(user)
+            app.print_user(user)
     else:
         print('Specify number of new users:\n\texpfactory users --new 1')
