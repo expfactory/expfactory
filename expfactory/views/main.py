@@ -131,7 +131,16 @@ def next():
     # Headless mode requires logged in user with token
     if app.headless and "token" not in session:
         return headless_denied()
-    return router()
+
+    # To generate redirect to experiment
+    experiment = app.get_next(session)
+ 
+    if experiment is not None:
+        app.logger.info('Next experiment is %s' % experiment)
+        return perform_checks('/experiments/%s' % experiment, do_redirect=True,
+                              next=experiment)
+
+    return redirect('/finish')
    
 
 # Reset/Logout
