@@ -18,9 +18,9 @@ and changes prior to that are (unfortunately) done retrospectively. Critical ite
 
 **additions**
  - this changelog was added
+ - a development image `vanessa/expfactory-builder.dev` was added for others to test new changes before integration into master repo.
 **changed defaults**
  - the interactive portal study identifier used to be an incrementing number. To be consistent with the ability to generate a token, the identifier is now an automatically generated 34 character string.
-
 **features**
  - `--headless` has been added as an option for start, meaning that the portal is closed off and tokens must be entered to participate. The experiments order is either preset with `--experiments` and `--no-randomize`, randomized (default) or filtered to a limited subset (`--experiments` without `--no-randomize`),
  - `expfactory logs` can be used inside the container to print out application logs. With `--tail` they are left open for viewing updates.
