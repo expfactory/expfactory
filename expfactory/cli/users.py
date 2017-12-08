@@ -62,6 +62,7 @@ def main(args, parser, subparser):
         func = app.revoke_token
         action = "Revoking"
     elif args.refresh is not None:
+        subid = clean(args.refresh)
         func = app.refresh_token
         action = "Refreshing"
     elif args.restart is not None:
@@ -77,7 +78,9 @@ def main(args, parser, subparser):
     if action is not None:
         bot.info('%s %s' %(action, subid))
         result = func(subid=subid)
-        print(result)
+        print("[%s] %s --> %s" %(action.lower(), 
+                                 subid,
+                                 result))
         sys.exit(0)
 
     print('See expfactory users --help for usage')

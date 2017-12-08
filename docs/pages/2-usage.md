@@ -81,95 +81,19 @@ If you ask for non random order without giving a list, you will present the expe
 
 
 ### Generate tokens
-A "token" is basically a subject id that is intended to be used once, and can be sent securely to your participants to access the experiments. You will need to generate them, and we can use `exec` to execute a command to the container to do this. If we just run the general users command, we learn better how to use it:
+A "token" is basically a subject id that is intended to be used once, and can be sent securely to your participants to access the experiments. The token can be refreshed, revoked, or active. You will need to generate them, and briefly it looks like this:
+
 
 ```
-docker exec experiments expfactory users
-See expfactory users --help for usage
-```
-
-The full usage:
-
-```
-usage: expfactory users [-h] [--new NEW] [--list] [--revoke REVOKE]
-                        [--refresh REFRESH] [--restart RESTART]
-                        [--finish FINISH]
-
-optional arguments:
-  -h, --help         show this help message and exit
-  --new NEW          generate new user tokens, recommended for headless
-                     runtime.
-  --list             list current tokens, for a headless install
-  --revoke REVOKE    revoke token for a user id, ending the experiments
-  --refresh REFRESH  refresh a token for a user
-  --restart RESTART  restart a user, revoking and then refresing the token
-  --finish FINISH    finish a user session by removing the token
-```
-
-Let's try creating three new users with the `--new` flag:
-
-```
+docker exec experiments expfactory users --help
 docker exec experiments expfactory users --new 3
-DATABASE	TOKEN
-/scif/data/expfactory/41a451cc-7416-4fab-9247-59b1d65e33a2	41a451cc-7416-4fab-9247-59b1d65e33a2[active]
-/scif/data/expfactory/6afabdd5-7d5e-48dc-a3b2-ade235d2e0a6	6afabdd5-7d5e-48dc-a3b2-ade235d2e0a6[active]
-/scif/data/expfactory/3251fd0e-ba3e-4089-b01a-28dfa03f1fbd	3251fd0e-ba3e-4089-b01a-28dfa03f1fbd[active]
 ```
 
-The result here will depend on the database type. 
-
- - `DATABASE`: The above shows a filesystem save, so a `DATABASE` refers to the folder, and remember this is internal to the container, so you might have `/scif/data` mapped to a different folder on your host. A relational database would have the `DATABASE` column correspond with the index. 
- - `TOKEN`: The token corresponds with the folder on the filesystem, and shown also is the participant status (e.g., `active`).
-
-You can copy paste this output from the terminal, or pipe into a file instead:
-
-```
-docker exec experiments expfactory users --new 3 >> participants.tsv
-```
-
-You can also issue these commands by shelling inside the container, which we will do for the remainder of the examples:
-
-```
-docker exec -it experiments bash
-```
-
-If you ever need to list the tokens you've generated, you can use the `users --list` command. Be careful that the environment variable `EXPFACTORY_DATABASE` is set to be the one that you intend. For example, a filesystem database setting will print all folders found in the mapped folder given this variable is set to `filesystem`. In the example below, we list users saved as folders on the filesystem, and note that the command can be used for headless (token-named) users as well as traditional.
-
-Headless experiment runs have tokens for identifiers
-
-```
- expfactory users --list
-DATABASE	TOKEN
-/scif/data/expfactory/41a451cc-7416-4fab-9247-59b1d65e33a2	41a451cc-7416-4fab-9247-59b1d65e33a2[active]
-/scif/data/expfactory/6afabdd5-7d5e-48dc-a3b2-ade235d2e0a6	6afabdd5-7d5e-48dc-a3b2-ade235d2e0a6[active]
-/scif/data/expfactory/3251fd0e-ba3e-4089-b01a-28dfa03f1fbd	3251fd0e-ba3e-4089-b01a-28dfa03f1fbd[active]
-```
-
-Interactive experiment runs are increasing numerical folders.
-
-```
- expfactory users --list
-DATABASE	TOKEN
-/scif/data/expfactory/00000	00000[active]
-/scif/data/expfactory/00001	00001[active]
-/scif/data/expfactory/00002	00002[active]
-``` 
-
-If we were to list a relational database, we would see the database index in the `DATABASE` column instead:
-
-```
-expfactory users --list
-DATABASE	TOKEN
-6	a2d266f7-52a5-497b-9b85-1e98febef6dc
-7	a98e63c4-2ed1-4de4-a315-a9291502dd26
-8	f524e1cc-6841-4417-9529-80874cf30b74
-```
-
-**Important** For relational databases, remember that the token is not the participant id, as it will be cleared when the participant finished the experiments. In the example above, we would care about matching the `DATABASE` id to the participant. For filesystem "databases" the token folder is considered the id. Thus, you should be careful with renaming or otherwise changing a partipant folder.
+See [managing users](#managing-users) for complete details about generating, refreshing, and using tokens.
 
 
 ### Use tokens
-It's up to you to maintain the linking of anonymous tokens to actual participants. What you would do is issue a token to each participant, and have him or her enter it into the web interface.
+Once you generate tokens for your users (and remember that it's up to you to maintain the linking of anonymous tokens to actual participants) the tokens can be entered into the web interface:
 
 <div>
     <img src="../img/headless/enter-token.png"><br>
@@ -186,31 +110,8 @@ Once entry is given, the user can continue normally to complete the experiments 
 
 
 ### Headless Finish
-When the user finishes the protocol, the user will have the token revoked so an additional attempt to do the experiments will not work. Here we are running a filesystem database and we can observe the change in the folder name from before the user completes the experiments:
+When the user finishes the protocol, the user will have the token revoked so an additional attempt to do the experiments will not work. You would need to generate a new session with token (the `--new` command above) or restart the participant to rewrite the previously generated data.
 
-
-```
- expfactory users --list
-/scif/data/expfactory/1f5862a8-fa8f-4456-a519-e82ffbc7657e	1f5862a8-fa8f-4456-a519-e82ffbc7657e
-
-```
-to after:
-
-```
- expfactory users --list
-/scif/data/expfactory/1f5862a8-fa8f-4456-a519-e82ffbc7657e_finished	1f5862a8-fa8f-4456-a519-e82ffbc7657e_finished
-
-```
-
-If the user tried to complete the experiment again, a message is shown that a valid token is required. If the user reads these documents and adds a `_finished` extension, it's still denied.
-
-##TODO: need to make sure this doesn't work.
-
-If a user finishes and you want to restart, you have two options. You can either issue a new identifier (this preserves previous data, and you will still need to keep track of both identifiers):
-
-```
-TODO: revoke and refresh examples
-```
 
 
 ### Pre-set Experiments
@@ -233,10 +134,39 @@ docker run -p 80:80 -d \
 
 ## Container Logs
 
-TODO: write examples here.
+The `expfactory` tool in the container will let you view (or keep open) the experiment logs. You can do this by issuing a command to a running container:
+
+```
+$ docker exec angry_blackwell expfactory logs
+New session [subid] expfactory/f57bd534-fa50-4af5-9114-d0fb769c5de4
+[router] None --> bis11-survey for [subid] expfactory/f57bd534-fa50-4af5-9114-d0fb769c5de4 [username] You
+Next experiment is bis11-survey
+[router] bis11-survey --> bis11-survey for [subid] expfactory/f57bd534-fa50-4af5-9114-d0fb769c5de4 [username] You
+Redirecting to /experiments/bis11-survey
+Rendering experiments/experiment.html
+Saving data for bis11-survey
+Finishing bis11-survey
+Finished bis11-survey, 0 remaining.
+Expfactory Version: 3.0
+```
+
+if you want the window to remain open to watch, just add `--tail`
+
+```
+$ docker exec angry_blackwell expfactory logs --tail
+```
+You can equally shell into the contaniner and run `expfactory logs` directly.
 
 
 ## User Management
+This section will go into detail about generation, restart, revoke, and refresh of tokens.
+
+ - **generation** means creating a completely new entry in the database. Previous entries for a participant are irrelevant, you need to keep track of both.
+ - **restart** means that you are removing any `finished` status from a known participant token identifier. This means that the participant can navigate to the portal and retake the experiments, having the data saved under the previous identifier. Previous data is over-written.
+ - **revoke** means that the participant is no longer allowed to participate. The token essentially becomes inactive.
+ - **refresh** means that a new token is issued. Be careful with refreshing a token, because you will need to keep track of the change in the subject token (the main identifier to the data).
+
+### Application Flow
 The flow for a user session is the following:
 
 **Headless**
@@ -245,14 +175,123 @@ The flow for a user session is the following:
  - The token is revoked upon finish, meaning that the user cannot go back without you refreshing it.
 
 **Interactive**
- - The user is issued an id upon starting the experiment, without a token
+ - The user is automatically issued an id upon starting the experiment, nothing is pre-generated
  - When the user finishes, `_finished` is appended to the session folder, and so restarting the session will create a new folder.
  - If the user is revoked, the folder is appended with `_revoked`
+ - If the user finishes and returns to the portal, a new session (different data folder) is created.
+
+If you are running an experiment in a lab and can expect the user to not return to the portal, the interactive option above is ok. However if you are serving the battery remotely, or if you want to better secure your databases, it's recommend to run the experiment container headless. In this section, we will talk about user management that is relevant to a headless (without an interactive portal) start. 
+
+### User Management Help
+The main entrypoint for managing users is with `expfactory users`:
+
+```
+expfactory users --help
+usage: expfactory users [-h] [--new NEW] [--list] [--revoke REVOKE]
+                        [--refresh REFRESH] [--restart RESTART]
+                        [--finish FINISH]
+optional arguments:
+  -h, --help         show this help message and exit
+  --new NEW          generate new user tokens, recommended for headless
+                     runtime.
+  --list             list current tokens, for a headless install
+  --revoke REVOKE    revoke token for a user id, ending the experiments
+  --refresh REFRESH  refresh a token for a user
+  --restart RESTART  restart a user, revoking and then refresing the token
+  --finish FINISH    finish a user session by removing the token
+```
+
+### New Users
+As shown previously, we can use `exec` to execute a command to the container to create new users:
+
+```
+docker exec experiments expfactory users --new 3
+DATABASE	TOKEN
+/scif/data/expfactory/41a451cc-7416-4fab-9247-59b1d65e33a2	41a451cc-7416-4fab-9247-59b1d65e33a2[active]
+/scif/data/expfactory/6afabdd5-7d5e-48dc-a3b2-ade235d2e0a6	6afabdd5-7d5e-48dc-a3b2-ade235d2e0a6[active]
+/scif/data/expfactory/3251fd0e-ba3e-4089-b01a-28dfa03f1fbd	3251fd0e-ba3e-4089-b01a-28dfa03f1fbd[active]
+```
+
+The result here will depend on the database type. 
+
+ - `DATABASE`: The above shows a filesystem save, so a `DATABASE` refers to the folder, and remember this is internal to the container, so you might have `/scif/data` mapped to a different folder on your host. A relational database would have the `DATABASE` column correspond with the index. 
+ - `TOKEN`: The token corresponds with the folder (for filesystem) or relational database `token` variable, and shown also is the participant status (e.g., `active`).
+
+You can copy paste this output from the terminal, or pipe into a file instead:
+
+```
+docker exec experiments expfactory users --new 3 >> participants.tsv
+```
+
+You can also issue these commands by shelling inside the container, which we will do for the remainder of the examples:
+
+```
+docker exec -it experiments bash
+```
+
+### List Users
+If you ever need to list the tokens you've generated, you can use the `users --list` command. Be careful that the environment variable `EXPFACTORY_DATABASE` is set to be the one that you intend. For example, a filesystem database setting will print all folders found in the mapped folder given this variable is set to `filesystem`. In the example below, we list users saved as folders on the filesystem:
+
+```
+ expfactory users --list
+DATABASE	TOKEN
+/scif/data/expfactory/41a451cc-7416-4fab-9247-59b1d65e33a2	41a451cc-7416-4fab-9247-59b1d65e33a2[active]
+/scif/data/expfactory/6afabdd5-7d5e-48dc-a3b2-ade235d2e0a6	6afabdd5-7d5e-48dc-a3b2-ade235d2e0a6[active]
+/scif/data/expfactory/3251fd0e-ba3e-4089-b01a-28dfa03f1fbd	3251fd0e-ba3e-4089-b01a-28dfa03f1fbd[active]
+```
+
+If we were to list a relational database, we would see the database index in the `DATABASE` column instead:
+
+```
+expfactory users --list
+DATABASE	TOKEN
+6	a2d266f7-52a5-497b-9b85-1e98febef6dc[active]
+7	a98e63c4-2ed1-4de4-a315-a9291502dd26[active]
+8	f524e1cc-6841-4417-9529-80874cf30b74[active]
+```
+
+**Important** For relational databases, remember that the token is not the participant id, as it will be cleared when the participant finished the experiments. In the example above, we would care about matching the `DATABASE` id to the participant. For filesystem "databases" the token folder is considered the id. Thus, you should be careful with renaming or otherwise changing a partipant folder, because the token is the only association you have (and must keep a record of yourself) to a participant's data.
+
+
+### Restart User
+If a user finishes and you want to restart, you have two options. You can either issue a new identifier (this preserves previous data, and you will still need to keep track of both identifiers):
+
+```
+expfactory users --new 1
+```
+
+or you can restart the user, meaning that any status of `finished` or `revoked` is cleared, and the participant can again write (or over-write) data to his or her folder:
+
+```
+TODO: revoke and refresh examples
+```
+
 
 This ensures that a participant, under headless mode, cannot go back and retake the experiments. If you want to allow him or her to do so, then you need to generate a new token. You can use these methods to either revoke or refresh tokens.
 
 ```
 ```
+
+
+
+
+Here we are running a filesystem database and we can observe the change in the folder name from before the user completes the experiments:
+
+
+```
+ expfactory users --list
+/scif/data/expfactory/1f5862a8-fa8f-4456-a519-e82ffbc7657e	1f5862a8-fa8f-4456-a519-e82ffbc7657e[active]
+
+```
+to after:
+
+```
+ expfactory users --list
+/scif/data/expfactory/1f5862a8-fa8f-4456-a519-e82ffbc7657e_finished	1f5862a8-fa8f-4456-a519-e82ffbc7657e[finished]
+
+```
+
+If the user tried to complete the experiment again, a message is shown that a valid token is required. If the user reads these documents and adds a `_finished` extension, it's still denied. For more information about managing users (e.g., revoking, refreshing, tokens) see [user management](#user-management) below.
 
 
 ## Saving Data
