@@ -60,13 +60,7 @@ def generate_subid(self, token=None, digits=5):
 
     # Not headless auto-increments
     if not token:
-        folder_id = 0
-        folders = glob('%s/*' %(self.database))
-        folders.sort()
-        if len(folders) > 0:
-            folder_id = int(os.path.basename(folders[-1])) + 1
-        folder_id = str(folder_id).zfill(digits)
-        return "%s/%s" % (self.study_id, folder_id)
+        token = str(uuid.uuid4())
 
     # Headless doesn't use any folder_id, just generated token folder
     return "%s/%s" % (self.study_id, token)

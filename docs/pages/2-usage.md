@@ -111,12 +111,17 @@ Let's try creating three new users with the `--new` flag:
 ```
 docker exec experiments expfactory users --new 3
 DATABASE	TOKEN
-/scif/data/expfactory/c4f58f85-bda0-47ee-9625-e6f70c3459e6	c4f58f85-bda0-47ee-9625-e6f70c3459e6
-/scif/data/expfactory/c058ac0d-9c0a-426c-b646-3b2f29abf555	c058ac0d-9c0a-426c-b646-3b2f29abf555
-/scif/data/expfactory/c65978e2-c5ce-41ff-92c8-d16edc499444	c65978e2-c5ce-41ff-92c8-d16edc499444
+/scif/data/expfactory/41a451cc-7416-4fab-9247-59b1d65e33a2	41a451cc-7416-4fab-9247-59b1d65e33a2[active]
+/scif/data/expfactory/6afabdd5-7d5e-48dc-a3b2-ade235d2e0a6	6afabdd5-7d5e-48dc-a3b2-ade235d2e0a6[active]
+/scif/data/expfactory/3251fd0e-ba3e-4089-b01a-28dfa03f1fbd	3251fd0e-ba3e-4089-b01a-28dfa03f1fbd[active]
 ```
 
-The result here will depend on the database type. The above shows a filesystem save, so a `DATABASE` refers to the folder, and remember this is internal to the container, so you might have `/scif/data` mapped to a different folder on your host. A relational database would have the `DATABASE` column correspond with the index. You can copy paste this from the terminal, or pipe into a file instead:
+The result here will depend on the database type. 
+
+ - `DATABASE`: The above shows a filesystem save, so a `DATABASE` refers to the folder, and remember this is internal to the container, so you might have `/scif/data` mapped to a different folder on your host. A relational database would have the `DATABASE` column correspond with the index. 
+ - `TOKEN`: The token corresponds with the folder on the filesystem, and shown also is the participant status (e.g., `active`).
+
+You can copy paste this output from the terminal, or pipe into a file instead:
 
 ```
 docker exec experiments expfactory users --new 3 >> participants.tsv
@@ -128,16 +133,16 @@ You can also issue these commands by shelling inside the container, which we wil
 docker exec -it experiments bash
 ```
 
-If you ever need to list the tokens you've generated, you can use the `users --list` command. Be careful that you specify the kind of database if you have changed from the default. In the example below, we list users saved as folders on the filesystem, and note that the command can be used for headless (token-named) users as well as traditional.
+If you ever need to list the tokens you've generated, you can use the `users --list` command. Be careful that the environment variable `EXPFACTORY_DATABASE` is set to be the one that you intend. For example, a filesystem database setting will print all folders found in the mapped folder given this variable is set to `filesystem`. In the example below, we list users saved as folders on the filesystem, and note that the command can be used for headless (token-named) users as well as traditional.
 
 Headless experiment runs have tokens for identifiers
 
 ```
  expfactory users --list
 DATABASE	TOKEN
-/scif/data/expfactory/398f9f05-2f85-462b-8042-1b020b9c006a	398f9f05-2f85-462b-8042-1b020b9c006a
-/scif/data/expfactory/50d49c45-2ca9-4797-a8e6-df41921e5ee4	50d49c45-2ca9-4797-a8e6-df41921e5ee4
-/scif/data/expfactory/513ac67c-1fb5-4323-a1f0-7484c719a92c	513ac67c-1fb5-4323-a1f0-7484c719a92c
+/scif/data/expfactory/41a451cc-7416-4fab-9247-59b1d65e33a2	41a451cc-7416-4fab-9247-59b1d65e33a2[active]
+/scif/data/expfactory/6afabdd5-7d5e-48dc-a3b2-ade235d2e0a6	6afabdd5-7d5e-48dc-a3b2-ade235d2e0a6[active]
+/scif/data/expfactory/3251fd0e-ba3e-4089-b01a-28dfa03f1fbd	3251fd0e-ba3e-4089-b01a-28dfa03f1fbd[active]
 ```
 
 Interactive experiment runs are increasing numerical folders.
@@ -145,9 +150,9 @@ Interactive experiment runs are increasing numerical folders.
 ```
  expfactory users --list
 DATABASE	TOKEN
-/scif/data/expfactory/00000	00000
-/scif/data/expfactory/00001	00001
-/scif/data/expfactory/00002	00002
+/scif/data/expfactory/00000	00000[active]
+/scif/data/expfactory/00001	00001[active]
+/scif/data/expfactory/00002	00002[active]
 ``` 
 
 If we were to list a relational database, we would see the database index in the `DATABASE` column instead:
