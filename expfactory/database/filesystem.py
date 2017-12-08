@@ -53,7 +53,7 @@ import sys
 # to the main application upon initialization of the server.
 
 
-def generate_subid(self, token=None, digits=5):
+def generate_subid(self, token=None):
     '''assumes a flat (file system) database, organized by experiment id, and
        subject id, with data (json) organized by subject identifier
     ''' 
@@ -102,7 +102,7 @@ def print_user(self, user):
 # Actions ######################################################################
 
 
-def generate_user(self, subid=None, digits=5):
+def generate_user(self, subid=None):
     '''generate a new user on the filesystem, still session based so we
        create a new identifier. This function is called from the users new 
        entrypoint, and it assumes we want a user generated with a token.
@@ -130,7 +130,7 @@ def finish_user(self, subid, ext='finished'):
        will not work again to rewrite the result. If the user needs to update
        or redo an experiment, this can be done with a new session'''        
     if os.path.exists(self.database):    # /scif/data/<study_id>
-        data_base = "%s/%s" %(self.data_base, subid)
+        data_base = "%s/%s" %(self.database, subid)
         if os.path.exists(data_base):
             finished = "%s_%s" % (data_base, ext)
             os.rename(data_base, finished)
