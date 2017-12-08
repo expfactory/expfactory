@@ -711,8 +711,6 @@ You should generally use a delimiter like tab, as it's commonly the case that fi
 A few questions for you!
 
  - Would password protection of the portal be desired?
- - Is a user allowed to redo an experiment? Meaning, if a session is started and the data is written (and the experiment done again) is it over-written? 
- - Is some higher level mechanism for generating user ids in advance, and then validating them with an individual, desired?
 
 To best develop the software for different deployment, it's important to discuss these issues. Please [post an issue](https://www.github.com/expfactory/expfactory/issues) to give feedback.
 
