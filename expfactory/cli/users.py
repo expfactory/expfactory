@@ -39,17 +39,14 @@ import os
 
 def main(args,parser,subparser):
   
-    # Only filesystem database has FOLDER
-    header = 'TOKEN'
-    if EXPFACTORY_DATABASE == "filesystem":
-        header = 'FOLDER\tTOKEN' 
+    header = 'DATABASE\tTOKEN' 
     print(header)
 
     # The user wants to list active subjects
     if args.list is True:
-        tokens = app.list_users() # returns token or folder\ttoken
-        for token in tokens:
-            print(token)
+        users = app.list_users() # returns id\ttoken
+        for user in users:
+            print(user)
         sys.exit(0)
 
     # The user wants to add new subjects
@@ -57,10 +54,10 @@ def main(args,parser,subparser):
     if number is not None:
         for i in range(number):
             user = app.generate_user()
-            token = os.path.basename(user)
             if EXPFACTORY_DATABASE == "filesystem":
+                token = os.path.basename(user)
                 print('%s\t%s' %(user,token))
             else:
-                print(token)
+                print('%s\t%s' %(user.id,user.token))
     else:
         print('Specify number of new users:\n\texpfactory users --new 1')
