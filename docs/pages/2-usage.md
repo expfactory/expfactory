@@ -74,27 +74,52 @@ A "token" is basically a subject id that is intended to be used once, and can be
 
 ```
 docker exec experiments expfactory users
-Specify number of new users:
-	expfactory users --new 1
+See expfactory users --help for usage
 ```
 
-Let's try creating three users:
+The full usage:
+
+```
+usage: expfactory users [-h] [--new NEW] [--list] [--revoke REVOKE]
+                        [--refresh REFRESH] [--restart RESTART]
+                        [--finish FINISH]
+
+optional arguments:
+  -h, --help         show this help message and exit
+  --new NEW          generate new user tokens, recommended for headless
+                     runtime.
+  --list             list current tokens, for a headless install
+  --revoke REVOKE    revoke token for a user id, ending the experiments
+  --refresh REFRESH  refresh a token for a user
+  --restart RESTART  restart a user, revoking and then refresing the token
+  --finish FINISH    finish a user session by removing the token
+```
+
+Let's try creating three new users with the `--new` flag:
 
 ```
 docker exec experiments expfactory users --new 3
-FOLDER	TOKEN
+DATABASE	TOKEN
 /scif/data/expfactory/c4f58f85-bda0-47ee-9625-e6f70c3459e6	c4f58f85-bda0-47ee-9625-e6f70c3459e6
 /scif/data/expfactory/c058ac0d-9c0a-426c-b646-3b2f29abf555	c058ac0d-9c0a-426c-b646-3b2f29abf555
 /scif/data/expfactory/c65978e2-c5ce-41ff-92c8-d16edc499444	c65978e2-c5ce-41ff-92c8-d16edc499444
 ```
 
-The result here will depend on the database type. The above shows a filesystem save, so a `FOLDER` is included, and remember this is internal to the container, so you might have `/scif/data` mapped to a different folder on your host. A relational database would just show the `TOKEN`. You can copy paste this from the terminal, or pipe into a file instead:
+The result here will depend on the database type. The above shows a filesystem save, so a `DATABASE` refers to the folder, and remember this is internal to the container, so you might have `/scif/data` mapped to a different folder on your host. A relational database would have the `DATABASE` column correspond with the index. You can copy paste this from the terminal, or pipe into a file instead:
 
 ```
 docker exec experiments expfactory users --new 3 >> participants.tsv
 ```
 
+You can also issue these commands by shelling inside the container, which we will do for the remainder of the examples:
+
+```
+docker exec -it experiments bash
+```
+
 If you ever need to list the tokens you've generated, you can use the `users --list` command. Be careful that you specify the kind of database if you have changed from the default. In the example below, we list users saved as folders on the filesystem, and note that the command can be used for headless (token-named) users as well as traditional.
+
+Headless experiment runs have tokens for identifiers
 
 ```
  expfactory users --list
@@ -102,7 +127,11 @@ DATABASE	TOKEN
 /scif/data/expfactory/398f9f05-2f85-462b-8042-1b020b9c006a	398f9f05-2f85-462b-8042-1b020b9c006a
 /scif/data/expfactory/50d49c45-2ca9-4797-a8e6-df41921e5ee4	50d49c45-2ca9-4797-a8e6-df41921e5ee4
 /scif/data/expfactory/513ac67c-1fb5-4323-a1f0-7484c719a92c	513ac67c-1fb5-4323-a1f0-7484c719a92c
+```
 
+Interactive experiment runs are increasing numerical folders.
+
+```
  expfactory users --list
 DATABASE	TOKEN
 /scif/data/expfactory/00000	00000
@@ -119,7 +148,8 @@ DATABASE	TOKEN
 7	a98e63c4-2ed1-4de4-a315-a9291502dd26
 8	f524e1cc-6841-4417-9529-80874cf30b74
 ```
-**Important** remember that the token is not the participant id, as it will be cleared when the participant finished the experiments. In the example above, we would care about matching the `DATABASE` id to the participant.
+
+**Important** For relational databases, remember that the token is not the participant id, as it will be cleared when the participant finished the experiments. In the example above, we would care about matching the `DATABASE` id to the participant. For filesystem "databases" the token folder is considered the id. Thus, you should be careful with renaming or otherwise changing a partipant folder.
 
 
 ### Use tokens

@@ -96,6 +96,8 @@ def home():
         if "token" not in session:
             form = EntryForm()
             session['experiments'] = [os.path.basename(x) for x in app.experiments] # list
+            print(session.keys())
+            print(session['experiments'])
             return render_template('routes/entry.html', form=form)
         return redirect('/next')
 
@@ -163,7 +165,7 @@ def finish():
 
         # Filesystem will rename folder to _finished
         # Relational removes token so not accessible
-        app.finish_user(user)
+        app.finish_user(subid)
         clear_session()
         return render_template('routes/finish.html')
     return redirect('/')
