@@ -76,4 +76,4 @@ def main(args, parser, subparser):
             app.print_user(user)
         sys.exit(0)
 
-    subparser.format_help()
+    print(subparser.format_help())
