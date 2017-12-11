@@ -16,7 +16,7 @@ Below, we will summarize the variables that can be set at runtime:
 | headless  | require pre-generated tokens for headless use  |  flag | 
 | randomize     | present the experiments in random order  |  flag | 
 | no-randomize     | present the experiments in random order  |  flag | 
-| experiments  | comma separated list of experiments to expose. With  |  [] | 
+| experiments  | comma separated list of experiments to expose  |  [] | 
 | studyid | set the studyid at runtime  |  expfactory |
 
 
