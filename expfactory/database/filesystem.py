@@ -130,8 +130,13 @@ def finish_user(self, subid, ext='finished'):
        will not work again to rewrite the result. If the user needs to update
        or redo an experiment, this can be done with a new session
     '''
-    if os.path.exists(self.data_base):    # /scif/data/<study_id>
-        data_base = "%s/%s" %(self.data_base, subid)
+    if os.path.exists(self.data_base):    # /scif/data
+        if subid.startswith(self.studyid):
+            data_base = "%s/%s" %(self.data_base, subid)
+        else:
+            data_base = "%s/%s/%s" %(self.data_base,
+                                     self.studyid,
+                                     subid)
         if os.path.exists(data_base):
             finished = "%s_%s" % (data_base, ext)
             os.rename(data_base, finished)

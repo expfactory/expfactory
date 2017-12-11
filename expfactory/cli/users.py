@@ -86,7 +86,7 @@ def main(args, parser, subparser):
                                      subid,
                                      result))
         else:
-            print("[%s] %s not successful. See logs for details." %(action.lower()))
+            print("[%s] not successful. See logs for details." %(action.lower()))
             print("Commands may only possible for [active] status." %(action))
 
         sys.exit(0)
