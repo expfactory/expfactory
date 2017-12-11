@@ -128,15 +128,22 @@ def finish_user(self, subid, ext='finished'):
        the user has completed (or been revoked from) the battery. 
        For headless, this means that the session is ended and the token 
        will not work again to rewrite the result. If the user needs to update
-       or redo an experiment, this can be done with a new session
+       or redo an experiment, this can be done with a new session. Note that if
+       this function is called internally by the application at experiment
+       finish, the subid includes a study id (e.g., expfactory/xxxx-xxxx)
+       but if called by the user, it may not (e.g., xxxx-xxxx). We check
+       for this to ensure it works in both places.
     '''
     if os.path.exists(self.data_base):    # /scif/data
+
+        # Only relevant to filesystem save - the studyid is the top folder
         if subid.startswith(self.studyid):
             data_base = "%s/%s" %(self.data_base, subid)
         else:
             data_base = "%s/%s/%s" %(self.data_base,
                                      self.studyid,
                                      subid)
+        # Do the renaming
         if os.path.exists(data_base):
             finished = "%s_%s" % (data_base, ext)
             os.rename(data_base, finished)
@@ -148,7 +155,10 @@ def finish_user(self, subid, ext='finished'):
 
 def restart_user(self, subid):
     '''restart user will remove any "finished" or "revoked" extensions from 
-    the user folder to restart the session'''        
+    the user folder to restart the session. This command always comes from
+    the client users function, so we know subid does not start with the
+    study identifer first
+    '''        
     if os.path.exists(self.data_base): # /scif/data/<study_id>
         data_base = "%s/%s" %(self.data_base, subid)
         for ext in ['revoked','finished']:
