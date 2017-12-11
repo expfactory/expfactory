@@ -193,6 +193,9 @@ def main():
     if command in ['users']:
         os.environ['MESSAGELEVEL'] = "0"
 
+    if args.database is not None:
+        os.environ['EXPFACTORY_DATABASE'] = args.database
+
     from expfactory.logger import bot
     from expfactory.version import __version__
     bot.info("Expfactory Version: %s" % __version__)

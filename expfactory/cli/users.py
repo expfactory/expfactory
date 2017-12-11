@@ -37,10 +37,7 @@ import os
 
 
 def main(args, parser, subparser):
-  
-    if args.database is not None:
-        os.environ['EXPFACTORY_DATABASE'] = args.database
-    
+      
     from expfactory.server import app
     header = 'DATABASE\tTOKEN' 
 
