@@ -143,14 +143,24 @@ def finish_user(self, subid, ext='finished'):
             data_base = "%s/%s/%s" %(self.data_base,
                                      self.study_id,
                                      subid)
-        # Do the renaming
-        if os.path.exists(data_base):
-            finished = "%s_%s" % (data_base, ext)
-            os.rename(data_base, finished)
-            return finished
-        self.logger.warning('%s does not exist, cannot finish. %s' % (data_base, subid))
 
-    self.logger.warning('%s does not exist, cannot finish. %s' % (self.database, subid))
+        # The renamed file will be here
+        finished = "%s_%s" % (data_base, ext)
+
+        # Participant already finished
+        if os.path.exists(finished):
+            self.logger.warning('[%s] is already finished: %s' % (subid, data_base))
+
+        # Exists and can finish
+        elif os.path.exists(data_base):
+            os.rename(data_base, finished)
+
+        # Not finished, doesn't exist
+        else:
+            finished = None
+            self.logger.warning('%s does not exist, cannot finish. %s' % (data_base, subid))
+
+    return finished
 
 
 def restart_user(self, subid):
