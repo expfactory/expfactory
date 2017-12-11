@@ -242,14 +242,27 @@ DATABASE	TOKEN
 /scif/data/expfactory/3251fd0e-ba3e-4089-b01a-28dfa03f1fbd	3251fd0e-ba3e-4089-b01a-28dfa03f1fbd[active]
 ```
 
+This would be equivalent to the following below. This is the suggested usage because a single container can be flexible to have multiple different kinds of databases:
+
+```
+ expfactory users --list --database filesystem
+```
+
 If we were to list a relational database, we would see the database index in the `DATABASE` column instead:
 
 ```
-expfactory users --list
+expfactory users --list --database sqlite
 DATABASE	TOKEN
 6	a2d266f7-52a5-497b-9b85-1e98febef6dc[active]
 7	a98e63c4-2ed1-4de4-a315-a9291502dd26[active]
 8	f524e1cc-6841-4417-9529-80874cf30b74[active]
+```
+
+We generally recommend for you to specify the `--database` argument unless you are using the database defined to be the container default, determinde by `EXPFACTORY_DATABASE` in it's build recipe (the Dockerfile). You can always check the default in a running image (`foo`) like this:
+
+```
+docker inspect foo | grep EXPFACTORY_DATABASE
+                "EXPFACTORY_DATABASE=filesystem",
 ```
 
 **Important** For relational databases, remember that the token is not the participant id, as it will be cleared when the participant finished the experiments. In the example above, we would care about matching the `DATABASE` id to the participant. For filesystem "databases" the token folder is considered the id. Thus, you should be careful with renaming or otherwise changing a partipant folder, because the token is the only association you have (and must keep a record of yourself) to a participant's data.
