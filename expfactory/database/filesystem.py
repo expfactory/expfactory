@@ -128,9 +128,10 @@ def finish_user(self, subid, ext='finished'):
        the user has completed (or been revoked from) the battery. 
        For headless, this means that the session is ended and the token 
        will not work again to rewrite the result. If the user needs to update
-       or redo an experiment, this can be done with a new session'''        
-    if os.path.exists(self.database):    # /scif/data/<study_id>
-        data_base = "%s/%s" %(self.database, subid)
+       or redo an experiment, this can be done with a new session
+    '''
+    if os.path.exists(self.data_base):    # /scif/data/<study_id>
+        data_base = "%s/%s" %(self.data_base, subid)
         if os.path.exists(data_base):
             finished = "%s_%s" % (data_base, ext)
             os.rename(data_base, finished)
@@ -143,8 +144,8 @@ def finish_user(self, subid, ext='finished'):
 def restart_user(self, subid):
     '''restart user will remove any "finished" or "revoked" extensions from 
     the user folder to restart the session'''        
-    if os.path.exists(self.database): # /scif/data/<study_id>
-        data_base = "%s/%s" %(self.database, subid)
+    if os.path.exists(self.data_base): # /scif/data/<study_id>
+        data_base = "%s/%s" %(self.data_base, subid)
         for ext in ['revoked','finished']:
             folder = "%s_%s" % (data_base, ext)
             if os.path.exists(folder):
@@ -176,8 +177,8 @@ def validate_token(self, token):
 def refresh_token(self, subid):
     '''refresh or generate a new token for a user. If the user is finished,
        this will also make the folder available again for using.'''
-    if os.path.exists(self.database):    # /scif/data/<study_id>
-        data_base = "%s/%s" %(self.database, subid)
+    if os.path.exists(self.data_base):    # /scif/data
+        data_base = "%s/%s" %(self.data_base, subid)
         if os.path.exists(data_base):
             refreshed = "%s/%s" %(self.database, str(uuid.uuid4()))
             os.rename(data_base, refreshed)
