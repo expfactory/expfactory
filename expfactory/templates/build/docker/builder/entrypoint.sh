@@ -76,7 +76,7 @@ if [ $1 == "build" ]; then
         cp /opt/expfactory/expfactory/templates/build/docker/startscript.sh /data
         echo
         echo "To build, cd to directory with Dockerfile and:
-              docker build -t expfactory/experiments ."
+              docker build --no-cache -t expfactory/experiments ."
     else
         expfactory build --help
         exit
