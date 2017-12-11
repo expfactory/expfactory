@@ -159,9 +159,8 @@ For the cases above, you can use the `vanessa/expfactory-builder` image to run t
 Testing an experiment primarily means two things: some kind of static testing for content, and a runtime test that the experiment functions as we would expect.
 
 ### Runtime Test
-When you submit an experiment for review, given that the repository for the experiment is also hosting it on the Github pages associated with the repository, it's likely easy enough for you and your reviewers to test the experiment using Github pages. However, for predictable experiment layouts (e.g., jspsych) we have developed an experiment robot that can run through the experiment for you. We provide the robot as a container, with source code in the [examples](https://github.com/expfactory/expfactory/tree/master/examples) folder.
+When you submit an experiment for review, given that the repository for the experiment is also hosting it on the Github pages associated with the repository, it's likely easy enough for you and your reviewers to test the experiment using Github pages. However, for predictable experiment layouts (e.g., jspsych) we are currently developing an experiment robot that can run through the experiment for you. We provide the robot as a container, with source code. We will update these docs when the robot containers are ready.
 
-TODO write me
 
 ### Static Testing
 You have two options to test experiments on your host using `vanessa/expfactory-builder`. If you want to test a single experiment, meaning a folder with a `config.json` file:
