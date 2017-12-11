@@ -18,6 +18,7 @@ Below, we will summarize the variables that can be set at runtime:
 | no-randomize     | present the experiments in random order  |  flag | 
 | experiments  | comma separated list of experiments to expose. With  |  [] | 
 | studyid | set the studyid at runtime  |  expfactory |
+| name | ??? | ??? |
 
 
 ## Start the Container
