@@ -137,11 +137,11 @@ def finish_user(self, subid, ext='finished'):
     if os.path.exists(self.data_base):    # /scif/data
 
         # Only relevant to filesystem save - the studyid is the top folder
-        if subid.startswith(self.studyid):
+        if subid.startswith(self.study_id):
             data_base = "%s/%s" %(self.data_base, subid)
         else:
             data_base = "%s/%s/%s" %(self.data_base,
-                                     self.studyid,
+                                     self.study_id,
                                      subid)
         # Do the renaming
         if os.path.exists(data_base):
