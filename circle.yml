@@ -9,7 +9,8 @@ machine:
 dependencies:
   override:
     - docker info
-    - cd expfactory/templates/build/docker/builder-ci && /bin/bash build.sh
+    - cd expfactory/templates/build/docker/builder-ci && /bin/bash setup_build.sh
+    - /bin/bash /tmp/builder/build.sh
   pre:
     - echo "The Experiment Factory!"
     - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
