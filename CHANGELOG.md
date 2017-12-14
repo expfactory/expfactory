@@ -19,6 +19,7 @@ and changes prior to that are (unfortunately) done retrospectively. Critical ite
 **additions**
  - this changelog was added
  - a development image `vanessa/expfactory-builder.dev` was added for others to test new changes before integration into master repo.
+ - addition of tests for builder (and databases)
 **changed defaults**
  - the interactive portal study identifier used to be an incrementing number. To be consistent with the ability to generate a token, the identifier is now an automatically generated 34 character string.
 **features**

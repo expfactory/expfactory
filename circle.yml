@@ -1,0 +1,22 @@
+machine:
+  services:
+    - docker
+  python:
+    version: 3.5.1
+  environment:
+    TEST_RUN_FOLDER: /tmp
+
+dependencies:
+  override:
+    - docker info
+    - cd expfactory/templates/build/docker/builder && docker build --rm=false -t expfactory/expfactory-builder .
+  pre:
+    - echo "The Experiment Factory!"
+    - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    - /bin/bash Miniconda3-latest-Linux-x86_64.sh -b 
+    - cd /tmp && git clone https://github.com/expfactory/expfactory.git
+    - cd /tmp/expfactory && $HOME/miniconda3/bin/python setup.py install
+
+test:
+  override:
+    - bash expfactory/testing/test_builder.sh
