@@ -6,4 +6,4 @@ docker run -v /tmp/data:/data vanessa/expfactory-builder build test-task
 
 echo "Building container"
 cd /tmp/data
-docker build expfactory/experiments .
+docker build -t expfactory/experiments .
