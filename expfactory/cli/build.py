@@ -63,7 +63,7 @@ def main(args,parser,subparser):
     database = args.database
     studyid = args.studyid
     experiments = args.experiments
-    branch = "-b %s" os.environ.get('EXPFACTORY_BRANCH','master')
+    branch = "-b %s" %os.environ.get('EXPFACTORY_BRANCH','master')
 
     headless = "false"
     if args.headless is True:

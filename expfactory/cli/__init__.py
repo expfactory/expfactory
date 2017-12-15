@@ -44,18 +44,18 @@ def get_parser():
     parser = argparse.ArgumentParser(
     description="expfactory: produce a reproducible battery of container experiments")
 
-    parser.add_argument("--database", dest='database', 
-                        choices=['fllesystem', 'sqlite'],
-                        help="database for application (default filesystem)",
-                        type=str, default="filesystem")
-
     subparsers = parser.add_subparsers(help='Experiment Factory actions',
                                        title='actions',
                                        description='actions for expfactory tools',
                                        dest="command")
 
+    parser.add_argument("--database", dest='database', 
+                        choices=['fllesystem', 'sqlite'],
+                        help="database for application (default filesystem)",
+                        type=str, default="filesystem")
+
     # Users manager
-    users = subparsers.add_parser("users",
+    users = subparsers.add_parser("users", parents=[parser],
                                    help="Manager for interacting with users")
 
     users.add_argument('--new', dest="new",
@@ -83,11 +83,11 @@ def get_parser():
                         default=None, type=str)
 
     # List
-    listy = subparsers.add_parser("list", 
+    listy = subparsers.add_parser("list", parents=[parser],
                                    help="List available Expfactory Experiments from Github")
 
     # List
-    logs = subparsers.add_parser("logs", 
+    logs = subparsers.add_parser("logs", parents=[parser],
                                  help="Print expfactory logs to terminal.")
 
     logs.add_argument('--tail',dest="tail",
@@ -95,7 +95,7 @@ def get_parser():
                       default=False, action='store_true')
 
     # Install
-    install = subparsers.add_parser("install", 
+    install = subparsers.add_parser("install", parents=[parser],
                                      help="install an Experiment from Github")
 
     install.add_argument('src', nargs=1, help='source url or folder of experiment')
@@ -113,7 +113,7 @@ def get_parser():
 
 
     # Generate Build Recipe
-    build = subparsers.add_parser("build", 
+    build = subparsers.add_parser("build", parents=[parser],
                                    help="Build an experiment container (or just recipe)")
 
     build.add_argument("--output",'-o', dest='output', 
