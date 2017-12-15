@@ -19,4 +19,4 @@ dependencies:
 
 test:
   override:
-    - bash expfactory/testing/test_builder.sh
+    - /bin/bash expfactory/testing/test_builder.sh
