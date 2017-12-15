@@ -55,7 +55,7 @@ def get_parser():
                         type=str, default="filesystem")
 
     # Users manager
-    users = subparsers.add_parser("users", parents=[parser],
+    users = subparsers.add_parser("users",
                                    help="Manager for interacting with users")
 
     users.add_argument('--new', dest="new",
@@ -83,11 +83,11 @@ def get_parser():
                         default=None, type=str)
 
     # List
-    listy = subparsers.add_parser("list", parents=[parser],
+    listy = subparsers.add_parser("list", 
                                    help="List available Expfactory Experiments from Github")
 
     # List
-    logs = subparsers.add_parser("logs", parents=[parser],
+    logs = subparsers.add_parser("logs", 
                                  help="Print expfactory logs to terminal.")
 
     logs.add_argument('--tail',dest="tail",
@@ -95,7 +95,7 @@ def get_parser():
                       default=False, action='store_true')
 
     # Install
-    install = subparsers.add_parser("install", parents=[parser],
+    install = subparsers.add_parser("install", 
                                      help="install an Experiment from Github")
 
     install.add_argument('src', nargs=1, help='source url or folder of experiment')
@@ -113,7 +113,7 @@ def get_parser():
 
 
     # Generate Build Recipe
-    build = subparsers.add_parser("build", parents=[parser],
+    build = subparsers.add_parser("build", 
                                    help="Build an experiment container (or just recipe)")
 
     build.add_argument("--output",'-o', dest='output', 
