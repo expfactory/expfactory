@@ -70,7 +70,7 @@ class TestExperiment(unittest.TestCase):
         valid = validator.validate(self.experiment)
         not_valid = validator.validate(self.bad_experiment)
         self.assertTrue(valid)
-        self.assertTrue(not valid_valid)
+        self.assertTrue(not not_valid)
 
 
 if __name__ == '__main__':
