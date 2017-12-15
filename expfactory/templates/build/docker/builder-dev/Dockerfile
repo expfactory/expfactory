@@ -1,9 +1,6 @@
-FROM ubuntu:16.04
+FROM vanessa/expfactory-builder:base
 
 # docker build -t vanessa/expfactory-builder-dev .
-
-RUN apt-get update && apt-get install -y nginx git python3-pip python3-dev python libyaml-dev
-ENV DEBIAN_FRONTEND noninteractive
 
 ###################################
 # Experiment Factory

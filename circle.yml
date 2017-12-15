@@ -21,8 +21,11 @@ dependencies:
     - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
     - /bin/bash Miniconda3-latest-Linux-x86_64.sh -b 
     - cd $HOME/expfactory && $HOME/miniconda3/bin/python setup.py install
+    - $HOME/miniconda3/bin/python -m pip install requests
 
 test:
   override:
     - /bin/bash expfactory/testing/test_builder.sh
-    - /bin/bash expfactory/testing/run_tests.sh $PWD/expfactory/testing $TEST_RUN_FOLDER
+    - cd $HOME/expfactory && $HOME/miniconda3/bin/python -m unittest testing.test_experiment 
+    - cd $HOME/expfactory && $HOME/miniconda3/bin/python -m unittest testing.test_client 
+
