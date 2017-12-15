@@ -59,7 +59,7 @@ class TestClient(unittest.TestCase):
  
     def test_help(self):
         result = self.run_command(["expfactory","--help"])
-        self.assertTrue('{list,install,build}' in result)
+        self.assertTrue('{users,list,logs,install,build}' in result)
 
         result = self.run_command(["expfactory","list","--help"])
         self.assertTrue('expfactory list' in result)
@@ -69,6 +69,12 @@ class TestClient(unittest.TestCase):
 
         result = self.run_command(["expfactory","install","--help"])
         self.assertTrue('expfactory install' in result)
+
+        result = self.run_command(["expfactory","users","--help"])
+        self.assertTrue('expfactory users' in result)
+
+        result = self.run_command(["expfactory","logs","--help"])
+        self.assertTrue('expfactory logs' in result)
 
     def test_list(self):
         result = self.run_command(["expfactory"])

@@ -68,7 +68,7 @@ class TestExperiment(unittest.TestCase):
         loaded_experiment = load_experiment(self.experiment)  
         validator = ExperimentValidator()
         valid = validator.validate(self.experiment)
-        not_valid = validator.validate(self.not_an_experiment)
+        not_valid = validator.validate(self.bad_experiment)
         self.assertTrue(valid)
         self.assertTrue(not valid_valid)
 
