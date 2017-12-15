@@ -26,6 +26,6 @@ dependencies:
 test:
   override:
     - /bin/bash expfactory/testing/test_builder.sh
-    - cd $HOME/expfactory && $HOME/miniconda3/bin/python -m unittest testing.test_experiment 
-    - cd $HOME/expfactory && $HOME/miniconda3/bin/python -m unittest testing.test_client 
+    - cd $HOME/expfactory/expfactory && $HOME/miniconda3/bin/python -m unittest testing.test_experiment 
+    - cd $HOME/expfactory/expfactory && $HOME/miniconda3/bin/python -m unittest testing.test_client 
 
