@@ -77,11 +77,6 @@ class TestClient(unittest.TestCase):
         self.assertTrue(len(result.split('\\n'))>95)
         self.assertTrue('test-task' in result)
 
-    def test_validate(self):
-        loaded_experiment = load_experiment(self.experiment)  
-        validation = validate(self.experiment)
-        self.assertTrue(validation)
-
     def test_install(self):
         os.chdir(self.tmpdir)
         result = self.run_command(["expfactory",

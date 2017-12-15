@@ -35,11 +35,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import unittest
 import shutil
-from numpy.testing import (
-    assert_array_equal, 
-    assert_almost_equal, 
-    assert_equal
-)
 from expfactory.utils import *
 from expfactory.experiment import *
 from expfactory.validator import *
@@ -53,7 +48,7 @@ class TestExperiment(unittest.TestCase):
     def setUp(self):
         self.pwd = get_installdir()
         self.battery_folder = "%s/testing/data" %self.pwd
-        self.experiment = os.path.abspath("%s/testing/data/test_task/" %self.pwd)
+        self.experiment = os.path.abspath("%s/testing/data/test-task/" %self.pwd)
         self.bad_experiment = os.path.abspath("%s/testing/data/not_an_experiment/" %self.pwd)
         self.tmpdir = tempfile.mkdtemp()
 

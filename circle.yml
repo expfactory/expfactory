@@ -5,6 +5,7 @@ machine:
     version: 3.5.1
   environment:
     TEST_RUN_FOLDER: /tmp
+    PATH: $HOME/miniconda3/bin:$PATH
 
 dependencies:
   cache_directories:

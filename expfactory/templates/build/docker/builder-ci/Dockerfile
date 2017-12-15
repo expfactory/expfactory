@@ -8,9 +8,7 @@ FROM vanessa/expfactory-builder:base
 
 WORKDIR /opt
 ADD . /opt
-RUN ls
 WORKDIR /opt/expfactory
-RUN ls
 RUN python3 setup.py install
 RUN mv /opt/entrypoint.sh /entrypoint.sh
 RUN chmod u+x /entrypoint.sh
