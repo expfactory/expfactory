@@ -1,0 +1,37 @@
+.shapebox {
+  width: 20vw;
+  height: 20vw;
+  position: absolute;
+  top:50%;
+  left:50%;
+  margin-right:-50%;
+  transform: translate(-50%,-50%);
+  display: flex;
+justify-content: center; /* align horizontal */
+align-items: center; /* align vertical */
+}
+
+#cross {
+  background: black;
+  height: 100%;
+  width: 20%;
+  position:absolute;
+  top:50%;
+  left:50%;
+    transform: translate(-50%, -50%) rotate(45deg) ;
+}
+
+#cross:after {
+  background: black;
+  content: "";
+  height: 20%;
+  left: -200%;
+  position: absolute;
+  top: 40%;
+  width: 500%;
+}
+
+.responded {
+  visibility: hidden;
+}
+

@@ -1,0 +1,369 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto|Raleway|Roboto+Slab)
+
+html {
+  font-family: sans-serif;
+  font-size: 18px;
+  line-height: 1.6em;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.consent, .consent > p {
+  color: black;
+}
+
+.jspsych-display-element {
+  margin: 0;
+}
+
+.display_stage_background {
+  height: 100vh;
+  width: 100vw;
+  background-color: #707070;
+  z-index: -1;
+}
+
+.display_stage {
+  position: fixed;
+  left: 5vw;
+  top: 2vh;
+  height: 94vh;
+  width: 90vw;
+  background-color: white;
+  box-shadow: 1px 1px 1px #999;
+  border-radius: 15px;
+  z-index: 0;
+  padding: 30px 30px 30px 30px;
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+  box-sizing: border-box;         /* Opera/IE 8+ */
+  overflow: auto;
+}
+
+
+.centerbox {
+  width: 50vw;
+  height: 60vh;
+  position:absolute;
+  top:50%;
+  left:50%;
+  margin-right:-50%;
+  transform: translate(-50%,-50%);
+}
+
+
+/* Text based classes */
+/* Used for general instructions */
+.block-text {
+  width:100%;
+  height 100vw;
+  text-align: justify;
+  margin: 0 auto;
+  margin-bottom: 1em;
+  font-size: 24px;
+  line-height: 120%;
+}
+
+/* As above but centered instead of justified. Good for instructions with few lines */
+.center-block-text {
+  width:100%;
+  height 100vw;
+  text-align: center;
+  margin: 0 auto;
+  margin-bottom: 1em;
+  font-size: 26px;
+  line-height: 120%;
+}
+
+/* used for large text shown in the center of the screen, like FB or stimuli */
+.center-text {
+  text-align:center;
+  font-size: 60px;
+  position: relative;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+/* fixation should be used like this in: '<div class = centerbox><div class = fixation>+</div></div>'*/
+.fixation {
+  text-align: center;
+  font-size: 150px;
+  position: relative;
+  top: 50%; 
+  transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+}
+
+
+/* Used in lists */
+.list-text li{
+  font-size: 20px;
+}
+
+/* flex box used to vertically and horizontally center an img.
+Sample html: <div class = centerbox><div class = img-container><img...></img></div></div>
+*/
+.img-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center; /* align horizontal */
+  align-items: center; /* align vertical */
+}
+
+#legal {
+  margin: 0 auto;
+  margin-top: 1.5em;
+  font-size: 0.8em;
+}
+
+
+/* Used for positioning during instructions */
+
+.jspsych-instructions-nav {
+  text-align: center;
+  margin-top: 50px;
+  position: relative;
+  z-index: 1;
+}
+
+.jspsych-instructions-nav p {
+  font-family: 'Roboto' serif;
+  font-size: 20px;
+  line-height: 20px;
+}
+
+/*
+ *
+ * PLUGIN: jspsych-poldrack-survey-multi-choice
+ *
+ */
+
+.jspsych-poldrack-survey-multi-choice-question {
+  margin-top: 2em;
+  margin-bottom: 2em;
+ }
+
+.jspsych-poldrack-survey-multi-choice-text span.required {
+  color: darkred;
+}
+
+.jspsych-poldrack-survey-multi-choice-horizontal .jspsych-poldrack-survey-multi-choice-text {
+  text-align: left;
+}
+
+.jspsych-poldrack-survey-multi-choice-option {
+  line-height: 2;
+}
+.jspsych-poldrack-survey-multi-choice-horizontal .jspsych-poldrack-survey-multi-choice-option {
+  display: inline-block;
+  margin-left: 1em;
+  margin-right: 1em;
+  vertical-align: top;
+}
+
+label.jspsych-poldrack-survey-multi-choice-text input[type="radio"] {
+  margin-right: 1em;
+}
+
+#jspsych-poldrack-survey-multi-choice-next {
+  display: block;
+  margin: auto;
+}
+
+.jspsych-poldrack-survey-multi-choice-opts {
+  list-style:none;
+  width:100%;
+  margin:0;
+  padding:0 0 35px;
+  display:block;
+  font-size: 13px;
+  line-height:1.1em;
+}
+
+.jspsych-poldrack-survey-multi-choice-opt-label {
+  line-height: 1.1em;
+}
+
+.jspsych-poldrack-survey-multi-choice-opts:before {
+  content: '';
+  position:relative;
+  top:11px;
+  /*left:9.5%;*/
+  display:block;
+  /*background-color:#efefef*/;
+  height:4px;
+  width:100%;
+}
+
+.jspsych-poldrack-survey-multi-choice-opts:last-of-type {
+  border-bottom: 0;
+}
+
+/*descendants of horizontal are inline-block*/
+.jspsych-poldrack-survey-multi-choice-horizontal .jspsych-poldrack-survey-multi-choice-opts li {
+  display:inline-block;
+  /*width:19%;*/
+  text-align:center;
+  vertical-align: top;
+  padding: 0px;
+}
+
+/*otherwise they are just block*/
+.jspsych-poldrack-survey-multi-choice-opts li {
+  display:block;
+  /*width:100% !important*/;
+  text-align:left;
+  vertical-align: top;
+  padding: 10px;
+}
+
+
+/*descendants of horizontal are block so they are above the option*/
+.jspsych-poldrack-survey-multi-choice-horizontal .jspsych-poldrack-survey-multi-choice-opts li input[type=radio] {
+    -webkit-appearance: none;
+    height: 1.5em;
+    position: relative;
+    background-color: #276FF4;
+    width: 1.5em;
+    border-radius: 50%;
+    outline: none;
+    font-size: 14px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  display:block;
+  position:relative;
+  top:0;
+  left:50%;
+  margin-left:-6px;
+}
+
+.jspsych-poldrack-survey-multi-choice-horizontal .jspsych-poldrack-survey-multi-choice-opts li input[type=radio]:checked:before {
+    content: '';
+    height: 0.4em;
+    width: 0.4em;
+    background-color: #FFF;
+    position: absolute;
+    border-radius: 50%;
+    top: 0.3em;
+    left: 0.3em;
+}
+
+
+/*otherwise they are inline-block so they are next to the option*/
+.jspsych-poldrack-survey-multi-choice-opts li input[type=radio] {
+    -webkit-appearance: none;
+    height: 1.5em;
+    position: relative;
+    background-color: #276FF4;
+    width: 1.5em;
+    border-radius: 50%;
+    outline: none;
+    font-size: 14px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  display:inline-block;
+  /*position:relative;
+  top:0;
+  left:0;*/
+  margin-right:6px;
+}
+
+.jspsych-poldrack-survey-multi-choice-opts li input[type=radio]:checked:before {
+    content: '';
+    height: 0.4em;
+    width: 0.4em;
+    background-color: #FFF;
+    position: absolute;
+    border-radius: 50%;
+    top: 0.3em;
+    left: 0.3em;
+}
+
+/* Buttons */
+.jspsych-btn, #jspsych-instructions-next, #jspsych-instructions-back {
+  font-size:22px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  padding: 12px 20px 12px 20px;
+  color: white;
+  background-color:cornflowerblue;
+  cursor: pointer;
+  line-height: 1.4;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+#jspsych-instructions-next, #jspsych-instructions-back {
+ width: 250px;
+}
+
+#jspsych-instructions-next, #jspsych-instructions-back {
+  padding: 12px 40px 12px 40px;
+}
+
+.jspsych-btn:hover, #jspsych-instructions-next:hover, #jspsych-instructions-back:hover {
+  border-color:#999;
+  background-color: darkblue;
+}
+
+#jspsych-survey-multi-choice-next {
+  padding-bottom: 10px;
+}
+
+/*
+ *
+ * PLUGIN: jspsych-survey-text
+ *
+ */
+
+.jspsych-survey-text-question > textarea, #jspsych-survey-text-next {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/*
+ *
+ * PLUGIN: jspsych-attention-check
+ *
+ */
+
+ #jspsych-attention-check-stimulus {
+  width: 50vw;
+  height: 60vh;
+  position:absolute;
+  top:50%;
+  left:50%;
+  margin-right:-50%;
+  transform: translate(-50%,-50%);
+}
+
+.jspsych-attention-check-stimulus > p {
+  width:100%;
+  height 100vw;
+  text-align: justify;
+  margin: 0 auto;
+  margin-bottom: 1em;
+  font-size: 24px;
+  line-height: 120%;
+}
+
+/*
+ *
+ * PLUGIN: jspsych-multi-choice-nav
+ *
+ */
+
+.jspsych-survey-multi-choice-nav {
+  padding-top: 20px;
+}
