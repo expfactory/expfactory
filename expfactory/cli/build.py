@@ -63,6 +63,7 @@ def main(args,parser,subparser):
     database = args.database
     studyid = args.studyid
     experiments = args.experiments
+    branch = "-b %s" os.environ.get('EXPFACTORY_BRANCH','master')
 
     headless = "false"
     if args.headless is True:
@@ -71,6 +72,7 @@ def main(args,parser,subparser):
     template = sub_template(template,"{{studyid}}",studyid)
     template = sub_template(template,"{{database}}",database)
     template = sub_template(template,"{{headless}}",headless)
+    template = sub_template(template,"{{branch}}",branch)
 
     if args.headless is True:
         bot.info("Headless build detected, you will need to generate tokens for application entry with expfactory users --new")

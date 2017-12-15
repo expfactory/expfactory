@@ -44,6 +44,10 @@ def get_parser():
     parser = argparse.ArgumentParser(
     description="expfactory: produce a reproducible battery of container experiments")
 
+    parser.add_argument("--database", dest='database', 
+                        choices=['fllesystem', 'sqlite'],
+                        help="database for application (default filesystem)",
+                        type=str, default="filesystem")
 
     subparsers = parser.add_subparsers(help='Experiment Factory actions',
                                        title='actions',
@@ -53,11 +57,6 @@ def get_parser():
     # Users manager
     users = subparsers.add_parser("users",
                                    help="Manager for interacting with users")
-
-    users.add_argument("--database", dest='database', 
-                        choices=['fllesystem', 'sqlite'],
-                        help="database for application (default filesystem)",
-                        type=str, default="filesystem")
 
     users.add_argument('--new', dest="new",
                        help="generate new user tokens, recommended for headless runtime.",
@@ -131,11 +130,6 @@ def get_parser():
     build.add_argument("--studyid", dest='studyid', 
                         help="study id for saving database",
                         type=str, default="expfactory")
-
-    build.add_argument("--database", dest='database', 
-                        choices=['fllesystem', 'sqlite'],
-                        help="database for application (default filesystem)",
-                        type=str, default="filesystem")
 
     # Experiment Runtime Arguments
     parser.add_argument("--experiments", dest='experiments', 
