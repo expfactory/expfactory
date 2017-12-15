@@ -16,7 +16,6 @@ dependencies:
     - cd expfactory/templates/build/docker/builder-ci && /bin/bash setup_build.sh
     - cd /tmp/builder && /bin/bash build.sh
     - mkdir -p ~/docker; docker save vanessa/expfactory-builder-ci > ~/docker/builder.tar
-    - mkdir -p ~/docker; docker save expfactory/experiments > ~/docker/image.tar
   pre:
     - echo "The Experiment Factory!"
     - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
