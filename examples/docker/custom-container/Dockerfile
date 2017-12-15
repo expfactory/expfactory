@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM vanessa/expfactory-builder:base
 
 ########################################
 # Configure
@@ -14,7 +14,6 @@ ENV EXPFACTORY_BASE /scif/apps
 ADD startscript.sh /startscript.sh
 RUN chmod u+x /startscript.sh
 
-RUN apt-get update && apt-get install -y nginx git python3-pip python3-dev
 WORKDIR /opt 
 RUN git clone https://www.github.com/expfactory/expfactory
 WORKDIR expfactory 
