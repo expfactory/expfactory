@@ -122,7 +122,7 @@ def get_parser():
 
     build.add_argument("--input",'-i', dest='input', 
                          help="use custom Dockerflie template", 
-                         type=str, required=True)
+                         type=str, default="Dockerfile")
 
     build.add_argument('experiments', nargs="+",
                         help='experiments to build in image')
