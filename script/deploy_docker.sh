@@ -9,21 +9,15 @@ BASE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 # vanessa/expfactory-builder
 # Build builder with tag, and push tag and latest
 cd $BASE/expfactory/templates/build/docker/builder
-docker build -t vanessa/expfactory-builder .
-docker tag vanessa/expfactory-builder:$VERSION_TAG
+docker build --no-cache -t vanessa/expfactory-builder .
+docker tag vanessa/expfactory-builder vanessa/expfactory-builder:$VERSION_TAG
 docker push vanessa/expfactory-builder:$VERSION_TAG
 docker push vanessa/expfactory-builder
 
-# vanessa/experiment
-cd $BASE/examples/docker/custom-container
-docker build -t vanessa/experiment .
-docker tag vanessa/experiment vanessa/experiment:$VERSION_TAG
-docker push vanessa/experiment:$VERSION_TAG
-docker push vanessa/experiment
-
 # vanessa/expfactory-surveys
 cd $BASE/examples/docker/surveys-container
-docker build -t vanessa/expfactory-surveys .
+./expfactory-generate.sh
+docker build --no-cache -t vanessa/expfactory-surveys .
 docker tag vanessa/expfactory-surveys vanessa/expfactory-surveys:$VERSION_TAG
 docker push vanessa/expfactory-surveys:$VERSION_TAG
 docker push vanessa/expfactory-surveys
