@@ -1,5 +1,5 @@
 '''
-dynamic_views.py: part of expfactory package
+headless.py: part of expfactory package
 
 Copyright (c) 2017, Vanessa Sochat
 All rights reserved.
@@ -30,31 +30,68 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
-from expfactory.logger import bot
 
 from flask import (
-    Blueprint,
+    flash,
+    jsonify,
     render_template, 
+    request, 
+    redirect,
+    session
 )
+
+from flask_wtf.csrf import generate_csrf
+from flask_cors import cross_origin
+from expfactory.defaults import EXPFACTORY_LOGS
+from werkzeug import secure_filename
+from expfactory.utils import get_post_fields
+
 from expfactory.views.utils import (
     perform_checks, 
     clear_session
 )
-from expfactory.server import app, csrf
+from expfactory.server import app
+from random import choice
+import logging
 import os
+import json
+
+from expfactory.forms import EntryForm
 
 
-{{ exp_id_python }} = Blueprint('{{ exp_id }}', __name__,
-                                static_url_path='/experiments/{{ exp_id }}', 
-                                static_folder='/scif/apps/{{ exp_id }}',
-                                template_folder='/scif/apps')
+# HEADLESS LOGIN ###############################################################
 
-@{{ exp_id_python }}.route('/experiments/{{ exp_id }}/')
-def {{ exp_id_python }}_base():
-    context = {'experiment': '{{ exp_id }}/index.html'}
-    return perform_checks('experiments/experiment.html', quiet=True,
-                                                         context=context,
-                                                         next="{{ exp_id }}")
+@app.route('/login', methods=['POST'])
+def login():
 
-{{ exp_id_python }}.before_request(csrf.protect)
-app.register_blueprint({{ exp_id_python }})
+    # Only allowed to login via post from entry (headless) url
+    form = EntryForm()
+
+    # If not headless, we don't need to login
+    if not app.headless:
+        app.logger.debug('Not running in headless mode, redirect to /start.')
+        redirect('/start')
+
+    subid = session.get('subid')
+    if not subid:
+        if form.validate_on_submit():
+            token = form.token.data
+
+            subid = app.validate_token(token)
+            if subid is None:
+                return headless_denied(form=form)
+
+            session['subid'] = subid
+            session['token'] = token
+
+            app.logger.info('Logged in user [subid] %s' %subid)
+    return redirect('/next')
+
+
+# Denied Entry for Headless
+def headless_denied(form=None):
+    if form is None:
+        form = EntryForm()
+    message = "A valid token is required. Contact the experiment administrator if you believe this to be a mistake."
+    return render_template('routes/entry.html', form=form,
+                                                message=message)

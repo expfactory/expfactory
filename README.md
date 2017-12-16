@@ -22,5 +22,3 @@ If you build on [Singularity Hub](https://www.singularity-hub.org) anyone else c
 
 ## Experiment Library
 The experiments themselves are now maintained under [expfactory-experiments](https://www.github.com/expfactory-experiments), official submissions to be found by expfactory can be added to the [library](https://www.github.com/expfactory/library) (under development) to be tested that they meet minimum requirements.
-
-The documentation and codebase are under development! For now, you can preview legacy [experiments](http://expfactory.github.io/table.html) that will be ported to this updated version, and preview our [documentation base](https://expfactory.github.io/expfactory) provided with this repository. This code base is under development, so it might even be the case that not all files are added yet! Stay tuned.

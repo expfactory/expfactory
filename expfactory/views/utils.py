@@ -42,23 +42,31 @@ from expfactory.logger import bot
 import os
 
 
-def perform_checks(template, do_redirect=False, context=None):
+def perform_checks(template, do_redirect=False, context=None, next=None, quiet=False):
     '''return all checks for required variables before returning to 
        desired view
     '''
     from expfactory.server import app
-
-    bot.debug('Performing checks...')
     username = session.get('username')
     subid = session.get('subid')
+
+    # If redirect, "last" is currently active (about to start)
+    # If render, "last" is last completed / active experiment (just finished)
     last = session.get('exp_id')
-    next = app.get_next(session)
+    if next is None:
+        next = app.get_next(session)
     session['exp_id'] = next
 
-    # Update the user / log
-    app.logger.info("<current:%s><next:%s> for <%s, %s>" %(last, next, subid, username))
+    # Headless mode requires token
+    if "token" not in session and app.headless is True:
+        flash('A token is required for these experiments.')
+        return redirect('/')
 
-    if username is None:
+    # Update the user / log
+    if quiet is False:
+        app.logger.info("[router] %s --> %s for [subid] %s [username] %s" %(last, next, subid, username))
+
+    if username is None and app.headless is False:
         flash('You must start a session before doing experiments.')
         return redirect('/')
 
@@ -71,15 +79,21 @@ def perform_checks(template, do_redirect=False, context=None):
         return redirect('/finish')
 
     if do_redirect is True:
+        app.logger.debug('Redirecting to %s' %template)
         return redirect(template)
 
     if context is not None and isinstance(context,dict):
+        app.logger.debug('Rendering %s' %template)
         return render_template(template, **context)
     return render_template(template)
 
 
 def clear_session():
-    del session['subid']
-    del session['username']
-    del session['experiments']
-    del session['exp_id']
+
+    def clear_variables(variables):
+        for var in variables:
+            if var in session:
+                del session[var]
+
+    clear_variables(['subid', 'experiments', 'exp_id'])
+    clear_variables(['username', 'token'])

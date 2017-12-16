@@ -27,11 +27,7 @@ from expfactory.experiment import (
     get_selection
 )
 
-from expfactory.database import (
-    init_db, 
-    generate_subid,
-    save_data
-)
+from expfactory.database import *
 from flask import Flask
 from flask_wtf.csrf import (
     CSRFProtect, 
@@ -88,18 +84,19 @@ class EFServer(Flask):
         self.study_id = EXPFACTORY_SUBID
         self.base = EXPFACTORY_BASE
         self.randomize = EXPFACTORY_RANDOMIZE
+        self.headless = EXPFACTORY_HEADLESS
 
         available = get_experiments("%s" % self.base)
         self.experiments = get_selection(available, self.selection)
         self.logger.debug(self.experiments)
         self.lookup = make_lookup(self.experiments)
-        final = "\n".join(list(self.lookup.keys()))        
+        final = "\n".join(list(self.lookup.keys()))       
 
+        bot.log("Headless mode: %s" % self.headless)
         bot.log("User has selected: %s" % self.selection)
         bot.log("Experiments Available: %s" %"\n".join(available))
         bot.log("Randomize: %s" % self.randomize)
         bot.log("Final Set \n%s" % final)
-       
 
     def get_next(self, session):
         '''return the name of the next experiment, depending on the user's
@@ -122,6 +119,7 @@ class EFServer(Flask):
     def finish_experiment(self, session, exp_id):
         '''remove an experiment from the list after completion.
         '''
+        self.logger.debug('Finishing %s' %exp_id)
         experiments = session.get('experiments', [])
         experiments = [x for x in experiments if x != exp_id]
         session['experiments'] = experiments
@@ -131,6 +129,19 @@ class EFServer(Flask):
 EFServer.init_db = init_db
 EFServer.save_data = save_data
 EFServer.generate_subid = generate_subid
+EFServer.generate_user = generate_user
+
+# Tokens
+EFServer.validate_token = validate_token
+EFServer.refresh_token = refresh_token
+EFServer.revoke_token = revoke_token
+
+# User Actions
+EFServer.list_users = list_users
+EFServer.print_user = print_user
+EFServer.finish_user = finish_user
+EFServer.restart_user = restart_user
+
 app = EFServer(__name__)
 app.config.from_object('expfactory.config')
 

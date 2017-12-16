@@ -51,12 +51,18 @@ from expfactory.views.utils import (
     clear_session
 )
 from expfactory.server import app
+from .general import *
+from .headless import *
+
 from random import choice
 import logging
 import os
 import json
 
-from expfactory.forms import ParticipantForm
+from expfactory.forms import (
+    ParticipantForm,
+    EntryForm
+)
 
 
 # LOGGING ######################################################################
@@ -85,42 +91,15 @@ def experiment_base():
 @app.route('/', methods=['GET', 'POST'])
 def home():
 
-    form = ParticipantForm()
+    # A headless app can only be entered with a user token
+    if app.headless:
+        if "token" not in session:
+            form = EntryForm()
+            session['experiments'] = [os.path.basename(x) for x in app.experiments] # list
+            return render_template('routes/entry.html', form=form)
+        return redirect('/next')
 
-    if request.method == "POST":   
-
-        # Submit and valid
-        if form.validate_on_submit():
-
-            # User name is not required
-            username = 'You'
-            if form.openid.data not in [None,""]:
-                username = form.openid.data
- 
-            subid = session.get('subid')
-            if subid is None:
-                subid = app.generate_subid()
-                session['subid'] = subid
-                app.logger.info('New session [subid] %s' %subid)
-
-            app.randomize = form.randomize.data
-            session['username'] = username
-            session['experiments'] = form.exp_ids.data.split(',') # list
-            flash('Participant ID: "%s" <br> Name %s <br> Randomize: "%s" <br> Experiments: %s' %
-                  (subid, username, app.randomize,
-                  str(form.exp_ids.data)))
-            return redirect('/start')
-
-        # Submit but not valid
-        return render_template('portal/index.html', experiments=app.lookup,
-                                                    base=app.base,
-                                                    randomize=app.randomize,
-                                                    form=form, toggleform=True)
-
-    # Not submit
-    return render_template('portal/index.html', experiments=app.lookup,
-                                                base=app.base,
-                                                form=form)
+    return portal()
 
 
 # EXPERIMENT ROUTER ############################################################
@@ -133,6 +112,7 @@ def save():
     '''
     if request.method == 'POST':
         exp_id = session.get('exp_id')
+        app.logger.debug('Saving data for %s' %exp_id)
 
         fields = get_post_fields(request)
         result_file = app.save_data(session=session, content=fields, exp_id=exp_id)
@@ -145,15 +125,24 @@ def save():
     return json.dumps({'success':False}), 403, {'ContentType':'application/json'} 
 
 
+
 @app.route('/next', methods=['POST', 'GET'])
 def next():
 
-    # Redirects to another template view
-    experiment = app.get_next(session)
-    if experiment is not None:
-        app.logger.info('Next experiment is %s' % experiment)
-    return perform_checks('/experiments/%s' % experiment, do_redirect=True)
+    # Headless mode requires logged in user with token
+    if app.headless and "token" not in session:
+        return headless_denied()
 
+    # To generate redirect to experiment
+    experiment = app.get_next(session)
+ 
+    if experiment is not None:
+        app.logger.debug('Next experiment is %s' % experiment)
+        return perform_checks('/experiments/%s' % experiment, do_redirect=True,
+                              next=experiment)
+
+    return redirect('/finish')
+   
 
 # Reset/Logout
 @app.route('/logout', methods=['POST', 'GET'])
@@ -172,6 +161,10 @@ def finish():
 
     # If the user has finished, clear session
     if subid is not None:
+
+        # Filesystem will rename folder to _finished
+        # Relational removes token so not accessible
+        app.finish_user(subid)
         clear_session()
         return render_template('routes/finish.html')
     return redirect('/')

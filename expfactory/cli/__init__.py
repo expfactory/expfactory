@@ -44,16 +44,55 @@ def get_parser():
     parser = argparse.ArgumentParser(
     description="expfactory: produce a reproducible battery of container experiments")
 
-
     subparsers = parser.add_subparsers(help='Experiment Factory actions',
                                        title='actions',
                                        description='actions for expfactory tools',
                                        dest="command")
 
+    parser.add_argument("--database", dest='database', 
+                        choices=['fllesystem', 'sqlite'],
+                        help="database for application (default filesystem)",
+                        type=str, default="filesystem")
+
+    # Users manager
+    users = subparsers.add_parser("users",
+                                   help="Manager for interacting with users")
+
+    users.add_argument('--new', dest="new",
+                       help="generate new user tokens, recommended for headless runtime.",
+                       default=None, type=int)
+
+    users.add_argument('--list', dest="list",
+                        help="list current tokens, for a headless install",
+                        default=False, action='store_true')
+
+    users.add_argument('--revoke', dest="revoke",
+                        help="revoke token for a user id, ending the experiments",
+                        default=None, type=str)
+
+    users.add_argument('--refresh', dest="refresh",
+                        help="refresh a token for a user",
+                        default=None, type=str)
+
+    users.add_argument('--restart', dest="restart",
+                        help="restart a user, revoking and then refresing the token",
+                        default=None, type=str)
+
+    users.add_argument('--finish', dest="finish",
+                        help="finish a user session by removing the token",
+                        default=None, type=str)
 
     # List
     listy = subparsers.add_parser("list", 
                                    help="List available Expfactory Experiments from Github")
+
+    # List
+    logs = subparsers.add_parser("logs", 
+                                 help="Print expfactory logs to terminal.")
+
+    logs.add_argument('--tail',dest="tail",
+                      help="keep the log open and update in real time.",
+                      default=False, action='store_true')
 
     # Install
     install = subparsers.add_parser("install", 
@@ -81,17 +120,16 @@ def get_parser():
                          help="output name for Dockerfile (if you want a custom path)", 
                          type=str, required=True)
 
+    build.add_argument("--input",'-i', dest='input', 
+                         help="use custom Dockerflie template", 
+                         type=str, required=True)
+
     build.add_argument('experiments', nargs="+",
                         help='experiments to build in image')
 
     build.add_argument("--studyid", dest='studyid', 
                         help="study id for saving database",
                         type=str, default="expfactory")
-
-    build.add_argument("--database", dest='database', 
-                        choices=['fllesystem', 'sqlite'],
-                        help="database for application (default filesystem)",
-                        type=str, default="filesystem")
 
     # Experiment Runtime Arguments
     parser.add_argument("--experiments", dest='experiments', 
@@ -101,6 +139,10 @@ def get_parser():
     parser.add_argument("--subid", dest='subid', 
                          help="subject id for saving database",
                          type=str, default=None)
+
+    parser.add_argument("--headless", dest='headless', 
+                         help="headless runtime will require generation of tokens or ids.",
+                         default=False, action="store_true")
 
     parser.add_argument('--no-random', dest="disable_randomize",
                          help="present experiments serially",
@@ -130,10 +172,6 @@ def get_subparsers(parser):
 
 def main():
 
-    from expfactory.logger import bot
-    from expfactory.version import __version__
-    bot.info("Expfactory Version: %s" % __version__)
-
     parser = get_parser()
     subparsers = get_subparsers(parser)
 
@@ -144,11 +182,29 @@ def main():
 
     # Does the use want to install?
     command = args.command
+
+    # Options that shouldn't produce output
+    if command in ['users']:
+        os.environ['MESSAGELEVEL'] = "0"
+
+    if args.database is not None:
+        os.environ['EXPFACTORY_DATABASE'] = args.database
+
+    from expfactory.logger import bot
+    from expfactory.version import __version__
+    bot.info("Expfactory Version: %s" % __version__)
+
     if command == "install":
         from .install import main
 
     elif command == "list":
         from .list import main
+
+    elif command == "logs":
+        from .logs import main
+
+    elif command == "users":
+        from .users import main
 
     elif command == "build":
         from .build import main

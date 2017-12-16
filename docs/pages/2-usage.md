@@ -13,15 +13,15 @@ Below, we will summarize the variables that can be set at runtime:
 | Variable        | Description           | Default  |
 | ------------- |:-------------:| -----:|
 | database      | the database to store response data | filesystem |
+| headless  | require pre-generated tokens for headless use  |  flag | 
 | randomize     | present the experiments in random order  |  flag | 
-| no-randomize  | manually select the order of experiments  |  flag | 
-| experiments  | comma separated list of experiments to expose |  [] | 
+| no-randomize     | present the experiments in random order  |  flag | 
+| experiments  | comma separated list of experiments to expose  |  [] | 
 | studyid | set the studyid at runtime  |  expfactory |
 
 
-
 ## Start the Container
-It's most likely the case that your container's default is to save data to the file system, and use a study id of expfactory. This coincides to running with no extra arguments, but perhaps mapping the data folder:
+The first thing you should do is start the container. The variables listed above can be set when you do this. It's most likely the case that your container's default is to save data to the file system, and use a study id of expfactory. This coincides to running with no extra arguments, but perhaps mapping the data folder:
 
 ```
 docker run -v /tmp/my-experiment/data/:/scif/data \
@@ -53,16 +53,286 @@ docker run -v /tmp/my-experiment/data/:/scif/data \
            expfactory/experiments  --experiments test-test,tower-of-london start
 ```
 
-We are currently working on a "headless" start up that will allow for a pre-set ordering an other variables, and then skipping over the portal. Please let us know if you have feedback on this. We will go into each database type in some detail.
+## Start a Headless Experiment Container
+"Headless" refers to the idea that you going to be running your experiment with remote participants, and you will need to send them to a different portal that has them login first. In order to do this, you need to start the container with the `--headless` flag, and then issue a command to pre-generate these users.
 
-
-### filesystem
-Saving to the filesytem is the default (what you get when you don't specify a particular database) and means saving to a folder called `/scif/data` in the Docker image. If you are saving data to the filesystem (`filesystem` database), given that you've mounted the container data folder `/scif/data` to the host, this means that the data will be found on the host in that location. In the example below, we have mounted `/tmp/data` to `/scif/data` in the container:
+First we can start the container (notice that we are giving it a name to easily reference it by) with `--headless` mode.
 
 ```
-$ tree /tmp/data/expfactory/00000/
+docker run -p 80:80 -d --name experiments -v /tmp/data:/scif/data <container> --headless start
+4f6826329e9e366c4d2fb56d64956f599861d1f0439d39d7bcacece3e88c7473
+```
 
-    /tmp/data/expfactory/00000/
+If we go to the portal at [127.0.0.1](http://127.0.0.1) we will see a different entrypoint, one that requires a token.
+
+<div>
+    <img src="../img/headless/portal.png"><br>
+</div>
+
+You can also start and specify to not randomize, and present experiments in a particular order:
+
+```
+docker run -p 80:80 -d --name experiments -v /tmp/data:/scif/data <container> \
+                    --headless --no-randomize \
+                    --experiments test-task,tower-of-london start
+```
+
+If you ask for non random order without giving a list, you will present the experiments in the order listed on the filesystem. See [pre-set-experiments](#pre-set-experiments) for more information.
+
+
+### Generate tokens
+A "token" is basically a subject id that is intended to be used once, and can be sent securely to your participants to access the experiments. The token can be refreshed, revoked, or active. You will need to generate them, and briefly it looks like this:
+
+
+```
+docker exec experiments expfactory users --help
+docker exec experiments expfactory users --new 3
+```
+
+See [managing users](#managing-users) for complete details about generating, refreshing, and using tokens.
+
+
+### Use tokens
+Once you generate tokens for your users (and remember that it's up to you to maintain the linking of anonymous tokens to actual participants) the tokens can be entered into the web interface:
+
+<div>
+    <img src="../img/headless/enter-token.png"><br>
+</div>
+
+
+And of course it follows that if you enter a bad token, you cannot enter.
+
+<div>
+    <img src="../img/headless/bad-token.png"><br>
+</div>
+
+Once entry is given, the user can continue normally to complete the experiments in the protocol. 
+
+
+### Headless Finish
+When the user finishes the protocol, the user will have the token revoked so an additional attempt to do the experiments will not work. You would need to generate a new session with token (the `--new` command above) or restart the participant to rewrite the previously generated data.
+
+
+
+### Pre-set Experiments
+For a headless experiment, you don't have the web interface to filter experiments in advance, or as for random (or not random) ordering. By default, not giving the `--experiments` argument will serve all experiments found installed in the container. If you want to limit to a smaller subset, do that with the experiments argument:
+
+```
+docker run -p 80:80 -d \
+           --name experiments \ 
+           -v /tmp/data:/scif/data <container> --experiments tower-of-london,test-task --headless start
+```
+
+and if you want the order typed to be maintained (and not random) add the `--no-randomize` flag.
+
+
+```
+docker run -p 80:80 -d \
+           --name experiments \ 
+           -v /tmp/data:/scif/data <container> --experiments tower-of-london,test-task --headless --no-randomize start
+```
+
+## Container Logs
+
+The `expfactory` tool in the container will let you view (or keep open) the experiment logs. You can do this by issuing a command to a running container:
+
+```
+$ docker exec angry_blackwell expfactory logs
+New session [subid] expfactory/f57bd534-fa50-4af5-9114-d0fb769c5de4
+[router] None --> bis11-survey for [subid] expfactory/f57bd534-fa50-4af5-9114-d0fb769c5de4 [username] You
+Next experiment is bis11-survey
+[router] bis11-survey --> bis11-survey for [subid] expfactory/f57bd534-fa50-4af5-9114-d0fb769c5de4 [username] You
+Redirecting to /experiments/bis11-survey
+Rendering experiments/experiment.html
+Saving data for bis11-survey
+Finishing bis11-survey
+Finished bis11-survey, 0 remaining.
+Expfactory Version: 3.0
+```
+
+if you want the window to remain open to watch, just add `--tail`
+
+```
+$ docker exec angry_blackwell expfactory logs --tail
+```
+You can equally shell into the contaniner and run `expfactory logs` directly.
+
+
+## User Management
+This section will go into detail about generation, restart, revoke, and refresh of tokens.
+
+ - **generation** means creating a completely new entry in the database. Previous entries for a participant are irrelevant, you need to keep track of both.
+ - **restart** means that you are removing any `finished` status from a known participant token identifier. This means that the participant can navigate to the portal and retake the experiments, having the data saved under the previous identifier. Previous data is over-written.
+ - **revoke** means that the participant is no longer allowed to participate. The token essentially becomes inactive.
+ - **refresh** means that a new token is issued. Be careful with refreshing a token, because you will need to keep track of the change in the subject token (the main identifier to the data).
+
+### Application Flow
+The flow for a user session is the following:
+
+**Headless**
+ - You generate an id and token for the user in advance
+ - The user starts and completes the experiments with the token associated with the id
+ - The token is revoked upon finish, meaning that the user cannot go back without you refreshing it.
+
+**Interactive**
+ - The user is automatically issued an id upon starting the experiment, nothing is pre-generated
+ - When the user finishes, `_finished` is appended to the session folder, and so restarting the session will create a new folder.
+ - If the user is revoked, the folder is appended with `_revoked`
+ - If the user finishes and returns to the portal, a new session (different data folder) is created.
+
+If you are running an experiment in a lab and can expect the user to not return to the portal, the interactive option above is ok. However if you are serving the battery remotely, or if you want to better secure your databases, it's recommend to run the experiment container headless. In this section, we will talk about user management that is relevant to a headless (without an interactive portal) start. 
+
+### User Management Help
+The main entrypoint for managing users is with `expfactory users`:
+
+```
+expfactory users --help
+usage: expfactory users [-h] [--new NEW] [--list] [--revoke REVOKE]
+                        [--refresh REFRESH] [--restart RESTART]
+                        [--finish FINISH]
+optional arguments:
+  -h, --help         show this help message and exit
+  --new NEW          generate new user tokens, recommended for headless
+                     runtime.
+  --list             list current tokens, for a headless install
+  --revoke REVOKE    revoke token for a user id, ending the experiments
+  --refresh REFRESH  refresh a token for a user
+  --restart RESTART  restart a user, revoking and then refresing the token
+  --finish FINISH    finish a user session by removing the token
+```
+
+**Important** For filesystem databases, the token coincides with the data folder, and *is* the user id. When you reference an id for a filesystem save, you reference the token (e.g., `41a451cc-7416-4fab-9247-59b1d65e33a2`) however when you reference a relational database id, you reference the index. You should keep track of these corresponding values to keep track of your participants, and be careful when you [refresh tokens](#refresh-tokens) as the filesystem folder (and thus participant id) will be renamed.
+
+### New Users
+As shown previously, we can use `exec` to execute a command to the container to create new users:
+
+```
+docker exec experiments expfactory users --new 3
+DATABASE	TOKEN
+/scif/data/expfactory/41a451cc-7416-4fab-9247-59b1d65e33a2	41a451cc-7416-4fab-9247-59b1d65e33a2[active]
+/scif/data/expfactory/6afabdd5-7d5e-48dc-a3b2-ade235d2e0a6	6afabdd5-7d5e-48dc-a3b2-ade235d2e0a6[active]
+/scif/data/expfactory/3251fd0e-ba3e-4089-b01a-28dfa03f1fbd	3251fd0e-ba3e-4089-b01a-28dfa03f1fbd[active]
+```
+
+The result here will depend on the database type. 
+
+ - `DATABASE`: The above shows a filesystem save, so a `DATABASE` refers to the folder, and remember this is internal to the container, so you might have `/scif/data` mapped to a different folder on your host. A relational database would have the `DATABASE` column correspond with the index. 
+ - `TOKEN`: The token corresponds with the folder (for filesystem) or relational database `token` variable, and shown also is the participant status (e.g., `active`).
+
+You can copy paste this output from the terminal, or pipe into a file instead:
+
+```
+docker exec experiments expfactory users --new 3 >> participants.tsv
+```
+
+You can also issue these commands by shelling inside the container, which we will do for the remainder of the examples:
+
+```
+docker exec -it experiments bash
+```
+
+### List Users
+If you ever need to list the tokens you've generated, you can use the `users --list` command. Be careful that the environment variable `EXPFACTORY_DATABASE` is set to be the one that you intend. For example, a filesystem database setting will print all folders found in the mapped folder given this variable is set to `filesystem`. In the example below, we list users saved as folders on the filesystem:
+
+```
+ expfactory users --list
+DATABASE	TOKEN
+/scif/data/expfactory/41a451cc-7416-4fab-9247-59b1d65e33a2	41a451cc-7416-4fab-9247-59b1d65e33a2[active]
+/scif/data/expfactory/6afabdd5-7d5e-48dc-a3b2-ade235d2e0a6	6afabdd5-7d5e-48dc-a3b2-ade235d2e0a6[active]
+/scif/data/expfactory/3251fd0e-ba3e-4089-b01a-28dfa03f1fbd	3251fd0e-ba3e-4089-b01a-28dfa03f1fbd[active]
+```
+
+This would be equivalent to the following below. This is the suggested usage because a single container can be flexible to have multiple different kinds of databases:
+
+```
+ expfactory users --list --database filesystem
+```
+
+If we were to list a relational database, we would see the database index in the `DATABASE` column instead:
+
+```
+expfactory users --list --database sqlite
+DATABASE	TOKEN
+6	a2d266f7-52a5-497b-9b85-1e98febef6dc[active]
+7	a98e63c4-2ed1-4de4-a315-a9291502dd26[active]
+8	f524e1cc-6841-4417-9529-80874cf30b74[active]
+```
+
+We generally recommend for you to specify the `--database` argument unless you are using the database defined to be the container default, determinde by `EXPFACTORY_DATABASE` in it's build recipe (the Dockerfile). You can always check the default in a running image (`foo`) like this:
+
+```
+docker inspect foo | grep EXPFACTORY_DATABASE
+                "EXPFACTORY_DATABASE=filesystem",
+```
+
+**Important** For relational databases, remember that the token is not the participant id, as it will be cleared when the participant finished the experiments. In the example above, we would care about matching the `DATABASE` id to the participant. For filesystem "databases" the token folder is considered the id. Thus, you should be careful with renaming or otherwise changing a partipant folder, because the token is the only association you have (and must keep a record of yourself) to a participant's data.
+
+
+### Restart User
+If a user finishes and you want to restart, you have two options. You can either issue a new identifier (this preserves previous data, and you will still need to keep track of both identifiers):
+
+```
+expfactory users --new 1
+DATABASE	TOKEN
+/scif/data/expfactory/1753bfb5-a230-472c-aa04-ecdc118c1922	1753bfb5-a230-472c-aa04-ecdc118c1922[active]
+```
+
+or you can restart the user, meaning that any status of `finished` or `revoked` is cleared, and the participant can again write (or over-write) data to his or her folder. You would need to restart a user if you intend to refresh a token. Here we show the folder with list before and after a restart:
+
+
+```
+$ expfactory users --list
+/scif/data/expfactory/04a144da-97f5-4734-b5ea-1658aa2170ce_finished	04a144da-97f5-4734-b5ea-1658aa2170ce[finished]
+
+$ expfactory users --restart 04a144da-97f5-4734-b5ea-1658aa2170ce
+[restarting] 04a144da-97f5-4734-b5ea-1658aa2170ce --> /scif/data/expfactory/04a144da-97f5-4734-b5ea-1658aa2170ce
+
+$ expfactory users --list
+/scif/data/expfactory/04a144da-97f5-4734-b5ea-1658aa2170ce	04a144da-97f5-4734-b5ea-1658aa2170ce[active]
+```
+
+You can also change your mind and put the user back in `finished` status:
+
+```
+$ expfactory users --finish 04a144da-97f5-4734-b5ea-1658aa2170ce
+[finishing] 04a144da-97f5-4734-b5ea-1658aa2170ce --> /scif/data/expfactory/04a144da-97f5-4734-b5ea-1658aa2170ce_finished
+```
+
+or revoke the token entirely, which is akin to a finish, but implies a different status.
+
+```
+$ expfactory users --revoke 04a144da-97f5-4734-b5ea-1658aa2170ce
+[revoking] 04a144da-97f5-4734-b5ea-1658aa2170ce --> /scif/data/expfactory/04a144da-97f5-4734-b5ea-1658aa2170ce_revoked
+
+$ expfactory users --list                                       
+/scif/data/expfactory/04a144da-97f5-4734-b5ea-1658aa2170ce_revoked	04a144da-97f5-4734-b5ea-1658aa2170ce[revoked]
+```
+
+### Refresh User Token
+A refresh means issuing a completely new token, and this is only possible for status `[active]`. You should be careful with this because the folder is renamed (for filesystem) commands. If you have a finished or revoked folder and want to refresh a user token, you need to restart first. Here is what it looks like to refresh an active user token:
+
+```
+expfactory users --refresh 1320a84f-2e70-456d-91dc-083d36c68e17
+[refreshing] 1320a84f-2e70-456d-91dc-083d36c68e17 --> /scif/data/expfactory/fecad5cd-b044-4b1a-8fd1-37aafdbf8ed7
+```
+
+A completely new identifier is issued, and at this point you would need to update your participant logs with this change. 
+
+**Important** For the examples above, since we are using a filesystems database, the participant id *is* the token. For relational databases, the participant id is the database index.
+
+Having these status and commands ensures that a participant, under headless mode, cannot go back and retake the experiments unless you explicitly allow them, either by way of a new token or an updated one. If a user tried to complete the experiment again after finish or revoke, a message is shown that a valid token is required. If the user reads these documents and adds a `_finished` extension, it's still denied.
+
+
+## Saving Data
+Whether you choose a headless or interactive start, in both cases you can choose how your data is saved. The subtle difference for each saving method that result when you choose headless or interactive will be discussed below.
+
+### filesystem
+Saving to the filesytem is the default (what you get when you don't specify a particular database) and means saving to a folder called `/scif/data` in the Docker image. If you are saving data to the filesystem (`filesystem` database), given that you've mounted the container data folder `/scif/data` to the host, this means that the data will be found on the host in that location. In the example below, we have mounted `/tmp/data` to `/scif/data` in the container, and we are running interactive experiments (meaning without pre-generated tokens for login):
+
+```
+$ tree /tmp/data/expfactory/xxxx-xxxx-xxxx/
+
+    /tmp/data/expfactory/xxxx-xxxx-xxxx/
        └── tower-of-london-results.json
 
 0 directories, 1 file
@@ -71,17 +341,17 @@ $ tree /tmp/data/expfactory/00000/
 If we had changed our studyid to something else (e.g., `dns`), we might see:
 
 ```
-$ tree /tmp/data/dns/00000/
+$ tree /tmp/data/dns/xxxx-xxxx-xxxx/
 
-    /tmp/data/dns/00000/
+    /tmp/data/dns/xxxx-xxxx-xxxx/
        └── tower-of-london-results.json
 
 0 directories, 1 file
 ```
 
-Participant folders will be created under the `studyid` folder.  These start at 00000 and are incremented with each participant you run. If you stop the container and had mounted a volume to the host, the data will persist on the host. If you didn't mount a volume, then you will not see the data on the host.
+Participant folders are created under the `studyid` folder. If you stop the container and had mounted a volume to the host, the data will persist on the host. If you didn't mount a volume, then you will not see the data on the host.
 
-
+Now we will talk about interaction with the data.
 
 #### How do I read it?
 For detailed information about how to read json strings (whether from file or database) see [working with JSON](#working-with-json). For a filesystem save, the data is saved to a json object, regardless of the string output produced by the experiment. This means that you can load the data as json, and then look at the `data` key to find the result saved by the particular experiment. Typically you will find another string saved as json, but it could be the case that some experiments do this differently.
@@ -332,7 +602,7 @@ First, let's discuss the portal - what you see when you go to [127.0.0.1](http:/
 When you start your container instance, browsing to your localhost will show the entrypoint, a user portal that lists all experiments installed in the container. If you have defined a limited subset with `--experiments` you will only see that set here:
 
 <div>
-    <img src="/expfactory/img/generate/portal.png"><br>
+    <img src="../img/generate/portal.png"><br>
 </div>
 
 
@@ -340,45 +610,45 @@ This is where the experiment administrator would select one or more experiments,
  When you make a selection, the estimated time and experiment count on the bottom of the page are adjusted, and you can inspect individual experiment times: 
 
 <div>
-    <img src="/expfactory/img/generate/selected.png"><br>
+    <img src="../img/generate/selected.png"><br>
 </div>
 
 You can make a selection and then start your session. I would recommend the `test-task` as a first try, because it finishes quickly. When you click on `proceed` a panel will pop up that gives you choices for ordering and an (optional) Participant name. 
 
 <div>
-    <img src="/expfactory/img/generate/proceed.png"><br>
+    <img src="../img/generate/proceed.png"><br>
 </div>
 
 If you care about order, the order that you selected the boxes will be maintained for the session:
 
 <div>
-    <img src="/expfactory/img/generate/order-manual.png"><br>
+    <img src="../img/generate/order-manual.png"><br>
 </div>
 
 or if you want random selection, just check the box. This is the default setting.
 
 <div>
-    <img src="/expfactory/img/generate/order-random.png"><br>
+    <img src="../img/generate/order-random.png"><br>
 </div>
 
 This name is currently is only used to say hello to the participant. The actual experiment identifier is based on a study id defined in the build recipe.  After proceeding, there is a default "consent" screen that you must agree to (or disagree to return to the portal):
 
 <div>
-    <img src="/expfactory/img/generate/welcome.png"><br>
+    <img src="../img/generate/welcome.png"><br>
 </div>
 
 
 Once the session is started, the user is guided through each experiment (with random selection) until no more are remaining.
 
 <div>
-    <img src="/expfactory/img/generate/preview.png"><br>
+    <img src="../img/generate/preview.png"><br>
 </div>
 
 
 When you finish, you will see a "congratulations" screen
 
 <div>
-    <img src="/expfactory/img/generate/finish.png"><br>
+    <img src="../img/generate/finish.png"><br>
 </div>
 
 Generally, when you administer a battery of experiments you want to ensure that:
@@ -454,8 +724,6 @@ You should generally use a delimiter like tab, as it's commonly the case that fi
 A few questions for you!
 
  - Would password protection of the portal be desired?
- - Is a user allowed to redo an experiment? Meaning, if a session is started and the data is written (and the experiment done again) is it over-written? 
- - Is some higher level mechanism for generating user ids in advance, and then validating them with an individual, desired?
 
 To best develop the software for different deployment, it's important to discuss these issues. Please [post an issue](https://www.github.com/expfactory/expfactory/issues) to give feedback.
 

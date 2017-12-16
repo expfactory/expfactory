@@ -108,6 +108,20 @@ def copy_directory(src, dest, force=False):
             sys.exit(1)
 
 
+def mkdir_p(path):
+    '''mkdir_p attempts to get the same functionality as mkdir -p
+    :param path: the path to create.
+    '''
+    try:
+        os.makedirs(path)
+    except OSError as e:
+        if e.errno == errno.EEXIST and os.path.isdir(path):
+            pass
+        else:
+            bot.error("Error creating path %s, exiting." % path)
+            sys.exit(1)
+
+
 def clone(url, tmpdir=None):
     '''clone a repository from Github'''
     if tmpdir is None:
@@ -141,9 +155,14 @@ def run_command(cmd):
 def get_template(name, base=None):
     '''read in and return a template file
     '''
-    if base is None:
-        base = get_templatedir()
-    template_file = "%s/%s" %(base, name)
+    # If the file doesn't exist, assume relative to base
+    template_file = name
+    if not os.path.exists(template_file):
+        if base is None:
+            base = get_templatedir()
+        template_file = "%s/%s" %(base, name)
+
+    # Then try again, if it still doesn't exist, bad name
     if os.path.exists(template_file):
         with open(template_file,"r") as filey:
             template = "".join(filey.readlines())

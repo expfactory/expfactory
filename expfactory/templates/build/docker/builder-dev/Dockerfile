@@ -1,13 +1,13 @@
 FROM vanessa/expfactory-builder:base
 
-# docker build -t vanessa/expfactory-builder .
+# docker build -t vanessa/expfactory-builder-dev .
 
 ###################################
 # Experiment Factory
 ###################################
 
 WORKDIR /opt
-RUN git clone https://www.github.com/expfactory/expfactory
+RUN git clone -b headless https://www.github.com/expfactory/expfactory
 WORKDIR /opt/expfactory
 RUN python3 setup.py install
 RUN python3 -m pip install pyaml

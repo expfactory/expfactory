@@ -1,5 +1,4 @@
 '''
-views.py: part of expfactory package
 
 Copyright (c) 2017, Vanessa Sochat
 All rights reserved.
@@ -31,25 +30,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
-from flask_wtf import FlaskForm
-from wtforms import (
-    StringField, 
-    BooleanField
-)
+from expfactory.defaults import EXPFACTORY_LOGS
+import sys
+import os
 
-from wtforms.validators import DataRequired
+def main(args,parser,subparser):
 
-class ParticipantForm(FlaskForm):
-    '''the participant form is shown in the portal given an interactive
-       (non headless) runtime. We collection an (optional) participant name,
-       along with the experiments to run.
-    '''
-    openid = StringField('openid')
-    exp_ids = StringField('exp_ids', validators=[DataRequired()])
-    randomize = BooleanField('randomize', default=True)
-
-class EntryForm(FlaskForm):
-    '''the entry form is shown for a headless install. The user is required to
-       enter a pre-generated token, otherwise entry is denied
-    '''
-    token = StringField('token', validators=[DataRequired()])
+    logs = "%s/expfactory.log" % EXPFACTORY_LOGS
+    if os.path.exists(logs):
+        if not args.tail:
+            os.system("cat %s" %logs)
+        else:
+            os.system("tail -f %s" %logs)

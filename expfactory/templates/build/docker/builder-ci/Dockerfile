@@ -1,17 +1,16 @@
 FROM vanessa/expfactory-builder:base
 
-# docker build -t vanessa/expfactory-builder .
+# docker build -t vanessa/expfactory-builder-ci .
 
 ###################################
 # Experiment Factory
 ###################################
 
 WORKDIR /opt
-RUN git clone https://www.github.com/expfactory/expfactory
+ADD . /opt
 WORKDIR /opt/expfactory
 RUN python3 setup.py install
-RUN python3 -m pip install pyaml
-ADD entrypoint.sh /entrypoint.sh
+RUN mv /opt/entrypoint.sh /entrypoint.sh
 RUN chmod u+x /entrypoint.sh
 RUN mkdir -p /scif/apps
 RUN mkdir -p /data

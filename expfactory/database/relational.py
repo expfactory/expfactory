@@ -46,6 +46,7 @@ from expfactory.defaults import (
 )
 from glob import glob
 import os
+import uuid
 import pickle
 import json
 import sys
@@ -61,16 +62,116 @@ import sys
 #
 ################################################################################
 
-def generate_subid(self, digits=5):
+def generate_subid(self, token=None, return_user=False):
     '''generate a new user in the database, still session based so we
        create a new identifier.
     '''    
     from expfactory.database.models import Participant
-    p = Participant()
+    if not token:
+        p = Participant()
+    else:
+        p = Participant(token=token)
     self.session.add(p)
     self.session.commit()
-    print('Session Participant id: %s' % p.id)
+    if return_user is True:
+        return p
     return p.id
+
+
+def print_user(self, user):
+    '''print a relational database user
+    ''' 
+    status = "active"
+    token = user.token
+
+    if token in ['finished', 'revoked']:
+        status = token
+
+    if token is None:
+        token = ''
+  
+    subid = "%s\t%s[%s]" %(user.id, token, status)
+    print(subid)
+    return subid
+
+
+def list_users(self, user=None):
+    '''list users, each having a model in the database. A headless experiment
+       will use protected tokens, and interactive will be based on auto-
+       incremented ids.
+    ''' 
+    from expfactory.database.models import Participant
+    participants = Participant.query.all()
+    users = []
+    for user in participants:
+        users.append(self.print_user(user))
+    return users
+
+
+# Actions ######################################################################
+
+def generate_user(self):
+    '''generate a new user in the database, still session based so we
+       create a new identifier. This function is called from the users new 
+       entrypoint, and it assumes we want a user generated with a token.
+    '''
+    token = str(uuid.uuid4())
+    return self.generate_subid(token=token, return_user=True)
+
+
+def finish_user(self, subid):
+    '''finish user will remove a user's token, making the user entry not
+       accesible if running in headless model'''        
+
+    p = self.revoke_token(subid)
+    p.token = "finished"
+    self.session.commit()
+    return p
+
+
+def restart_user(self, subid):
+    '''restart a user, which means revoking and issuing a new token.'''
+    p = self.revoke_token(subid)
+    p = self.refresh_token(subid)
+    return p
+
+
+# Tokens #######################################################################
+
+
+def validate_token(self, token):
+    '''retrieve a subject based on a token. Valid means we return a participant
+       invalid means we return None
+    '''
+    from expfactory.database.models import Participant
+    p = Participant.query.filter(Participant.token == token).first()
+    if p is not None:
+        if p.token.endswith(('finished','revoked')):
+            p = None
+        else:
+            p = p.id
+    return p
+
+
+def revoke_token(self, subid):
+    '''revoke a token by removing it. Is done at finish, and also available
+    as a command line option'''
+    from expfactory.database.models import Participant
+    p = Participant.query.filter(Participant.id == subid).first()
+    if p is not None:
+        p.token = 'revoked'
+    self.session.commit()
+    return p
+
+
+def refresh_token(self, subid):
+    '''refresh or generate a new token for a user'''
+    from expfactory.database.models import Participant
+    p = Participant.query.filter(Participant.id == subid).first()
+    if p is not None:
+        p.token = str(uuid.uuid4())
+    self.session.commit()
+    return p
 
 
 def save_data(self,session, exp_id, content):
@@ -80,29 +181,36 @@ def save_data(self,session, exp_id, content):
         Participant,
         Result
     )
-    subid = session.get('subid') 
-    bot.info('Saving data for subid %s' % subid)    
+    subid = session.get('subid')
+    token = session.get('token') 
+
+    self.logger.info('Saving data for subid %s' % subid)    
 
     # We only attempt save if there is a subject id, set at start
     if subid is not None:
         p = Participant.query.filter(Participant.id == subid).first() # better query here
 
-        # Preference is to save data under 'data', otherwise do all of it
-        if "data" in content:
-            content = content['data']
+        # Does 
+        if self.headless and p.token != token:
+            self.logger.warning('%s attempting to use mismatched token [%s] skipping save' %(p.id, token))
+        elif self.headless and p.token.endswith(('finished','revoked')):
+            self.logger.warning('%s attempting to use expired token [%s] skipping save' %(p.id, token))
+        else:
 
-        print(content)
-        pickle.dump(content, open('/data/content.pkl','wb'))
-        result = Result(data=content,
-                        exp_id=exp_id,
-                        participant_id=p.id) # check if changes from str/int
-        self.session.add(result)
-        p.results.append(result)
-        self.session.commit()
+            # Preference is to save data under 'data', otherwise do all of it
+            if "data" in content:
+                content = content['data']
 
-        bot.info("Participant: %s" %p)
-        bot.info("Result: %s" %result)
+            result = Result(data=content,
+                            exp_id=exp_id,
+                            participant_id=p.id) # check if changes from str/int
 
+            # Create and save the result
+            self.session.add(result)
+            p.results.append(result)
+            self.session.commit()
+
+            self.logger.info("Save [participant] %s [result] %s" %(p, result))
 
 
 Base = declarative_base()
@@ -119,7 +227,7 @@ def init_db(self):
 
     # The user can provide a custom string
     if self.database is None:
-        bot.error("You must provide a database url, exiting.")
+        self.logger.error("You must provide a database url, exiting.")
         sys.exit(1)
 
     self.engine = create_engine(self.database, convert_unicode=True)

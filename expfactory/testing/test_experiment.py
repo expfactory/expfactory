@@ -1,5 +1,7 @@
+#!/usr/bin/python
+
 '''
-views.py: part of expfactory package
+Test experiments
 
 Copyright (c) 2017, Vanessa Sochat
 All rights reserved.
@@ -31,25 +33,45 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
-from flask_wtf import FlaskForm
-from wtforms import (
-    StringField, 
-    BooleanField
-)
+import unittest
+import shutil
+from expfactory.utils import *
+from expfactory.experiment import *
+from expfactory.validator import *
 
-from wtforms.validators import DataRequired
+import tempfile
+import json
+import os
 
-class ParticipantForm(FlaskForm):
-    '''the participant form is shown in the portal given an interactive
-       (non headless) runtime. We collection an (optional) participant name,
-       along with the experiments to run.
-    '''
-    openid = StringField('openid')
-    exp_ids = StringField('exp_ids', validators=[DataRequired()])
-    randomize = BooleanField('randomize', default=True)
+class TestExperiment(unittest.TestCase):
 
-class EntryForm(FlaskForm):
-    '''the entry form is shown for a headless install. The user is required to
-       enter a pre-generated token, otherwise entry is denied
-    '''
-    token = StringField('token', validators=[DataRequired()])
+    def setUp(self):
+        self.pwd = get_installdir()
+        self.battery_folder = "%s/testing/data" %self.pwd
+        self.experiment = os.path.abspath("%s/testing/data/test-task/" %self.pwd)
+        self.bad_experiment = os.path.abspath("%s/testing/data/not_an_experiment/" %self.pwd)
+        self.tmpdir = tempfile.mkdtemp()
+
+    def tearDown(self):
+        shutil.rmtree(self.tmpdir)
+
+    def test_library(self):
+        library = get_library(key='name')
+        self.assertTrue(len(library)>95)
+
+    def test_load_experiments(self):
+
+        loaded_experiment = load_experiment(self.experiment)  
+        self.assertTrue(isinstance(loaded_experiment,dict))
+
+    def test_validate(self):
+        loaded_experiment = load_experiment(self.experiment)  
+        validator = ExperimentValidator()
+        valid = validator.validate(self.experiment)
+        not_valid = validator.validate(self.bad_experiment)
+        self.assertTrue(valid)
+        self.assertTrue(not not_valid)
+
+
+if __name__ == '__main__':
+    unittest.main()

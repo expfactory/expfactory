@@ -42,23 +42,31 @@ from sqlalchemy import (
     func
 )
 from sqlalchemy.orm import relationship, backref
+from uuid import uuid4
 from expfactory.database import Base
 
 
 class Participant(Base):
-    '''A participant in a local assessment. Names must be unique
+    '''A participant in a local assessment. id must be unique. If a token is
+       revoked or finished, it will end with `_revoked` or `_finished`. A
+       user generated without a token will have value of None
     '''
     __tablename__ = 'participant'
     id = Column(Integer, primary_key=True)
     name = Column(String(150))
+    token = Column(String(50))
     results = relationship('Result', lazy='select',
                            backref=backref('participant', lazy='joined'))
-    def __init__(self, name=None):
+    def __init__(self, name=None, token=None):
         self.name = name
+        self.token = token
 
     def __repr__(self):
         return '<Participant %r>' % (self.name)
 
+    def url(self):
+        '''return the participant url'''
+        
 
 class Result(Base):
     '''a result is an experiment name, json dump, and datetime'''

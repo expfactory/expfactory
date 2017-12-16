@@ -1,7 +1,6 @@
 from expfactory.defaults import EXPFACTORY_DATABASE
 
 if EXPFACTORY_DATABASE == "filesystem":
-    print("Importing filesystem functions")
     from .filesystem import *
 else:
     from .relational import *

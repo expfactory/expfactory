@@ -1,0 +1,73 @@
+<!DOCTYPE html><html class=''>
+<head>
+    <meta charset='UTF-8'>
+    <meta name="robots" content="noindex">
+    <title>The Experiment Factory: Test Task</title>
+    
+<link rel='stylesheet' type='text/css' href='jspsych.css'>
+<link rel='stylesheet' type='text/css' href='default_style.css'>
+<link rel='stylesheet' type='text/css' href='style.css'>
+</head>
+
+<body>
+<script src='js/jquery.min.js'></script>
+<script src='js/math.min.js'></script>
+<script src='js/jspsych/jspsych.js'></script>
+<script src='js/jspsych/plugins/jspsych-text.js'></script>
+<script src='js/jspsych/poldrack_plugins/jspsych-poldrack-text.js'></script>
+<script src='js/jspsych/poldrack_plugins/jspsych-poldrack-instructions.js'></script>
+<script src='js/jspsych/poldrack_plugins/jspsych-attention-check.js'></script>
+<script src='js/jspsych/poldrack_plugins/jspsych-poldrack-single-stim.js'></script>
+<script src='js/jspsych/plugins/jspsych-survey-text.js'></script>
+<script src='js/jspsych/plugins/jspsych-call-function.js'></script>
+<script src='js/jspsych/poldrack_plugins/poldrack_utils.js'></script>
+<script src='experiment.js'></script>
+
+<script>
+$( document ).ready(function() {
+
+    jsPsych.init({
+             timeline: test_task_experiment,
+             display_element: "getDisplayElement",
+             fullscreen: true,
+             on_trial_finish: function(data){
+               addID('test-task')
+             },
+
+             on_finish: function(data){
+
+                 // Serialize the data
+                 var promise = new Promise(function(resolve, reject) {
+                     var data = jsPsych.data.dataAsJSON();
+                     resolve(data);
+                 })
+
+                 promise.then(function(data) {
+
+
+                     $.ajax({
+                         type: "POST",
+                         url: '/save',
+                         data: { "data": data },
+                         success: function(){ document.location = "/next" },
+                         dataType: "application/json",
+
+                         // Endpoint not running, local save
+                         error: function(err) {
+
+                             if (err.status == 200){
+                                document.location = "/next"
+                             } else {
+                                 // If error, assue local save
+                                 jsPsych.data.localSave('test-task_results.csv', 'csv');
+                            }
+                         }
+                     });
+                 })
+             }
+
+      });
+});
+</script>
+</body>
+</html>
