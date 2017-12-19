@@ -84,7 +84,7 @@ The Experiment Factory robots are a set of scripts (and associated containers) t
 For complete setup and usage, see the most updated docs in the [Github repository](https://www.github.com/expfactory/expfactory-robots). Here we will review a "quick start" with a Singularity image.
 
 ## Singularity Usage
-You will need to [install Singularity](https://singularityware.github.io/install-linux) first. Singularity is ideal for this use case because of the seamless nature between the container and host. We have a pre-built image for your use:
+You will need to [install Singularity](https://singularityware.github.io/install-linux) first. Singularity is ideal for this use case because of the seamless nature between the container and host. We have a [pre-built image](https://www.singularity-hub.org/collections/380) on Singularity Hub for your use:
 
 ```
 singularity pull --name expfactory-robots.simg shub://expfactory/expfactory-robots
