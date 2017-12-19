@@ -33,6 +33,7 @@ Next, read more about [generation](pages/1-generate.md) of your own experiment c
  - [Building](pages/1-generate.md) your battery means creating and configuring your image.
  - [Using](pages/2-usage.md) an experiment factory container.
  - [Contribute](pages/3-contribute.md) an experiment to the [library](https://www.github.com/expfactory/experiments) for others to use.
+ - [Integrations](pages/4-integrations.md) including automated experiment testing robots, generators, and third party tools.
 
 ## Library
 
