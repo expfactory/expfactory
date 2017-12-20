@@ -1,9 +1,9 @@
 {% include experiment %}
 
 <script type="text/javascript">
-    window.onload = function() {
+    var csrf_token = "{{ csrf_token() }}";
 
-        var csrf_token = "{{ csrf_token() }}";
+    window.onload = function() {
 
         if (window.jQuery) {  
 
