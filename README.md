@@ -6,7 +6,19 @@
 
 [documentation](https://expfactory.github.io/expfactory)
 
-The Experiment Factory is software to create a reproducible container that you can easily customize to deploy a set of web-based experiments. It's predecessor at [Expfactory.org](https://expfactory.org) was never able to open up to the public, and this went against the original goal of the software. Further, the badly needed functionality to serve a local battery was poorly met with [expfactory-python](https://www.github.com/expfactory/expfactory-python) as time progressed and dependencies changes.
+The Experiment Factory is software to create a reproducible container that you can easily customize to deploy a set of web-based experiments. 
+
+## Contributing
+We have many ways to contribute, and will nriefly provide resources here to get you started.
+
+### How to Contribute
+If you are a developer interested in working on the Experiment Factory software you should read out [contributing guidelines](.github/CONTRIBUTING.md) for details. For contributing containers and experiments, see our [user documentation](https://expfactory.github.io/expfactory/contribute). If you have any questions, please don't hesitate to [ask a question](https://www.github.com/expfactory/expfactory/issues).
+
+### Code of Conduct
+It's important to treat one another with respect and maintain a fun and respectful environment for the open source community. Toward this aim, we ask that you review our [code of conduct](.github/CODE_OF_CONDUCT.md)
+
+## Background
+It's predecessor at [Expfactory.org](https://expfactory.org) was never able to open up to the public, and this went against the original goal of the software. Further, the badly needed functionality to serve a local battery was poorly met with [expfactory-python](https://www.github.com/expfactory/expfactory-python) as time progressed and dependencies changes.
  
 This version is agnostic to the underlying driver of the experiments, and provides reproducible, instantly deployable "container" experiments. What does that mean?
 

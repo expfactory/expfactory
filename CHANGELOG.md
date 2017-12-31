@@ -16,6 +16,10 @@ and changes prior to that are (unfortunately) done retrospectively. Critical ite
 
 ## [v3.x](https://github.com/expfactory/expfactory/tree/headless) (development)
 
+**contributions**
+ - a [contributing](.github/CONTRIBUTING.md) file was added to guide users to contribute.
+ - a [code of conduct](.github/CODE_OF_CONDUCT.md) was added.
+ - a [pull request](.github/PULL_REQUEST_TEMPLATE.md) and [issues template](.github/ISSUE_TEMPLATE.md) was added.
 **additions**
  - this changelog was added
  - a development image `vanessa/expfactory-builder.dev` was added for others to test new changes before integration into master repo.
