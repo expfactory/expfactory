@@ -4,7 +4,7 @@
 
 ![expfactory/static/img/expfactoryticketyellow.png](expfactory/static/img/expfactoryticketyellow.png)
 
-[documentation](https://expfactory.github.io/expfactory)
+See our [documentation](https://expfactory.github.io/expfactory) for getting started. If you are new to containers, read our [background](https://expfactory.github.io/expfactory/generate#background) or [paper](paper) first. If you want a more guided entry, see the [detailed start](https://expfactory.github.io/expfactory/generate#detailed-start)
 
 The Experiment Factory is software to create a reproducible container that you can easily customize to deploy a set of web-based experiments. 
 

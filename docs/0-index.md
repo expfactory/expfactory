@@ -25,12 +25,12 @@ docker run -p 80:80 vanessa/expfactory-surveys start
 docker run -p 80:80 vanessa/expfactory-experiments start
 ```
 
-Next, read more about [generation](pages/1-generate.md) of your own experiment container. Please [give feedback](https://www.github.com/expfactory/expfactory/issues) about your needs to further develop the software. The [library](https://expfactory.github.io/experiments/) will show you a selection to choose from, including all experiments, surveys, and games migrated from [the legacy Expfactory](https://www.github.com/expfactory/expfactory-experiments). If you have web-based experiments to contribute, please [reach out](https://www.github.com/expfactory/expfactory/issues)! Your contributions and feedback are greatly appreciated!
-
+If you want a more gentle introduction, start with reading some [background](https://expfactory.github.io/expfactory/generate#background) on containers and why the Experiment Factory exists in the first place. Then move on to our quick start to [generate](https://expfactory.github.io/expfactory/generate#quick-start) your own experiment container. Please [give feedback](https://www.github.com/expfactory/expfactory/issues) about your needs to further develop the software. The [library](https://expfactory.github.io/experiments/) will show you a selection to choose from, including all experiments, surveys, and games migrated from [the legacy Expfactory](https://www.github.com/expfactory/expfactory-experiments). If you have web-based experiments to contribute, please [reach out](https://www.github.com/expfactory/expfactory/issues)! Your contributions and feedback are greatly appreciated!
 
 ## User Guide
 
- - [Building](pages/1-generate.md) your battery means creating and configuring your image.
+ - [Background](https://expfactory.github.io/expfactory/generate#background) for a gentle introduction to containers before the quick start.
+ - [Building](pages/1-generate.md) (the quick start) means your battery means creating and configuring your image.
  - [Using](pages/2-usage.md) an experiment factory container.
  - [Contribute](pages/3-contribute.md) an experiment to the [library](https://www.github.com/expfactory/experiments) for others to use.
  - [Integrations](pages/4-integrations.md) including automated experiment testing robots, generators, and third party tools.
