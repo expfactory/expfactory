@@ -35,7 +35,7 @@ AUTHOR = 'Vanessa Sochat'
 AUTHOR_EMAIL = 'vsochat@stanford.edu'
 NAME = 'expfactory'
 PACKAGE_URL = "http://www.github.com/expfactory/expfactory"
-KEYWORDS = 'singularity container reproducible behavior neuroscience experiment factory'
+KEYWORDS = 'docker container reproducible behavior neuroscience experiment factory'
 DESCRIPTION = "software to generate a reproducible container battery of experiments."
 LICENSE = "LICENSE"
 

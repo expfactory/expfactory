@@ -27,10 +27,10 @@ This version is agnostic to the underlying driver of the experiments, and provid
    - custom variables (e.g., a study identifier) and configurations go into the build recipe 
    - you can choose to use your own database (default output is flat files)
    - other options are available at runtime 
- - The container is a Singularity container, meaning that it's a file that can be easily moved, and shared.
+ - The container can be easily shared.
  - You run the container, optionally specifying a subset and ordering, and collect your results
  
-If you build on [Singularity Hub](https://www.singularity-hub.org) anyone else can then pull and use your exact container to collect their own results. It is exact down to the file hash.
+If you build on [Docker Hub](https://hub.docker.com/) anyone else can then pull and use your exact container to collect their own results. It is exact down to the file hash.
 
 ## Experiment Library
 The experiments themselves are now maintained under [expfactory-experiments](https://www.github.com/expfactory-experiments), official submissions to be found by expfactory can be added to the [library](https://www.github.com/expfactory/library) (under development) to be tested that they meet minimum requirements.

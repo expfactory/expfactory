@@ -39,7 +39,7 @@ The most basic experiment contribution could be a web form, an intermediate cont
  - **all dependencies can be included in a folder**: While content delivery networks (CDNs) are great for obtaining resources, you can be more assured of having a file if you download it locally.
  - **the experiment runs via a single file**: The server will be authenticating pages based on sessions and CSRF. For now, your experiment is required to run on a single page, meaning that the `POST` to save data comes from the same page where the experiment started.
  - **the experiment runs statically** When it finishes, it posts to `/finish`, and on successful POST redirects to `/next`.
- - (optional) documentation about any special variables that can be set in the Singularity build recipe environment section for it (more on this later).
+ - (optional) documentation about any special variables that can be set in the Dockerfile (the build recipe - more on this later).
  - **experiment completion** should have a POST of json data (`{"data": data}`) to `/save`. If successful, it navigates to `/next`. If not successful, data should be saved locally in the format of your choice (for preview and testing purposes). The server will by default look for the post to have a `data` field and use it. If not found, it will use the entire `POST`.
 
 

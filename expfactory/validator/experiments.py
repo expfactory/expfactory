@@ -71,8 +71,7 @@ class ExperimentValidator:
             a folder, config, or url. If a URL is found, it is
             cloned and cleaned up.
            :param validate_folder: ensures the folder name (github repo)
-                                   matches. Not used if running in singularity
-                                   test image
+                                   matches.
         '''
          
         # Obtain any repository URL provided
