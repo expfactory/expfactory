@@ -170,19 +170,26 @@ class ReverseProxied(object):
             if path_info.startswith(script_name):
                 environ['PATH_INFO'] = path_info[len(script_name):]
 
-        scheme = environ.get('HTTP_X_SCHEME', '')
-        if scheme:
-            environ['wsgi.url_scheme'] = scheme
+        # scheme = environ.get('HTTP_X_SCHEME', '')
+        # if scheme:
+        #     environ['wsgi.url_scheme'] = scheme
 
-        server = environ.get('HTTP_X_FORWARDED_SERVER', '')
-        if server:
-            environ['HTTP_HOST'] = server
+        # server = environ.get('HTTP_X_FORWARDED_SERVER', '')
+        # if server:
+        #     environ['HTTP_HOST'] = server
 
         return self.app(environ, start_response)
 
+
+# Import the fixer
+from werkzeug.contrib.fixers import ProxyFix
+
 app = EFServer(__name__)
 app.config.from_object('expfactory.config')
+# Use the fixer
+app.wsgi_app = ProxyFix(app.wsgi_app, 2)
 app.wsgi_app = ReverseProxied(app.wsgi_app)
+
 
 # EXPERIMENTS #################################################################
 
