@@ -30,22 +30,21 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
+import os
+import sys
 from expfactory.validator import ExperimentValidator
 from expfactory.experiment import load_experiment
 from expfactory.utils import (
     get_viewsdir,
-    get_template, 
-    run_command,
+    get_template,
     sub_template,
     save_template
 )
 from expfactory.logger import bot
-import tempfile
-import sys
-import os
+from bs4 import BeautifulSoup
 
 
-def main(args,parser,subparser):
+def main(args, parser, subparser):
 
     folder = args.folder
     if folder is None:
@@ -59,7 +58,7 @@ def main(args,parser,subparser):
     # Is the experiment valid?
     cli = ExperimentValidator()
     valid = cli.validate(source, cleanup=False)
-    exp_id = os.path.basename(source).replace('.git','')
+    exp_id = os.path.basename(source).replace('.git', '')
 
     if valid is True:
 
@@ -68,20 +67,20 @@ def main(args,parser,subparser):
             config = load_experiment(source)
             source = os.path.abspath(source)
         else:
-            config = load_experiment("%s/%s" %(cli.tmpdir,exp_id))
-            source = "%s/%s" %(cli.tmpdir,exp_id)
+            config = load_experiment("%s/%s" % (cli.tmpdir, exp_id))
+            source = "%s/%s" % (cli.tmpdir, exp_id)
 
         exp_id = config['exp_id']
-        python_module = exp_id.replace('-','_').lower()
+        python_module = exp_id.replace('-', '_').lower()
     else:
         bot.error('%s is not valid.' % exp_id)
         sys.exit(1)
 
     # Move static files to output folder
-    dest = "%s/%s" %(folder,exp_id)
+    dest = "%s/%s" % (folder, exp_id)
 
-    bot.log("Installing %s to %s" %(exp_id, dest))
-    
+    bot.log("Installing %s to %s" % (exp_id, dest))
+
     # Building container
     in_container = False
     if os.environ.get('SINGULARITY_IMAGE') is not None:
@@ -103,27 +102,54 @@ def main(args,parser,subparser):
 
         # 1. Python blueprint
         views = get_viewsdir(base=args.base)
-        view_output = "%s/%s.py" %(views, python_module)
+        view_output = "%s/%s.py" % (views, python_module)
         save_template(view_output, template, base=views)
     
         # 2. append to __init__
         init = "%s/__init__.py" % views
         with open(init,'a') as filey:
-            filey.writelines('from .%s import *\n' %python_module)
+            filey.writelines('from .%s import *\n' % python_module)
 
         # 3. Instructions
         if "instructions" in config:
-            instruct = "%s/%s.help" %(views, python_module)
-        with open(instruct,'w') as filey:
+            instruct = "%s/%s.help" % (views, python_module)
+        with open(instruct, 'w') as filey:
             filey.writelines(config['instructions'])
 
     if not os.path.exists(dest):
-        os.system('mkdir -p %s' %dest)
+        os.system('mkdir -p %s' % dest)
     else:
         if args.force is False:
-            bot.error('%s is not empty! Use --force to delete and re-create.' %folder)
-            sys.exit(1) 
+            bot.error('%s is not empty! Use --force to delete and re-create.'
+                      % folder)
+            sys.exit(1)
 
     # We don't need to copy if experiment already there
     if source != dest:
-        os.system('cp -R %s/* %s' %(source, dest))
+        os.system('cp -R %s/* %s' % (source, dest))
+
+    # Insert template into index.html
+    template = """
+  // Set SCRIPT_ROOT in case experiment factory is deployed at a
+  // non-root URL.
+  var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+  var csrf_token = "{{ csrf_token() }}";
+
+  $.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+      if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+        xhr.setRequestHeader("X-CSRFToken", csrf_token);
+      }
+    }
+  });
+"""
+
+    with open("%s/%s" % (dest, "index.html"), "r+") as f:
+        index = BeautifulSoup(f, "html.parser")
+        script_tag = index.new_tag('script')
+        script_tag.string = template
+        exp_script = index.find("script", {"src": "experiment.js"})
+        exp_script.insert_before(script_tag)
+        f.seek(0)
+        f.write(str(index))
