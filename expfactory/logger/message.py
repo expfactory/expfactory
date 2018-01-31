@@ -1,6 +1,6 @@
 '''
 
-logger/message.py: Python logger base for singularity python
+logger/message.py: Python logger base for expfactory
 
 Copyright (c) 2016-2017 Vanessa Sochat
 

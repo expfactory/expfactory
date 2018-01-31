@@ -10,6 +10,8 @@
     url: "/expfactory/generate"
     slug: generate
     sections:
+      - title: Background
+        slug: background
       - title: Quick Start
         slug: quick-start
       - title: Detailed Start

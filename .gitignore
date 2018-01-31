@@ -1,4 +1,6 @@
 [expfactory]
+Singularity*
+singularity*
 pypi.sh
 expfactory.egg-info
 config.py
