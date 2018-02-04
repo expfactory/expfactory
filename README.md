@@ -1,6 +1,7 @@
 # The Experiment Factory
 
 [![DOI](https://zenodo.org/badge/108672186.svg)](https://zenodo.org/badge/latestdoi/108672186)
+[![status](http://joss.theoj.org/papers/91829e3895316bb54bf4a3b5e32cdb71/status.svg)](http://joss.theoj.org/papers/91829e3895316bb54bf4a3b5e32cdb71)
 
 ![expfactory/static/img/expfactoryticketyellow.png](expfactory/static/img/expfactoryticketyellow.png)
 
