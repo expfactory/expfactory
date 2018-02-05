@@ -1,13 +1,20 @@
 # The Experiment Factory
 
+[![DOI](http://joss.theoj.org/papers/10.21105/joss.00521/status.svg)](https://doi.org/10.21105/joss.00521)
 [![DOI](https://zenodo.org/badge/108672186.svg)](https://zenodo.org/badge/latestdoi/108672186)
-[![status](http://joss.theoj.org/papers/91829e3895316bb54bf4a3b5e32cdb71/status.svg)](http://joss.theoj.org/papers/91829e3895316bb54bf4a3b5e32cdb71)
 
 ![expfactory/static/img/expfactoryticketyellow.png](expfactory/static/img/expfactoryticketyellow.png)
 
 See our [documentation](https://expfactory.github.io/expfactory) for getting started. If you are new to containers, read our [background](https://expfactory.github.io/expfactory/generate#background) or [paper](paper) first. If you want a more guided entry, see the [detailed start](https://expfactory.github.io/expfactory/generate#detailed-start)
 
 The Experiment Factory is software to create a reproducible container that you can easily customize to deploy a set of web-based experiments. 
+
+## Citation
+If the Experiment Factory is useful to you, please cite [the paper](https://doi.org/10.21105/joss.00521) to support the software and open source development.
+
+```
+Sochat, (2018). The Experiment Factory: Reproducible Experiment Containers. Journal of Open Source Software, 3(22), 521, https://doi.org/10.21105/joss.00521
+```
 
 ## Contributing
 We have many ways to contribute, and will nriefly provide resources here to get you started.
