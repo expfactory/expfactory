@@ -42,6 +42,22 @@ If you want a more gentle introduction, start with reading some [background](htt
  - [Recipes](https://expfactory.github.io/experiments/recipes) view a pre-generated recipe based on tags in the library.
 
 
+## Citation
+
+[![DOI](http://joss.theoj.org/papers/10.21105/joss.00521/status.svg)](https://doi.org/10.21105/joss.00521)
+
+If the Experiment Factory is useful to you, please cite [the paper](https://doi.org/10.21105/joss.00521) to support the software and open source development.
+
+```
+Sochat, (2018). The Experiment Factory: Reproducible Experiment Containers. Journal of Open Source Software, 3(22), 521, https://doi.org/10.21105/joss.00521
+```
+
+If you are using the [Legacy software](https://expfactory.github.io/v1/) please cite [this paper](https://www.frontiersin.org/articles/10.3389/fpsyg.2016.00610/full).
+
+```
+Sochat VV, Eisenberg IW, Enkavi AZ, Li J, Bissett PG and Poldrack RA (2016) The Experiment Factory: Standardizing Behavioral Experiments. Front. Psychol. 7:610. doi: 10.3389/fpsyg.2016.00610
+```
+
 <div>
     <a href="/expfactory/generate"><button class="next-button btn btn-primary"><i class="fa fa-chevron-right"></i> </button></a>
 </div><br>
