@@ -37,6 +37,7 @@ from flask import (
     render_template, 
     request, 
     redirect,
+    url_for,
     session
 )
 
@@ -97,7 +98,7 @@ def home():
             form = EntryForm()
             session['experiments'] = [os.path.basename(x) for x in app.experiments] # list
             return render_template('routes/entry.html', form=form)
-        return redirect('/next')
+        return redirect(url_for('next'))
 
     return portal()
 
@@ -121,9 +122,8 @@ def save():
         app.logger.info('Finished %s, %s remaining.' % (exp_id, len(experiments)))
 
         # Note, this doesn't seem to be enough to trigger ajax success
-        return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
-    return json.dumps({'success':False}), 403, {'ContentType':'application/json'} 
-
+        return jsonify(success=True)
+    return jsonify(success=False)
 
 
 @app.route('/next', methods=['POST', 'GET'])
@@ -138,10 +138,10 @@ def next():
  
     if experiment is not None:
         app.logger.debug('Next experiment is %s' % experiment)
-        return perform_checks('/experiments/%s' % experiment, do_redirect=True,
+        return perform_checks('experiments/%s' % experiment, do_redirect=True,
                               next=experiment)
 
-    return redirect('/finish')
+    return redirect(url_for('finish'))
    
 
 # Reset/Logout
@@ -150,7 +150,7 @@ def logout():
 
     # If the user has finished, clear session
     clear_session()
-    return redirect('/')
+    return redirect(url_for('home'))
 
 
 # Finish
@@ -167,7 +167,7 @@ def finish():
         app.finish_user(subid)
         clear_session()
         return render_template('routes/finish.html')
-    return redirect('/')
+    return redirect(url_for('home'))
 
 
 @app.route('/start')

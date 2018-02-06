@@ -36,6 +36,7 @@ from flask import (
     render_template, 
     request, 
     redirect,
+    url_for,
     session
 )
 
@@ -76,7 +77,7 @@ def portal():
             flash('Participant ID: "%s" <br> Name %s <br> Randomize: "%s" <br> Experiments: %s' %
                   (subid, username, app.randomize,
                   str(form.exp_ids.data)))
-            return redirect('/start')
+            return redirect(url_for('start'))
 
         # Submit but not valid
         return render_template('portal/index.html', experiments=app.lookup,
