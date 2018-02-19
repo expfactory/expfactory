@@ -324,7 +324,7 @@ You should then be able to go to the [expfactory library](https://www.github.com
 
 
 # Deploying Experiments
-Once you get here, you've probably had your experiment pull required approved and merged! After this, your experiment will be made available in the [library](https://expfactory.github.io/experiments/library.json). More information will be added about using the library as it is developed. You can then add your experiment to a Reproducible Experiments Container, along with any of the other selection in the library. Read about [usage](/expfactory/usage.html) for your different options if you haven't yet.
+Once you get here, you've probably had your experiment pull request approved and merged! After this, your experiment will be made available in the [library](https://expfactory.github.io/experiments/library.json). More information will be added about using the library as it is developed. You can then add your experiment to a Reproducible Experiments Container, along with any of the other selection in the library. Read about [usage](/expfactory/usage.html) for your different options if you haven't yet.
 
 # Contribute a Survey
 A survey is (for now) just an experiment that is primarily questions. You can take a look at some our examples in the experiments library, or if you want to easily generate a new survey, see our [survey generator integration](/expfactory/integrations.html#contribute-a-survey).
