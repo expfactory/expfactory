@@ -265,7 +265,7 @@ Remember if you need to shell inside, you can do `docker exec -it <containerid> 
 
 
 ## Add the Experiment
-When your experiment is ready to go, you should fork the [library repository](https://expfactory.github.io/library), and in the `experiments` folder, create a file named equivalently to the main identifier (`exp_id`) of your experiment in the folder `docs/_library`. For example, after I've cloned the fork of my repo, I might check out a new branch for my task:
+When your experiment is ready to go, you should fork the [library repository](https://github.com/expfactory/experiments), and in the `experiments` folder, create a file named equivalently to the main identifier (`exp_id`) of your experiment in the folder `docs/_library`. For example, after I've cloned the fork of my repo, I might check out a new branch for my task:
 
 
 ```
