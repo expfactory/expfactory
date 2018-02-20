@@ -315,7 +315,7 @@ and then push!
 git push origin add/breath-counting-task
 ```
 
-You should then be able to go to the [expfactory library](https://www.github.com/expfactory/experiments) interface and click the button to do a **pull request** that is **across forks** to the **expfactory master branch**. Github is usually pretty clever in knowing when you've recently submit to a branch associated with a repository. For example, when I browsed to the expfactory experiments library main repo, I saw:
+You should then be able to go to the [expfactory library](https://www.github.com/expfactory/experiments) interface and click the button to do a **pull request** that is **across forks** to the **expfactory master branch**. Github is usually pretty clever in knowing when you've recently commit to a branch associated with a repository. For example, when I browsed to the expfactory experiments library main repo, I saw:
 
 <div>
     <img src="/expfactory/img/contribute/pull-request.png"><br>
