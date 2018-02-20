@@ -75,7 +75,7 @@ It's also helpful to copy paste this address and add it to the main repository d
 </div>
 
 
-Now let's pretend we created out Github remot, and have our experiment in our local repository (a folder on your machine with the `.git` hidden directory). We need to bring up a web server, and open our browser to the port we are using to see our experiment. The easiest way to bring up a server is by using python. If you cd into the folder and run:
+Now let's pretend we created our Github remote, and have our experiment in our local repository (a folder on your machine with the `.git` hidden directory). We need to bring up a web server, and open our browser to the port we are using to see our experiment. The easiest way to bring up a server is by using python. If you cd into the folder and run:
 
 ```
 cd my-experiment/
