@@ -25,7 +25,7 @@ first row, the header:
  - `option_text`: For radio and checkboxes, you are asking the user to select from one or more options. These should be the text portion (what the user sees on the screen), and separated by commas (e.g, Yes,No,Sometimes. Note: these fields are not required for instructions or textbox types, and can be left as empty tabs.
  - `option_values`: Also for radio and checkboxes, these are the data values that correspond to the text. For example, the option_text Yes,No may correspond to 1,0. This field is typically blank for instructions or textbox types.
 
-We have provided an folder with examples ([state-minfullness-survey](state-minfullness-survey)) that you can use to generate a new survey.
+We have provided an folder with examples ([state-mindfulness-survey](https://github.com/expfactory-experiments/state-mindfulness-survey)) that you can use to generate a new survey.
 
 ## Run the Container
 To generate the survey, we will run the container from the folder where our two files are.
