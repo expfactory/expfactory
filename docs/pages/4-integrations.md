@@ -36,16 +36,29 @@ because most of the arguments are set in the image. We just need to make sure th
  - 2. we specify `start`
  - 3. we map the `$PWD` (or where our survey and config are) to `/data` in the container
 
+Let's just wget the needed survey.tsv and config.json, because the repository has the completed survey.
+
 ```
-cd state-mindfulness-survey
+mkdir -p /tmp/mindfulness-survey
+cd /tmp/mindfulness-survey
+wget https://raw.githubusercontent.com/expfactory-experiments/state-mindfulness-survey/master/config.json
+wget https://raw.githubusercontent.com/expfactory-experiments/state-mindfulness-survey/master/survey.tsv
+```
+```
 ls 
 config.json    survey.tsv
+```
+
+Make a README to describe your survey!
+
+```
+echo "My Awesome Survey!" >> README.md
 ```
 
 The output is minimal, but when we finish, our survey is ready!
 
 ```
-$ docker run -v $PWD:/data vanessa/expfactory-survey start
+$ docker run -v $PWD:/data vanessa/survey-generator start
 Writing output files to /data/index.html
 index.html
 js
