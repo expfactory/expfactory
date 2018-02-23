@@ -45,7 +45,7 @@ config.json    survey.tsv
 The output is minimal, but when we finish, our survey is ready!
 
 ```
-$ docker run -v $PWD:/data vanessa/expfactory-survey start
+$ docker run -v $PWD:/data vanessa/survey-generator start
 Writing output files to /data/index.html
 index.html
 js
