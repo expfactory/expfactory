@@ -28,7 +28,7 @@ first row, the header:
 We have provided an folder with examples ([state-mindfulness-survey](https://github.com/expfactory-experiments/state-mindfulness-survey)) that you can use to generate a new survey.
 
 ## Run the Container
-To generate the survey, we will run the container from the folder where our two files are.
+To generate the survey, we will run [the container](https://hub.docker.com/r/vanessa/survey-generator/) from the folder where our two files are.
 If we run without specifying `start` we will get a help prompt. But really we don't need to look at it,
 because most of the arguments are set in the image. We just need to make sure that 
 
@@ -79,14 +79,14 @@ python -m http.server 9999
 If you need to generate the `index.html` again and force overwrite, use `--force`.
 
 ```
-docker run -v $PWD:/data vanessa/expfactory-survey start --force
+docker run -v $PWD:/data vanessa/survey-generator start --force
 ```
 
 ## Development
 If you want to build the image:
 
 ```
-docker build -t vanessa/expfactory-survey .
+docker build -t vanessa/survey-generator .
 ```
 
 # Expfactory Robots
