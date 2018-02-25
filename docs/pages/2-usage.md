@@ -5,8 +5,12 @@ pdf: true
 permalink: /usage
 ---
 
-# Using your Experiments Container
-If you've just finished [generating your experiments container](/expfactory/generate.html) (whether a custom build or pull of an already existing container) then you are ready to use it! 
+# Usage
+If you've just finished [generating your experiments container](/expfactory/generate.html) (whether a custom build or pull of an already existing container) then you are ready to use it! These sections will discuss runtime variables, along with settings like experiment order and database type.
+
+{% include toc.html %}
+
+## Summary of Variables
 
 Below, we will summarize the variables that can be set at runtime:
 
