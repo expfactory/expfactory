@@ -52,7 +52,6 @@ Journal of Open Source Software, 3(22), 521, https://doi.org/10.21105/joss.00521
 ```
 [![DOI](http://joss.theoj.org/papers/10.21105/joss.00521/status.svg)](https://doi.org/10.21105/joss.00521)
 
-
 If you are using the [Legacy software](https://expfactory.github.io/v1/) please cite [this paper](https://www.frontiersin.org/articles/10.3389/fpsyg.2016.00610/full).
 
 ```
@@ -60,6 +59,19 @@ Sochat VV, Eisenberg IW, Enkavi AZ, Li J, Bissett PG and Poldrack RA (2016)
 The Experiment Factory: Standardizing Behavioral Experiments. 
 Front. Psychol. 7:610. doi: 10.3389/fpsyg.2016.00610
 ```
+
+## Support
+[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/expfactory/lobby)
+
+We are here for you! You can ask a question directly on Gitter (linked above) or open an issue for:
+
+ - [Experiment Factory Core](https://www.github.com/expfactory/expfactory/issues) 
+ - [Experiment LIbrary](https://www.github.com/expfactory/experiments/issues)
+ - [Survey Generator](https://www.github.com/expfactory/survey-generator/issues)
+ - [Expfactory Builder](https://www.github.com/expfactory/expfactory-builder/issues)
+ - [Expfactory Robots](https://www.github.com/expfactory/expfactory-robots/issues)
+
+If your issue is for a particular experiment, open the issue at the respective repository for the [expfactory-experiments](https://www.github.com/expfactory-experiments) organization.
 
 <div>
     <a href="/expfactory/generate"><button class="next-button btn btn-primary"><i class="fa fa-chevron-right"></i> </button></a>
