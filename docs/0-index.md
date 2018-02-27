@@ -61,9 +61,11 @@ Front. Psychol. 7:610. doi: 10.3389/fpsyg.2016.00610
 ```
 
 ## Support
+You'll notice a little eliipsis (<i class="fa fa-ellipsis-h"></i>) next to each header section. If you click this, you can open an issue relevant to the section, grab a permalink, or suggest a change. You can also talk to us directly on Gitter.
+
 [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/expfactory/lobby)
 
-We are here for you! You can ask a question directly on Gitter (linked above) or open an issue for:
+We are here for you! You can ask a question directly or open an issue for:
 
  - [Experiment Factory Core](https://www.github.com/expfactory/expfactory/issues) 
  - [Experiment LIbrary](https://www.github.com/expfactory/experiments/issues)
