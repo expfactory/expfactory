@@ -60,9 +60,27 @@ def get_runtime_vars(varset, experiment, token):
     '''
     url = ''
     if experiment in varset:
+
+        variables = dict()
+
+        # Participant set variables
+
         if token in varset[experiment]:
-            varlist = ["%s=%s" %(k,v) for k,v in varset[experiment][token].items()]
-            url = "?%s" %'&'.join(varlist)
+            for k,v in varset[experiment][token].items():
+                variables[k] = v
+
+        # Global set variables
+        if "*" in varset[experiment]:
+            for k,v in varset[experiment]['*']:
+
+                # Only add the variable if not already defined
+                if k not in variables:
+                    variables[k] = v
+
+        # Join together, the first ? is added by calling function
+        varlist = ["%s=%s" %(k,v) for k,v in variables.items()]
+        url = '&'.join(varlist)
+
     return url
 
 
@@ -126,7 +144,6 @@ def generate_runtime_vars(variable_file=None, sep=','):
     # Read in the file, generate config
 
     varset = dict()
-    globalset = []
     rows = _read_runtime_vars(variable_file)
     
     if len(rows) > 0:
@@ -141,11 +158,6 @@ def generate_runtime_vars(variable_file=None, sep=','):
             var_value = row[2]
             token = row[3]
 
-            # If found global setting, will be parsed last
-            if token == "*":
-                globalset.append([exp_id, var_name, var_value])
-                continue
-
             # Level 1: Experiment ID
             if exp_id not in varset:
                 varset[exp_id] = {}
@@ -154,24 +166,15 @@ def generate_runtime_vars(variable_file=None, sep=','):
             if token not in varset[exp_id]:
                 varset[exp_id][token] = {}
 
+            # If found global setting, courtesy debug message
+            if token == "*":
+                bot.debug('Found global variable %s' %var_name)
+
             # Level 3: is the variable, issue warning if already defined
             if var_name in varset[exp_id][token]:
                 bot.warning('%s defined twice %s:%s' %(var_name, exp_id, token))
             varset[exp_id][token][var_name] = var_value
 
-
-        # Global Set
-
-        for row in globalset:
-
-            exp_id = row[0]
-            var_name = row[1]
-            var_value = row[2]
-            for subject, subvars in varset[exp_id].items():
-
-                # Only add the global default if not defined
-                if var_name not in subvars:
-                    varset[exp_id][subject][var_name] = var_value
 
     return varset
 

@@ -148,7 +148,7 @@ def next():
             variables = get_runtime_vars(token=token,
                                          varset=app.vars,
                                          experiment=experiment)
-            template = "%s%s" %(template, variables)
+            template = "%s?%s" %(template, variables)
 
         return perform_checks(template=template,
                               do_redirect=True,

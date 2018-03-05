@@ -135,7 +135,13 @@ while true; do
             shift
             EXPFACTORY_RUNTIME_VARS=${1:-}
             shift
-            export EXPFACTORY_RUNTIME_VARS
+            if [ -f "${EXPFACTORY_RUNTIME_VARS}" ]; then
+                echo "Found Variable File: ${EXPFACTORY_RUNTIME_VARS}"
+                export EXPFACTORY_RUNTIME_VARS
+            else
+                echo "WARNING: Cannot find ${EXPFACTORY_RUNTIME_VARS}"
+            fi
+
         ;;
         -*)
             echo "Unknown option: ${1:-}"
