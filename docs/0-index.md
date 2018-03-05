@@ -69,7 +69,7 @@ You'll notice a little eliipsis (<i class="fa fa-ellipsis-h"></i>) next to each 
 We are here for you! You can ask a question directly or open an issue for:
 
  - [Experiment Factory Core](https://www.github.com/expfactory/expfactory/issues) 
- - [Experiment LIbrary](https://www.github.com/expfactory/experiments/issues)
+ - [Experiment Library](https://www.github.com/expfactory/experiments/issues)
  - [Survey Generator](https://www.github.com/expfactory/survey-generator/issues)
  - [Expfactory Builder](https://www.github.com/expfactory/expfactory-builder/issues)
  - [Expfactory Robots](https://www.github.com/expfactory/expfactory-robots/issues)

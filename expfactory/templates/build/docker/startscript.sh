@@ -5,7 +5,6 @@ usage () {
     echo "Usage:
 
 
-    
          docker run <container> [help|list|test-experiments|start]
          docker run -p 80:80 -v /tmp/data:/scif/data <container> start
 
@@ -30,6 +29,10 @@ usage () {
 
                 --db: specify a database url to override the default filesystem
                                  [sqlite|mysql|postgresql]:///
+
+
+                --vars:  specify an experiment variables file
+                --delim: specify a delimiter for the variables file (default is csv)
 
                 --studyid:  specify a studyid to override the default
                 --randomize: select experiment order at random
@@ -68,6 +71,12 @@ while true; do
             export EXPFACTORY_DATABASE
             shift
         ;;
+        --delim|delim)
+            shift
+            EXPFACTORY_RUNTIME_DELIM=${1:-}
+            shift
+            export EXPFACTORY_RUNTIME_DELIM
+        ;;
         --env|env)
             shift
             env | grep ${1:-}
@@ -96,13 +105,6 @@ while true; do
             echo
             exit
         ;;
-        --studyid)
-            shift
-            EXPFACTORY_STUDY_ID=${1:-}
-            echo "Study ID selected as ${EXPFACTORY_STUDYID}"
-            export EXPFACTORY_STUDY_ID
-            shift
-        ;;
         --randomize)
             shift
             EXPFACTORY_RANDOM="true"
@@ -117,10 +119,23 @@ while true; do
             EXPFACTORY_START="yes"
             shift
         ;;
+        --studyid)
+            shift
+            EXPFACTORY_STUDY_ID=${1:-}
+            echo "Study ID selected as ${EXPFACTORY_STUDYID}"
+            export EXPFACTORY_STUDY_ID
+            shift
+        ;;
         -test-experiments|--te|test)
             cd /opt/expfactory/expfactory/templates/build
             exec python3 -m unittest tests.test_experiment
             exit
+        ;;
+        --vars|vars)
+            shift
+            EXPFACTORY_RUNTIME_VARS=${1:-}
+            shift
+            export EXPFACTORY_RUNTIME_VARS
         ;;
         -*)
             echo "Unknown option: ${1:-}"
