@@ -113,6 +113,10 @@ def generate_runtime_vars(variable_file=None, sep=','):
             bot.warning('%s is set, but not found' %variable_file)
             return variable_file
 
+    # If still None, no file
+    if variable_file is None:
+        return variable_file
+
     # If we get here, we have a variable file that exists
     delim = sep
     if EXPFACTORY_RUNTIME_DELIM is not None:

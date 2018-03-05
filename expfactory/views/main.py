@@ -152,7 +152,6 @@ def next():
 
         return perform_checks(template=template,
                               do_redirect=True,
-                              variables=variables,
                               next=experiment)
 
     return redirect('/finish')
