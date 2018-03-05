@@ -23,9 +23,16 @@ Below, we will summarize the variables that can be set at runtime:
 | experiments  | comma separated list of experiments to expose  |  [] | 
 | studyid | set the studyid at runtime  |  expfactory |
 
+If you have variables to set on a per-subject basis, then you can also define these
+with a custom variables file. See [participant variables](#participant-variables)
+below to undestand this.
+
 
 ## Start the Container
-The first thing you should do is start the container. The variables listed above can be set when you do this. It's most likely the case that your container's default is to save data to the file system, and use a study id of expfactory. This coincides to running with no extra arguments, but perhaps mapping the data folder:
+The first thing you should do is start the container. The variables listed above can be set when you do this. 
+
+### Save Data to the Host
+It's most likely the case that your container's default is to save data to the file system, and use a study id of expfactory. This coincides to running with no extra arguments, but perhaps mapping the data folder:
 
 ```
 docker run -v /tmp/my-experiment/data/:/scif/data \
@@ -33,6 +40,7 @@ docker run -v /tmp/my-experiment/data/:/scif/data \
            expfactory/experiments start
 ```
 
+### Custom Databases
 Here is how you would specify a different studyid. The study id is only used for a folder name (in the case of a fileystem save) or an sqlite database name (for sqlite3 database):
 
 ```
@@ -49,6 +57,7 @@ docker run -v /tmp/my-experiment/data/:/scif/data \
            expfactory/experiments  --database sqlite start
 ```
 
+### Custom Experiment Set
 Here is how to limit the experiments exposed in the portal. For example, you may have 30 installed in the container, but only want to reveal 3 for a session:
 
 ```
@@ -56,6 +65,58 @@ docker run -v /tmp/my-experiment/data/:/scif/data \
            -d -p 80:80 \
            expfactory/experiments  --experiments test-test,tower-of-london start
 ```
+
+### Participant Variables
+When you start your container, you will have the option to provide a comma separated file (csv) of subject identifiers and experiment variables. These variables will simply be passed to the relevant experiments that are specified in the file given that a particular participant token is running. The variables are not rendered or otherwise checked in any way before being passed to the experiment (spaces and capitalization matters, and the experiment is required to do any extra parsing needed in the Javascript). The server does not do any kind of custom parsing or checks for them. Let's look at an example file to better understand this. The format of the file should be flat and tab delimited (default) with fields for an experiment id (`exp_id`), variable name and values (`var_name`, `var_values`) and then a token assigned to each:
+
+```
+TODO: update here
+```
+
+
+We use this "flat" style so that there is no requirement that all participants share the same variables. You can imagine if you
+used more of a data matrix you would have many undefined cells. I would save this file to `variables.tsv`, and then copy it to a folder mapped to my container (e.g., /tmp/my-experiment/data in the example below) and then specify it
+with `--vars`
+
+```
+# I'm putting the variable file in a folder to be mapped to the container
+cp variables.tsv /tmp/my-experiment/data
+```
+Then I would start the container and specify the file as `--vars`
+
+```
+docker run -v /tmp/my-experiment/data/:/scif/data \
+           -d -p 80:80 \
+           expfactory/experiments --vars /scif/data/variables.tsv start
+```
+
+If you have a file separated by a different delimited (e.g., a comma) just specify it:
+
+```
+docker run -v /tmp/my-experiment/data/:/scif/data \
+           -d -p 80:80 \
+           expfactory/experiments --vars /scif/data/variables.tsv --delim , start
+```
+
+We parse the variables file at the start of the container, and then use it as a lookup
+before deploying each experiment. In the case that a token is found to match an experiment id 
+(e.g., stroop) we send the data to the browser for the experiment to parse. As stated previously, we don't do any checks or parsing of the content beyond that.
+
+Note that you can also export these settings in the environment of your container as 
+`EXPFACTORY_RUNTIME_VARS` and `EXPFACTORY_RUNTIME_DELIM`. If you have experiment variables
+that are required or defaults, you could thus build the container and include the file inside, 
+and export the environment variable in the container to the file.
+
+TODO: put link / instructions to example container here
+
+TODO: stopped here:
+1. generate container with experiment that accepts post and test
+2. start headless container with three participants
+3. create data file that specifies participants
+4. read in file, write code to parse at start, and save lookup, then write code to load / check when participant is running.
+  - ensure that warning is read / stopp on error if file isn't parseable.
+  - ensure that there is a default for "catch all particpants" (all) (or a regular expression?)
+
 
 ## Start a Headless Experiment Container
 "Headless" refers to the idea that you going to be running your experiment with remote participants, and you will need to send them to a different portal that has them login first. In order to do this, you need to start the container with the `--headless` flag, and then issue a command to pre-generate these users.

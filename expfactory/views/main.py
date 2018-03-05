@@ -46,6 +46,7 @@ from expfactory.defaults import EXPFACTORY_LOGS
 from werkzeug import secure_filename
 from expfactory.utils import get_post_fields
 
+from expfactory.variables import get_runtime_vars
 from expfactory.views.utils import (
     perform_checks, 
     clear_session
@@ -135,10 +136,23 @@ def next():
 
     # To generate redirect to experiment
     experiment = app.get_next(session)
+    variables = None
  
     if experiment is not None:
         app.logger.debug('Next experiment is %s' % experiment)
-        return perform_checks('/experiments/%s' % experiment, do_redirect=True,
+        template = '/experiments/%s' % experiment
+
+        # Do we have runtime variables?
+
+        if "token" in session and app.vars is not None:
+            variables = get_runtime_vars(token=token,
+                                         varset=app.vars,
+                                         experiment=experiment)
+            template = "%s%s" %(template, variables)
+
+        return perform_checks(template=template,
+                              do_redirect=True,
+                              variables=variables,
                               next=experiment)
 
     return redirect('/finish')

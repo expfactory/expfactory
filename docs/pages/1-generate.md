@@ -3,30 +3,8 @@ layout: default
 title: Generate your Experiment Container
 pdf: true
 permalink: /generate
-toc: false
+toc: true
 ---
-
-# Background
-Behavioral research can be challenging because of software dependencies. For example, if I have a stroop task that needs a web browser and a set of system libraries to run, if I were to try and share that task with a colleague that does not have that software on his computer, it might not work. This is a huge problem for validating scientific claims that are founded on these experiments, because it means that the work cannot be reproduced. It becomes even more challenging when we need to consider things like storage of data, and how to easily generate customized experiments.
-
-This set of tools, software called "The Experiment Factory" was made for this purpose. A user interested in deploying a behavioral assessment can simply select a grouping of paradigms from the web interface, and build a container to serve them. Once the particular set of paradigms is generated, it (along with dependencies and important settings) are carried forward with the container.
-
-## What is a container?
-A container is an encapsulated environment that includes all of these dependencies. It follows that, if we can put our software in containers that run anywhere, it is reproducible. If we make it easy to create and customize containers, we empower scientists and users to do so. Thus, the Experiment Factory takes the following approach. The base software is written in Python, and provided for you to use to generate other experiment containers. It looks like this:
-
-```
-# Base python software   # Builder container (or other tool)
-[expfactory (python)]    --> [expfactory-builder (container)]  --> [your experiment (container)]
-```
-
-This general workflow using the experiment factory builder means that you could do any of the following:
-
- - run your experiment container across computers with Docker without worrying about dependencies
- - share you experiments container with a colleague that can reproduce the battery
- - go back and use the same version of the builder to re-create your experiment container, or a slight derivation of it
- - (developers) contribute to the core expfactory Python software to enhance the builder, or [another integration or tool](/expfactory/integrations).
-
-If you have not heard of Docker we recommend that you [read about it first](https://www.docker.com/what-container) and go through a [getting started](https://docs.docker.com/get-started/) tutorial. When you are ready, come back here and try out the quick start. If you have any questions, [please don't hesitate to ask](https://www.github.com/expfactory/expfactory/issues).
 
 
 # Really Quick Start
@@ -75,8 +53,7 @@ docker run -v /tmp/my-experiment/data/:/scif/data \
            expfactory/experiments start 
 ```
 
-Open your browser to localhost ([http://127.0.0.1](http://127.0.0.1)) to see the portal [portal](/expfactory/usage.html). For specifying a different database or study identifier, read the detailed start below, and then how to [customize your container runtime](#customize-your-container). When you are ready to run (and specify a particular database type) read [the usage docs](/expfactory/usage.html).
-
+Open your browser to localhost ([http://127.0.0.1](http://127.0.0.1)) to see the portal [portal](2-usage.md). For specifying a different database or study identifier, read the detailed start below, and then how to [customize your container runtime](#customize-your-container). When you are ready to run (and specify a particular database type) read [the usage docs](2-usage.md).
 
 
 # Detailed Start
@@ -497,82 +474,9 @@ docker run -v $PWD:/data vanessa/expfactory-builder build digit-span test-task
 If you have any questions about the above, or want more detail, please [get in touch](https://www.github.com/expfactory/issues) as I am looking to develop this.
 
 
-# Custom Configuration
-If you want more specificity to configure your container, you might want to customize the database or experiment variables. There are **two** kinds of customization, the customization that happens **before** you build the container (for example, the experiments you choose to install, period, and any defaults you want set for running them) and the customization that happens at runtime (meaning defining the database type when you start the container).
-
-If you change the defaults, this means that any users that run your container (without specifying these variables) will get these as default. If you want your container to be most usable by others, we recommend that you don't do this, and keep the defaults as the most flexible types - a flat file system database and general study id (expfactory).
-
-If you leave these defaults, you (and the future users of your container) can then easily customize these variables when the container is started in the future. The risk of setting a default database like `sql` or `postgres` is that a user that doesn't know some credential needs to be defined won't be able to use the container. 
-
-The choice is up to you! For settings defaults at build time, see the next section [default variables](#default-variables). For setting at runtime, see the next page for [starting your container](/expfactory/usage.html#start-the-container).
-
- 
-## Default Variables
-When you run a build with `vanessa/expfactory-builder` image, there are other command line options available pertaining to the database and study id. Try running `docker run vanessa/expfactory-builder build --help` to see usage. If you customize these variables, the container recipe generated will follow suit.
-
-### database
-We recommend that you generate your container using the default "filesystem" database, and customize the database at runtime. A **filesystem** database is flat files, meaning that results are written to a mapped folder on the local machine, and each participant has their own results folder. This option is provided as many labs are accustomed to providing a battery locally, and want to save output directly to the filesystem without having any expertise with setting up a database. This argument doesn't need to be specified, and would coincide with:
-
-```
-docker run -v /tmp/my-experiment:/data \
-              vanessa/expfactory-builder \
-              build --database filesystem \
-                      tower-of-london
-```
-
-Your other options are **sqlite**, **mysql**, and **postgres** all of which we recommend you specify when you start the image.
-
-### randomize
-By default, experiments will be selected in random order, and it's recommended to keep this. The other option will use the ordering of experiments as you've selected them. If you want a manually set order, then after you use the `expfactory-builder`, edit your Dockerfile by adding the following environment variable:
-
-```
-ENV EXPFACTORY_RANDOM true
-```
-
-This variable can be easily changed at runtime via a checkbox, so it's not hugely important to set here.
-
-
-### studyid
-
-The Experiment Factory will generate a new unique ID for each participant with some study idenitifier prefix. The default is `expfactory`, meaning that my participants will be given identifiers `expfactory/0` through `expfactory/n`, and for a filesystem database, it will produce output files according to that schema:
-
-```
- /scif/data/
-      expfactory/
-           00000/
-            tower-of-london-result.json
-```
-
-To ask for a different study id:
-
-```
-docker run -v /tmp/my-experiment:/data \
-              vanessa/expfactory-builder \
-              build --studyid dns \
-                      tower-of-london
-```
-
-Again, we recommend that you leave this as general (or the default) and specify the study identifier at runtime. If you want to preserve a container to be integrated into an analysis exactly as is, then you would want to specify it at build.
-
-
-### output
-
-You actually **don't** want to edit the recipe output file, since this happens inside the container
-(and you map a folder of your choice to it.) Note that it is a variable, however, if you need to use expfactory natively and want to specify a different location.
-
-
-## Expfactory wants Your Feedback!
-The customization process is very important, because it will mean allowing you to select variable stimuli, lengths, or anything to make a likely general experiment specific to your use case. To help with this, @vsoch is looking for feedback about:
-
- - what kind of experiments (those provided in the library? generated with a build tool?) do you want to use
- - what variables do you want to customize? Do you have preference for how you would want to go about this?
- - if there is a build, when and how does it happen?
-
-A reasonable feature would be to have the experiment manifests capture variables that are "allowed" to be changed (e.g., a stimulus number or similar) and then exposing these options to the user at build time, likely with a simple configuration file. Currently, It's important to remember that your experiment to be truly reproducible, other than introducing planned randomness (e.g., presentation of stimuli) it shouldn't be the case that a lot of the experiment details are required to be set at runtime. They must be frozen into the container so that when a colleague tries to reproduce your study, the exact thing is used.
-
-With this in mind, please [let us know](https://www.github.com/expfactory/expfactory/issues) your thoughts.
+Now that you are comfortable generating your container, check out how to [customize it](/expfactory/customize).
 
 <div>
-    <a href="/expfactory/"><button class="previous-button btn btn-primary"><i class="fa fa-chevron-left"></i> </button></a>
-    <a href="/expfactory/usage.html"><button class="next-button btn btn-primary"><i class="fa fa-chevron-right"></i> </button></a>
+    <a href="/expfactory/background"><button class="previous-button btn btn-primary"><i class="fa fa-chevron-left"></i> </button></a>
+    <a href="/expfactory/customize"><button class="next-button btn btn-primary"><i class="fa fa-chevron-right"></i> </button></a>
 </div><br>

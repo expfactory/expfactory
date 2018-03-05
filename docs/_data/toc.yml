@@ -6,12 +6,14 @@
     url: "https://expfactory.github.io/experiments/"
     slug: experiments
 
+  - title: "Background"
+    url: "/expfactory/background"
+    slug: background
+
   - title: "Generate an Experiment Container"
     url: "/expfactory/generate"
     slug: generate
     sections:
-      - title: Background
-        slug: background
       - title: Quick Start
         slug: quick-start
       - title: Detailed Start

@@ -33,6 +33,7 @@ from flask_wtf.csrf import (
     CSRFProtect, 
     generate_csrf
 )
+from expfactory.variables import generate_runtime_vars
 from flask_cors import CORS
 from expfactory.logger import bot
 from expfactory.defaults import *
@@ -85,6 +86,9 @@ class EFServer(Flask):
         self.base = EXPFACTORY_BASE
         self.randomize = EXPFACTORY_RANDOMIZE
         self.headless = EXPFACTORY_HEADLESS
+
+        # Generate variables, if they exist
+        self.vars = generate_runtime_vars() or None
 
         available = get_experiments("%s" % self.base)
         self.experiments = get_selection(available, self.selection)
