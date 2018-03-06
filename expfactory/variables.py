@@ -71,7 +71,7 @@ def get_runtime_vars(varset, experiment, token):
 
         # Global set variables
         if "*" in varset[experiment]:
-            for k,v in varset[experiment]['*']:
+            for k,v in varset[experiment]['*'].items():
 
                 # Only add the variable if not already defined
                 if k not in variables:
