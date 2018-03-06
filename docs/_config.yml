@@ -9,8 +9,8 @@ author:
   name:       Vanessa Sochat
   url:        https://expfactory.github.io/expfactory
 
-# SCI-F Version
-version: 3.0.0
+# Version
+version: 3.1.0
 
 # Defaults
 defaults:

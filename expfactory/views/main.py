@@ -136,7 +136,6 @@ def next():
 
     # To generate redirect to experiment
     experiment = app.get_next(session)
-    variables = None
  
     if experiment is not None:
         app.logger.debug('Next experiment is %s' % experiment)

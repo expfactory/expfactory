@@ -14,7 +14,10 @@ and changes prior to that are (unfortunately) done retrospectively. Critical ite
  - changed behaviour (recipe sections work differently)
 
 
-## [v3.x](https://github.com/expfactory/expfactory/tree/headless) (development)
+## [v3.x](https://github.com/expfactory/expfactory/tree/master) (master)
+ - Current master, development version
+
+## [v3.1](https://github.com/expfactory/expfactory/releases/tag/v3.1) (v3.1)
 
 **contributions**
  - a [contributing](.github/CONTRIBUTING.md) file was added to guide users to contribute.
@@ -24,6 +27,7 @@ and changes prior to that are (unfortunately) done retrospectively. Critical ite
  - this changelog was added
  - a development image `vanessa/expfactory-builder.dev` was added for others to test new changes before integration into master repo.
  - addition of tests for builder (and databases)
+ - addition of participant variables to be set at runtime
 **changed defaults**
  - the interactive portal study identifier used to be an incrementing number. To be consistent with the ability to generate a token, the identifier is now an automatically generated 34 character string.
 **features**
