@@ -81,6 +81,7 @@ def get_runtime_vars(varset, experiment, token):
         varlist = ["%s=%s" %(k,v) for k,v in variables.items()]
         url = '&'.join(varlist)
 
+    bot.debug('Parsed url: %s' %url)
     return url
 
 

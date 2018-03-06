@@ -143,8 +143,8 @@ def next():
         template = '/experiments/%s' % experiment
 
         # Do we have runtime variables?
-
-        if "token" in session and app.vars is not None:
+        token = session.get('token')
+        if app.vars is not None:
             variables = get_runtime_vars(token=token,
                                          varset=app.vars,
                                          experiment=experiment)
