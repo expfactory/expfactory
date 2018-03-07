@@ -3,8 +3,8 @@
 This is a manually generated log to track changes to the repository for each release. 
 Each section should include general headers such as **Implemented enhancements** 
 and **Merged pull requests**. All closed issued and bug fixes should be 
-represented by the pull requests that fixed them. This log originated with Singularity 2.4
-and changes prior to that are (unfortunately) done retrospectively. Critical items to know are:
+represented. The versions to the right of the description correspond with pypi releases.
+Critical items to know are:
 
  - renamed commands
  - deprecated / removed commands
@@ -15,10 +15,7 @@ and changes prior to that are (unfortunately) done retrospectively. Critical ite
 
 
 ## [v3.x](https://github.com/expfactory/expfactory/tree/master) (master)
- - Current master, development version
-
-## [v3.1](https://github.com/expfactory/expfactory/releases/tag/v3.1) (v3.1)
-
+ - addition of participant variables to be set at runtime (3.11)
 **contributions**
  - a [contributing](.github/CONTRIBUTING.md) file was added to guide users to contribute.
  - a [code of conduct](.github/CODE_OF_CONDUCT.md) was added.
@@ -27,7 +24,6 @@ and changes prior to that are (unfortunately) done retrospectively. Critical ite
  - this changelog was added
  - a development image `vanessa/expfactory-builder.dev` was added for others to test new changes before integration into master repo.
  - addition of tests for builder (and databases)
- - addition of participant variables to be set at runtime
 **changed defaults**
  - the interactive portal study identifier used to be an incrementing number. To be consistent with the ability to generate a token, the identifier is now an automatically generated 34 character string.
 **features**
