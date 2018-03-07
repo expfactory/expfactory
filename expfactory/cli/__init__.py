@@ -131,6 +131,7 @@ def get_parser():
                         help="study id for saving database",
                         type=str, default="expfactory")
 
+
     # Experiment Runtime Arguments
     parser.add_argument("--experiments", dest='experiments', 
                          help="comma separated list of experiments for a local battery", 
@@ -151,6 +152,15 @@ def get_parser():
     parser.add_argument("--base", dest='base', 
                          help="experiments base (default /scif/apps)",
                          type=str, default=None)
+
+    # Runtime variables
+    parser.add_argument("--vars", dest='vars', 
+                         help="runtime variables file to pass to experiments",
+                         type=str, default=None)
+
+    parser.add_argument("--delim", dest='delim', 
+                         help="delimiter for runtime variables file.",
+                         type=str, default='\t')
 
     return parser
 

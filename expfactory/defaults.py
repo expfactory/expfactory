@@ -60,27 +60,32 @@ EXPFACTORY_REGISTRY = getenv("EXPFACTORY_REGISTRY_BASE",
 
 EXPFACTORY_LIBRARY = "%s/experiments/library.json" %(EXPFACTORY_REGISTRY)
 
-EXPFACTORY_SERVER = os.environ.get('EXPFACTORY_SERVER', 'localhost')
+EXPFACTORY_SERVER = getenv('EXPFACTORY_SERVER', 'localhost')
 
 
 #######################################################################
 # Expfactory Database
 #######################################################################
 
-EXPFACTORY_LOGS = os.environ.get('EXPFACTORY_LOGS', '/scif/logs')
-EXPFACTORY_DATABASE = os.environ.get('EXPFACTORY_DATABASE', 'filesystem')
-EXPFACTORY_BASE = os.environ.get('EXPFACTORY_BASE', '/scif/apps')
-EXPFACTORY_DATA = os.environ.get('EXPFACTORY_DATA', '/scif/data')
+EXPFACTORY_LOGS = getenv('EXPFACTORY_LOGS', '/scif/logs')
+EXPFACTORY_DATABASE = getenv('EXPFACTORY_DATABASE', 'filesystem')
+EXPFACTORY_BASE = getenv('EXPFACTORY_BASE', '/scif/apps')
+EXPFACTORY_DATA = getenv('EXPFACTORY_DATA', '/scif/data')
 
 
 #######################################################################
 # Expfactory Experiments
 #######################################################################
 
-EXPFACTORY_SUBID = os.environ.get('EXPFACTORY_STUDY_ID', 'expfactory')
+EXPFACTORY_SUBID = getenv('EXPFACTORY_STUDY_ID', 'expfactory')
 EXPFACTORY_EXPERIMENTS = getenv('EXPFACTORY_EXPERIMENTS', [])
 EXPFACTORY_RANDOMIZE = convert2boolean(getenv('EXPFACTORY_RANDOM', True))
 EXPFACTORY_HEADLESS = convert2boolean(getenv('EXPFACTORY_HEADLESS', False))
+
+# Runtime Variables
+EXPFACTORY_RUNTIME_VARS = getenv('EXPFACTORY_RUNTIME_VARS')
+EXPFACTORY_RUNTIME_DELIM = getenv('EXPFACTORY_RUNTIME_DELIM', ',')
+
 
 #######################################################################
 # Formatting

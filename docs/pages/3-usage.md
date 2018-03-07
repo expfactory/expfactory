@@ -23,9 +23,16 @@ Below, we will summarize the variables that can be set at runtime:
 | experiments  | comma separated list of experiments to expose  |  [] | 
 | studyid | set the studyid at runtime  |  expfactory |
 
+If you have variables to set on a per-subject basis, then you can also define these
+with a custom variables file. See [participant variables](#participant-variables)
+below to undestand this.
+
 
 ## Start the Container
-The first thing you should do is start the container. The variables listed above can be set when you do this. It's most likely the case that your container's default is to save data to the file system, and use a study id of expfactory. This coincides to running with no extra arguments, but perhaps mapping the data folder:
+The first thing you should do is start the container. The variables listed above can be set when you do this. 
+
+### Save Data to the Host
+It's most likely the case that your container's default is to save data to the file system, and use a study id of expfactory. This coincides to running with no extra arguments, but perhaps mapping the data folder:
 
 ```
 docker run -v /tmp/my-experiment/data/:/scif/data \
@@ -33,6 +40,7 @@ docker run -v /tmp/my-experiment/data/:/scif/data \
            expfactory/experiments start
 ```
 
+### Custom Databases
 Here is how you would specify a different studyid. The study id is only used for a folder name (in the case of a fileystem save) or an sqlite database name (for sqlite3 database):
 
 ```
@@ -49,6 +57,7 @@ docker run -v /tmp/my-experiment/data/:/scif/data \
            expfactory/experiments  --database sqlite start
 ```
 
+### Custom Experiment Set
 Here is how to limit the experiments exposed in the portal. For example, you may have 30 installed in the container, but only want to reveal 3 for a session:
 
 ```
@@ -56,6 +65,105 @@ docker run -v /tmp/my-experiment/data/:/scif/data \
            -d -p 80:80 \
            expfactory/experiments  --experiments test-test,tower-of-london start
 ```
+
+### Participant Variables
+When you start your container, you will have the option to provide a comma separated file (csv) of subject identifiers and experiment variables. These variables will simply be passed to the relevant experiments that are specified in the file given that a particular participant token is running. The variables are not rendered or otherwise checked in any way before being passed to the experiment (spaces and capitalization matters, and the experiment is required to do any extra parsing needed in the Javascript). The server does not do any kind of custom parsing or checks for them. Let's look at an example file to better understand this. The format of the file should be flat and tab delimited (default) with fields for an experiment id (`exp_id`), variable name and values (`var_name`, `var_values`) and then a token assigned to each:
+
+```
+exp_id,var_name,var_value,token
+test-parse-url,globalname,globalvalue,*
+test-parse-url,color,red,123
+test-parse-url,color,blue,456
+test-parse-url,color,pink,789
+test-parse-url,words,at the thing,123
+test-parse-url,words,omg tacos,456
+test-parse-url,words,pancakes,789
+```
+
+In the example above, the participants defined have tokens `123` and `456`. For any other participants, we have defined a global variable `globalname` to be `globalvalue`. The first row in the file is non negoatiable - it *must* have four fields, in that order, 
+and name. The fields are the following:
+
+ - **exp_id** The Experiment Factory identifier that identifies the experiment
+ - **var_name** The variable name to pass into the url
+ - **var_value** the variable_value to pass
+ - **token** the subject token to pass for. If a particular combination of exp_id and token is seen twice, a warning will be issued and the later defined taken preference. If you set token to "*" it will be treated as a global variable, and set for all subject ids (also defined in the file) that do not have a previously defined value for the variable in question. 
+
+The variables will be passed to the experiment `test-parse-uri` via the URL, and it's up to the experiment to parse them with JavaScript. For example, if I am participant `789` and I start the `test-parse-uri` task, my variables will be passed in the format (shown for one and more than one variable):
+
+
+```
+<base-url>/experiments/<exp_id>?<var_name>=<var_value>
+<base-url>/experiments/<exp_id>?<var_name1>=<var_value1>&<var_name2>=<var_value2>
+```
+
+which corresponds to this for the file above:
+
+```
+http://127.0.0.1/experiments/test-parse-uri?globalname=globalvar&color=pink&words=pancakes
+```
+
+The parameters are simply passed to the experiment, and the experiment is expected to parse them
+appropriately. Since the data file is loaded at start of the container and you would need to generate users before using them, you will want to:
+
+ - start the container in detached mode `-d` and then generate users
+ - list the users or otherwise get the identifiers that you've created
+ - create the variables file with the user ids specified
+ - stop the container, making sure to restart with the same database mapped.
+
+A complete example of this is provided in the [test-parse-uri repository](https://github.com/expfactory-experiments/test-parse-url/tree/master/docker)
+and the commands are briefly summarized below.
+
+```
+# Pull the example container with the url experiment (or create your own!)
+docker pull vanessa/test-parse-url:v3.1 .
+
+# Start it in detached mode, named test-parse-url, filesystem database is mapped to the host
+docker run --name test-parse-url -d -v $PWD:/scif/data -p 80:80 vanessa/test-parse-url start
+
+# Verify no participants
+docker exec test-parse-url expfactory users --list
+
+# Create three users, and list identifiers to write into file
+docker exec test-parse-url expfactory users --new 3
+exec d8c612e0dfa2 expfactory users --list
+/scif/data/expfactory/017305e8-7eba-4d43-bc81-e95f5ceab0a8	017305e8-7eba-4d43-bc81-e95f5ceab0a8[active]
+/scif/data/expfactory/275ae6ea-5d33-499e-a3db-2bbcc4881ff4	275ae6ea-5d33-499e-a3db-2bbcc4881ff4[active]
+/scif/data/expfactory/a737a811-1bcc-449c-b0b0-9acded60bbd9	a737a811-1bcc-449c-b0b0-9acded60bbd9[active]
+```
+
+Here is the new data variables file:
+
+```
+exp_id,var_name,var_value,token
+test-parse-url,globalname,globalvalue,*
+test-parse-url,color,red,017305e8-7eba-4d43-bc81-e95f5ceab0a8
+test-parse-url,color,blue,275ae6ea-5d33-499e-a3db-2bbcc4881ff4
+test-parse-url,words,at the thing,017305e8-7eba-4d43-bc81-e95f5ceab0a8
+test-parse-url,words,omg tacos,275ae6ea-5d33-499e-a3db-2bbcc4881ff4
+```
+
+Stop the container and verify the filesystem database persists on the host.
+
+```
+$  ls expfactory/
+017305e8-7eba-4d43-bc81-e95f5ceab0a8  275ae6ea-5d33-499e-a3db-2bbcc4881ff4  a737a811-1bcc-449c-b0b0-9acded60bbd9
+```
+
+Run the container again, this time specifying the variables file with `--vars`. Since we are using a filesystem database we don't need to start
+the exact same container, but you could if you wanted to. You can also change the delimiter with `--delim`. 
+
+```
+docker run -d -v $PWD:/scif/data -p 80:80 vanessa/test-parse-url --vars /scif/data/variables.csv --headless start
+```
+
+Note that you can also export these settings in the environment of your container as `EXPFACTORY_RUNTIME_VARS` and `EXPFACTORY_RUNTIME_DELIM`. If you have experiment variables that are required or defaults, you could thus build the container and include the file inside, 
+and export the environment variable in the container to the file. Make sure to open the experiment in a new browser tab, in case you have any previous sessions (data in the browser cache). When we enter one of our participant identifiers, we see the variables passed on!
+
+![img/variables.png](https://github.com/expfactory-experiments/test-parse-url/raw/master/docker/img/variables.png)
+
+For a complete tutorial of the above, see the [test-parse-url repository](https://github.com/expfactory-experiments/test-parse-url/tree/master/docker).
+
+
 
 ## Start a Headless Experiment Container
 "Headless" refers to the idea that you going to be running your experiment with remote participants, and you will need to send them to a different portal that has them login first. In order to do this, you need to start the container with the `--headless` flag, and then issue a command to pre-generate these users.

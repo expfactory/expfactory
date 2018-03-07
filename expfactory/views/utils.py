@@ -42,9 +42,23 @@ from expfactory.logger import bot
 import os
 
 
-def perform_checks(template, do_redirect=False, context=None, next=None, quiet=False):
+def perform_checks(template,
+                   do_redirect=False,
+                   context=None,
+                   next=None,
+                   quiet=False):
+
     '''return all checks for required variables before returning to 
        desired view
+
+       Parameters
+       ==========
+       template: the html template to render
+       do_redirect: if True, perform a redirect and not render
+       context: dictionary of context variables to pass to render_template
+       next: a pre-defined next experiment, will calculate if None
+       quiet: decrease verbosity
+
     '''
     from expfactory.server import app
     username = session.get('username')
@@ -64,7 +78,10 @@ def perform_checks(template, do_redirect=False, context=None, next=None, quiet=F
 
     # Update the user / log
     if quiet is False:
-        app.logger.info("[router] %s --> %s for [subid] %s [username] %s" %(last, next, subid, username))
+        app.logger.info("[router] %s --> %s [subid] %s [user] %s" %(last,
+                                                                    next, 
+                                                                    subid,
+                                                                    username))
 
     if username is None and app.headless is False:
         flash('You must start a session before doing experiments.')
@@ -82,7 +99,7 @@ def perform_checks(template, do_redirect=False, context=None, next=None, quiet=F
         app.logger.debug('Redirecting to %s' %template)
         return redirect(template)
 
-    if context is not None and isinstance(context,dict):
+    if context is not None and isinstance(context, dict):
         app.logger.debug('Rendering %s' %template)
         return render_template(template, **context)
     return render_template(template)

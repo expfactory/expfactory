@@ -65,6 +65,15 @@ def main(args,parser,subparser=None):
 
     os.environ['EXPFACTORY_EXPERIMENTS'] = experiments
 
+    # If defined and file exists, set runtime variables
+    if args.vars is not None:
+        if os.path.exists(args.vars):
+            os.environ['EXPFACTORY_RUNTIME_VARS'] = args.vars
+            os.environ['EXPFACTORY_RUNTIME_DELIM'] = args.delim
+        else:
+            bot.warning('Variables file %s not found.' %args.vars)
+
+
     subid = os.environ.get('EXPFACTORY_STUDY_ID')
     if args.subid is not None:
         subid = args.subid 
