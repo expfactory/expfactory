@@ -23,9 +23,17 @@ docker tag vanessa/expfactory-surveys vanessa/expfactory-surveys:$VERSION_TAG
 docker push vanessa/expfactory-surveys:$VERSION_TAG
 docker push vanessa/expfactory-surveys
 
-# vanessa/expfactory-survey (create survey)
-#cd $BASE/examples/docker/create-survey
-#docker build -t vanessa/expfactory-survey .
-#docker tag vanessa/expfactory-survey vanessa/expfactory-survey:$VERSION_TAG
-#docker push vanessa/expfactory-survey:$VERSION_TAG
-#docker push vanessa/expfactory-survey
+# vanessa/experiments (create survey)
+cd $BASE/examples/docker/custom-container
+docker build -t vanessa/experiments .
+docker tag vanessa/experiments vanessa/experiments:$VERSION_TAG
+docker push vanessa/experiments:$VERSION_TAG
+docker push vanessa/experiments
+
+# vanessa/expfactory-games
+cd $BASE/examples/docker/expfactory-games
+./expfactory-generate.sh
+docker build -t vanessa/expfactory-games .
+docker tag vanessa/expfactory-games vanessa/expfactory-games:$VERSION_TAG
+docker push vanessa/expfactory-games:$VERSION_TAG
+docker push vanessa/expfactory-games

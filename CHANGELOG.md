@@ -15,6 +15,7 @@ Critical items to know are:
 
 
 ## [v3.x](https://github.com/expfactory/expfactory/tree/master) (master)
+ - fixing bug with surveys posting of data (3.12)
  - addition of participant variables to be set at runtime (3.11)
 **contributions**
  - a [contributing](.github/CONTRIBUTING.md) file was added to guide users to contribute.
