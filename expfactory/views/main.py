@@ -56,6 +56,7 @@ from .general import *
 from .headless import *
 
 from random import choice
+import pickle
 import logging
 import os
 import json
@@ -114,6 +115,8 @@ def save():
     if request.method == 'POST':
         exp_id = session.get('exp_id')
         app.logger.debug('Saving data for %s' %exp_id)
+
+        pickle.dump(request.form,open('formy.pkl','wb'))
 
         fields = get_post_fields(request)
         result_file = app.save_data(session=session, content=fields, exp_id=exp_id)
