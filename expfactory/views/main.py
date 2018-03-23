@@ -116,7 +116,8 @@ def save():
         exp_id = session.get('exp_id')
         app.logger.debug('Saving data for %s' %exp_id)
 
-        pickle.dump(dict(request), open('formy.pkl','wb'))
+        fields = request.get_json()
+        pickle.dump(fields, open('formy.pkl','wb'))
 
         fields = get_post_fields(request)
         result_file = app.save_data(session=session, content=fields, exp_id=exp_id)
