@@ -1,9 +1,10 @@
 #!/bin/sh
 
 # These builds should be done after a PR is merged, and master branch is
-# updated with the version indicated
+# updated with the version indicated. This should be run from the script
+# directory as the PWD.
 
-VERSION_TAG=3.1
+VERSION_TAG=3.12
 BASE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 
 # vanessa/expfactory-builder
@@ -23,8 +24,8 @@ docker push vanessa/expfactory-surveys:$VERSION_TAG
 docker push vanessa/expfactory-surveys
 
 # vanessa/expfactory-survey (create survey)
-cd $BASE/examples/docker/create-survey
-docker build -t vanessa/expfactory-survey .
-docker tag vanessa/expfactory-survey vanessa/expfactory-survey:$VERSION_TAG
-docker push vanessa/expfactory-survey:$VERSION_TAG
-docker push vanessa/expfactory-survey
+#cd $BASE/examples/docker/create-survey
+#docker build -t vanessa/expfactory-survey .
+#docker tag vanessa/expfactory-survey vanessa/expfactory-survey:$VERSION_TAG
+#docker push vanessa/expfactory-survey:$VERSION_TAG
+#docker push vanessa/expfactory-survey
