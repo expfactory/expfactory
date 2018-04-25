@@ -17,6 +17,7 @@ docker push vanessa/expfactory-builder
 
 # vanessa/expfactory-surveys
 cd $BASE/examples/docker/surveys-container
+rm $PWD/Dockerfile
 ./expfactory-generate.sh
 docker build --no-cache -t vanessa/expfactory-surveys .
 docker tag vanessa/expfactory-surveys vanessa/expfactory-surveys:$VERSION_TAG
