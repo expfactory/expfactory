@@ -4,7 +4,7 @@
 # updated with the version indicated. This should be run from the script
 # directory as the PWD.
 
-VERSION_TAG=3.12
+VERSION_TAG=3.13
 BASE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 
 # vanessa/expfactory-builder
