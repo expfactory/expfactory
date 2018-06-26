@@ -39,4 +39,5 @@ RUN apt-get clean          # tests, mysql,  postgres
 
 ENTRYPOINT ["/bin/bash", "/startscript.sh"]
 EXPOSE 5000
+EXPOSE 443
 EXPOSE 80
