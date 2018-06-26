@@ -774,7 +774,7 @@ Generally, when you administer a battery of experiments you want to ensure that:
 ## Working with JSON
 Whether you find your json objects in a file (`filesystem`) or saved in a text field in a relational database (`sqlite`) you will reach some point where you have a bunch of json objects to parse to work with your data. Json means "JavaScript Object Notation," and natively is found in browsers (with JavaScript, of course). It's flexibility in structure (it's not a relational database) makes it well suited to saving experiments with many different organizations of results. This also makes it more challenging for you, the researcher, given that you have to parse many experiments with different formats. Generally, experiments that use the same paradigm (e.g., jspsych or phaser) will have similar structures, and we can show you easily how to read JSON into different programming languages. 
 
-We have [provided a script](https://gist.github.com/vsoch/76d8933e3ff7e080883362b8baa4a164) in Python that you can easily run to "extract" the inner json data structure, and then it can be loaded into your software of choice. Generally, the usage is as follows:
+We have [provided example scripts](https://gist.github.com/vsoch/76d8933e3ff7e080883362b8baa4a164) in a gist for Python and R (at the bottom) that you can easily run to "extract" the inner json data structure, and then it can be loaded into your software of choice. Generally, the usage is as follows:
 
 ```bash
 wget https://gist.githubusercontent.com/vsoch/76d8933e3ff7e080883362b8baa4a164/raw/9236b3877ad848d848a1391a940b105645ee71ba/parse.py
