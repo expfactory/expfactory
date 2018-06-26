@@ -5,3 +5,5 @@ These are builder containers to generate Experiment Factory containers. The temp
 generate a docker image **just** for your experiment protocol.
 
  - [Docker instructions](builder/README.md)
+ - [Dockerfile.template](Dockerfile.template) is the standard template used for (non-https) containers.
+ - [Dockerfile.https](Dockerfile.https) is for https containers. This can be specified for a build with the `--input` argument as `bulid/docker/Dockerfile.https`.
