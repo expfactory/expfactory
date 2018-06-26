@@ -415,6 +415,8 @@ docker run -p 80:80 -p 443:443 \
            expfactory/experiments start
 ```
 
+But you don't have the container, expfactory/experiments yet! Let's make that first!
+
 ## Container Generation
 Starting from the folder where we generated our Dockerfile, we can now build the experiment container. Note that when you have a production container you don't need to build locally each time, you can use an [automated build from a Github repository to Docker Hub](https://docs.docker.com/docker-hub/builds/) - this would mean that you can push to the repository and have the build done automatically, or that you can manually trigger it. For this tutorial, we will build locally:
 
@@ -431,7 +433,7 @@ and if we have local experiments, we would see them as well:
 experiments/
 ├── Dockerfile
 ├── startscript.sh
-└── test-task-two
+└── test-task-two/
 ```
 
 
@@ -502,7 +504,7 @@ For this first go, we aren't going to map the data folder. This way I can show y
 
 **Without SSL**
 
-```bash
+```
 docker run -p 80:80 expfactory/experiments start
 ```
 
@@ -514,7 +516,8 @@ docker run -p 80:80 -p 443:443 \
            -v /etc/ssl/private:/etc/ssl/private:ro \
            expfactory/experiments start
 ```
-```
+
+
 Starting Web Server
 
  * Starting nginx nginx
