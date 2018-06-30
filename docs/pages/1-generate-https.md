@@ -19,6 +19,7 @@ If you are starting on a base OS image, You will still need to [install Docker](
 don't need to do this. For either, you should be comfortable with the basic usage. If you don't
 need to setup a Droplet (and have your own server provider) jump down to [the step to install nginx](#basic-server-setup).
 
+
 ## Create an account on Digital Ocean
 First create an account with [DigitalOcean](https://www.digitalocean.com/). DigitalOcean provides cloud computing services. Basically, this means you can rent a server with as much or as little capacity as you want, with the possibility to expand or add features later if you need more capacity. Another nice feature, in the case that you just want to try something out, is that you can also rent a server for as little as 1-hour at a time.
 
