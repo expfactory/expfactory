@@ -263,7 +263,7 @@ example:
 EMAIL=firstlast@domain.com
 DOMAIN=expfactory.org
 STATE=California
-COUNTY=San Mateo County
+COUNTY="San Mateo County"
 ```
 
 We then need to generate a text file with these details! Many tutorials give a one line command to make this request, but I found that I couldn't get all variations of https with and 
@@ -384,6 +384,23 @@ Now get a signed certificate with acme-tiny.
 
 ```bash
 python /opt/acme-tiny/acme_tiny.py --account-key /etc/ssl/certs/account.key --csr /etc/ssl/certs/domain.csr --acme-dir /var/www/html/.well-known/acme-challenge/ > ./signed.crt
+```
+```
+Parsing account key...
+Parsing CSR...
+Found domains: www.expfactory.dynu.net, expfactory.dynu.net
+Getting directory...
+Directory found!
+Registering account...
+Registered!
+Creating new order...
+Order created!
+Verifying expfactory.dynu.net...
+expfactory.dynu.net verified!
+Verifying www.expfactory.dynu.net...
+www.expfactory.dynu.net verified!
+Signing certificate...
+Certificate signed!
 ```
 
 This should generate the `signed.crt` (signed certificate) in your present working directory.
