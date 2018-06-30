@@ -28,6 +28,7 @@ cd /tmp/my-experiment
 ```
 
 What experiments do you want in your container? Let's see the ones that are available!
+
 ```
 docker run vanessa/expfactory-builder list
 ```
@@ -61,6 +62,8 @@ The generation of a container comes down to adding the experiments to a text fil
 
  - generating a recipe with (reproducible) steps to build a custom container
  - building the container!
+
+Note that if you want to deploy a container with https, you should read our [https generation](/expfactory/generate-https) page, and then come back here to read about [interaction with your container](/expfactory/generate#shell-into-your-container).
 
 
 ## The Expfactory Builder Image
@@ -207,232 +210,6 @@ and your experiments will be copied fully there to still satisfy this condition,
 
 Finally, before you generate your recipe, in the case that you want "hard coded" defaults (e.g., set as defaults for future users) read the [custom build](#custom-conriguration) section below to learn about the variables that you can customize. If not, then rest assured that these values can be specified when a built container is started.
 
-## HTTPS Container
-By default, your container will serve http, as it is assumed you are testing this out on
-your local machine. For a more secure deployment, it is strongly encouraged to use https.
-To generate a container with an https configuration, modify your build command slightly:
-
-```bash
-
-docker run -v /tmp/my-experiment:/data \
-              vanessa/expfactory-builder \
-              build tower-of-london \
-              --input build/docker/Dockerfile.https
-
-```
-
-Before continuing, in the case that you are using a cloud-based host, make sure that
-port 443 for https is also exposed. It's terrible when you actually get something working,
-but you can't see it because the port isn't open :) We are also assuming that you've
-done the correct work to get a domain, and set up the A/CNAME records to support all
-versions of http/https and www or without.
-
-
-### Get Certificates
-For this next step, we are still working on the host where you will run your container. What we first need to do is generate certificates, start a local web server, and ping "Let's Encrypt" to
-verify that we own the server, and then sign the certificates. I usually start my local nginx server:
-
-```bash
-sudo service nginx start
-
-# if you don't have it installed
-sudo apt-get instll -y nginx
-```
-
-We will be intercting with the nginx on the host, and following steps to:
-
- - start nginx
- - install tiny acme
- - generate certificates
- - using tinyacme to get them certified
- - moving them to where they need to be.
- - add a reminder or some other method to renew within 89 days
- 
-Once we do this, we will stop the local nginx, bind the certificates to the server in our container, and cross our fingers that it works :). For the next set up steps, I'll
-walk through them manually, and if you choose, you could put them into a script.
-The certificates need to be renewed every 89 days, so you will need to have some
-strategy in place. It's likely the case that your server won't be running that long,
-so it doesn't matter :) If you are doing this for the first time, start at step 1. If you
-are refreshing your certificates, jump down to step 4.
-
-#### Step 1. Define Registration Details
-Let's define some environment variables that will go into our configuration. You need to define your email, the domain (e.g, expfactory.org) the state, and county. Here is an 
-example:
-
-```bash
-EMAIL=firstlast@domain.com
-DOMAIN=expfactory.org
-STATE=California
-COUNTY="San Mateo County"
-```
-
-We then need to generate a text file with these details! Many tutorials give a one line command to make this request, but I found that I couldn't get all variations of https with and 
-without "www." without reading the parameters from a file. Let's generate that file!
-Notice that we are using the environment variables defined above.
-
-```bash
-if [ ! -f "csr_details.txt" ]
-then
-
-cat > csr_details.txt <<-EOF
-[req]
-default_bits = 2048
-prompt = no
-default_md = sha256
-req_extensions = req_ext
-distinguished_name = dn
- 
-[ dn ]
-C=US
-ST=$STATE
-L=$COUNTY
-O=End Point
-OU=$DOMAIN
-emailAddress=$EMAIL
-CN = www.$DOMAIN
- 
-[ req_ext ]
-subjectAltName = @alt_names
- 
-[ alt_names ]
-DNS.1 = $DOMAIN
-DNS.2 = www.$DOMAIN
-EOF
-
-fi
-```
-
-This should produce a file `csr_details.txt` in your present working directory
-that we will use later.
-
-
-#### Step 2. Install Acme Tiny
-We are going to use [Acme Tiny](https://github.com/diafygi/acme-tiny) to both issue
-and renvew our certificates. Let's install it first. I chose to clone to `/tmp` and
-install to `/opt`, you can obviously mix this up.
-
-```bash
-sudo mkdir /opt/acme_tiny
-cd /tmp && git clone https://github.com/diafygi/acme-tiny
-sudo mv acme-tiny /opt/acme-tiny/
-sudo chown $USER -R /opt/acme-tiny
-```
-
-#### Step 3. Create Account Key and Parameters
-This step you only need to do once, so I'm bundling it into one. You need to generate a 
-key for your server, and for the best encryption, a `dhparam.pem` key (it takes a while!).
-
-```bash
-# Generate a private account key, if doesn't exist
-if [ ! -f "/etc/ssl/certs/account.key" ]
-   then
-   openssl genrsa 4096 > account.key && sudo mv account.key /etc/ssl/certs
-fi
-
-# Add extra security (takes a while!)
-if [ ! -f "/etc/ssl/certs/dhparam.pem" ]
-   then
-   openssl dhparam -out dhparam.pem 4096 && sudo mv dhparam.pem /etc/ssl/certs
-fi
-```
-
-You shouldn't need to regenerate these files.
-
-#### Step 4. Backup Previous Key / Certificate
-This step you only need to do if you have a previously created certificate and domain
-key. It's probably not super necessary, but I do it anyway. The certificate we will make
-(and/or backup) is called `expfactory.cert` and the key is `expfactory.key`.
-
-```bash
-# backup old key and cert
-if [ -f "/etc/ssl/private/domain.key" ]
-   then
-   sudo cp /etc/ssl/private/domain.key{,.bak.$(date +%s)}
-fi
-
-if [ -f "/etc/ssl/certs/chained.pem" ]
-   then
-   sudo cp /etc/ssl/certs/chained.pem{,.bak.$(date +%s)}
-fi
-
-if [ -f "/etc/ssl/certs/domain.csr" ]
-   then
-   sudo cp /etc/ssl/certs/domain.csr{,.bak.$(date +%s)}
-fi
-```
-
-#### Step 5. Call Openssl
-We now are going to use openssl with our `csr_details.txt` to generate a new domain key! That looks like this:
-
-```bash
-openssl req -new -sha256 -nodes -out domain.csr -newkey rsa:2048 -keyout domain.key -config <( cat csr_details.txt )
-
-# Move to where they are expected by the container
-sudo mv domain.csr /etc/ssl/certs/domain.csr
-sudo mv domain.key /etc/ssl/private/domain.key
-```
-
-#### Step 6. The Acme Challenge!
-Remember Acme Tiny? Let's use it now. Acme Tiny is going to help us communicate with Let's Encrypt. First, create the challenge folder in the webroot of your local nginx:
-
-```bash
-sudo mkdir -p /var/www/html/.well-known/acme-challenge/
-sudo chown $USER -R /var/www/html/
-```
-
-Now get a signed certificate with acme-tiny.
-
-```bash
-python /opt/acme-tiny/acme_tiny.py --account-key /etc/ssl/certs/account.key --csr /etc/ssl/certs/domain.csr --acme-dir /var/www/html/.well-known/acme-challenge/ > ./signed.crt
-```
-```
-Parsing account key...
-Parsing CSR...
-Found domains: www.expfactory.dynu.net, expfactory.dynu.net
-Getting directory...
-Directory found!
-Registering account...
-Registered!
-Creating new order...
-Order created!
-Verifying expfactory.dynu.net...
-expfactory.dynu.net verified!
-Verifying www.expfactory.dynu.net...
-www.expfactory.dynu.net verified!
-Signing certificate...
-Certificate signed!
-```
-
-This should generate the `signed.crt` (signed certificate) in your present working directory.
-This is what we are going to cross sign with let's encrypt, and combine them to make the final file called `chained.pem`.
-
-
-```bash
-wget -O - https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem > intermediate.pem
-cat signed.crt intermediate.pem > chained.pem
-sudo mv chained.pem /etc/ssl/certs/
-rm signed.crt intermediate.pem
-```
-
-At this point you would want to stop nginx, and proceed to use the container.
-
-```bash
-# Stop nginx
-sudo service nginx stop
-```
-
-Importantly, when you start the container (that will be generated in the next steps)
-you will need to bind to these files on the host, and
-expose port 443 too. Let's first discuss generating out container!
-
-```bash
-docker run -p 80:80 -p 443:443 \
-           -v /etc/ssl/certs:/etc/ssl/certs:ro \
-           -v /etc/ssl/private:/etc/ssl/private:ro \
-           expfactory/experiments start
-```
-
-But you don't have the container, expfactory/experiments yet! Let's make that first!
 
 ## Container Generation
 Starting from the folder where we generated our Dockerfile, we can now build the experiment container. Note that when you have a production container you don't need to build locally each time, you can use an [automated build from a Github repository to Docker Hub](https://docs.docker.com/docker-hub/builds/) - this would mean that you can push to the repository and have the build done automatically, or that you can manually trigger it. For this tutorial, we will build locally:
@@ -521,19 +298,11 @@ For this first go, we aren't going to map the data folder. This way I can show y
 
 **Without SSL**
 
+Remember, the above it without https! If you want to deploy a container with https,
+see [these docs](/expfactory/generate-https).
+
 ```
 docker run -p 80:80 expfactory/experiments start
-```
-
-**With SSL**
-
-```bash
-docker run -p 80:80 -p 443:443 \
-           -v /etc/ssl/certs:/etc/ssl/certs:ro \
-           -v /etc/ssl/private:/etc/ssl/private:ro \
-           expfactory/experiments start
-```
-
 
 Starting Web Server
 
