@@ -179,12 +179,10 @@ We'll use "certbot" to install and renew certificates.
 ### Step 1. Set some variables
 
 First we'll set some variables that are used in later steps.
-If you don't have a second hostname, you can set $DOMAIN1 and $DOMAIN2 to the same thing.
 
 ```
 EMAIL="youremail@yourdomain.com"
-DOMAIN1="expfactory.dynu.net"
-DOMAIN2="www.expfactory.dynu.net"
+DOMAIN="expfactory.dynu.net"
 ```
 
 The email you set here will be used to send you renewal reminders at 20 days, 10 days, and 1 day before expiry (super helpful!)
@@ -205,7 +203,7 @@ Now obtain a certificate by running this command.
 You can specify multiple hostnames, such as one with "www" like this:
 
 ```
-sudo certbot certonly --nginx -d $DOMAIN1 -d $DOMAIN2 --email $EMAIL --agree-tos --redirect
+sudo certbot certonly --nginx -d $DOMAIN -d "www".$DOMAIN --email $EMAIL --agree-tos --redirect
 ```
 
 ### Step 4. Copy certs to a new location
