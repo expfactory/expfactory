@@ -9,17 +9,13 @@ jobs:
     steps:
       - run:
           name: Test if the user has defined the repo name 
-          command: apk add --no-cache pigz python3
+          command: apk add --no-cache pigz python3 python3-pip
       - checkout
       - run:
           name: Install Python Dependency
           command: |
              echo "The Experiment Factory!"
-             wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-             /bin/sh Miniconda3-latest-Linux-x86_64.sh -b 
-             $HOME/miniconda3/bin/python -m pip install requests
-             echo $PWD && ls
-             $HOME/miniconda3/bin/python setup.py install
+             python3 -m pip install requests
 
   build:
     environment:
