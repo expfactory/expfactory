@@ -10,15 +10,7 @@ jobs:
       - run:
           name: Test if the user has defined the repo name 
           command: apk add --no-cache pigz python3
-      - checkout
-      - run:
-          name: Install Python Dependency
-          command: |
-             echo "The Experiment Factory!"
-             wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-             chmod u+x Miniconda3-latest-Linux-x86_64.sh
-             ./Miniconda3-latest-Linux-x86_64.sh -b -p /home/circleci/miniconda3
-             $HOME/miniconda3/bin/python -m pip install requests
+
   build:
     environment:
       - TZ: "/usr/share/zoneinfo/America/Los_Angeles"
@@ -125,6 +117,10 @@ jobs:
           command: |
             echo "Testing builder in $PWD" && ls
             cd /tmp/src/expfactory
+            wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+            chmod u+x Miniconda3-latest-Linux-x86_64.sh
+            ./Miniconda3-latest-Linux-x86_64.sh -b -p /home/circleci/miniconda3
+            $HOME/miniconda3/bin/python -m pip install requests
             $HOME/miniconda3/bin/python setup.py install
       - run:
           name: Test Builder
