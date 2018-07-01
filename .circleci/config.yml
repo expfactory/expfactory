@@ -64,7 +64,7 @@ jobs:
             cp ../builder-dev/entrypoint.sh /tmp/builder/entrypoint.sh
             cp Dockerfile /tmp/builder
             cp build.sh /tmp/builder && chmod u+x /tmp/builder/build.sh
-            cp -R /tmp/src /tmp/builder
+            cp -R /tmp/src /tmp/builder && cd /tmp/builder && ls
             echo "Working directory is ${PWD}"
             # Build docker image
             e=1 && for i in {1..5}; do
