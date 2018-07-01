@@ -99,7 +99,7 @@ Log into your account and under the Control Panel go to DDNS Services.
 
 On the next page, click the **+ Add** button.
 
-Fill out the Host and Top Level fields under Option 1 using whatever you like. This will be how users access your server (e.g., the options below would allow me to access my server by going to `myexpfactory.dynu.net)`. Click + Add.
+Fill out the Host and Top Level fields under Option 1 using whatever you like. This will be how users access your server (e.g., the options below would allow me to access my server by going to `expfactory.dynu.net)`. Click + Add.
 
 ![/expfactory/img/https/droplet-add.png](/expfactory/img/https/droplet-add.png)
 
@@ -176,9 +176,9 @@ This will save all of the certificate files to /etc/letsencrypt/live/expfactory.
 Now we'll move these to where they're expected later.
 
 ```
-cp /etc/letsencrypt/live/myexpfactory.dynu.net/fullchain.pem /etc/ssl/certs/chained.pem
-cp /etc/letsencrypt/live/myexpfactory.dynu.net/privkey.pem /etc/ssl/private/domain.key
-cp /etc/letsencrypt/ssl-dhparams.pem /etc/ssl/certs/ssl-dhparams.pem
+cp /etc/letsencrypt/live/expfactory.dynu.net/fullchain.pem /etc/ssl/certs/chained.pem
+cp /etc/letsencrypt/live/expfactory.dynu.net/privkey.pem /etc/ssl/private/domain.key
+cp /etc/letsencrypt/ssl-dhparams.pem /etc/ssl/certs/dhparam.pem
 ```
 
 ### (Optional) Step 4. Renewal reminder
