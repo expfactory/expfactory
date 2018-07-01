@@ -205,9 +205,17 @@ Now obtain a certificate by running this command.
 certbot certonly --nginx -d "${DOMAIN}" -d "www.${DOMAIN}" --email "${EMAIL}" --agree-tos --redirect
 ```
 
-### Step 4. Copy certs to a new location
+### Step 4. Stop nginx
 
-Now we'll move these to where they're expected later.
+Now we need to stop nginx because we have what we need from it!
+
+```
+sudo service nginx stop
+```
+
+### Step 5. Copy certs to a new location
+
+Now we'll move the certs to where they're expected later.
 
 ```
 sudo cp /etc/letsencrypt/live/$DOMAIN/fullchain.pem /etc/ssl/certs/chained.pem
@@ -215,7 +223,7 @@ sudo cp /etc/letsencrypt/live/$DOMAIN/privkey.pem /etc/ssl/private/domain.key
 sudo cp /etc/letsencrypt/ssl-dhparams.pem /etc/ssl/certs/dhparam.pem
 ```
 
-### Step 5. Renewal (and remembering to renew!)
+### Step 6. Renewal (and remembering to renew!)
 
 Certificates expire after 90 days. You'll get reminders at 20 days, 10 days, and 1 day before expiry to the email you set before. Before the cert expires, you can run this command to renew:
 
