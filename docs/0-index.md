@@ -1,6 +1,6 @@
 ---
 layout: default
-title: {{ site.name }}
+title: The Experiment Factory
 pdf: true
 permalink: /
 ---

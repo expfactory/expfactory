@@ -1,0 +1,177 @@
+version: 2
+jobs:
+  setup:
+    environment:
+      - TZ: "/usr/share/zoneinfo/America/Los_Angeles"
+      - TEST_RUN_FOLDER: /tmp
+    docker:
+      - image: docker:18.01.0-ce-git
+    steps:
+      - run:
+          name: Test if the user has defined the repo name 
+          command: apk add --no-cache pigz python3
+      - checkout
+      - run:
+          name: Install Python Dependency
+          command: |
+             echo "The Experiment Factory!"
+             wget https://bootstrap.pypa.io/get-pip.py &&
+             python3 get-pip.py &&
+             python3 -m pip install requests
+
+  build:
+    environment:
+      - TZ: "/usr/share/zoneinfo/America/Los_Angeles"
+      - TEST_RUN_FOLDER: /tmp
+      - CONTAINER_NAME: vanessa/expfactory-builder-ci
+    docker:
+      - image: docker:18.01.0-ce-git
+    working_directory: /tmp/src
+    steps:
+      - run:
+          name: Install parallel gzip and python3
+          command: apk add --no-cache pigz python3
+      - restore_cache:
+          keys:
+            - docker-v1-{{ .Branch }}-{{ epoch }}
+            - docker-v1-{{ .Branch }}-
+            - docker-v1-master-
+            - docker-v1-
+          paths:
+            - /tmp/cache/container.tar.gz
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Load Docker image layer cache
+          no_output_timeout: 30m
+          command: |
+            docker info
+            set +o pipefail
+            if [ -f /tmp/cache/container.tar.gz ]; then
+              pigz -d --stdout /tmp/cache/container.tar.gz | docker load
+            fi
+            docker images
+          
+      - run:
+          name: Build Docker image
+          no_output_timeout: 60m
+          command: |
+            echo $PWD
+            ls
+            cd /tmp/src/expfactory/templates/build/docker/builder-ci && 
+            echo "Building CI builder in /tmp/builder for testing current PR..."
+            mkdir -p /tmp/builder
+            cp ../builder-dev/entrypoint.sh /tmp/builder/entrypoint.sh
+            cp Dockerfile /tmp/builder
+            cp build.sh /tmp/builder && chmod u+x /tmp/builder/build.sh
+            cp -R /tmp/src /tmp/builder/expfactory && cd /tmp/builder && ls
+            echo "Working directory is ${PWD}"
+            # Build docker image
+            e=1 && for i in {1..5}; do
+              EXPFACTORY_BRANCH=$CIRCLE_BRANCH docker build \
+                --cache-from=${CONTAINER_NAME} \
+                --rm=false \
+                -t ${CONTAINER_NAME}:latest . \
+              && e=0 && break || sleep 15
+            done && [ "$e" -eq "0" ]
+      - run:
+          name: Docker save
+          no_output_timeout: 40m
+          command: |
+            echo "Saving ${CONTAINER_NAME} to container.tar.gz"
+            mkdir -p /tmp/cache
+            docker save ${CONTAINER_NAME}:latest \
+              | pigz -2 -p 3 > /tmp/cache/container.tar.gz
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - cache/container.tar.gz
+            - src
+
+  update_cache:
+    machine:
+      # Ubuntu 14.04 with Docker 17.10.0-ce
+      image: circleci/classic:201711-01
+    working_directory: /tmp/src
+    steps:
+      - attach_workspace:
+          at: /tmp
+      - save_cache:
+         key: docker-v1-{{ .Branch }}-{{ epoch }}
+         paths:
+            - /tmp/cache/container.tar.gz
+
+  test_expfactory:
+    machine:
+      image: circleci/classic:201711-01
+    working_directory: /home/circleci/out/tests
+    steps:
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Load Docker image layer cache
+          no_output_timeout: 30m
+          command: |
+            docker info
+            set +o pipefail
+            if [ -f /tmp/cache/container.tar.gz ]; then
+              sudo apt update && sudo apt -y install pigz
+              pigz -d --stdout /tmp/cache/container.tar.gz | docker load
+              docker images
+            fi
+      - run:
+          name: Test Builder
+          no_output_timeout: 2h
+          command: |
+            echo "Testing builder in $PWD" && ls
+            /bin/sh /tmp/expfactory/testing/test_builder.sh
+      - run:
+          name: Test Experiments
+          no_output_timeout: 2h
+          command: |
+            cd /tmp/expfactory/expfactory && $HOME/miniconda3/bin/python -m unittest testing.test_experiment
+      - run:
+          name: Test Client
+          no_output_timeout: 2h
+          command: |
+           cd /tmp/expfactory/expfactory && $HOME/miniconda3/bin/python -m unittest testing.test_client 
+      - store_test_results:
+          path: /home/circleci/out/tests
+
+
+workflows:
+  version: 2
+  build_test:
+    jobs:
+
+      - setup:
+          filters:
+            branches:
+              ignore: /docs?\/.*/
+            tags:
+              only: /.*/
+
+      - build:
+          requires:
+            - setup
+          filters:
+            tags:
+              only: /.*/
+
+      - update_cache:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore: /docs?\/.*/
+            tags:
+              only: /.*/
+
+      - test_expfactory:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore: /docs?\/.*/
+            tags:
+              only: /.*/

@@ -7,6 +7,16 @@
 VERSION_TAG=3.13
 BASE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 
+# Docker Builder Base
+# This is the base image for the various builders
+
+cd $BASE/expfactory/templates/build/docker/builder-base
+docker build -t vanessa/expfactory-builder:base .
+
+docker tag vanessa/expfactory-builder:base vanessa/expfactory-builder:base-v$VERSION_TAG
+docker push vanessa/expfactory-builder:base
+docker push vanessa/expfactory-builder:base-v$VERSION
+
 # vanessa/expfactory-builder
 # Build builder with tag, and push tag and latest
 cd $BASE/expfactory/templates/build/docker/builder
