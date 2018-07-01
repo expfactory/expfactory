@@ -200,7 +200,6 @@ sudo apt-get install python-certbot-nginx
 ### Step 3. Get certificates with certbot
 
 Now obtain a certificate by running this command. 
-You can specify multiple hostnames, such as one with "www" like this:
 
 ```
 certbot certonly --nginx -d "${DOMAIN}" -d "www.${DOMAIN}" --email "${EMAIL}" --agree-tos --redirect
