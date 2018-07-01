@@ -185,7 +185,6 @@ If you don't have a second hostname, you can set $DOMAIN1 and $DOMAIN2 to the sa
 EMAIL="youremail@yourdomain.com"
 DOMAIN1="expfactory.dynu.net"
 DOMAIN2="www.expfactory.dynu.net"
-
 ```
 
 The email you set here will be used to send you renewal reminders at 20 days, 10 days, and 1 day before expiry (super helpful!)
