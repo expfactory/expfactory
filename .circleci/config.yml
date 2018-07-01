@@ -16,7 +16,7 @@ jobs:
           command: |
              echo "The Experiment Factory!"
              wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-             /bin/bash Miniconda3-latest-Linux-x86_64.sh -b 
+             /bin/sh Miniconda3-latest-Linux-x86_64.sh -b 
              $HOME/miniconda3/bin/python -m pip install requests
              echo $PWD && ls
              $HOME/miniconda3/bin/python setup.py install
@@ -61,8 +61,8 @@ jobs:
             echo $PWD
             ls
             cd /tmp/src/expfactory/templates/build/docker/builder-ci && 
-            /bin/bash setup_build.sh
-            cd /tmp/builder && /bin/bash build.sh
+            /bin/sh setup_build.sh
+            cd /tmp/builder && /bin/sh build.sh
             echo "Working directory is ${PWD}"
             # Build docker image
             e=1 && for i in {1..5}; do
@@ -125,7 +125,7 @@ jobs:
           no_output_timeout: 2h
           command: |
             echo "Testing builder in $PWD" && ls
-            /bin/bash /tmp/expfactory/testing/test_builder.sh
+            /bin/sh /tmp/expfactory/testing/test_builder.sh
       - run:
           name: Test Experiments
           no_output_timeout: 2h
