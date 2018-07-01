@@ -120,11 +120,16 @@ jobs:
               docker images
             fi
       - run:
+          name: Show me where I am
+          no_output_timeout: 2h
+          command: |
+            echo "Testing builder in $PWD" && ls
+      - run:
           name: Test Builder
           no_output_timeout: 2h
           command: |
             echo "Testing builder in $PWD" && ls
-            /bin/sh /tmp/expfactory/testing/test_builder.sh
+            /bin/sh /tmp/expfactory/expfactory/testing/test_builder.sh
       - run:
           name: Test Experiments
           no_output_timeout: 2h
