@@ -203,7 +203,7 @@ Now obtain a certificate by running this command.
 You can specify multiple hostnames, such as one with "www" like this:
 
 ```
-sudo certbot certonly --nginx -d $DOMAIN -d "www".$DOMAIN --email $EMAIL --agree-tos --redirect
+certbot certonly --nginx -d "${DOMAIN}" -d "www.${DOMAIN}" --email "${EMAIL}" --agree-tos --redirect
 ```
 
 ### Step 4. Copy certs to a new location
