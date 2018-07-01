@@ -211,8 +211,8 @@ sudo certbot certonly --nginx -d $DOMAIN -d "www".$DOMAIN --email $EMAIL --agree
 Now we'll move these to where they're expected later.
 
 ```
-sudo cp /etc/letsencrypt/live/$DOMAIN1/fullchain.pem /etc/ssl/certs/chained.pem
-sudo cp /etc/letsencrypt/live/$DOMAIN1/privkey.pem /etc/ssl/private/domain.key
+sudo cp /etc/letsencrypt/live/$DOMAIN/fullchain.pem /etc/ssl/certs/chained.pem
+sudo cp /etc/letsencrypt/live/$DOMAIN/privkey.pem /etc/ssl/private/domain.key
 sudo cp /etc/letsencrypt/ssl-dhparams.pem /etc/ssl/certs/dhparam.pem
 ```
 
