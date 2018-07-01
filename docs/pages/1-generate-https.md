@@ -195,7 +195,7 @@ You can specify multiple hostnames, such as one with "www" like this:
 certbot certonly --nginx -d expfactory.dynu.net -d www.expfactory.dynu.net
 ```
 
-This will save all of the certificate files to /etc/letsencrypt/live/expfactory.dynu.net (the first domain listed in the cerbot command)
+This will save all of the certificate files to /etc/letsencrypt/live/expfactory.dynu.net (the first domain listed in the cerbot command). It will ask for your email during the generation. This is used to send you renewal reminders at 20 days, 10 days, and 1 day before expiry (super helpful!)
 
 ### Step 3. Copy certs to a new location
 
@@ -215,15 +215,13 @@ sudo cp /etc/letsencrypt/live/$MYDOMAIN/privkey.pem /etc/ssl/private/domain.key
 sudo cp /etc/letsencrypt/ssl-dhparams.pem /etc/ssl/certs/dhparam.pem
 ```
 
-### (Optional) Step 4. Renewal reminder
+### Step 4. Renewal (and remembering to renew!)
 
-Keep in mind these certificates expire after 90 days. Set yourself a reminder!
-To renew all certificates created with certbot, you can run this:
+Certificates expire after 90 days. If you entered your email when generating the certs, you'll get reminders at 20 days, 10 days, and 1 day before expiry. Before the cert expires, you can run this command to renew:
 
 ```
 sudo certbot renew
 ```
-
 Before renewing you need to stop the docker container running expfactory and start nginx outside of docker.
 
 
