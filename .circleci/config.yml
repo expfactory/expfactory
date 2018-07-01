@@ -59,7 +59,12 @@ jobs:
             echo $PWD
             ls
             cd /tmp/src/expfactory/templates/build/docker/builder-ci && 
-            /bin/sh setup_build.sh
+            echo "Building CI builder in /tmp/builder for testing current PR..."
+            mkdir -p /tmp/builder
+            cp ../builder-dev/entrypoint.sh /tmp/builder/entrypoint.sh
+            cp Dockerfile /tmp/builder
+            cp build.sh /tmp/builder && chmod u+x /tmp/builder/build.sh
+            cp -R /tmp/src /tmp/builder
             echo "Working directory is ${PWD}"
             # Build docker image
             e=1 && for i in {1..5}; do
