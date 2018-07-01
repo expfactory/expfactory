@@ -172,9 +172,9 @@ certbot certonly --nginx -d expfactory.dynu.net -d www.expfactory.dynu.net
 This will save all of the certificate files to /etc/letsencrypt/live/expfactory.dynu.net (the first domain listed in the cerbot command)
 
 
-### (Optional) Step 3. Reminder to renew
+### (Optional) Step 3. Renewal reminder
 
-Keep in mind these certificates expire after 90 days.
+Keep in mind these certificates expire after 90 days. Set yourself a reminder!
 To renew all certificates created with certbot, you can just run this:
 
 ```
