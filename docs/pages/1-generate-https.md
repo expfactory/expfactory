@@ -166,19 +166,22 @@ Now obtain a certificate by running this command.
 You can specify multiple hostnames, such as one with "www" like this:
 
 ```
-sudo certbot --nginx -d myexpfactory.dynu.net -d www.myexpfactory.dynu.net
+certbot certonly --nginx -d expfactory.dynu.net -d www.expfactory.dynu.net
 ```
+
+This will save all of the certificate files to /etc/letsencrypt/live/expfactory.dynu.net (the first domain listed in the cerbot command)
+
 
 ### (Optional) Step 3. Reminder to renew
 
 Keep in mind these certificates expire after 90 days.
-To renew all certificates created with certbot, you can just run
+To renew all certificates created with certbot, you can just run this:
 
 ```
 sudo certbot renew
 ```
 
-However, you will need to ensure that docker is stopped and nginx is running.
+Before renewing you need to stop the docker container running expfactory and start nginx outside of docker.
 
 
 Importantly, when you start the container (that will be generated in the next steps)
