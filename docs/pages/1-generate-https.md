@@ -175,10 +175,18 @@ This will save all of the certificate files to /etc/letsencrypt/live/expfactory.
 
 Now we'll move these to where they're expected later.
 
+First set the hostname for your server as a shell variable:
+
 ```
-cp /etc/letsencrypt/live/expfactory.dynu.net/fullchain.pem /etc/ssl/certs/chained.pem
-cp /etc/letsencrypt/live/expfactory.dynu.net/privkey.pem /etc/ssl/private/domain.key
-cp /etc/letsencrypt/ssl-dhparams.pem /etc/ssl/certs/dhparam.pem
+MYDOMAIN="expfactory.dynu.net"
+```
+
+Then copy the files.
+
+```
+sudo cp /etc/letsencrypt/live/$MYDOMAIN/fullchain.pem /etc/ssl/certs/chained.pem
+sudo cp /etc/letsencrypt/live/$MYDOMAIN/privkey.pem /etc/ssl/private/domain.key
+sudo cp /etc/letsencrypt/ssl-dhparams.pem /etc/ssl/certs/dhparam.pem
 ```
 
 ### (Optional) Step 4. Renewal reminder
