@@ -13,20 +13,20 @@ a walkthrough of doing these steps on Digital Ocean using a free domain service,
 thanks to [Tyler](https://tylerburleigh.com/index/) for help with writing and testing this setup. In the case that you don't yet have a plan for deployment, this is an option, and you can skip the "install Docker" step, because the server we deploy will have it ready to go.
 
 
-# Detailed Start
+## Detailed Start with HTTPS
 In these sections, we will be building your container from a customized file with https enabled.
 If you are starting on a base OS image, You will still need to [install Docker](https://docs.docker.com/engine/installation/) first. If you are deploying on Digital Ocean, you
 don't need to do this. For either, you should be comfortable with the basic usage. If you don't
 need to setup a Droplet (and have your own server provider) jump down to [the step to install nginx](#basic-server-setup).
 
 
-## Create an account on Digital Ocean
+### Create an account on Digital Ocean
 First create an account with [DigitalOcean](https://www.digitalocean.com/). DigitalOcean provides cloud computing services. Basically, this means you can rent a server with as much or as little capacity as you want, with the possibility to expand or add features later if you need more capacity. Another nice feature, in the case that you just want to try something out, is that you can also rent a server for as little as 1-hour at a time.
 
 To help Tyler out (and thank him for his contribution!) if you **do** wind up signing up for
 Digital Ocean, here is his [referral link](https://m.do.co/c/6232dfb63932).
 
-## Create a droplet
+### Create a droplet
 Now that you have an account, we’ll create a "droplet". This isn't water in the sky,
 it's just a cloud server :) After logging into your account, on the top go to Create -> Droplets.
 
@@ -54,7 +54,7 @@ Under "Choose a hostname" give it a descriptive (but not-too-long) name, like �
 Click Create.
 
 
-## SSH into your droplet
+### SSH into your droplet
 
 Shortly after creating your droplet, you’ll get an email from DigitalOcean that contains your IP, username and password. You can use these to SSH into your server with your software of choice. (PUTTY is a great choice for Windows users). If you are on Mac or Linux, you already
 have a command line and can use ssh. For example, let's say I have these credentials
@@ -75,23 +75,23 @@ ssh -XY dinosaur@111.222.333.44
 
 It will prompt you for your password to log in.
 
-# Basic Server Setup
+## Basic Server Setup
 Once you’ve SSH'd into your server, you need to setup a few things.
 
 
-## Expose Ports
+### Expose Ports
 Before continuing, in the case that you are using a cloud-based host, make sure that
 ports 80 and 443 (for https) are both exposed. It's terrible when you actually get something working, but you can't see it because the port isn't open :) If you aren't using Digital
 Ocean, we are also assuming that you've done the correct work to get a domain, and set up the A/CNAME records to support all versions of http/https and www or without.
 
-## Install nginx
+### Install nginx
 Run these commands to install nginx
 
 ```bash
 sudo apt-get update && sudo apt-get update install -y nginx
 ```
 
-## Get a hostname
+### Get a hostname
 Now we’ll take a slight detour so we can get your server a hostname. This way, rather than connecting to it by IP (e.g., 192.168.1.5) you can connect to it by name (`my.domain.com`). You also need a hostname in order to get an SSL certificate.
 
 Head over to [https://www.dynu.com](https://www.dynu.com) and create an account. (It’s free).
@@ -111,11 +111,11 @@ On the next page, change the IPv4 Address to the IP address for your droplet. Ch
 
 With a few minutes, you should be able to access your server using that hostname.
 
-## Install docker
+### Install docker
 
 Run these commands to install docker:
 
-```
+```bash
 sudo apt-get update
 sudo apt-get install \
     apt-transport-https \
@@ -159,7 +159,7 @@ docker ps
 docker run hello-world
 ```
 
-## Test Nginx
+### Test Nginx
 When you install nginx with `apt-get`, this install typically starts the nginx server (note
 this is pronounced ENGINE-X - it took me only 8 years to know that :P). As a sanity check, if you go to the web interface (the domain address that is associated with the droplet) you will see this.
 
@@ -177,7 +177,7 @@ For this next step, we are still working on the host where you will run your con
 verify that we own the server, and then sign the certificates.
 
 
-## SSL Certificates
+### Generating Your Certificates
 We will be interacting with the nginx on the host, and following steps to:
 
  - start nginx (already done)
@@ -195,7 +195,7 @@ so it doesn't matter :) If you are doing this for the first time, start at step 
 are refreshing your certificates, jump down to step 4.
 
 
-### Step 1. Define Registration Details
+#### Step 1. Define Registration Details
 Let's define some environment variables that will go into our configuration. You need to define your email, the domain (e.g, expfactory.org) the state, and county. Here is an 
 example:
 
@@ -245,7 +245,7 @@ This should produce a file `csr_details.txt` in your present working directory
 that we will use later.
 
 
-### Step 2. Install Acme Tiny
+#### Step 2. Install Acme Tiny
 We are going to use [Acme Tiny](https://github.com/diafygi/acme-tiny) to both issue
 and renvew our certificates. Let's install it first. I chose to clone to `/tmp` and
 install to `/opt`, you can obviously mix this up. If you are using a Droplet (or
@@ -265,7 +265,7 @@ sudo mv acme-tiny /opt/acme-tiny/
 sudo chown $USER -R /opt/acme-tiny
 ```
 
-### Step 3. Create Account Key and Parameters
+#### Step 3. Create Account Key and Parameters
 This step you only need to do once, so I'm bundling it into one. You need to generate a 
 key for your server, and for the best encryption, a `dhparam.pem` key (it takes a while!).
 
@@ -285,7 +285,7 @@ fi
 
 You shouldn't need to regenerate these files.
 
-### Step 4. Backup Previous Key / Certificate
+#### Step 4. Backup Previous Key / Certificate
 This step you only need to do if you have a previously created certificate and domain
 key. It's probably not super necessary, but I do it anyway. The certificate we will make
 (and/or backup) is called `expfactory.cert` and the key is `expfactory.key`.
@@ -308,7 +308,7 @@ if [ -f "/etc/ssl/certs/domain.csr" ]
 fi
 ```
 
-### Step 5. Call Openssl
+#### Step 5. Call Openssl
 We now are going to use openssl with our `csr_details.txt` to generate a new domain key! That looks like this:
 
 ```bash
@@ -319,7 +319,7 @@ sudo mv domain.csr /etc/ssl/certs/domain.csr
 sudo mv domain.key /etc/ssl/private/domain.key
 ```
 
-### Step 6. The Acme Challenge!
+#### Step 6. The Acme Challenge!
 Remember Acme Tiny? Let's use it now. Acme Tiny is going to help us communicate with Let's Encrypt. First, create the challenge folder in the webroot of your local nginx:
 
 ```bash
@@ -373,7 +373,7 @@ you will need to bind to these files on the host, and
 expose ports 80 and 443 too. Now it's time to generate our container!
 
 
-## The Expfactory Builder Image
+### The Expfactory Builder Image
 The provided [expfactory builder image](https://hub.docker.com/r/vanessa/expfactory-builder) will generate your Dockerfile, and from this file you can build your Docker image.  Versons (tags) 3.12 and up (including latest) have support for https. We don't build the image within the same container for the explicit purpose that you should keep a copy of the recipe Dockerfile at hand. The basic usage is to run the image, and you can either build, test, or list.
 
 ```
@@ -384,7 +384,7 @@ Generally, list will show you experiments provided by expfactory, build is used 
 enough detail here to build container with https. If you want more detail about installation of local experiments or other customization of the Dockerfile, you should refer to the main [generate page](/expfactory/generate). You might also look at how to [customize your container runtime](/expfactory/generate#customize-your-container).
 
 
-## Recipe Generation
+### Recipe Generation
 To generate a Dockerfile to build our custom image, we need to run expfactory in the container,
 and mount a folder to write the Dockerfile. If we are installing local experiments, they should be in this folder. The folder should not already contain a Dockerfile, and we recommend that you set this folder up with version control (a.k.a. Github). That looks like this:
 
@@ -401,7 +401,7 @@ docker run -v $HOME/my-experiment:/data \
 Finally, before you generate your recipe, in the case that you want "hard coded" defaults (e.g., set as defaults for future users) read the [custom build](/expfactory/generate#custom-conriguration) section on the main generate page to learn about the variables that you can customize.
 
 
-## Container Generation
+### Container Generation
 After we run the builder container, a Dockerfile and startscript.sh will be generated
 in the folder that we mounted at `/data`. Starting from this folder on our host, we can now build the experiment container. Note that when you have a production container you don't need to build locally each time, you can use an [automated build from a Github repository to Docker Hub](https://docs.docker.com/docker-hub/builds/) - this would mean that you can push to the repository and have the build done automatically, or that you can manually trigger it. For this tutorial, we will build locally. Here is the content of our folder on the host:
 
@@ -438,7 +438,7 @@ docker build --no-cache -t expfactory/experiments .
 Don't forget the `.` at the end! It references the present working directory with the Dockerfile. If you are developing and need to update your container, the fastest thing to do is to change files locally, and build again (and removing --no-cache should be OK).
 
 
-## Start your Container
+### Start your Container
 After you do the above steps, your custom container will exist on your local machine.
 To run our container, we will define the following variables:
 
