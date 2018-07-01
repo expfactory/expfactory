@@ -28,6 +28,7 @@ cd /tmp/my-experiment
 ```
 
 What experiments do you want in your container? Let's see the ones that are available!
+
 ```
 docker run vanessa/expfactory-builder list
 ```
@@ -61,6 +62,8 @@ The generation of a container comes down to adding the experiments to a text fil
 
  - generating a recipe with (reproducible) steps to build a custom container
  - building the container!
+
+Note that if you want to deploy a container with https, you should read our [https generation](/expfactory/generate-https) page, and then come back here to read about [interaction with your container](/expfactory/generate#shell-into-your-container).
 
 
 ## The Expfactory Builder Image
@@ -224,7 +227,7 @@ and if we have local experiments, we would see them as well:
 experiments/
 ├── Dockerfile
 ├── startscript.sh
-└── test-task-two
+└── test-task-two/
 ```
 
 
@@ -291,6 +294,12 @@ The command we are interested in is `start`, and the important (Docker) argument
 - `volumes`: The second command `-v` is telling Docker we want to see the output in the container at `/scif/data` to appear in the folder `/tmp/data` on our local machine. If you are just testing and don't care about saving or seeing data, you don't need to specify this.
 
 For this first go, we aren't going to map the data folder. This way I can show you how to shell inside an interactive container.
+
+
+**Without SSL**
+
+Remember, the above it without https! If you want to deploy a container with https,
+see [these docs](/expfactory/generate-https).
 
 ```
 docker run -p 80:80 expfactory/experiments start

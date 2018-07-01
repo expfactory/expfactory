@@ -82,11 +82,14 @@ def get_parser():
                         help="finish a user session by removing the token",
                         default=None, type=str)
 
+    # Version
+    version = subparsers.add_parser("version", 
+                                     help="Get the version of expfactory installed")
+
     # List
     listy = subparsers.add_parser("list", 
                                    help="List available Expfactory Experiments from Github")
 
-    # List
     logs = subparsers.add_parser("logs", 
                                  help="Print expfactory logs to terminal.")
 
@@ -202,6 +205,12 @@ def main():
 
     from expfactory.logger import bot
     from expfactory.version import __version__
+
+    # The user may just want to parse the version
+    if command == "version":
+        print(__version__)
+        sys.exit(0)
+
     bot.info("Expfactory Version: %s" % __version__)
 
     if command == "install":

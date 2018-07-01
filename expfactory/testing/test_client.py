@@ -36,6 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import unittest
 import shutil
 from expfactory.utils import *
+from expfactory.version import __version__
 from expfactory.experiment import *
 import tempfile
 import json
@@ -59,7 +60,10 @@ class TestClient(unittest.TestCase):
  
     def test_help(self):
         result = self.run_command(["expfactory","--help"])
-        self.assertTrue('{users,list,logs,install,build}' in result)
+        self.assertTrue('{users,version,list,logs,install,build}' in result)
+
+        result = self.run_command(["expfactory","version","--help"])
+        self.assertTrue('expfactory version' in result)
 
         result = self.run_command(["expfactory","list","--help"])
         self.assertTrue('expfactory list' in result)
@@ -75,6 +79,7 @@ class TestClient(unittest.TestCase):
 
         result = self.run_command(["expfactory","logs","--help"])
         self.assertTrue('expfactory logs' in result)
+
 
     def test_list(self):
         result = self.run_command(["expfactory"])
