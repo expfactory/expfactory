@@ -86,7 +86,7 @@ Before continuing, in the case that you are using a cloud-based host, make sure 
 Run these commands to install nginx
 
 ```bash
-sudo apt-get update && sudo apt-get update install -y nginx
+sudo apt-get update && sudo apt-get install -y nginx
 ```
 
 ### Get a hostname
