@@ -80,9 +80,7 @@ Once you’ve SSH'd into your server, you need to setup a few things.
 
 
 ## Expose Ports
-Before continuing, in the case that you are using a cloud-based host, make sure that
-ports 80 and 443 (for https) are both exposed. It's terrible when you actually get something working, but you can't see it because the port isn't open :) If you aren't using Digital
-Ocean, we are also assuming that you've done the correct work to get a domain, and set up the A/CNAME records to support all versions of http/https and www or without.
+Before continuing, in the case that you are using a cloud-based host, make sure that ports 80 and 443 (for https) are both exposed. It's terrible when you actually get something working, but you can't see it because the port isn't open :) If you are using Digital Ocean, there's no firewall to begin with so the ports are already exposed (but you can add a firewall if you want to). If you aren't using Digital Ocean, we are also assuming that you've done the correct work to get a domain, and set up the A/CNAME records to support all versions of http/https and www or without.
 
 ## Install nginx
 Run these commands to install nginx
@@ -101,7 +99,7 @@ Log into your account and under the Control Panel go to DDNS Services.
 
 On the next page, click the **+ Add** button.
 
-Fill out the Host and Top Level fields under Option 1 using whatever you like. This will be how users access your server (e.g., the options below would allow me to access my server by going to `myexpfactory.dynu.net)`. Click + Add.
+Fill out the Host and Top Level fields under Option 1 using whatever you like. This will be how users access your server (e.g., the options below would allow me to access my server by going to `expfactory.dynu.net)`. Click + Add.
 
 ![/expfactory/img/https/droplet-add.png](/expfactory/img/https/droplet-add.png)
 
@@ -168,205 +166,72 @@ this is pronounced ENGINE-X - it took me only 8 years to know that :P). As a san
 Notice that we do not have ssl, because there isn’t a small picture of a green lock in the address bar. We are going to need to use this local web server to sign our certificates, but then we will stop it to run our experiment container.  If for some reason you don't see
 this (and your server isn't started) try:
 
-
 ```bash
 sudo service nginx start
 ```
 
-For this next step, we are still working on the host where you will run your container. What we first need to do is generate certificates, start a local web server, and ping "Let's Encrypt" to
-verify that we own the server, and then sign the certificates.
+For this next step, we are still working on the host where you will run your container. What we first need to do is generate certificates, start a local web server, and ping "Let's Encrypt" to verify that we own the server, and then sign the certificates.
 
 
 ## SSL Certificates
-We will be interacting with the nginx on the host, and following steps to:
+We'll use "certbot" to install and renew certificates.
 
- - start nginx (already done)
- - install tiny acme
- - generate certificates
- - using tinyacme to get them certified
- - moving them to where they need to be.
- - add a reminder or some other method to renew within 89 days
- 
-Once we do this, we will stop the local nginx, build our container, and bind the certificates to the server in our container when we start it.For the next set up steps, I'll
-walk through them manually, and if you choose, you could put them into a script.
-The certificates need to be renewed every 89 days, so you will need to have some
-strategy in place. It's likely the case that your server won't be running that long,
-so it doesn't matter :) If you are doing this for the first time, start at step 1. If you
-are refreshing your certificates, jump down to step 4.
+### Step 1. Set some variables
 
+First we'll set some variables that are used in later steps.
 
-### Step 1. Define Registration Details
-Let's define some environment variables that will go into our configuration. You need to define your email, the domain (e.g, expfactory.org) the state, and county. Here is an 
-example:
-
-```bash
-EMAIL=dinosaur@planetearth.com
-DOMAIN=expfactory.dynu.net
-STATE=California
-COUNTY=”San Mateo County”
+```
+EMAIL="youremail@yourdomain.com"
+DOMAIN="expfactory.dynu.net"
 ```
 
-Let's work in our $HOME directory to generate a `csr_details.txt` file that we will use
-to issue the request for credentials.
+The email you set here will be used to send you renewal reminders at 20 days, 10 days, and 1 day before expiry (super helpful!)
 
-```bash
-cd $HOME
+### Step 2. Install certbot
+
+Certbot automates certificate generation and renewal. In other words, it makes it really easy to setup SSL.
+
 ```
-Then, write the csr_details.txt file
-
-```bash
-cat > csr_details.txt <<-EOF
-[req]
-default_bits = 2048
-prompt = no
-default_md = sha256
-req_extensions = req_ext
-distinguished_name = dn
- 
-[ dn ]
-C=US
-ST=$STATE
-L=$COUNTY
-O=End Point
-OU=$DOMAIN
-emailAddress=$EMAIL
-CN = www.$DOMAIN
- 
-[ req_ext ]
-subjectAltName = @alt_names
- 
-[ alt_names ]
-DNS.1 = $DOMAIN
-DNS.2 = www.$DOMAIN
-EOF
+sudo add-apt-repository ppa:certbot/certbot
+sudo apt-get update
+sudo apt-get install python-certbot-nginx
 ```
 
-This should produce a file `csr_details.txt` in your present working directory
-that we will use later.
+### Step 3. Get certificates with certbot
 
+Now obtain a certificate by running this command. 
 
-### Step 2. Install Acme Tiny
-We are going to use [Acme Tiny](https://github.com/diafygi/acme-tiny) to both issue
-and renvew our certificates. Let's install it first. I chose to clone to `/tmp` and
-install to `/opt`, you can obviously mix this up. If you are using a Droplet (or
-a server without python) make sure to install it first:
-
-```bash
-# Python
-sudo apt-get install -y python
+```
+certbot certonly --nginx -d "${DOMAIN}" -d "www.${DOMAIN}" --email "${EMAIL}" --agree-tos --redirect
 ```
 
-Then install Acme Tiny.
+### Step 4. Stop nginx
 
-```bash
-sudo mkdir /opt/acme_tiny
-cd /tmp && git clone https://github.com/diafygi/acme-tiny
-sudo mv acme-tiny /opt/acme-tiny/
-sudo chown $USER -R /opt/acme-tiny
+Now we need to stop nginx because we have what we need from it!
+
 ```
-
-### Step 3. Create Account Key and Parameters
-This step you only need to do once, so I'm bundling it into one. You need to generate a 
-key for your server, and for the best encryption, a `dhparam.pem` key (it takes a while!).
-
-```bash
-# Generate a private account key, if doesn't exist
-if [ ! -f "/etc/ssl/certs/account.key" ]
-   then
-   openssl genrsa 4096 > account.key && sudo mv account.key /etc/ssl/certs
-fi
-
-# Add extra security (takes a while!)
-if [ ! -f "/etc/ssl/certs/dhparam.pem" ]
-   then
-   openssl dhparam -out dhparam.pem 4096 && sudo mv dhparam.pem /etc/ssl/certs
-fi
-```
-
-You shouldn't need to regenerate these files.
-
-### Step 4. Backup Previous Key / Certificate
-This step you only need to do if you have a previously created certificate and domain
-key. It's probably not super necessary, but I do it anyway. The certificate we will make
-(and/or backup) is called `expfactory.cert` and the key is `expfactory.key`.
-
-```bash
-# backup old key and cert
-if [ -f "/etc/ssl/private/domain.key" ]
-   then
-   sudo cp /etc/ssl/private/domain.key{,.bak.$(date +%s)}
-fi
-
-if [ -f "/etc/ssl/certs/chained.pem" ]
-   then
-   sudo cp /etc/ssl/certs/chained.pem{,.bak.$(date +%s)}
-fi
-
-if [ -f "/etc/ssl/certs/domain.csr" ]
-   then
-   sudo cp /etc/ssl/certs/domain.csr{,.bak.$(date +%s)}
-fi
-```
-
-### Step 5. Call Openssl
-We now are going to use openssl with our `csr_details.txt` to generate a new domain key! That looks like this:
-
-```bash
-openssl req -new -sha256 -nodes -out domain.csr -newkey rsa:2048 -keyout domain.key -config <( cat csr_details.txt )
-
-# Move to where they are expected by the container
-sudo mv domain.csr /etc/ssl/certs/domain.csr
-sudo mv domain.key /etc/ssl/private/domain.key
-```
-
-### Step 6. The Acme Challenge!
-Remember Acme Tiny? Let's use it now. Acme Tiny is going to help us communicate with Let's Encrypt. First, create the challenge folder in the webroot of your local nginx:
-
-```bash
-sudo mkdir -p /var/www/html/.well-known/acme-challenge/
-sudo chown $USER -R /var/www/html/
-```
-
-Now get a signed certificate with acme-tiny.
-
-```bash
-python /opt/acme-tiny/acme_tiny.py --account-key /etc/ssl/certs/account.key --csr /etc/ssl/certs/domain.csr --acme-dir /var/www/html/.well-known/acme-challenge/ > ./signed.crt
-```
-```
-Parsing account key...
-Parsing CSR...
-Found domains: www.expfactory.dynu.net, expfactory.dynu.net
-Getting directory...
-Directory found!
-Registering account...
-Registered!
-Creating new order...
-Order created!
-Verifying expfactory.dynu.net...
-expfactory.dynu.net verified!
-Verifying www.expfactory.dynu.net...
-www.expfactory.dynu.net verified!
-Signing certificate...
-Certificate signed!
-```
-
-This should generate the `signed.crt` (signed certificate) in your present working directory.
-This is what we are going to cross sign with let's encrypt, and combine them to make the final file called `chained.pem`.
-
-
-```bash
-wget -O - https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem > intermediate.pem
-cat signed.crt intermediate.pem > chained.pem
-sudo mv chained.pem /etc/ssl/certs/
-rm signed.crt intermediate.pem
-```
-
-At this point you would want to stop nginx, and proceed to use the container.
-
-```bash
-# Stop nginx
 sudo service nginx stop
 ```
+
+### Step 5. Copy certs to a new location
+
+Now we'll move the certs to where they're expected later.
+
+```
+sudo cp /etc/letsencrypt/live/$DOMAIN/fullchain.pem /etc/ssl/certs/chained.pem
+sudo cp /etc/letsencrypt/live/$DOMAIN/privkey.pem /etc/ssl/private/domain.key
+sudo cp /etc/letsencrypt/ssl-dhparams.pem /etc/ssl/certs/dhparam.pem
+```
+
+### Step 6. Renewal (and remembering to renew!)
+
+Certificates expire after 90 days. You'll get reminders at 20 days, 10 days, and 1 day before expiry to the email you set before. Before the cert expires, you can run this command to renew:
+
+```
+sudo certbot renew
+```
+Before renewing you need to stop the docker container running expfactory and start nginx outside of docker.
+
 
 Importantly, when you start the container (that will be generated in the next steps)
 you will need to bind to these files on the host, and
