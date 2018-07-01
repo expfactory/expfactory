@@ -176,7 +176,21 @@ For this next step, we are still working on the host where you will run your con
 ## SSL Certificates
 We'll use "certbot" to install and renew certificates.
 
-### Step 1. Install certbot
+### Step 1. Set some variables
+
+First we'll set some variables that are used in later steps.
+If you don't have a second hostname, you can set $DOMAIN1 and $DOMAIN2 to the same thing.
+
+```
+EMAIL="youremail@yourdomain.com"
+DOMAIN1="expfactory.dynu.net"
+DOMAIN2="www.expfactory.dynu.net"
+
+```
+
+The email you set here will be used to send you renewal reminders at 20 days, 10 days, and 1 day before expiry (super helpful!)
+
+### Step 2. Install certbot
 
 Certbot automates certificate generation and renewal. In other words, it makes it really easy to setup SSL.
 
@@ -186,38 +200,28 @@ sudo apt-get update
 sudo apt-get install python-certbot-nginx
 ```
 
-### Step 2. Get certificates with certbot
+### Step 3. Get certificates with certbot
 
 Now obtain a certificate by running this command. 
 You can specify multiple hostnames, such as one with "www" like this:
 
 ```
-certbot certonly --nginx -d expfactory.dynu.net -d www.expfactory.dynu.net
+sudo certbot certonly --nginx -d $DOMAIN1 -d $DOMAIN2 --email $EMAIL --agree-tos --redirect
 ```
 
-This will save all of the certificate files to /etc/letsencrypt/live/expfactory.dynu.net (the first domain listed in the cerbot command). It will ask for your email during the generation. This is used to send you renewal reminders at 20 days, 10 days, and 1 day before expiry (super helpful!)
-
-### Step 3. Copy certs to a new location
+### Step 4. Copy certs to a new location
 
 Now we'll move these to where they're expected later.
 
-First set the hostname for your server as a shell variable:
-
 ```
-MYDOMAIN="expfactory.dynu.net"
-```
-
-Then copy the files.
-
-```
-sudo cp /etc/letsencrypt/live/$MYDOMAIN/fullchain.pem /etc/ssl/certs/chained.pem
-sudo cp /etc/letsencrypt/live/$MYDOMAIN/privkey.pem /etc/ssl/private/domain.key
+sudo cp /etc/letsencrypt/live/$DOMAIN1/fullchain.pem /etc/ssl/certs/chained.pem
+sudo cp /etc/letsencrypt/live/$DOMAIN1/privkey.pem /etc/ssl/private/domain.key
 sudo cp /etc/letsencrypt/ssl-dhparams.pem /etc/ssl/certs/dhparam.pem
 ```
 
-### Step 4. Renewal (and remembering to renew!)
+### Step 5. Renewal (and remembering to renew!)
 
-Certificates expire after 90 days. If you entered your email when generating the certs, you'll get reminders at 20 days, 10 days, and 1 day before expiry. Before the cert expires, you can run this command to renew:
+Certificates expire after 90 days. You'll get reminders at 20 days, 10 days, and 1 day before expiry to the email you set before. Before the cert expires, you can run this command to renew:
 
 ```
 sudo certbot renew
