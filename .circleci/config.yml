@@ -64,7 +64,7 @@ jobs:
             cp ../builder-dev/entrypoint.sh /tmp/builder/entrypoint.sh
             cp Dockerfile /tmp/builder
             cp build.sh /tmp/builder && chmod u+x /tmp/builder/build.sh
-            cp -R /tmp/src /tmp/builder && cd /tmp/builder && ls
+            cp -R /tmp/src/* /tmp/builder/ && cd /tmp/builder && ls
             echo "Working directory is ${PWD}"
             # Build docker image
             e=1 && for i in {1..5}; do
@@ -72,9 +72,6 @@ jobs:
                 --cache-from=${CONTAINER_NAME} \
                 --rm=false \
                 -t ${CONTAINER_NAME}:latest \
-                --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
-                --build-arg VCS_REF=`git rev-parse --short HEAD` \
-                --build-arg VERSION="${CIRCLE_TAG:-$THISVERSION}" . \
               && e=0 && break || sleep 15
             done && [ "$e" -eq "0" ]
       - run:
