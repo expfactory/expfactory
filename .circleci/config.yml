@@ -71,7 +71,7 @@ jobs:
               EXPFACTORY_BRANCH=$CIRCLE_BRANCH docker build \
                 --cache-from=${CONTAINER_NAME} \
                 --rm=false \
-                -t ${CONTAINER_NAME}:latest \
+                -t ${CONTAINER_NAME}:latest . \
               && e=0 && break || sleep 15
             done && [ "$e" -eq "0" ]
       - run:
