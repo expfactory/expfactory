@@ -130,6 +130,32 @@ sudo apt-get update
 sudo apt-get install docker-ce
 ```
 
+You will first need to add yourself to the Docker group. This consists of two steps:
+
+ - Adding yourself to the group
+ - Restarting the instance
+
+To add yourself to the Docker group:
+
+```bash
+sudo usermod -aG docker $USER
+
+# restart docker
+sudo service docker restart
+```
+
+Then restart the instance. It will kick you off, and you will need to ssh in again.
+
+```bash
+sudo reboot
+```
+
+Once you log in again, you can test that docker is configured correctly with `docker ps`. It should show you an empty listing of containers (and not a permissions error). You can also run the `hello-world` container to test more full functionality.
+
+```bash
+docker ps
+docker run hello-world
+```
 
 ## Test Nginx
 When you install nginx with `apt-get`, this install typically starts the nginx server (note
