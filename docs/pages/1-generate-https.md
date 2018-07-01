@@ -171,11 +171,20 @@ certbot certonly --nginx -d expfactory.dynu.net -d www.expfactory.dynu.net
 
 This will save all of the certificate files to /etc/letsencrypt/live/expfactory.dynu.net (the first domain listed in the cerbot command)
 
+### Step 3. Copy certs to a new location
 
-### (Optional) Step 3. Renewal reminder
+Now we'll move these to where they're expected later.
+
+```
+cp /etc/letsencrypt/live/myexpfactory.dynu.net/fullchain.pem /etc/ssl/certs/chained.pem
+cp /etc/letsencrypt/live/myexpfactory.dynu.net/privkey.pem /etc/ssl/private/domain.key
+cp /etc/letsencrypt/ssl-dhparams.pem /etc/ssl/certs/ssl-dhparams.pem
+```
+
+### (Optional) Step 4. Renewal reminder
 
 Keep in mind these certificates expire after 90 days. Set yourself a reminder!
-To renew all certificates created with certbot, you can just run this:
+To renew all certificates created with certbot, you can run this:
 
 ```
 sudo certbot renew
@@ -265,7 +274,8 @@ To run our container, we will define the following variables:
 
 ```bash
 docker run -p 80:80 -p 443:443 \
-           -v /etc/ssl/certs:/etc/letsencrypt:ro \
+           -v /etc/ssl/certs:/etc/ssl/certs:ro \
+           -v /etc/ssl/private:/etc/ssl/private:ro \
            expfactory/experiments start
 ...
 
@@ -290,7 +300,8 @@ If https is working, this means that if you open your browser to localhost ([htt
 
 ```
 docker run -d -p 80:80 -p 443:443 \
-           -v /etc/ssl/certs:/etc/letsencrypt:ro \
+           -v /etc/ssl/certs:/etc/ssl/certs:ro \
+           -v /etc/ssl/private:/etc/ssl/private:ro \
            expfactory/experiments start
 2c503ddf6a7a0f2a629fa2e55276e220246320291c14f6393a33ef54ab5d512a
 ```
@@ -309,7 +320,8 @@ if the container stops and goes away, the data persists.
 
 ```
 docker run -d -p 80:80 -p 443:443 \
-           -v /etc/ssl/certs:/etc/letsencrypt:ro \
+           -v /etc/ssl/certs:/etc/ssl/certs:ro \
+           -v /etc/ssl/private:/etc/ssl/private:ro \
            -v $PWD:/scif
            expfactory/experiments start
 ```
