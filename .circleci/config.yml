@@ -15,10 +15,10 @@ jobs:
           name: Install Python Dependency
           command: |
              echo "The Experiment Factory!"
-             wget https://bootstrap.pypa.io/get-pip.py &&
-             python3 get-pip.py &&
-             python3 -m pip install requests
-
+             wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+             chmod u+x Miniconda3-latest-Linux-x86_64.sh
+             ./Miniconda3-latest-Linux-x86_64.sh -b -p $HOME/miniconda3
+             $HOME/miniconda3/bin/python -m pip install requests
   build:
     environment:
       - TZ: "/usr/share/zoneinfo/America/Los_Angeles"
@@ -120,26 +120,32 @@ jobs:
               docker images
             fi
       - run:
-          name: Show me where I am
+          name: Install dependencies
           no_output_timeout: 2h
           command: |
             echo "Testing builder in $PWD" && ls
+            cd /tmp/src/expfactory
+            $HOME/miniconda3/bin/python setup.py install
       - run:
           name: Test Builder
           no_output_timeout: 2h
           command: |
             echo "Testing builder in $PWD" && ls
-            /bin/sh /tmp/expfactory/expfactory/testing/test_builder.sh
+            /bin/sh /tmp/src/expfactory/testing/test_builder.sh
       - run:
           name: Test Experiments
           no_output_timeout: 2h
           command: |
-            cd /tmp/expfactory/expfactory && $HOME/miniconda3/bin/python -m unittest testing.test_experiment
+            export PATH=$HOME/miniconda3/bin:$PATH
+            cd /tmp/src/expfactory
+            $HOME/miniconda3/bin/python3 -m unittest testing.test_experiment
       - run:
           name: Test Client
           no_output_timeout: 2h
           command: |
-           cd /tmp/expfactory/expfactory && $HOME/miniconda3/bin/python -m unittest testing.test_client 
+           export PATH=$HOME/miniconda3/bin:$PATH
+           cd /tmp/src/expfactory
+           $HOME/miniconda3/bin/python3 -m unittest testing.test_client 
       - store_test_results:
           path: /home/circleci/out/tests
 
