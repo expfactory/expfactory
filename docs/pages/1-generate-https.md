@@ -79,7 +79,7 @@ It will prompt you for your password to log in.
 Once you’ve SSH'd into your server, you need to setup a few things.
 
 
-## Expose Ports
+### Expose Ports
 Before continuing, in the case that you are using a cloud-based host, make sure that ports 80 and 443 (for https) are both exposed. It's terrible when you actually get something working, but you can't see it because the port isn't open :) If you are using Digital Ocean, there's no firewall to begin with so the ports are already exposed (but you can add a firewall if you want to). If you aren't using Digital Ocean, we are also assuming that you've done the correct work to get a domain, and set up the A/CNAME records to support all versions of http/https and www or without.
 
 ### Install nginx
@@ -172,10 +172,10 @@ sudo service nginx start
 
 For this next step, we are still working on the host where you will run your container. What we first need to do is generate certificates, start a local web server, and ping "Let's Encrypt" to verify that we own the server, and then sign the certificates.
 
-## SSL Certificates
+### SSL Certificates
 We'll use "certbot" to install and renew certificates.
 
-### Step 1. Set some variables
+#### Step 1. Set some variables
 
 First we'll set some variables that are used in later steps.
 
@@ -186,7 +186,7 @@ DOMAIN="expfactory.dynu.net"
 
 The email you set here will be used to send you renewal reminders at 20 days, 10 days, and 1 day before expiry (super helpful!)
 
-### Step 2. Install certbot
+#### Step 2. Install certbot
 
 Certbot automates certificate generation and renewal. In other words, it makes it really easy to setup SSL.
 
@@ -196,7 +196,7 @@ sudo apt-get update
 sudo apt-get install python-certbot-nginx
 ```
 
-### Step 3. Get certificates with certbot
+#### Step 3. Get certificates with certbot
 
 Now obtain a certificate by running this command. 
 
@@ -204,7 +204,7 @@ Now obtain a certificate by running this command.
 certbot certonly --nginx -d "${DOMAIN}" -d "www.${DOMAIN}" --email "${EMAIL}" --agree-tos --redirect
 ```
 
-### Step 4. Stop nginx
+#### Step 4. Stop nginx
 
 Now we need to stop nginx because we have what we need from it!
 
@@ -212,7 +212,7 @@ Now we need to stop nginx because we have what we need from it!
 sudo service nginx stop
 ```
 
-### Step 5. Copy certs to a new location
+#### Step 5. Copy certs to a new location
 
 Now we'll move the certs to where they're expected later.
 
@@ -222,7 +222,7 @@ sudo cp /etc/letsencrypt/live/$DOMAIN/privkey.pem /etc/ssl/private/domain.key
 sudo cp /etc/letsencrypt/ssl-dhparams.pem /etc/ssl/certs/dhparam.pem
 ```
 
-### Step 6. Renewal (and remembering to renew!)
+#### Step 6. Renewal (and remembering to renew!)
 
 Certificates expire after 90 days. You'll get reminders at 20 days, 10 days, and 1 day before expiry to the email you set before. Before the cert expires, you can run this command to renew:
 
@@ -237,7 +237,7 @@ you will need to bind to these files on the host, and
 expose ports 80 and 443 too. Now it's time to generate our container!
 
 
-### The Expfactory Builder Image
+## The Expfactory Builder Image
 The provided [expfactory builder image](https://hub.docker.com/r/vanessa/expfactory-builder) will generate your Dockerfile, and from this file you can build your Docker image.  Versons (tags) 3.12 and up (including latest) have support for https. We don't build the image within the same container for the explicit purpose that you should keep a copy of the recipe Dockerfile at hand. The basic usage is to run the image, and you can either build, test, or list.
 
 ```bash
@@ -248,7 +248,7 @@ Generally, list will show you experiments provided by expfactory, build is used 
 enough detail here to build container with https. If you want more detail about installation of local experiments or other customization of the Dockerfile, you should refer to the main [generate page](/expfactory/generate). You might also look at how to [customize your container runtime](/expfactory/generate#customize-your-container).
 
 
-### Recipe Generation
+## Recipe Generation
 To generate a Dockerfile to build our custom image, we need to run expfactory in the container,
 and mount a folder to write the Dockerfile. If we are installing local experiments, they should be in this folder. The folder should not already contain a Dockerfile, and we recommend that you set this folder up with version control (a.k.a. Github). That looks like this:
 
@@ -265,7 +265,7 @@ docker run -v $HOME/my-experiment:/data \
 Finally, before you generate your recipe, in the case that you want "hard coded" defaults (e.g., set as defaults for future users) read the [custom build](/expfactory/generate#custom-conriguration) section on the main generate page to learn about the variables that you can customize.
 
 
-### Container Generation
+## Container Generation
 After we run the builder container, a Dockerfile and startscript.sh will be generated
 in the folder that we mounted at `/data`. Starting from this folder on our host, we can now build the experiment container. Note that when you have a production container you don't need to build locally each time, you can use an [automated build from a Github repository to Docker Hub](https://docs.docker.com/docker-hub/builds/) - this would mean that you can push to the repository and have the build done automatically, or that you can manually trigger it. For this tutorial, we will build locally. Here is the content of our folder on the host:
 
