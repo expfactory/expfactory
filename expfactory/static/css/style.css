@@ -558,3 +558,8 @@ iframe {
 
 }
 
+.modal-dialog {
+	top: 50%;
+	transform: translateY(-50%) !important;
+	margin: auto !important;
+}
