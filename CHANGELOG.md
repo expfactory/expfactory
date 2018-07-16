@@ -16,6 +16,7 @@ Critical items to know are:
 
 ## [v3.x](https://github.com/expfactory/expfactory/tree/master) (master)
  - added option to print version, and https configuration (3.13)
+ - documentation for labjs integration, and re-organization of integrations
  - increasing body size of nginx conf server block to 20M (3.12)
  - addition of participant variables to be set at runtime (3.11)
 **contributions**

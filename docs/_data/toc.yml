@@ -35,9 +35,3 @@
   - title: "Integrations"
     url: "/expfactory/integrations"
     slug: integrations
-    sections:
-      - title: "Contribute a Survey"
-        slug: contribute-a-survey
-      - title: "Expfactory Robots"
-        slug: expfactory-robots
-
