@@ -17,7 +17,7 @@ can use the [expfactory builder](https://expfactory.github.io/builder), demonstr
 
 ## Design Your Experiment
 
-The first thing you likely want to do is to design your experiment. Take a look at the [getting started](https://github.com/FelixHenninger/lab.js) section of the main README.md file of the LabJS Github repository. There is ample documentation about a started kit, along with a tutorial to build your first experiment. You will use the [LabJS builder interface](https://labjs.felixhenninger.com/) to design your experiment, and when you finish, the Experiment Factory (v3.0) is an export option:
+The first thing you likely want to do is to design your experiment. Take a look at the [getting started](https://github.com/FelixHenninger/lab.js) section of the main README.md file of the LabJS Github repository. There is ample documentation about a started kit, along with a tutorial to build your first experiment. You will (currently) need to use the [LabJS beta interface](https://labjs-beta-tour.netlify.com) and eventually the [LabJS builder interface](https://labjs.felixhenninger.com/) to design your experiment, and when you finish, the Experiment Factory (v3.0) is an export option:
 
 ![https://github.com/expfactory/builder-labjs/raw/master/img/export.png](https://github.com/expfactory/builder-labjs/raw/master/img/export.png)
 
