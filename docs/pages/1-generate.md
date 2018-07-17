@@ -298,7 +298,7 @@ For this first go, we aren't going to map the data folder. This way I can show y
 
 **Without SSL**
 
-Remember, the above it without https! If you want to deploy a container with https,
+Remember, the above is *without* SSL (https)! If you want to deploy an https container,
 see [these docs](/expfactory/generate-https).
 
 ```
