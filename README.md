@@ -18,7 +18,7 @@ Sochat, (2018). The Experiment Factory: Reproducible Experiment Containers. Jour
 ```
 
 ## Contributing
-We have many ways to contribute, and will nriefly provide resources here to get you started.
+We have many ways to contribute, and will briefly provide resources here to get you started.
 
 ### How to Contribute
 If you are a developer interested in working on the Experiment Factory software you should read out [contributing guidelines](.github/CONTRIBUTING.md) for details. For contributing containers and experiments, see our [user documentation](https://expfactory.github.io/expfactory/contribute). If you have any questions, please don't hesitate to [ask a question](https://www.github.com/expfactory/expfactory/issues).
