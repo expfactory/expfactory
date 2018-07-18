@@ -88,7 +88,7 @@ and name. The fields are the following:
  - **var_value** the variable_value to pass
  - **token** the subject token to pass for. If a particular combination of exp_id and token is seen twice, a warning will be issued and the later defined taken preference. If you set token to "*" it will be treated as a global variable, and set for all subject ids (also defined in the file) that do not have a previously defined value for the variable in question. 
 
-The variables will be passed to the experiment `test-parse-uri` via the URL, and it's up to the experiment to parse them with JavaScript. For example, if I am participant `789` and I start the `test-parse-uri` task, my variables will be passed in the format (shown for one and more than one variable):
+The variables will be passed to the experiment `test-parse-url` via the URL, and it's up to the experiment to parse them with JavaScript. For example, if I am participant `789` and I start the `test-parse-url` task, my variables will be passed in the format (shown for one and more than one variable):
 
 
 ```
@@ -99,7 +99,7 @@ The variables will be passed to the experiment `test-parse-uri` via the URL, and
 which corresponds to this for the file above:
 
 ```
-http://127.0.0.1/experiments/test-parse-uri?globalname=globalvalue&color=pink&words=pancakes
+http://127.0.0.1/experiments/test-parse-url?globalname=globalvalue&color=pink&words=pancakes
 ```
 
 The parameters are simply passed to the experiment, and the experiment is expected to parse them
@@ -110,7 +110,7 @@ appropriately. Since the data file is loaded at start of the container and you w
  - create the variables file with the user ids specified
  - stop the container, making sure to restart with the same database mapped.
 
-A complete example of this is provided in the [test-parse-uri repository](https://github.com/expfactory-experiments/test-parse-url/tree/master/docker)
+A complete example of this is provided in the [test-parse-url repository](https://github.com/expfactory-experiments/test-parse-url/tree/master/docker)
 and the commands are briefly summarized below.
 
 ```
