@@ -71,16 +71,17 @@ When you start your container, you will have the option to provide a comma separ
 
 ```
 exp_id,var_name,var_value,token
-test-parse-uri,globalname,globalvalue,*
-test-parse-uri,color,red,123
-test-parse-uri,color,blue,456
-test-parse-uri,color,pink,789
-test-parse-uri,words,at the thing,123
-test-parse-uri,words,omg tacos,456
-test-parse-uri,words,pancakes,789
+test-parse-url,globalname,globalvalue,*
+test-parse-url,color,red,123
+test-parse-url,color,blue,456
+test-parse-url,color,pink,789
+test-parse-url,words,at the thing,123
+test-parse-url,words,omg tacos,456
+test-parse-url,words,pancakes,789
 ```
 
-In the example above, the participants defined have tokens `123` and `456`. For any other participants, we have defined a global variable `globalname` to be `globalvalue`. The first row in the file is non negoatiable - it *must* have four fields, in that order, and name. The fields are the following:
+In the example above, the participants defined have tokens `123` and `456`. For any other participants, we have defined a global variable `globalname` to be `globalvalue`. The first row in the file is non negoatiable - it *must* have four fields, in that order, 
+and name. The fields are the following:
 
  - **exp_id** The Experiment Factory identifier that identifies the experiment
  - **var_name** The variable name to pass into the url
