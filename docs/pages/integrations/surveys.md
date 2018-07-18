@@ -55,6 +55,15 @@ Make a README to describe your survey!
 echo "My Awesome Survey!" >> README.md
 ```
 
+To build the survey you will need Docker installed.  On Ubuntu, you can do this as follows:
+
+```
+sudo apt-get install docker.io
+sudo usermod -aG docker $USER
+su - $USER
+cd /tmp/mindfulness-survey
+```
+
 The output is minimal, but when we finish, our survey is ready!
 
 ```
