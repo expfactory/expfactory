@@ -73,7 +73,7 @@ config.json  css  index.html  js  LICENSE  README.md  survey.tsv
 Now we can easily test it by opening a web browser:
 
 ```
-python -m http.server 9999
+python3 -m http.server 9999
 ```
 
 If you need to generate the `index.html` again and force overwrite, use `--force`.
