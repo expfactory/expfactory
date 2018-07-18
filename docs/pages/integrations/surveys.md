@@ -9,7 +9,7 @@ permalink: /integration-surveys
 
 A survey is (for now) just an experiment that is primarily questions. Since this is a common need for 
 researchers, we have developed a simple means to turn a tab separated file into a web-ready experiment.
-We will be using the Experiment Factory survey generator to convert a tab delimited file of questions (called `survey.tsv`) with a standard [experiment factory config.json](https://expfactory.github.io/expfactory/contribute#the-experiment-config) to generate a folder with web content to serve your experiment.
+We will be using the Experiment Factory survey generator (a [Docker container](https://hub.docker.com/r/vanessa/survey-generator/)) to convert a tab delimited file of questions (called `survey.tsv`) with a standard [experiment factory config.json](https://expfactory.github.io/expfactory/contribute#the-experiment-config) to generate a folder with web content to serve your experiment.
 
 ## Usage
 
