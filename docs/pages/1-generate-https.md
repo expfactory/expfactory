@@ -198,11 +198,13 @@ sudo apt-get install python-certbot-nginx
 
 #### Step 3. Get certificates with certbot
 
-Now obtain a certificate by running this command. 
+Now obtain a certificate by running this command.  Note that if you aren't using a container, or you aren't the root user, you might need to add `sudo`.
 
 ```bash
 certbot certonly --nginx -d "${DOMAIN}" -d "www.${DOMAIN}" --email "${EMAIL}" --agree-tos --redirect
 ```
+
+Equivalently, if your domain doesn't have `www.` you can remove the second `-d` argument.
 
 #### Step 4. Stop nginx
 
