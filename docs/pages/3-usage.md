@@ -99,7 +99,7 @@ The variables will be passed to the experiment `test-parse-uri` via the URL, and
 which corresponds to this for the file above:
 
 ```
-http://127.0.0.1/experiments/test-parse-uri?globalname=globalvar&color=pink&words=pancakes
+http://127.0.0.1/experiments/test-parse-uri?globalname=globalvalue&color=pink&words=pancakes
 ```
 
 The parameters are simply passed to the experiment, and the experiment is expected to parse them
