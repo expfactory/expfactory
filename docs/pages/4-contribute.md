@@ -55,7 +55,7 @@ The general steps are the following:
 Each of these steps is outlined in detail below.
 
 ## The experiment repository
-You will want to first make an experiment repository. The repository should contain all required files (css style sheets, javascript, and other image and media) that are required to run your experiment. If you've never used Github before, it's ok! There are plenty of [guides available](https://guides.github.com/activities/hello-world/) to learn, and this is a good time to start. So you will want to:
+You will want to first make an experiment repository. The repository should contain all required files (css style sheets, javascript, and other image and media) that are required to run your experiment. To get an idea of what your repository will end up containing, have a look at the [test task](https://github.com/expfactory-experiments/test-task), which is an experiment built with [jsPsych](https://www.jspsych.org/).  If you've never used Github before, it's ok! There are plenty of [guides available](https://guides.github.com/activities/hello-world/) to learn, and this is a good time to start. So you will want to:
 
  - if you don't have one, create a Github account
  - create a remote repository in the Github interface
