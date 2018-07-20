@@ -35,6 +35,7 @@ usage () {
                 --delim: specify a delimiter for the variables file (default is csv)
 
                 --studyid:  specify a studyid to override the default
+                --finish_url: a custom url to send the user to on completion. Default /finish
                 --randomize: select experiment order at random
                 --no-randomize: select experiment order manually in the GUI
                 --experiments: a comma separated list of experiments (manual ordering) 
@@ -58,6 +59,7 @@ fi
 
 EXPFACTORY_START="no"
 EXPFACTORY_DATABASE="filesystem"
+EXPFACTORY_FINISH_URL="/finish"
 
 while true; do
     case ${1:-} in
@@ -87,6 +89,11 @@ while true; do
             EXPFACTORY_EXPERIMENTS="${1:-}"
             shift
             export EXPFACTORY_EXPERIMENTS
+        ;;
+        --finish_url)
+            shift
+            EXPFACTORY_FINISH_URL=${1:-}
+            shift
         ;;
         --headless|headless)
             shift
@@ -154,6 +161,8 @@ while true; do
 done
 
 # Are we starting the server?
+
+export EXPFACTORY_FINISH_URL
 
 if [ "${EXPFACTORY_START}" == "yes" ]; then
 

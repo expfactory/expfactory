@@ -137,6 +137,10 @@ def next():
     # To generate redirect to experiment
     experiment = app.get_next(session)
  
+    # Redirect to a different url, if defined by experiment
+    if request.args.get('external_url') is not None:
+        return self.redirect(request.args.get('external_url'))
+
     if experiment is not None:
         app.logger.debug('Next experiment is %s' % experiment)
         template = '/experiments/%s' % experiment
@@ -178,6 +182,11 @@ def finish():
         # Relational removes token so not accessible
         app.finish_user(subid)
         clear_session()
+
+        # If there is a custom finish url, redirect there
+        if self.finish_url != "/finish":
+            return redirect(self.finish_url)
+
         return render_template('routes/finish.html')
     return redirect('/')
 

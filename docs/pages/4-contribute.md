@@ -142,6 +142,15 @@ Great! Once you are here, you have a folder with a working experiment. This is n
 
 You can add whatever metadata you want to the config.json, and you can also add labels to the container to be programatically accessible (more later on this). You should not keep a version in this metadata file, but instead use Github tags and commits. This information will be added automatically upon build of your experiment container. We also **strongly** encourate you to add a LICENSE file to your work.
 
+## Runtime Variables
+
+We have a small set of variables that your experiment can set in the URL (meaning they
+go in as a GET request) to direct flow of the experiments.
+
+| Variable        | Description           | Default  |
+| ------------- |:-------------:| -----:|
+| external_url      | a url to redirect to, instead of the next experiment | not set (/next or /finish) |
+
 
 ## Test the Experiment
 Your experiment will be tested when you submit a pull request (as we just showed above). However you can run the tests before filing the PR. There are three kinds of tests, testing an **experiment** testing a **contribution**, and testing an **install**. You likely want to do the first and second, minimally, and ideally the third:

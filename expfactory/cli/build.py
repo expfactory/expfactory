@@ -62,6 +62,7 @@ def main(args,parser,subparser):
     # For now, only one database provided
     database = args.database
     studyid = args.studyid
+    finish_url = args.finish_url
     experiments = args.experiments
     branch = "-b %s" %os.environ.get('EXPFACTORY_BRANCH','master')
 
@@ -69,10 +70,11 @@ def main(args,parser,subparser):
     if args.headless is True:
         headless = "true"
 
-    template = sub_template(template,"{{studyid}}",studyid)
-    template = sub_template(template,"{{database}}",database)
-    template = sub_template(template,"{{headless}}",headless)
-    template = sub_template(template,"{{branch}}",branch)
+    template = sub_template(template,"{{studyid}}", studyid)
+    template = sub_template(template,"{{database}}", database)
+    template = sub_template(template,"{{headless}}", headless)
+    template = sub_template(template,"{{branch}}", branch)
+    template = sub_template(template,"{{finish_url}}", finish_url)
 
     if args.headless is True:
         bot.info("Headless build detected, you will need to generate tokens for application entry with expfactory users --new")
@@ -142,4 +144,4 @@ def main(args,parser,subparser):
 
     template = sub_template(template,"{{experiments}}",apps)
     outfile = write_file(args.output,template)
-    bot.log("Recipe written to %s" %outfile)
+    bot.log("Recipe written to %s" % outfile)

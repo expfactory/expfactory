@@ -123,6 +123,10 @@ def get_parser():
                          help="output name for Dockerfile (if you want a custom path)", 
                          type=str, required=True)
 
+    build.add_argument("--finish_url", dest='finish_url', 
+                        help="url to redirect to upon container finish.",
+                        type=str, default="/finish")
+
     build.add_argument("--input",'-i', dest='input', 
                          help="use custom Dockerflie template", 
                          type=str, default=None)
