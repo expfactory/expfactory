@@ -18,6 +18,7 @@ Below, we will summarize the variables that can be set at runtime:
 | ------------- |:-------------:| -----:|
 | database      | the database to store response data | filesystem |
 | headless  | require pre-generated tokens for headless use  |  flag | 
+| --no-cache  | set max file age to 0, disabling static file cache  |  flag | 
 | randomize     | present the experiments in random order  |  flag | 
 | no-randomize     | present the experiments in random order  |  flag | 
 | experiments  | comma separated list of experiments to expose  |  [] | 
