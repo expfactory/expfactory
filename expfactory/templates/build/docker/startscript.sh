@@ -35,9 +35,11 @@ usage () {
                 --delim: specify a delimiter for the variables file (default is csv)
 
                 --studyid:  specify a studyid to override the default
+                --finish_url: a custom url to send the user to on completion. Default /finish
                 --randomize: select experiment order at random
                 --no-randomize: select experiment order manually in the GUI
                 --experiments: a comma separated list of experiments (manual ordering) 
+                --no-cache: set the max file age to 0, disabling static file caching
 
          Examples:
 
@@ -58,6 +60,7 @@ fi
 
 EXPFACTORY_START="no"
 EXPFACTORY_DATABASE="filesystem"
+EXPFACTORY_FINISH_URL="/finish"
 
 while true; do
     case ${1:-} in
@@ -88,6 +91,11 @@ while true; do
             shift
             export EXPFACTORY_EXPERIMENTS
         ;;
+        --finish_url)
+            shift
+            EXPFACTORY_FINISH_URL=${1:-}
+            shift
+        ;;
         --headless|headless)
             shift
             EXPFACTORY_HEADLESS="true"
@@ -104,6 +112,11 @@ while true; do
             ls /scif/apps -1
             echo
             exit
+        ;;
+        --no-cache)
+            shift
+            EXPFACTORY_NOCACHE="true"
+            export EXPFACTORY_NOCACHE
         ;;
         --randomize)
             shift
@@ -154,6 +167,8 @@ while true; do
 done
 
 # Are we starting the server?
+
+export EXPFACTORY_FINISH_URL
 
 if [ "${EXPFACTORY_START}" == "yes" ]; then
 

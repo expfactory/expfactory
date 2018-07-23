@@ -18,10 +18,12 @@ Below, we will summarize the variables that can be set at runtime:
 | ------------- |:-------------:| -----:|
 | database      | the database to store response data | filesystem |
 | headless  | require pre-generated tokens for headless use  |  flag | 
+| --no-cache  | set max file age to 0, disabling static file cache  |  flag | 
 | randomize     | present the experiments in random order  |  flag | 
 | no-randomize     | present the experiments in random order  |  flag | 
 | experiments  | comma separated list of experiments to expose  |  [] | 
 | studyid | set the studyid at runtime  |  expfactory |
+| finish_url | a custom url to redirect to after finish | /finish |
 
 If you have variables to set on a per-subject basis, then you can also define these
 with a custom variables file. See [participant variables](#participant-variables)
@@ -39,6 +41,20 @@ docker run -v /tmp/my-experiment/data/:/scif/data \
            -d -p 80:80 \
            expfactory/experiments start
 ```
+
+### Custom Finish URL
+If you don't want to show a default "Thank you!" screen upon completion, you can 
+set a custom URL to redirect to after the participant completes the experiment. This
+comes down to saving data, and then redirecting to this url.
+
+```bash
+docker run -v /tmp/my-experiment/data/:/scif/data \
+           -d -p 80:80 \
+           expfactory/experiments start --finish_url https://www.google.com
+```
+
+You can also set the `external_url` parameter for any experiment to break away
+from an experiment at any time.
 
 ### Custom Databases
 Here is how you would specify a different studyid. The study id is only used for a folder name (in the case of a fileystem save) or an sqlite database name (for sqlite3 database):

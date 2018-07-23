@@ -61,7 +61,7 @@ EXPFACTORY_REGISTRY = getenv("EXPFACTORY_REGISTRY_BASE",
 EXPFACTORY_LIBRARY = "%s/experiments/library.json" %(EXPFACTORY_REGISTRY)
 
 EXPFACTORY_SERVER = getenv('EXPFACTORY_SERVER', 'localhost')
-
+EXPFACTORY_NOCACHE = convert2boolean(getenv('EXPFACTORY_NOCACHE', False))
 
 #######################################################################
 # Expfactory Database
@@ -81,6 +81,7 @@ EXPFACTORY_SUBID = getenv('EXPFACTORY_STUDY_ID', 'expfactory')
 EXPFACTORY_EXPERIMENTS = getenv('EXPFACTORY_EXPERIMENTS', [])
 EXPFACTORY_RANDOMIZE = convert2boolean(getenv('EXPFACTORY_RANDOM', True))
 EXPFACTORY_HEADLESS = convert2boolean(getenv('EXPFACTORY_HEADLESS', False))
+EXPFACTORY_FINISH_URL = getenv('EXPFACTORY_FINISH_URL', '/finish')
 
 # Runtime Variables
 EXPFACTORY_RUNTIME_VARS = getenv('EXPFACTORY_RUNTIME_VARS')

@@ -28,7 +28,7 @@ from expfactory.experiment import (
 )
 
 from expfactory.database import *
-from flask import Flask
+from flask import ( Flask, redirect )
 from flask_wtf.csrf import (
     CSRFProtect, 
     generate_csrf
@@ -86,6 +86,7 @@ class EFServer(Flask):
         self.base = EXPFACTORY_BASE
         self.randomize = EXPFACTORY_RANDOMIZE
         self.headless = EXPFACTORY_HEADLESS
+        self.finish_url = EXPFACTORY_FINISH_URL
 
         # Generate variables, if they exist
         self.vars = generate_runtime_vars() or None
@@ -97,6 +98,7 @@ class EFServer(Flask):
         final = "\n".join(list(self.lookup.keys()))       
 
         bot.log("Headless mode: %s" % self.headless)
+        bot.log("Finish URL: %s" % self.finish_url)
         bot.log("User has selected: %s" % self.selection)
         bot.log("Experiments Available: %s" %"\n".join(available))
         bot.log("Randomize: %s" % self.randomize)
@@ -118,6 +120,18 @@ class EFServer(Flask):
             else:
                 next = experiments[0]
         return next
+
+
+    def redirect(self, external_url):
+        '''return a redirect to a different view, and log the url for the user
+        
+           Parameters
+           ==========
+           external_url: the external url to redirect to
+
+        '''
+        self.logger.debug('Redirect requested to %s' % external_url)  
+        return redirect(external_url)
 
 
     def finish_experiment(self, session, exp_id):
@@ -148,6 +162,10 @@ EFServer.restart_user = restart_user
 
 app = EFServer(__name__)
 app.config.from_object('expfactory.config')
+
+# Don't cache static resources
+if EXPFACTORY_NOCACHE is True:
+    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 # EXPERIMENTS #################################################################
 
