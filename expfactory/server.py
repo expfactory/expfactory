@@ -163,6 +163,10 @@ EFServer.restart_user = restart_user
 app = EFServer(__name__)
 app.config.from_object('expfactory.config')
 
+# Don't cache static resources
+if EXPFACTORY_NOCACHE is True:
+    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+
 # EXPERIMENTS #################################################################
 
 # Cors

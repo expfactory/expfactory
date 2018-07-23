@@ -61,7 +61,7 @@ EXPFACTORY_REGISTRY = getenv("EXPFACTORY_REGISTRY_BASE",
 EXPFACTORY_LIBRARY = "%s/experiments/library.json" %(EXPFACTORY_REGISTRY)
 
 EXPFACTORY_SERVER = getenv('EXPFACTORY_SERVER', 'localhost')
-
+EXPFACTORY_NOCACHE = convert2boolean(getenv('EXPFACTORY_NOCACHE', False))
 
 #######################################################################
 # Expfactory Database

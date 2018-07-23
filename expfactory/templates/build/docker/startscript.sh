@@ -39,6 +39,7 @@ usage () {
                 --randomize: select experiment order at random
                 --no-randomize: select experiment order manually in the GUI
                 --experiments: a comma separated list of experiments (manual ordering) 
+                --no-cache: set the max file age to 0, disabling static file caching
 
          Examples:
 
@@ -111,6 +112,11 @@ while true; do
             ls /scif/apps -1
             echo
             exit
+        ;;
+        --no-cache)
+            shift
+            EXPFACTORY_NOCACHE="true"
+            export EXPFACTORY_NOCACHE
         ;;
         --randomize)
             shift
