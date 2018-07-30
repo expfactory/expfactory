@@ -96,7 +96,7 @@ class LibraryValidator:
             if not isinstance(self.metadata['tags'],list):
                 return notvalid('%s: tags must be a list' % name)
             if not re.search("(\w+://)(.+@)*([\w\d\.]+)(:[\d]+){0,1}/*(.*)", self.metadata['github']):
-                return notvalid('%s is not a valid URL.' %(content['github']))
+                return notvalid('%s is not a valid URL.' %(self.metadata['github']))
 
         return True
 
