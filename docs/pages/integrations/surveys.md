@@ -32,9 +32,9 @@ To generate the survey, we will run [the container](https://hub.docker.com/r/van
 If we run without specifying `start` we will get a help prompt. But really we don't need to look at it,
 because most of the arguments are set in the image. We just need to make sure that 
 
- - 1. the `config.json` and `survey.tsv` are in the present working directory
- - 2. we specify `start`
- - 3. we map the `$PWD` (or where our survey and config are) to `/data` in the container
+ 1. the `config.json` and `survey.tsv` are in the present working directory
+ 2. we specify `start`
+ 3. we map the `$PWD` (or where our survey and config are) to `/data` in the container
 
 Let's just wget the needed survey.tsv and config.json, because the repository has the completed survey.
 
