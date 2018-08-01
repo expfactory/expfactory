@@ -127,7 +127,7 @@ If you have experiments on your local machine where an experiment is defined bas
 
 Then you can treat a local path to an experiment folder as an experiment in the list to give to build. Since we will be working from a mapped folder in a Docker container, this comes down to providing the experiment name under the folder it is mapped to, `/data`. Continue reading for an example
 
-## Recipe Generation
+## Dockerfile Recipe Generation
 To generate a Dockerfile to build our custom image, we need to run expfactory in the container,
 and mount a folder to write the Dockerfile. If we are installing local experiments, they should be in this folder. The folder
 should not already contain a Dockerfile, and we recommend that you set this folder up with version control (a.k.a. Github). That looks like this:
@@ -210,12 +210,22 @@ and your experiments will be copied fully there to still satisfy this condition,
 
 Finally, before you generate your recipe, in the case that you want "hard coded" defaults (e.g., set as defaults for future users) read the [custom build](#custom-conriguration) section below to learn about the variables that you can customize. If not, then rest assured that these values can be specified when a built container is started.
 
-### Example: Repeated Measures Designs
+### Examples 
 
-A common scenario is an experiment where you use the same task multiple times.  For example, suppose you want to measure the 
-effect of two different tasks on the [Attention Network Test (ANT)](https://github.com/expfactory-experiments/attention-network-task).  You want a container that runs a baseline ANT, one of the two tasks (hint: you can assign participants to each task using participant variables), and then runs the ANT for a second time.  Because each task requires a unique name, you can use local experiments to build a container that runs the ANT twice.
+**Repeated Measures Designs**
 
-Generate your Dockerfile with the tasks that you want to run between the two ANT measurements.  Add the following lines to your Dockerfile to build the two ant tasks: 
+A common scenario is an experiment where you use the same task multiple times.  
+For example, suppose:
+
+ - you want to measure the effect of two different task variations of the [Attention Network Test (ANT)](https://github.com/expfactory-experiments/attention-network-task).
+ - you can assign participants to each task using [participant variables](https://expfactory.github.io/expfactory/usage#participant-variables).
+  
+Thus, you would want a container that runs a baseline ANT, one of the two tasks, and then runs the ANT for a second time.  Because each task requires a unique name, you can use local experiments to build a container that runs the ANT twice.
+
+Generate your Dockerfile with the tasks that you want to run between the two ANT measurements.  
+What we are basically going to do is copy an entire folder, and rename the experiment id
+to correspond with the renamed folder. This comes down to first adding the 
+following lines to your Dockerfile to build the two ant tasks: 
 
 ```
 LABEL EXPERIMENT_ant1 /scif/apps/ant1
@@ -244,7 +254,8 @@ Set `exp_id` to match the folder name in `ant1/config.json`:
 
 Repeat this cloning/renaming process, giving the second folder the name `ant2`.
 
-You can now build a container with two ANT tasks which you can run before and after your treatment tasks.  You can repeat this process as many times as you like in case you need more than two measurements from the same task/survey.
+You can now build a container with two ANT tasks that you can run before and after your treatment tasks.  You can repeat this process as many times as you like in case you need more than two measurements from the same task/survey.
+
 
 ## Container Generation
 

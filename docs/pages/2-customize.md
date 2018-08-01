@@ -7,6 +7,9 @@ toc: true
 ---
 
 # Custom Configuration
+
+> Note that these pages describe variables to customize the experiment container. See [participant variables](https://expfactory.github.io/expfactory/usage#participant-variables) for customizing experiments.
+
 You have probably just reviewed the basics of [generation of a container](/expfactory/generate) and now are ready to customize it. For example, if you want more specificity to configure your container, you might want to customize the database or experiment variables. There are **two** kinds of customization, the customization that happens **before** you build the container (for example, the experiments you choose to install, period, and any defaults you want set for running them) and the customization that happens at runtime (meaning defining the database type when you start the container).
 
 If you change the defaults, this means that any users that run your container (without specifying these variables) will get these as default. If you want your container to be most usable by others, we recommend that you don't do this, and keep the defaults as the most flexible types - a flat file system database and general study id (expfactory).
