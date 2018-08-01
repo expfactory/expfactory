@@ -214,13 +214,14 @@ Finally, before you generate your recipe, in the case that you want "hard coded"
 
 **Repeated Measures Designs**
 
-A common scenario is an experiment where you use the same task multiple times.  
-For example, suppose:
+A common scenario is an experiment where you use the same task multiple times. 
+For expfactory, you would want the same task associated with a different experiment identifier (`exp_id`) 
+and separate blocks in the battery of experiments. For example, suppose:
 
- - you want to measure the effect of two different task variations of the [Attention Network Test (ANT)](https://github.com/expfactory-experiments/attention-network-task).
+ - you want to measure the effect of two different task variations or blocks of the [Attention Network Test (ANT)](https://github.com/expfactory-experiments/attention-network-task).
  - you can assign participants to each task using [participant variables](https://expfactory.github.io/expfactory/usage#participant-variables).
   
-Thus, you would want a container that runs a baseline ANT, one of the two tasks, and then runs the ANT for a second time.  Because each task requires a unique name, you can use local experiments to build a container that runs the ANT twice.
+Thus, you would want a container that runs a baseline ANT, possibly other tasks, and then runs the ANT for a second time.  Because each task requires a unique name, you can use local experiments to build a container that runs the ANT twice.
 
 Generate your Dockerfile with the tasks that you want to run between the two ANT measurements.  
 What we are basically going to do is copy an entire folder, and rename the experiment id
