@@ -478,7 +478,7 @@ docker run -p 80:80 expfactory/experiments \
            start
 ```
 
-If you just specify `sqlite` the file will save to a default at `/scif/data/<studyid>.db` You can also specify a custom database uri that starts with sqlite, like `sqlite:////tmp/database.db` that will be generated in the container (and you can optionally map to the host).vFor example, here is my sqlite3 database under `/scif/data`, from within the container:
+If you just specify `sqlite` the file will save to a default at `/scif/data/<studyid>.db` You can also specify a custom database uri that starts with sqlite, like `sqlite:////tmp/database.db` that will be generated in the container (and you can optionally map to the host). For example, here is my sqlite3 database under `/scif/data`, from within the container:
 
 ```
 ls /scif/data
