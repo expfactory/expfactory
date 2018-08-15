@@ -23,7 +23,7 @@ first row, the header:
  - `required`: is a boolean (0 or 1) to indicate if the participant is required to answer the question (1) or not (0) before moving on in the survey.
  - `page_number`: determines the page that the question will be rendered on. If you look at an example survey you will notice that questions are separated by Next / Previous tabs, and the final page has a Finish button. It was important for us to give control over pagination to preserve how some “old school” questionnaires were presented to participants.
  - `option_text`: For radio and checkboxes, you are asking the user to select from one or more options. These should be the text portion (what the user sees on the screen), and separated by commas (e.g, Yes,No,Sometimes. Note: these fields are not required for instructions or textbox types, and can be left as empty tabs.
- - `option_values`: Also for radio and checkboxes, these are the data values that correspond to the text. For example, the option_text Yes,No may correspond to 1,0. This field is typically blank for instructions or textbox types.
+ - `option_values`: For radio buttons, these are the data values that correspond to the text. For example, the option_text Yes,No may correspond to 1,0. For checkboxes, the value will be a copy of the question if (and only if) the box is checked. This field is typically blank for instructions or textbox types.
 
 We have provided an folder with examples ([state-mindfulness-survey](https://github.com/expfactory-experiments/state-mindfulness-survey)) that you can use to generate a new survey.
 
