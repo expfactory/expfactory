@@ -61,7 +61,7 @@ from expfactory.forms import EntryForm
 
 # HEADLESS LOGIN ###############################################################
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['POST', 'GET'])
 def login():
 
     # Only allowed to login via post from entry (headless) url
@@ -74,8 +74,12 @@ def login():
 
     subid = session.get('subid')
     if not subid:
-        if form.validate_on_submit():
-            token = form.token.data
+        if form.validate_on_submit() or request.args.get('token') is not None:	
+            if form.validate_on_submit():		
+                token = form.token.data
+            else:
+                token = request.args.get('token')
+                session['experiments'] = [os.path.basename(x) for x in app.experiments]
 
             subid = app.validate_token(token)
             if subid is None:
