@@ -193,7 +193,7 @@ test_builder: &test_builder
 test_expfactory: &test_expfactory
   name: Test Expfactory
   command: |
-    cd /root/repo
+    cd /root/repo/expfactory
     python -m unittest testing.test_experiment
     python -m unittest testing.test_client 
 
