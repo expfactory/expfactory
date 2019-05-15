@@ -129,7 +129,7 @@ install_deps: &install_deps
   command: |
       apk update
       apk add pigz
-      apk add libcurl
+      apk add wget
 
 install_python_3: &install_python_3
   name: install Python 3.5 dependencies
@@ -175,8 +175,11 @@ test_builder: &test_builder
     docker run -d --name experiments-sqlite expfactory/experiments --database sqlite --headless start
 
     # HTTP/1.1 200 OK
-    apk update && apk add curl libcurl
-    curl -I localhost | grep 200
+    response=$(wget --server-response http://localhost 2>&1 | awk '/^  HTTP/{print $2}')
+    echo ${response}
+    if [ "${response}" != "200" ]; then
+        echo "Invalid response, should be 200"
+    fi
     cd /root/repo
 
 
