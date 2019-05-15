@@ -155,8 +155,27 @@ test_builder: &test_builder
   name: Test Expfactory Builder
   command: |
     python --version
+    mkdir -p /tmp/data && cd /tmp/data
+    echo "Testing expfactory-builder"
+
+    # Run detached container, and create recipe
+    docker run --name builder --entrypoint bash -dt vanessa/expfactory-builder-ci
+    docker exec builder /bin/bash /entrypoint.sh build test-task
+    docker cp builder:/data/Dockerfile Dockerfile
+    docker stop builder
+    echo "Contents of /tmp/data"
+    ls
+
+    echo "Building container"
+    docker build -t expfactory/experiments .
+    echo "Start [filesystem][sqlite]"
+    docker run -d -p 80:80 --name experiments-fs expfactory/experiments --headless start
+    docker run -d --name experiments-sqlite expfactory/experiments --database sqlite --headless start
+
+    # HTTP/1.1 200 OK
+    curl -I localhost | grep 200
     cd /root/repo
-    /bin/sh expfactory/testing/test_builder.sh
+
 
 test_expfactory: &test_expfactory
   name: Test Expfactory

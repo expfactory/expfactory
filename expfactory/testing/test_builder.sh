@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# See .circleci/config.yml for the version that is run on CircleCI
+
 echo "Testing expfactory-builder"
 
 mkdir -p /tmp/data && cd /tmp/data
