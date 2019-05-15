@@ -176,8 +176,12 @@ test_builder: &test_builder
     # Get the hostname
     container=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' experiments-fs;)
 
+    echo "Running container is at ${container}"
+
     # HTTP/1.1 200 OK
-    response=$(docker run --rm byrnedo/alpine-curl -I ${container} | grep 200)
+    docker pull byrnedo/alpine-curl
+    response=$(docker run byrnedo/alpine-curl -I ${container} | grep 200)
+    echo "Response is ${response}"
     if [ "${response}" != "HTTP/1.1 200 OK" ]; then
         echo "Bad response, should be HTTP/1.1 200 OK"
         exit 1;
