@@ -127,7 +127,7 @@ build_docker_image: &build_docker_image
 install_deps: &install_deps
   name: Install dependencies
   command: |
-      apk update && apk add --no-cache pigz
+      apk update && apk add --no-cache pigz curl
 
 
 install_python_3: &install_python_3
