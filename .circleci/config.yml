@@ -60,14 +60,11 @@ workflows:
                    done
                    echo "Version for Docker tag is ${DOCKER_TAG}"
                    docker tag vanessa/expfactory-builder:base vanessa/expfactory-builder:base-v${DOCKER_TAG}
-            - run:
-                name: Generate Builder (not base)
-                command: |
-                    echo "PWD is ${PWD}"
-                    ls
-                    cd expfactory/templates/build/docker/builder
-                    docker build --no-cache -t vanessa/expfactory-builder .
-                    docker tag vanessa/expfactory-builder vanessa/expfactory-builder:${DOCKER_TAG}
+                   echo "PWD is ${PWD}"
+                   ls
+                   cd expfactory/templates/build/docker/builder
+                   docker build --no-cache -t vanessa/expfactory-builder .
+                   docker tag vanessa/expfactory-builder vanessa/expfactory-builder:${DOCKER_TAG}
 
 
 install: &install
