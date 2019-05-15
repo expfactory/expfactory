@@ -43,8 +43,7 @@ workflows:
                 name: Generate Builder (not base)
                 command: |
                     echo "PWD is ${PWD}"
-                    ls
-                    cd /tmp/src/expfactory/templates/build/docker/builder
+                    cd expfactory/templates/build/docker/builder
                     docker build --no-cache -t vanessa/expfactory-builder .
 
   # This workflow will deploy images on merge to master only
@@ -71,7 +70,7 @@ workflows:
                 command: |
                     echo "PWD is ${PWD}"
                     ls
-                    cd /tmp/src/expfactory/templates/build/docker/builder
+                    cd expfactory/templates/build/docker/builder
                     docker build --no-cache -t vanessa/expfactory-builder .
                     docker tag vanessa/expfactory-builder vanessa/expfactory-builder:${DOCKER_TAG}
 
@@ -127,7 +126,7 @@ build_docker_image: &build_docker_image
 install_deps: &install_deps
   name: Install dependencies
   command: |
-      apt-get update && apt-get install -y pigz
+      apk add -y pigz
 
 
 install_python_3: &install_python_3
