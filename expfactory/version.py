@@ -1,6 +1,6 @@
 '''
 
-Copyright (c) 2017-2018, Vanessa Sochat
+Copyright (c) 2017-2019, Vanessa Sochat
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
-__version__ = "3.13"
+__version__ = "3.14"
 AUTHOR = 'Vanessa Sochat'
 AUTHOR_EMAIL = 'vsochat@stanford.edu'
 NAME = 'expfactory'
@@ -38,7 +38,6 @@ PACKAGE_URL = "http://www.github.com/expfactory/expfactory"
 KEYWORDS = 'docker container reproducible behavior neuroscience experiment factory'
 DESCRIPTION = "software to generate a reproducible container battery of experiments."
 LICENSE = "LICENSE"
-
 
 INSTALL_REQUIRES = (
     ('flask', {'min_version': '0.12'}),
