@@ -182,7 +182,8 @@ test_builder: &test_builder
     docker pull byrnedo/alpine-curl
     response=$(docker run byrnedo/alpine-curl -I ${container} | grep 200)
     echo "Response is ${response}"
-    if [ "${response}" != "HTTP/1.1 200 OK" ]; then
+
+    if [[ $response != *"HTTP/1.1 200 OK"* ]]; then
         echo "Bad response, should be HTTP/1.1 200 OK"
         exit 1;
     fi
