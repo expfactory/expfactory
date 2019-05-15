@@ -162,6 +162,7 @@ test_builder: &test_builder
     docker run --name builder --entrypoint bash -dt vanessa/expfactory-builder-ci
     docker exec builder /bin/bash /entrypoint.sh build test-task
     docker cp builder:/data/Dockerfile Dockerfile
+    docker cp builder:/data/startscript.sh startscript.sh
     docker stop builder
     echo "Contents of /tmp/data"
     ls
