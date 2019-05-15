@@ -10,7 +10,7 @@ can be found here. The order of operations works as follows:
        case that required = True. A required = True variable not found
        will system exit with an error.
 
-Copyright (c) 2017, Vanessa Sochat
+Copyright (c) 2017-2019, Vanessa Sochat
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -51,9 +51,9 @@ import pwd
 import sys
 
 
-#######################################################################
+################################################################################
 # Expfactory Registry
-#######################################################################
+################################################################################
 
 EXPFACTORY_REGISTRY = getenv("EXPFACTORY_REGISTRY_BASE",
                              default="https://expfactory.github.io")
@@ -63,9 +63,9 @@ EXPFACTORY_LIBRARY = "%s/experiments/library.json" %(EXPFACTORY_REGISTRY)
 EXPFACTORY_SERVER = getenv('EXPFACTORY_SERVER', 'localhost')
 
 
-#######################################################################
+################################################################################
 # Expfactory Database
-#######################################################################
+################################################################################
 
 EXPFACTORY_LOGS = getenv('EXPFACTORY_LOGS', '/scif/logs')
 EXPFACTORY_DATABASE = getenv('EXPFACTORY_DATABASE', 'filesystem')
@@ -73,9 +73,9 @@ EXPFACTORY_BASE = getenv('EXPFACTORY_BASE', '/scif/apps')
 EXPFACTORY_DATA = getenv('EXPFACTORY_DATA', '/scif/data')
 
 
-#######################################################################
+################################################################################
 # Expfactory Experiments
-#######################################################################
+################################################################################
 
 EXPFACTORY_SUBID = getenv('EXPFACTORY_STUDY_ID', 'expfactory')
 EXPFACTORY_EXPERIMENTS = getenv('EXPFACTORY_EXPERIMENTS', [])
@@ -87,9 +87,9 @@ EXPFACTORY_RUNTIME_VARS = getenv('EXPFACTORY_RUNTIME_VARS')
 EXPFACTORY_RUNTIME_DELIM = getenv('EXPFACTORY_RUNTIME_DELIM', ',')
 
 
-#######################################################################
+################################################################################
 # Formatting
-#######################################################################
+################################################################################
 
 COLORIZE = getenv("EXPFACTORY_COLORIZE", default=None)
 if COLORIZE is not None:

@@ -29,7 +29,7 @@ RUN cp expfactory/config_dummy.py expfactory/config.py && \
     chmod u+x /opt/expfactory/script/generate_key.sh && \
     /bin/bash /opt/expfactory/script/generate_key.sh /opt/expfactory/expfactory/config.py
 RUN python3 setup.py install
-RUN python3 -m pip install pyaml    pymysql psycopg2
+RUN python3 -m pip install pyaml    pymysql psycopg2==2.7.5
 RUN apt-get clean          # tests, mysql,  postgres
 
 ########################################

@@ -3,7 +3,7 @@
 '''
 Test experiments
 
-Copyright (c) 2017, Vanessa Sochat
+Copyright (c) 2017-2019, Vanessa Sochat
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -48,8 +48,8 @@ class TestExperiment(unittest.TestCase):
     def setUp(self):
         self.pwd = get_installdir()
         self.battery_folder = "%s/testing/data" %self.pwd
-        self.experiment = os.path.abspath("%s/testing/data/test-task/" %self.pwd)
-        self.bad_experiment = os.path.abspath("%s/testing/data/not_an_experiment/" %self.pwd)
+        self.experiment = os.path.abspath("%s/testing/data/test-task/" % self.pwd)
+        self.bad_experiment = os.path.abspath("%s/testing/data/not_an_experiment/" % self.pwd)
         self.tmpdir = tempfile.mkdtemp()
 
     def tearDown(self):

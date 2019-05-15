@@ -1,6 +1,6 @@
 '''
 
-Copyright (c) 2017-2018, Vanessa Sochat
+Copyright (c) 2017-2019, Vanessa Sochat
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
-__version__ = "3.13"
+__version__ = "3.14"
 AUTHOR = 'Vanessa Sochat'
 AUTHOR_EMAIL = 'vsochat@stanford.edu'
 NAME = 'expfactory'
@@ -39,14 +39,20 @@ KEYWORDS = 'docker container reproducible behavior neuroscience experiment facto
 DESCRIPTION = "software to generate a reproducible container battery of experiments."
 LICENSE = "LICENSE"
 
-
 INSTALL_REQUIRES = (
     ('flask', {'min_version': '0.12'}),
-    ('flask-restful', {'min_version': None}),
-    ('flask-blueprint',{'min_version': None}),
-    ('Flask-WTF', {'min_version': None}),
-    ('Flask-SQLAlchemy', {'min_version': None}),
-    ('flask-cors', {'min_version': None}),
+    ('flask-restful', {'min_version': "0.3.6"}),
+    ('flask-blueprint',{'exact_version': "1.2.2"}),
+    ('Flask-WTF', {'min_version': "0.14.2"}),
+    ('Flask-SQLAlchemy', {'min_version': "2.3.2"}),
+    ('flask-cors', {'min_version': "3.0.6"}),
     ('requests', {'min_version': '2.12.4'}),
     ('retrying', {'min_version': '1.3.3'})
 )
+
+# Original working versions, in case needed
+# Flask-Cors==3.0.6
+# Flask-RESTful==0.3.6
+# Flask-SQLAlchemy==2.3.2
+# Flask-WTF==0.14.2
+# flask-blueprint==1.2.2

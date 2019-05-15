@@ -2,9 +2,9 @@ from setuptools import setup, find_packages
 import codecs
 import os
 
-##########################################################################################
-# HELPER FUNCTIONS #######################################################################
-##########################################################################################
+################################################################################
+# HELPER FUNCTIONS #############################################################
+################################################################################
 
 def get_lookup():
     '''get version by way of expfactory.version, returns a 
@@ -30,12 +30,12 @@ def get_requirements(lookup=None):
         module_name = module[0]
         module_meta = module[1]
         if "exact_version" in module_meta:
-            dependency = "%s==%s" %(module_name,module_meta['exact_version'])
+            dependency = "%s==%s" %(module_name, module_meta['exact_version'])
         elif "min_version" in module_meta:
             if module_meta['min_version'] == None:
                 dependency = module_name
             else:
-                dependency = "%s>=%s" %(module_name,module_meta['min_version'])
+                dependency = "%s>=%s" %(module_name, module_meta['min_version'])
         install_requires.append(dependency)
     return install_requires
 
@@ -58,9 +58,9 @@ LICENSE = lookup['LICENSE']
 with open('README.md') as filey:
     LONG_DESCRIPTION = filey.read()
 
-##########################################################################################
-# MAIN ###################################################################################
-##########################################################################################
+################################################################################
+# MAIN #########################################################################
+################################################################################
 
 
 if __name__ == "__main__":
@@ -91,7 +91,6 @@ if __name__ == "__main__":
               'Topic :: Software Development',
               'Topic :: Scientific/Engineering',
               'Operating System :: Unix',
-              'Programming Language :: Python :: 2.7',
               'Programming Language :: Python :: 3',
           ],
-          entry_points = {'console_scripts': [ 'expfactory=expfactory.cli:main' ] })
+          entry_points = {'console_scripts': ['expfactory=expfactory.cli:main']})
