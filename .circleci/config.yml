@@ -12,11 +12,6 @@ workflows:
             branches:
               ignore: 
                 - master
-      - test-python-2:
-          filters:
-            branches:
-              ignore:
-                - master
 
   # This workflow will be run on all branches but master (to test)
   build_without_publishing_job:
@@ -225,39 +220,6 @@ jobs:
          paths:
             - /tmp/cache/container.tar.gz
       - run: *install_python_3
-      - run: *install
-      - run: *test_builder
-      - run: *test_expfactory
-      - store_test_results:
-          path: /root/out/tests
-
-  test-python-2:
-    docker:
-      - image: docker:18.01.0-ce-git
-    environment:
-      - TEST_RUN_FOLDER: /tmp
-      - CONTAINER_NAME: vanessa/expfactory-builder-ci
-    working_directory: ~/repo
-    steps:
-      - restore_cache:
-          keys:
-            - docker-v1-{{ .Branch }}-{{ epoch }}
-            - docker-v1-{{ .Branch }}-
-            - docker-v1-master-
-            - docker-v1-
-          paths:
-            - /tmp/cache/container.tar.gz
-      - checkout
-      - setup_remote_docker
-      - run: *install_deps
-      - run: *load_docker_cache
-      - run: *build_docker_image
-      - run: *docker_save
-      - save_cache:
-         key: docker-v1-{{ .Branch }}-{{ epoch }}
-         paths:
-            - /tmp/cache/container.tar.gz
-      - run: *install_python_2
       - run: *install
       - run: *test_builder
       - run: *test_expfactory

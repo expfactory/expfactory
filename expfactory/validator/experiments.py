@@ -135,7 +135,7 @@ class ExperimentValidator:
             # Field is present, check type
             else:
                 if not isinstance(config[field], ftype):
-                    return notvalid("%s: invalid type, must be %s." %(name,str(ftype)))
+                    return notvalid("%s:%s invalid type, must be %s." %(name, field, str(ftype)))
 
             # Expid gets special treatment
             if field == "exp_id" and validate_folder is True:
@@ -165,15 +165,15 @@ class ExperimentValidator:
                  2: not required, warning      
                 type: indicates the variable type
         '''
-        return [("name",1,str),   # required
-                ("time",1,int), 
-                ("url",1,str), 
-                ("description",1, str),
-                ("instructions",1, str),
-                ("exp_id",1,str),
+        return [("name", 1, str),   # required
+                ("time", 1, int), 
+                ("url", 1, str), 
+                ("description", 1, str),
+                ("instructions", 1, str),
+                ("exp_id", 1, str),
 
-                ("install",0, list),  # list of commands to install / build experiment 
-                ("contributors",0, list), # not required
-                ("reference",0, list), 
-                ("cognitive_atlas_task_id",0,str),
-                ("template",0,str)]
+                ("install", 0, list),  # list of commands to install / build experiment 
+                ("contributors", 0, list), # not required
+                ("reference", 0, list), 
+                ("cognitive_atlas_task_id", 0, str),
+                ("template", 0, str)]
