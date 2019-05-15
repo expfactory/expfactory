@@ -175,7 +175,7 @@ test_builder: &test_builder
     docker run -d --name experiments-sqlite expfactory/experiments --database sqlite --headless start
 
     # HTTP/1.1 200 OK
-    apk update && apk add libcurl
+    apk update && apk add curl libcurl
     curl -I localhost | grep 200
     cd /root/repo
 
