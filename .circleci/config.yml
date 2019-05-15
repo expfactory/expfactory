@@ -129,7 +129,6 @@ install_deps: &install_deps
   command: |
       apk update
       apk add pigz
-      apk add wget
 
 install_python_3: &install_python_3
   name: install Python 3.5 dependencies
@@ -174,11 +173,14 @@ test_builder: &test_builder
     docker run -d -p 80:80 --name experiments-fs expfactory/experiments --headless start
     docker run -d --name experiments-sqlite expfactory/experiments --database sqlite --headless start
 
+    # Get the hostname
+    container=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' experiments-fs;)
+
     # HTTP/1.1 200 OK
-    response=$(wget --server-response http://localhost 2>&1 | awk '/^  HTTP/{print $2}')
-    echo ${response}
-    if [ "${response}" != "200" ]; then
-        echo "Invalid response, should be 200"
+    response=$(docker run --rm byrnedo/alpine-curl -I ${container} | grep 200)
+    if [ "${response}" != "HTTP/1.1 200 OK" ]; then
+        echo "Bad response, should be HTTP/1.1 200 OK"
+        exit 1;
     fi
     cd /root/repo
 
