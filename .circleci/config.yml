@@ -78,7 +78,7 @@ workflows:
 install: &install
   name: install expfactory
   command: |
-     cd /tmp/src
+     cd /root/repo
      pip uninstall expfactory --yes || echo "Not installed"
      pip install .[all]
 
@@ -155,12 +155,13 @@ test_builder: &test_builder
   name: Test Expfactory Builder
   command: |
     python --version
-    /bin/sh /tmp/src/expfactory/testing/test_builder.sh
+    cd /root/repo
+    /bin/sh expfactory/testing/test_builder.sh
 
 test_expfactory: &test_expfactory
   name: Test Expfactory
   command: |
-    cd /tmp/src/expfactory
+    cd /root/repo
     python -m unittest testing.test_experiment
     python -m unittest testing.test_client 
 
