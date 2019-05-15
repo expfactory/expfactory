@@ -105,14 +105,15 @@ build_docker_image: &build_docker_image
   name: Build Docker Images
   command: |
         echo $PWD
+        echo " Testing container: ${CONTAINER_NAME}"
         ls
-        cd /tmp/src/expfactory/templates/build/docker/builder-ci && 
+        cd expfactory/templates/build/docker/builder-ci && 
         echo "Building CI builder in /tmp/builder for testing current PR..."
         mkdir -p /tmp/builder
         cp ../builder-dev/entrypoint.sh /tmp/builder/entrypoint.sh
         cp Dockerfile /tmp/builder
         cp build.sh /tmp/builder && chmod u+x /tmp/builder/build.sh
-        cp -R /tmp/src /tmp/builder/expfactory && cd /tmp/builder && ls
+        cp -R /root/repo /tmp/builder/expfactory && cd /tmp/builder && ls
         echo "Working directory is ${PWD}"
         # Build docker image
         e=1 && for i in {1..5}; do
