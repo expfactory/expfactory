@@ -135,14 +135,20 @@ install_python_3: &install_python_3
   command: | 
       echo "Testing builder in $PWD" && ls
       cd $HOME
-      apk add python3 python3-dev python3-pip
+      apk add --no-cache python3
+      python3 -m ensurepip
+      rm -r /usr/lib/python*/ensurepip
+      pip3 install --upgrade pip setuptools
+      if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi
+      if [[ ! -e /usr/bin/python ]]; then ln -sf /usr/bin/python3 /usr/bin/python; fi
+      rm -r /root/.cache
 
 install_python_2: &install_python_2
   name: install Python 2.7 dependencies
   command: | 
       ls $HOME
       echo "Testing builder in $PWD" && ls
-      apk add python python-dev python-pip
+      apk add python python-dev py-pip
 
 
 test_builder: &test_builder
