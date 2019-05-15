@@ -30,12 +30,12 @@ def get_requirements(lookup=None):
         module_name = module[0]
         module_meta = module[1]
         if "exact_version" in module_meta:
-            dependency = "%s==%s" %(module_name,module_meta['exact_version'])
+            dependency = "%s==%s" %(module_name, module_meta['exact_version'])
         elif "min_version" in module_meta:
             if module_meta['min_version'] == None:
                 dependency = module_name
             else:
-                dependency = "%s>=%s" %(module_name,module_meta['min_version'])
+                dependency = "%s>=%s" %(module_name, module_meta['min_version'])
         install_requires.append(dependency)
     return install_requires
 
