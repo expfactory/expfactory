@@ -2,29 +2,29 @@
 
 usage () {
 
-    echo "Usage:    docker run vanessa/expfactory-builder [list|build|test|test-library]
+    echo "Usage:    docker run quay.io/vanessa/expfactory-builder [list|build|test|test-library]
 
           LIST experiments
 
-              docker run vanessa/expfactory-builder list
-              docker run vanessa/expfactory-builder list | grep survey
+              docker run quay.io/vanessa/expfactory-builder list
+              docker run quay.io/vanessa/expfactory-builder list | grep survey
 
           BUILD a container recipe (Dockerfile)
 
               # generate build recipe for 2 experiments in new directory /tmp/data
-              docker run -v /tmp/data:/data vanessa/expfactory-builder build test-task tower-of-london
+              docker run -v /tmp/data:/data quay.io/vanessa/expfactory-builder build test-task tower-of-london
 
               # generate build recipe with local experiment folder (test-task-two) in (\$PWD)
               # We reference the fullpath to the experiment in the container (/data/test-task-two).
-              docker run -v \$PWD:/data vanessa/expfactory-builder build test-task /data/test-task-two
+              docker run -v \$PWD:/data quay.io/vanessa/expfactory-builder build test-task /data/test-task-two
 
           TEST local experiments or library folder
 
               # Test local experiments folder 'experiments' 
-              docker run -v experiments:/scif/apps vanessa/expfactory-builder test
+              docker run -v experiments:/scif/apps quay.io/vanessa/expfactory-builder test
 
               # Test local library in folder 'library'
-              docker run -v library:/scif/apps vanessa/expfactory-builder test-library
+              docker run -v library:/scif/apps quay.io/vanessa/expfactory-builder test-library
  
          https://expfactory.github.io/expfactory/generate.html#container-generation 
          "

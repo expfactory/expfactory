@@ -39,7 +39,9 @@ This version is agnostic to the underlying driver of the experiments, and provid
  - The container can be easily shared.
  - You run the container, optionally specifying a subset and ordering, and collect your results
  
-If you build on [Docker Hub](https://hub.docker.com/) anyone else can then pull and use your exact container to collect their own results. It is exact down to the file hash.
+If you build on [Docker Hub](https://hub.docker.com/) anyone else can then pull and use your exact container to collect their own results. It is exact down to the file hash. Note
+that bases for expfactory were initially provided on [Docker Hub](https://hub.docker.com/r/vanessa/expfactory-builder/tags) and have moved to [Quay.io](https://quay.io/repository/vanessa/expfactory-builder?tab=tags). Dockerfiles in the repository that use the expfactory-builder are
+also updated. If you need a previous version, please see the tags on the original Docker Hub.
 
 ## Experiment Library
 The experiments themselves are now maintained under [expfactory-experiments](https://www.github.com/expfactory-experiments), official submissions to be found by expfactory can be added to the [library](https://www.github.com/expfactory/library) (under development) to be tested that they meet minimum requirements.

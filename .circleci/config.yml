@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   # https://circleci.com/orbs/registry/orb/circleci/docker-publish
-  docker-publish: circleci/docker-publish@0.1.3
+  docker-publish: circleci/docker-publish@0.1.7
 
 workflows:
   test:
@@ -18,8 +18,9 @@ workflows:
     jobs:
 
       - docker-publish/publish:
-          image: vanessa/expfactory-builder
+          image: quay.io/vanessa/expfactory-builder
           dockerfile: expfactory/templates/build/docker/builder-base/Dockerfile
+          registry: quay.io
           deploy: false
           tag: base
           filters:
@@ -39,14 +40,15 @@ workflows:
                 command: |
                     echo "PWD is ${PWD}"
                     cd expfactory/templates/build/docker/builder
-                    docker build --no-cache -t vanessa/expfactory-builder .
+                    docker build --no-cache -t quay.io/vanessa/expfactory-builder .
 
   # This workflow will deploy images on merge to master only
   docker_with_lifecycle:
     jobs:
       - docker-publish/publish:
-          image: vanessa/expfactory-builder
+          image: quay.io/vanessa/expfactory-builder
           dockerfile: expfactory/templates/build/docker/builder-base/Dockerfile
+          registry: quay.io
           tag: base
           filters:
             branches:
@@ -59,12 +61,12 @@ workflows:
                           DOCKER_TAG="${string//\"}"
                    done
                    echo "Version for Docker tag is ${DOCKER_TAG}"
-                   docker tag vanessa/expfactory-builder:base vanessa/expfactory-builder:base-v${DOCKER_TAG}
+                   docker tag quay.io/vanessa/expfactory-builder:base quay.io/vanessa/expfactory-builder:base-v${DOCKER_TAG}
                    echo "PWD is ${PWD}"
                    ls
                    cd expfactory/templates/build/docker/builder
-                   docker build --no-cache -t vanessa/expfactory-builder .
-                   docker tag vanessa/expfactory-builder vanessa/expfactory-builder:${DOCKER_TAG}
+                   docker build --no-cache -t quay.io/vanessa/expfactory-builder .
+                   docker tag quay.io/vanessa/expfactory-builder quay.io/vanessa/expfactory-builder:${DOCKER_TAG}
 
 
 install: &install
@@ -135,13 +137,6 @@ install_python_3: &install_python_3
       if [[ ! -e /usr/bin/python ]]; then ln -sf /usr/bin/python3 /usr/bin/python; fi
       rm -r /root/.cache
 
-install_python_2: &install_python_2
-  name: install Python 2.7 dependencies
-  command: | 
-      ls $HOME
-      echo "Testing builder in $PWD" && ls
-      apk add python python-dev py-pip
-
 
 test_builder: &test_builder
   name: Test Expfactory Builder
@@ -151,7 +146,7 @@ test_builder: &test_builder
     echo "Testing expfactory-builder"
 
     # Run detached container, and create recipe
-    docker run --name builder --entrypoint bash -dt vanessa/expfactory-builder-ci
+    docker run --name builder --entrypoint bash -dt quay.io/vanessa/expfactory-builder-ci
     docker exec builder /bin/bash /entrypoint.sh build test-task
     docker cp builder:/data/Dockerfile Dockerfile
     docker cp builder:/data/startscript.sh startscript.sh
@@ -167,19 +162,7 @@ test_builder: &test_builder
 
     # Get the hostname
     container=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' experiments-fs;)
-
     echo "Running container is at ${container}"
-
-    # HTTP/1.1 200 OK
-    docker pull byrnedo/alpine-curl
-    response=$(docker run byrnedo/alpine-curl -I ${container} | grep 200)
-    echo "Response is ${response}"
-
-    if [[ $response != *"HTTP/1.1 200 OK"* ]]; then
-        echo "Bad response, should be HTTP/1.1 200 OK"
-        exit 1;
-    fi
-    cd /root/repo
 
 
 test_expfactory: &test_expfactory
@@ -196,7 +179,7 @@ jobs:
     working_directory: ~/repo
     environment:
       - TEST_RUN_FOLDER: /tmp
-      - CONTAINER_NAME: vanessa/expfactory-builder-ci
+      - CONTAINER_NAME: quay.io/vanessa/expfactory-builder-ci
     steps:
       - restore_cache:
           keys:

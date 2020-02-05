@@ -11,19 +11,19 @@ BASE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 # This is the base image for the various builders
 
 cd $BASE/expfactory/templates/build/docker/builder-base
-docker build -t vanessa/expfactory-builder:base .
+docker build -t quay.io/vanessa/expfactory-builder:base .
 
-docker tag vanessa/expfactory-builder:base vanessa/expfactory-builder:base-v$VERSION_TAG
-docker push vanessa/expfactory-builder:base
-docker push vanessa/expfactory-builder:base-v$VERSION
+docker tag quay.io/vanessa/expfactory-builder:base quay.io/vanessa/expfactory-builder:base-v$VERSION_TAG
+docker push quay.io/vanessa/expfactory-builder:base
+docker push quay.io/vanessa/expfactory-builder:base-v$VERSION
 
-# vanessa/expfactory-builder
+# quay.io/vanessa/expfactory-builder
 # Build builder with tag, and push tag and latest
 cd $BASE/expfactory/templates/build/docker/builder
-docker build --no-cache -t vanessa/expfactory-builder .
-docker tag vanessa/expfactory-builder vanessa/expfactory-builder:$VERSION_TAG
-docker push vanessa/expfactory-builder:$VERSION_TAG
-docker push vanessa/expfactory-builder
+docker build --no-cache -t quay.io/vanessa/expfactory-builder .
+docker tag quay.io/vanessa/expfactory-builder quay.io/vanessa/expfactory-builder:$VERSION_TAG
+docker push quay.io/vanessa/expfactory-builder:$VERSION_TAG
+docker push quay.io/vanessa/expfactory-builder
 
 # vanessa/expfactory-surveys
 cd $BASE/examples/docker/surveys-container

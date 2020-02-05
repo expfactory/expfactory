@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-# docker build -t vanessa/expfactory-builder:base .
+# docker build -t quay.io/vanessa/expfactory-builder:base .
 
 RUN apt-get update && apt-get install -y nginx \
                                          git \

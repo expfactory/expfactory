@@ -17,10 +17,10 @@ Dockerfile at hand. The basic usage is to run the image, and you will see output
 from the expfactory build tool inside:
 
 ```
-$ docker run vanessa/expfactory-builder
+$ docker run quay.io/vanessa/expfactory-builder
 
 Usage:
-docker run vanessa/expfactory-builder experiment-one experiment-two ...
+docker run quay.io/vanessa/expfactory-builder experiment-one experiment-two ...
 Expfactory Version: 3.0
 usage: expfactory build [-h] [--recipe] --output OUTPUT [--studyid STUDYID]
                         [--database {fllesystem}]
@@ -44,7 +44,7 @@ The minimum requirement we need is a list of `experiments`. You can either [brow
 the table](https://expfactory.github.io/experiments/) or see a current library list with `list.`
 
 ```
-docker run vanessa/expfactory-builder list
+docker run quay.io/vanessa/expfactory-builder list
 
 Expfactory Version: 3.0
 Experiments
@@ -60,7 +60,7 @@ Experiments
 Try using grep if you want to search for a term in the name or url
 
 ```
-docker run vanessa/expfactory-builder list | grep survey
+docker run quay.io/vanessa/expfactory-builder list | grep survey
 2  alcohol-drugs-survey	https://www.github.com/expfactory-experiments/alcohol-drugs-survey
 4  dospert-eb-survey	https://www.github.com/expfactory-experiments/dospert-eb-survey
 5  dospert-rp-survey	https://www.github.com/expfactory-experiments/dospert-rp-survey
@@ -76,7 +76,7 @@ intend to set up with version control (a.k.a. Github). That looks like this:
 ```
 mkdir -p /tmp/my-experiment
 docker run -v /tmp/my-experiment:/data \
-              vanessa/expfactory-builder \
+              quay.io/vanessa/expfactory-builder \
               build tower-of-london
 
 Expfactory Version: 3.0
@@ -237,13 +237,13 @@ when I first didn't give an easy exit to running the gunicorn process.
 
 ## Adding Experiments
 While we are working on a development workflow for you to install experiments interactively, for now we encourage you
-to use the `vanessa/expfactory-builder` image to generate Dockerfile to maximize reproducibility of your work. Each
+to use the `quay.io/vanessa/expfactory-builder` image to generate Dockerfile to maximize reproducibility of your work. Each
 change or command that you would do interactively breaks reproducibility!
 
 
 ### Under Development
 **not ready for use**
-While we encourage you to re-generate the file with the `vanessa/expfactory-builder` so generation of your
+While we encourage you to re-generate the file with the `quay.io/vanessa/expfactory-builder` so generation of your
 container is reproducible, it's possible to install experiments into your container after it's generated. You
 should only do this for development, as changes that you make to your container that are not recorded in the Dockerfile
 are not reproducible. Let's say that we have an experiment container that has one task, `tower-of-london`, and we want to install
@@ -325,5 +325,5 @@ Make sure that the branch that you want is cloned in the [Dockerfile](Dockerfile
 build the image
 
 ```
-docker build -t vanessa/expfactory-builder .
+docker build -t quay.io/vanessa/expfactory-builder .
 ```

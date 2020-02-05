@@ -3,7 +3,7 @@
 validators/experiments.py: python functions to validate experiments and library
 experiment objects
 
-Copyright (c) 2017-2019, Vanessa Sochat
+Copyright (c) 2017-2020, Vanessa Sochat
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
