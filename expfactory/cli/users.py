@@ -1,4 +1,4 @@
-'''
+"""
 
 Copyright (c) 2017-2020, Vanessa Sochat
 All rights reserved.
@@ -28,7 +28,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-'''
+"""
 
 from expfactory.logger import bot
 from expfactory.defaults import EXPFACTORY_DATABASE
@@ -37,13 +37,14 @@ import os
 
 
 def main(args, parser, subparser):
-      
+
     from expfactory.server import app
-    header = 'DATABASE\tTOKEN' 
+
+    header = "DATABASE\tTOKEN"
 
     # The user wants to list active subjects
     if args.list is True:
-        users = app.list_users() # returns id\ttoken
+        users = app.list_users()  # returns id\ttoken
         sys.exit(0)
 
     # The user wants to add new subjects
@@ -76,25 +77,23 @@ def main(args, parser, subparser):
 
     # Perform the action
     if action is not None:
-        bot.info('%s %s' %(action, subid))
+        bot.info("%s %s" % (action, subid))
         result = func(subid=subid)
         if result is not None:
-            print("[%s] %s --> %s" %(action.lower(), 
-                                     subid,
-                                     result))
+            print("[%s] %s --> %s" % (action.lower(), subid, result))
         else:
-            print("[%s] not successful. See logs for details." %(action.lower()))
+            print("[%s] not successful. See logs for details." % (action.lower()))
             print("Commands may only possible for [active] status.")
 
         sys.exit(0)
 
-    print('See expfactory users --help for usage')
+    print("See expfactory users --help for usage")
 
 
 def clean(subid):
-    '''clean a subid, removing any folder extensions (_revoked or _finished)
+    """clean a subid, removing any folder extensions (_revoked or _finished)
        for the functions
-    '''
-    for ext in ['_revoked','_revoked']:
-        subid = subid.replace(ext,'')
+    """
+    for ext in ["_revoked", "_revoked"]:
+        subid = subid.replace(ext, "")
     return subid

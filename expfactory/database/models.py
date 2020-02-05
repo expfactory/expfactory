@@ -1,4 +1,4 @@
-'''
+"""
 models.py: datanases for the expfactory package
 
 Copyright (c) 2017-2020, Vanessa Sochat
@@ -29,52 +29,46 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-'''
+"""
 
 from expfactory.logger import bot
-from sqlalchemy import (
-    Column, 
-    DateTime,
-    Integer, 
-    String, 
-    Text,
-    ForeignKey,
-    func
-)
+from sqlalchemy import Column, DateTime, Integer, String, Text, ForeignKey, func
 from sqlalchemy.orm import relationship, backref
 from uuid import uuid4
 from expfactory.database import Base
 
 
 class Participant(Base):
-    '''A participant in a local assessment. id must be unique. If a token is
+    """A participant in a local assessment. id must be unique. If a token is
        revoked or finished, it will end with `_revoked` or `_finished`. A
        user generated without a token will have value of None
-    '''
-    __tablename__ = 'participant'
+    """
+
+    __tablename__ = "participant"
     id = Column(Integer, primary_key=True)
     name = Column(String(150))
     token = Column(String(50))
-    results = relationship('Result', lazy='select',
-                           backref=backref('participant', lazy='joined'))
+    results = relationship(
+        "Result", lazy="select", backref=backref("participant", lazy="joined")
+    )
+
     def __init__(self, name=None, token=None):
         self.name = name
         self.token = token
 
     def __repr__(self):
-        return '<Participant %r>' % (self.name)
+        return "<Participant %r>" % (self.name)
 
     def url(self):
-        '''return the participant url'''
-        
+        """return the participant url"""
+
 
 class Result(Base):
-    '''a result is an experiment name, json dump, and datetime'''
-    __tablename__ = 'result'
+    """a result is an experiment name, json dump, and datetime"""
+
+    __tablename__ = "result"
     id = Column(Integer, primary_key=True)
     date = Column(DateTime, default=func.now())
     data = Column(Text, nullable=False)
     exp_id = Column(String(250), nullable=False)
-    participant_id = Column(Integer, 
-                            ForeignKey('participant.id'),
-                            nullable=False)
+    participant_id = Column(Integer, ForeignKey("participant.id"), nullable=False)

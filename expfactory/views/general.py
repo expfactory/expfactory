@@ -1,4 +1,4 @@
-'''
+"""
 general.py: part of expfactory package
 
 Copyright (c) 2017-2020, Vanessa Sochat
@@ -29,15 +29,9 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-'''
+"""
 
-from flask import (
-    flash,
-    render_template, 
-    request, 
-    redirect,
-    session
-)
+from flask import flash, render_template, request, redirect, session
 
 from expfactory.utils import get_post_fields
 
@@ -48,43 +42,47 @@ import os
 import json
 
 
-
 # Home portal to start experiments
 def portal():
 
     form = ParticipantForm()
 
-    if request.method == "POST":   
+    if request.method == "POST":
 
         # Submit and valid
         if form.validate_on_submit():
 
             # User name is not required
-            username = 'You'
-            if form.openid.data not in [None,""]:
+            username = "You"
+            if form.openid.data not in [None, ""]:
                 username = form.openid.data
- 
-            subid = session.get('subid')
+
+            subid = session.get("subid")
             if subid is None:
                 subid = app.generate_subid()
-                session['subid'] = subid
-                app.logger.info('New session [subid] %s' %subid)
+                session["subid"] = subid
+                app.logger.info("New session [subid] %s" % subid)
 
             app.randomize = form.randomize.data
-            session['username'] = username
-            session['experiments'] = form.exp_ids.data.split(',') # list
-            flash('Participant ID: "%s" <br> Name %s <br> Randomize: "%s" <br> Experiments: %s' %
-                  (subid, username, app.randomize,
-                  str(form.exp_ids.data)))
-            return redirect('/start')
+            session["username"] = username
+            session["experiments"] = form.exp_ids.data.split(",")  # list
+            flash(
+                'Participant ID: "%s" <br> Name %s <br> Randomize: "%s" <br> Experiments: %s'
+                % (subid, username, app.randomize, str(form.exp_ids.data))
+            )
+            return redirect("/start")
 
         # Submit but not valid
-        return render_template('portal/index.html', experiments=app.lookup,
-                                                    base=app.base,
-                                                    randomize=app.randomize,
-                                                    form=form, toggleform=True)
+        return render_template(
+            "portal/index.html",
+            experiments=app.lookup,
+            base=app.base,
+            randomize=app.randomize,
+            form=form,
+            toggleform=True,
+        )
 
     # Not submit
-    return render_template('portal/index.html', experiments=app.lookup,
-                                                base=app.base,
-                                                form=form)
+    return render_template(
+        "portal/index.html", experiments=app.lookup, base=app.base, form=form
+    )

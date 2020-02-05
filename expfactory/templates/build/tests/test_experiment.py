@@ -1,4 +1,4 @@
-'''
+"""
 test_experiments.py: Allow a user to test all experiments in the container. 
                      The experiments are assumed to be installed at /scif/apps
 
@@ -29,7 +29,7 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-'''
+"""
 
 import os
 import sys
@@ -37,18 +37,18 @@ from glob import glob
 from expfactory.validator import ExperimentValidator
 from unittest import TestCase
 
-class TestExperiment(TestCase):
 
+class TestExperiment(TestCase):
     def setUp(self):
 
         self.ExpValidator = ExperimentValidator()
         self.base = "/scif/apps"
-        self.experiments = glob("%s/*" %self.base)
+        self.experiments = glob("%s/*" % self.base)
         self.contenders = [os.path.basename(x) for x in self.experiments]
-        
+
     def test_experiment(self):
-        '''test an experiment, including the markdown file, and repo itself
-        '''
+        """test an experiment, including the markdown file, and repo itself
+        """
         print("...Test: Experiment Validation")
 
         # First priority - the user gave an experiment folder
@@ -56,7 +56,9 @@ class TestExperiment(TestCase):
             for experiment in self.experiments:
                 name = os.path.basename(experiment)
                 if name == "config.json":
-                    valid = self.ExpValidator.validate(experiment, validate_folder=False) 
+                    valid = self.ExpValidator.validate(
+                        experiment, validate_folder=False
+                    )
                     self.assertTrue(valid)
 
         # Otherwise, the user gave a folder with subfolders
@@ -64,10 +66,10 @@ class TestExperiment(TestCase):
             for experiment in self.experiments:
                 name = os.path.basename(experiment)
                 if os.path.isdir(experiment):
-                    print('Found experiment %s' %name)
-                    valid = self.ExpValidator.validate(experiment) 
+                    print("Found experiment %s" % name)
+                    valid = self.ExpValidator.validate(experiment)
                     self.assertTrue(valid)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -1,4 +1,4 @@
-'''
+"""
 database.py: part of expfactory package
 
 Copyright (c) 2017-2020, Vanessa Sochat
@@ -29,9 +29,10 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-'''
+"""
 
 from expfactory.server import app
+
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):

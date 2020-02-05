@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-'''
+"""
 Test experiments
 
 Copyright (c) 2017-2020, Vanessa Sochat
@@ -31,7 +31,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-'''
+"""
 
 import unittest
 import shutil
@@ -43,29 +43,31 @@ import tempfile
 import json
 import os
 
-class TestExperiment(unittest.TestCase):
 
+class TestExperiment(unittest.TestCase):
     def setUp(self):
         self.pwd = get_installdir()
-        self.battery_folder = "%s/testing/data" %self.pwd
+        self.battery_folder = "%s/testing/data" % self.pwd
         self.experiment = os.path.abspath("%s/testing/data/test-task/" % self.pwd)
-        self.bad_experiment = os.path.abspath("%s/testing/data/not_an_experiment/" % self.pwd)
+        self.bad_experiment = os.path.abspath(
+            "%s/testing/data/not_an_experiment/" % self.pwd
+        )
         self.tmpdir = tempfile.mkdtemp()
 
     def tearDown(self):
         shutil.rmtree(self.tmpdir)
 
     def test_library(self):
-        library = get_library(key='name')
-        self.assertTrue(len(library)>95)
+        library = get_library(key="name")
+        self.assertTrue(len(library) > 95)
 
     def test_load_experiments(self):
 
-        loaded_experiment = load_experiment(self.experiment)  
-        self.assertTrue(isinstance(loaded_experiment,dict))
+        loaded_experiment = load_experiment(self.experiment)
+        self.assertTrue(isinstance(loaded_experiment, dict))
 
     def test_validate(self):
-        loaded_experiment = load_experiment(self.experiment)  
+        loaded_experiment = load_experiment(self.experiment)
         validator = ExperimentValidator()
         valid = validator.validate(self.experiment)
         not_valid = validator.validate(self.bad_experiment)
@@ -73,5 +75,5 @@ class TestExperiment(unittest.TestCase):
         self.assertTrue(not not_valid)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

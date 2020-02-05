@@ -1,7 +1,7 @@
 '''
 dynamic_views.py: part of expfactory package
 
-Copyright (c) 2017, Vanessa Sochat
+Copyright (c) 2017-2020, Vanessa Sochat
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -43,9 +43,8 @@ from expfactory.views.utils import (
 from expfactory.server import app, csrf
 import os
 
-
 {{ exp_id_python }} = Blueprint('{{ exp_id }}', __name__,
-                                static_url_path='/experiments/{{ exp_id }}', 
+                                static_url_path='/experiments/{{ exp_id }}',
                                 static_folder='/scif/apps/{{ exp_id }}',
                                 template_folder='/scif/apps')
 

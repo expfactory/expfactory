@@ -1,4 +1,4 @@
-'''
+"""
 
 defaults.py: this script acts as a gateway between variables defined at
 runtime, and defaults. Any variable that has an unchanging default value 
@@ -39,12 +39,9 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-'''
+"""
 
-from expfactory.utils import (
-    convert2boolean, 
-    getenv
-)
+from expfactory.utils import convert2boolean, getenv
 import tempfile
 import os
 import pwd
@@ -55,36 +52,37 @@ import sys
 # Expfactory Registry
 ################################################################################
 
-EXPFACTORY_REGISTRY = getenv("EXPFACTORY_REGISTRY_BASE",
-                             default="https://expfactory.github.io")
+EXPFACTORY_REGISTRY = getenv(
+    "EXPFACTORY_REGISTRY_BASE", default="https://expfactory.github.io"
+)
 
-EXPFACTORY_LIBRARY = "%s/experiments/library.json" %(EXPFACTORY_REGISTRY)
+EXPFACTORY_LIBRARY = "%s/experiments/library.json" % (EXPFACTORY_REGISTRY)
 
-EXPFACTORY_SERVER = getenv('EXPFACTORY_SERVER', 'localhost')
+EXPFACTORY_SERVER = getenv("EXPFACTORY_SERVER", "localhost")
 
 
 ################################################################################
 # Expfactory Database
 ################################################################################
 
-EXPFACTORY_LOGS = getenv('EXPFACTORY_LOGS', '/scif/logs')
-EXPFACTORY_DATABASE = getenv('EXPFACTORY_DATABASE', 'filesystem')
-EXPFACTORY_BASE = getenv('EXPFACTORY_BASE', '/scif/apps')
-EXPFACTORY_DATA = getenv('EXPFACTORY_DATA', '/scif/data')
+EXPFACTORY_LOGS = getenv("EXPFACTORY_LOGS", "/scif/logs")
+EXPFACTORY_DATABASE = getenv("EXPFACTORY_DATABASE", "filesystem")
+EXPFACTORY_BASE = getenv("EXPFACTORY_BASE", "/scif/apps")
+EXPFACTORY_DATA = getenv("EXPFACTORY_DATA", "/scif/data")
 
 
 ################################################################################
 # Expfactory Experiments
 ################################################################################
 
-EXPFACTORY_SUBID = getenv('EXPFACTORY_STUDY_ID', 'expfactory')
-EXPFACTORY_EXPERIMENTS = getenv('EXPFACTORY_EXPERIMENTS', [])
-EXPFACTORY_RANDOMIZE = convert2boolean(getenv('EXPFACTORY_RANDOM', True))
-EXPFACTORY_HEADLESS = convert2boolean(getenv('EXPFACTORY_HEADLESS', False))
+EXPFACTORY_SUBID = getenv("EXPFACTORY_STUDY_ID", "expfactory")
+EXPFACTORY_EXPERIMENTS = getenv("EXPFACTORY_EXPERIMENTS", [])
+EXPFACTORY_RANDOMIZE = convert2boolean(getenv("EXPFACTORY_RANDOM", True))
+EXPFACTORY_HEADLESS = convert2boolean(getenv("EXPFACTORY_HEADLESS", False))
 
 # Runtime Variables
-EXPFACTORY_RUNTIME_VARS = getenv('EXPFACTORY_RUNTIME_VARS')
-EXPFACTORY_RUNTIME_DELIM = getenv('EXPFACTORY_RUNTIME_DELIM', ',')
+EXPFACTORY_RUNTIME_VARS = getenv("EXPFACTORY_RUNTIME_VARS")
+EXPFACTORY_RUNTIME_DELIM = getenv("EXPFACTORY_RUNTIME_DELIM", ",")
 
 
 ################################################################################

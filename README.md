@@ -21,7 +21,12 @@ Sochat, (2018). The Experiment Factory: Reproducible Experiment Containers. Jour
 We have many ways to contribute, and will briefly provide resources here to get you started.
 
 ### How to Contribute
-If you are a developer interested in working on the Experiment Factory software you should read out [contributing guidelines](.github/CONTRIBUTING.md) for details. For contributing containers and experiments, see our [user documentation](https://expfactory.github.io/expfactory/contribute). If you have any questions, please don't hesitate to [ask a question](https://www.github.com/expfactory/expfactory/issues).
+If you are a developer interested in working on the Experiment Factory software you should read out [contributing guidelines](.github/CONTRIBUTING.md) for details. For contributing containers and experiments, see our [user documentation](https://expfactory.github.io/expfactory/contribute). If you have any questions, please don't hesitate to [ask a question](https://www.github.com/expfactory/expfactory/issues). You'll need to lint your code using black:
+
+```bash
+$ pip install black
+$ black expfactory --exclude template.py
+```
 
 ### Code of Conduct
 It's important to treat one another with respect, and maintain a fun and respectful environment for the open source community. Toward this aim, we ask that you review our [code of conduct](.github/CODE_OF_CONDUCT.md)

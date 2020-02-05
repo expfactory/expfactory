@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-'''
+"""
 Test experiments
 
 Copyright (c) 2017-2020, Vanessa Sochat
@@ -31,7 +31,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-'''
+"""
 
 import unittest
 import shutil
@@ -42,58 +42,62 @@ import tempfile
 import json
 import os
 
-class TestClient(unittest.TestCase):
 
+class TestClient(unittest.TestCase):
     def setUp(self):
         self.pwd = get_installdir()
-        self.battery_folder = "%s/testing/data" %self.pwd
-        self.experiment = os.path.abspath("%s/testing/data/test_task/" %self.pwd)
+        self.battery_folder = "%s/testing/data" % self.pwd
+        self.experiment = os.path.abspath("%s/testing/data/test_task/" % self.pwd)
         self.tmpdir = tempfile.mkdtemp()
 
     def tearDown(self):
         shutil.rmtree(self.tmpdir)
 
-    def run_command(self,cmd):
+    def run_command(self, cmd):
         result = run_command(cmd)
-        self.assertEqual(result['return_code'],0)
-        return str(result['message'])
- 
+        self.assertEqual(result["return_code"], 0)
+        return str(result["message"])
+
     def test_help(self):
-        result = self.run_command(["expfactory","--help"])
-        self.assertTrue('{users,version,list,logs,install,build}' in result)
+        result = self.run_command(["expfactory", "--help"])
+        self.assertTrue("{users,version,list,logs,install,build}" in result)
 
-        result = self.run_command(["expfactory","version","--help"])
-        self.assertTrue('expfactory version' in result)
+        result = self.run_command(["expfactory", "version", "--help"])
+        self.assertTrue("expfactory version" in result)
 
-        result = self.run_command(["expfactory","list","--help"])
-        self.assertTrue('expfactory list' in result)
+        result = self.run_command(["expfactory", "list", "--help"])
+        self.assertTrue("expfactory list" in result)
 
-        result = self.run_command(["expfactory","build","--help"])
-        self.assertTrue('expfactory build' in result)
+        result = self.run_command(["expfactory", "build", "--help"])
+        self.assertTrue("expfactory build" in result)
 
-        result = self.run_command(["expfactory","install","--help"])
-        self.assertTrue('expfactory install' in result)
+        result = self.run_command(["expfactory", "install", "--help"])
+        self.assertTrue("expfactory install" in result)
 
-        result = self.run_command(["expfactory","users","--help"])
-        self.assertTrue('expfactory users' in result)
+        result = self.run_command(["expfactory", "users", "--help"])
+        self.assertTrue("expfactory users" in result)
 
-        result = self.run_command(["expfactory","logs","--help"])
-        self.assertTrue('expfactory logs' in result)
-
+        result = self.run_command(["expfactory", "logs", "--help"])
+        self.assertTrue("expfactory logs" in result)
 
     def test_list(self):
         result = self.run_command(["expfactory"])
 
         # We list > 95 experiments
-        self.assertTrue(len(result.split('\\n'))>95)
-        self.assertTrue('test-task' in result)
+        self.assertTrue(len(result.split("\\n")) > 95)
+        self.assertTrue("test-task" in result)
 
     def test_install(self):
         os.chdir(self.tmpdir)
-        result = self.run_command(["expfactory",
-                                   "install",
-                                   "https://www.github.com/expfactory-experiments/test-task"])
-        self.assertTrue(os.path.exists('%s/test-task' %self.tmpdir))
+        result = self.run_command(
+            [
+                "expfactory",
+                "install",
+                "https://www.github.com/expfactory-experiments/test-task",
+            ]
+        )
+        self.assertTrue(os.path.exists("%s/test-task" % self.tmpdir))
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

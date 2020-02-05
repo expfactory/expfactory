@@ -1,4 +1,4 @@
-'''
+"""
 
 Copyright (c) 2017-2020, Vanessa Sochat
 All rights reserved.
@@ -28,17 +28,18 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-'''
+"""
 
 from expfactory.defaults import EXPFACTORY_LOGS
 import sys
 import os
 
-def main(args,parser,subparser):
+
+def main(args, parser, subparser):
 
     logs = "%s/expfactory.log" % EXPFACTORY_LOGS
     if os.path.exists(logs):
         if not args.tail:
-            os.system("cat %s" %logs)
+            os.system("cat %s" % logs)
         else:
-            os.system("tail -f %s" %logs)
+            os.system("tail -f %s" % logs)
