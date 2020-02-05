@@ -1,6 +1,6 @@
-FROM vanessa/expfactory-builder:base
+FROM quay.io/vanessa/expfactory-builder:base
 
-# docker build -t vanessa/expfactory-builder-dev .
+# docker build -t quay.io/vanessa/expfactory-builder-dev .
 
 ###################################
 # Experiment Factory

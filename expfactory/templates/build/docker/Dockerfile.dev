@@ -1,4 +1,4 @@
-FROM vanessa/expfactory-builder:base
+FROM quay.io/vanessa/expfactory-builder:base
 
 ########################################
 # Configure

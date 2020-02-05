@@ -5,7 +5,7 @@
 echo "Testing expfactory-builder"
 
 mkdir -p /tmp/data && cd /tmp/data
-docker run -v /tmp/data:/data vanessa/expfactory-builder-ci build test-task
+docker run -v /tmp/data:/data quay.io/vanessa/expfactory-builder-ci build test-task
 
 echo "Contents of /tmp/data"
 ls

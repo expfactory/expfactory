@@ -13,8 +13,8 @@ Make sure that the branch that you want is cloned in the [Dockerfile](Dockerfile
 build the image
 
 ```
-docker build -t vanessa/expfactory-builder-dev .
-docker push vanessa/expfactory-builder-dev
+docker build -t quay.io/vanessa/expfactory-builder-dev .
+docker push quay.io/vanessa/expfactory-builder-dev
 ```
 
 Follow instructions in the [main builder](../builder) README for using the builder. If you have questions please [get in touch](https://www.github.com/expfactory/issues).

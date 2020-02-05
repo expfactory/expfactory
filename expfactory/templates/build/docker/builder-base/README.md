@@ -3,7 +3,7 @@
 This is the base image for the various builders
 
 ```bash
-docker build -t vanessa/expfactory-builder-base .
+docker build -t quay.io/vanessa/expfactory-builder-base .
 ```
 
 
@@ -11,9 +11,9 @@ docker build -t vanessa/expfactory-builder-base .
 # Make sure expfactory version is the most recent install
 VERSION=$(expfactory version)
 
-docker tag vanessa/expfactory-builder-base vanessa/expfactory-builder:base
-docker tag vanessa/expfactory-builder-base vanessa/expfactory-builder:base-v$VERSION
+docker tag quay.io/vanessa/expfactory-builder-base quay.io/vanessa/expfactory-builder:base
+docker tag quay.io/vanessa/expfactory-builder-base quay.io/vanessa/expfactory-builder:base-v$VERSION
 
-docker push vanessa/expfactory-builder:base-v$VERSION
-docker push vanessa/expfactory-builder:base
+docker push quay.io/vanessa/expfactory-builder:base-v$VERSION
+docker push quay.io/vanessa/expfactory-builder:base
 ```
