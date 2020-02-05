@@ -1,4 +1,4 @@
-'''
+"""
 
 Copyright (c) 2018-2020, Vanessa Sochat
 All rights reserved.
@@ -28,14 +28,11 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-'''
+"""
 
 import filecmp
 from expfactory.utils import read_file
-from expfactory.defaults import (
-    EXPFACTORY_RUNTIME_DELIM,
-    EXPFACTORY_RUNTIME_VARS
-)
+from expfactory.defaults import EXPFACTORY_RUNTIME_DELIM, EXPFACTORY_RUNTIME_VARS
 from expfactory.logger import bot
 import json
 import re
@@ -43,7 +40,7 @@ import os
 
 
 def get_runtime_vars(varset, experiment, token):
-    '''get_runtime_vars will return the urlparsed string of one or more runtime
+    """get_runtime_vars will return the urlparsed string of one or more runtime
        variables. If None are present, None is returned.
   
        Parameters
@@ -57,8 +54,8 @@ def get_runtime_vars(varset, experiment, token):
        url: the variable portion of the url to be passed to experiment, e.g,
             '?words=at the thing&color=red&globalname=globalvalue'
 
-    '''
-    url = ''
+    """
+    url = ""
     if experiment in varset:
 
         variables = dict()
@@ -66,27 +63,27 @@ def get_runtime_vars(varset, experiment, token):
         # Participant set variables
 
         if token in varset[experiment]:
-            for k,v in varset[experiment][token].items():
+            for k, v in varset[experiment][token].items():
                 variables[k] = v
 
         # Global set variables
         if "*" in varset[experiment]:
-            for k,v in varset[experiment]['*'].items():
+            for k, v in varset[experiment]["*"].items():
 
                 # Only add the variable if not already defined
                 if k not in variables:
                     variables[k] = v
 
         # Join together, the first ? is added by calling function
-        varlist = ["%s=%s" %(k,v) for k,v in variables.items()]
-        url = '&'.join(varlist)
+        varlist = ["%s=%s" % (k, v) for k, v in variables.items()]
+        url = "&".join(varlist)
 
-    bot.debug('Parsed url: %s' %url)
+    bot.debug("Parsed url: %s" % url)
     return url
 
 
-def generate_runtime_vars(variable_file=None, sep=','):
-    '''generate a lookup data structure from a 
+def generate_runtime_vars(variable_file=None, sep=","):
+    """generate a lookup data structure from a 
        delimited file. We typically obtain the file name and delimiter from
        the environment by way of EXPFACTORY_RUNTIME_VARS, and
        EXPFACTORY_RUNTIME_DELIM, respectively, but the user can also parse
@@ -119,17 +116,17 @@ def generate_runtime_vars(variable_file=None, sep=','):
                               }
        }
 
-    '''
+    """
 
     # First preference goes to runtime, then environment, then unset
 
-    if variable_file is None:    
+    if variable_file is None:
         if EXPFACTORY_RUNTIME_VARS is not None:
             variable_file = EXPFACTORY_RUNTIME_VARS
 
     if variable_file is not None:
         if not os.path.exists(variable_file):
-            bot.warning('%s is set, but not found' %variable_file)
+            bot.warning("%s is set, but not found" % variable_file)
             return variable_file
 
     # If still None, no file
@@ -140,21 +137,21 @@ def generate_runtime_vars(variable_file=None, sep=','):
     delim = sep
     if EXPFACTORY_RUNTIME_DELIM is not None:
         delim = EXPFACTORY_RUNTIME_DELIM
-    bot.debug('Delim for variables file set to %s' %sep)
+    bot.debug("Delim for variables file set to %s" % sep)
 
     # Read in the file, generate config
 
     varset = dict()
     rows = _read_runtime_vars(variable_file)
-    
+
     if len(rows) > 0:
 
-        # When we get here, we are sure to have 
+        # When we get here, we are sure to have
         # 'exp_id', 'var_name', 'var_value', 'token'
 
         for row in rows:
 
-            exp_id = row[0].lower()   # exp-id must be lowercase
+            exp_id = row[0].lower()  # exp-id must be lowercase
             var_name = row[1]
             var_value = row[2]
             token = row[3]
@@ -169,19 +166,18 @@ def generate_runtime_vars(variable_file=None, sep=','):
 
             # If found global setting, courtesy debug message
             if token == "*":
-                bot.debug('Found global variable %s' %var_name)
+                bot.debug("Found global variable %s" % var_name)
 
             # Level 3: is the variable, issue warning if already defined
             if var_name in varset[exp_id][token]:
-                bot.warning('%s defined twice %s:%s' %(var_name, exp_id, token))
+                bot.warning("%s defined twice %s:%s" % (var_name, exp_id, token))
             varset[exp_id][token][var_name] = var_value
-
 
     return varset
 
 
-def _read_runtime_vars(variable_file, sep=','):
-    '''read the entire runtime variable file, and return a list of lists,
+def _read_runtime_vars(variable_file, sep=","):
+    """read the entire runtime variable file, and return a list of lists,
        each corresponding to a row. We also check the header, and exit
        if anything is missing or malformed.
 
@@ -202,9 +198,9 @@ def _read_runtime_vars(variable_file, sep=','):
             ['test-parse-url', 'words', 'at the thing', '123'],
             ['test-parse-url', 'words', 'omg tacos', '456']]
 
-    '''
+    """
 
-    rows = [x for x in read_file(variable_file).split('\n') if x.strip()]
+    rows = [x for x in read_file(variable_file).split("\n") if x.strip()]
     valid_rows = []
 
     if len(rows) > 0:
@@ -224,8 +220,8 @@ def _read_runtime_vars(variable_file, sep=','):
     return valid_rows
 
 
-def _validate_row(row, sep=',', required_length=None):
-    '''validate_row will ensure that a row has the proper length, and is
+def _validate_row(row, sep=",", required_length=None):
+    """validate_row will ensure that a row has the proper length, and is
        not empty and cleaned of extra spaces.
  
        Parameters
@@ -234,34 +230,35 @@ def _validate_row(row, sep=',', required_length=None):
 
        Returns a valid row, or None if not valid
 
-    '''
+    """
     if not isinstance(row, list):
         row = _parse_row(row, sep)
 
     if required_length:
         length = len(row)
         if length != required_length:
-            bot.warning('Row should have length %s (not %s)' %(required_length,
-                                                               length))
-            bot.warning(row) 
+            bot.warning(
+                "Row should have length %s (not %s)" % (required_length, length)
+            )
+            bot.warning(row)
             row = None
 
     return row
 
 
-def _parse_row(row, sep=','):
-    '''parse row is a helper function to simply clean up a string, and parse
+def _parse_row(row, sep=","):
+    """parse row is a helper function to simply clean up a string, and parse
        into a row based on a delimiter. If a required length is provided,
        we check for this too.
 
-    '''
+    """
     parsed = row.split(sep)
     parsed = [x for x in parsed if x.strip()]
     return parsed
 
 
 def validate_header(header, required_fields=None):
-    '''validate_header ensures that the first row contains the exp_id,
+    """validate_header ensures that the first row contains the exp_id,
        var_name, var_value, and token. Capitalization isn't important, but
        ordering is. This criteria is very strict, but it's reasonable
        to require.
@@ -274,9 +271,9 @@ def validate_header(header, required_fields=None):
 
        Does not return, instead exits if malformed. Runs silently if OK.
 
-    '''
+    """
     if required_fields is None:
-        required_fields = ['exp_id', 'var_name', 'var_value', 'token']
+        required_fields = ["exp_id", "var_name", "var_value", "token"]
 
     # The required length of the header based on required fields
 
@@ -284,11 +281,11 @@ def validate_header(header, required_fields=None):
 
     # This is very strict, but no reason not to be
 
-    header = _validate_row(header, required_length=length) 
+    header = _validate_row(header, required_length=length)
     header = [x.lower() for x in header]
 
     for idx in range(length):
         field = header[idx].lower().strip()
         if required_fields[idx] != field:
-            bot.error('Malformed header field %s, exiting.' %field)
+            bot.error("Malformed header field %s, exiting." % field)
             sys.exit(1)

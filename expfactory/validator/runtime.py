@@ -1,4 +1,4 @@
-'''
+"""
 
 validators/runtime.py: python functions to validate deployments
 
@@ -30,7 +30,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-'''
+"""
 
 import os
 import re
@@ -45,8 +45,7 @@ from glob import glob
 
 
 class RuntimeValidator:
-
-    def __init__(self,quiet=False):
+    def __init__(self, quiet=False):
         if quiet is True:
             bot.level = 0
 
@@ -54,13 +53,13 @@ class RuntimeValidator:
         return "expfactory.RuntimeValidator"
 
     def validate(self, url):
-        ''' takes in a Github repository for validation of preview and 
+        """ takes in a Github repository for validation of preview and 
             runtime (and possibly tests passing?
-        '''
+        """
 
         # Preview must provide the live URL of the repository
-        if not url.startswith('http') or not 'github' in url:
-            bot.error('Test of preview must be given a Github repostitory.')
+        if not url.startswith("http") or not "github" in url:
+            bot.error("Test of preview must be given a Github repostitory.")
             return False
 
         if not self._validate_preview(url):
@@ -69,46 +68,51 @@ class RuntimeValidator:
         return True
 
     def _print_valid(self, result):
-        options = {True:'yes', False: 'no'}
+        options = {True: "yes", False: "no"}
         return options[result]
 
     def _validate_preview(self, url):
 
-        bot.test('Experiment url: %s' %url)
-        org,repo = url.split('/')[-2:]
-        if repo.endswith('.git'):
-            repo = repo.replace('.git','')
-        github_pages =  "https://%s.github.io/%s" %(org,repo)
-        bot.test('Github Pages url: %s' %github_pages)
+        bot.test("Experiment url: %s" % url)
+        org, repo = url.split("/")[-2:]
+        if repo.endswith(".git"):
+            repo = repo.replace(".git", "")
+        github_pages = "https://%s.github.io/%s" % (org, repo)
+        bot.test("Github Pages url: %s" % github_pages)
 
         response = requests.get(github_pages)
 
         if response.status_code == 404:
-            bot.error('''Preview not found at %s. You must publish a static 
+            bot.error(
+                """Preview not found at %s. You must publish a static 
                          preview from the master branch of your repository to
-                         add to the library.''' % github_pages)
-            return False 
+                         add to the library."""
+                % github_pages
+            )
+            return False
 
         index = response.text
         tmpdir = tempfile.mkdtemp()
         repo_master = clone(url, tmpdir)
-        contenders = glob('%s/*' %repo_master)
+        contenders = glob("%s/*" % repo_master)
         license = False
         found = False
 
         for test in contenders:
             if os.path.isdir(test):
                 continue
-            print('...%s' %test)
+            print("...%s" % test)
             if "LICENSE" in os.path.basename(test):
                 license = True
             if os.path.basename(test) == "index.html":
-                bot.test('Found index file in repository.')
+                bot.test("Found index file in repository.")
                 found = True
                 break
 
         if license is False:
-            bot.warning("LICENSE file not found. This will be required for future experiments!")
+            bot.warning(
+                "LICENSE file not found. This will be required for future experiments!"
+            )
 
         self._print_valid(found)
         return found

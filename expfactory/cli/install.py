@@ -1,4 +1,4 @@
-'''
+"""
 
 Copyright (c) 2017-2020, Vanessa Sochat
 All rights reserved.
@@ -28,16 +28,16 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-'''
+"""
 
 from expfactory.validator import ExperimentValidator
 from expfactory.experiment import load_experiment
 from expfactory.utils import (
     get_viewsdir,
-    get_template, 
+    get_template,
     run_command,
     sub_template,
-    save_template
+    save_template,
 )
 from expfactory.logger import bot
 import tempfile
@@ -45,7 +45,7 @@ import sys
 import os
 
 
-def main(args,parser,subparser):
+def main(args, parser, subparser):
 
     folder = args.folder
     if folder is None:
@@ -53,13 +53,13 @@ def main(args,parser,subparser):
 
     source = args.src[0]
     if source is None:
-        bot.error('Please provide a Github https address to install.')
+        bot.error("Please provide a Github https address to install.")
         sys.exit(1)
 
     # Is the experiment valid?
     cli = ExperimentValidator()
     valid = cli.validate(source, cleanup=False)
-    exp_id = os.path.basename(source).replace('.git','')
+    exp_id = os.path.basename(source).replace(".git", "")
 
     if valid is True:
 
@@ -68,27 +68,27 @@ def main(args,parser,subparser):
             config = load_experiment(source)
             source = os.path.abspath(source)
         else:
-            config = load_experiment("%s/%s" %(cli.tmpdir,exp_id))
-            source = "%s/%s" %(cli.tmpdir,exp_id)
+            config = load_experiment("%s/%s" % (cli.tmpdir, exp_id))
+            source = "%s/%s" % (cli.tmpdir, exp_id)
 
-        exp_id = config['exp_id']
-        python_module = exp_id.replace('-','_').lower()
+        exp_id = config["exp_id"]
+        python_module = exp_id.replace("-", "_").lower()
     else:
-        bot.error('%s is not valid.' % exp_id)
+        bot.error("%s is not valid." % exp_id)
         sys.exit(1)
 
     # Move static files to output folder
-    dest = "%s/%s" %(folder,exp_id)
+    dest = "%s/%s" % (folder, exp_id)
 
-    bot.log("Installing %s to %s" %(exp_id, dest))
-    
+    bot.log("Installing %s to %s" % (exp_id, dest))
+
     # Building container
     in_container = False
-    if os.environ.get('SINGULARITY_IMAGE') is not None:
+    if os.environ.get("SINGULARITY_IMAGE") is not None:
         in_container = True
 
     # Running, live container
-    elif os.environ.get('EXPFACTORY_CONTAINER') is not None:
+    elif os.environ.get("EXPFACTORY_CONTAINER") is not None:
         in_container = True
 
     if in_container is True:
@@ -97,33 +97,33 @@ def main(args,parser,subparser):
         args.force = True
 
         bot.log("Preparing experiment routes...")
-        template = get_template('experiments/template.py')
-        template = sub_template(template, '{{ exp_id }}', exp_id)
-        template = sub_template(template, '{{ exp_id_python }}', python_module)
+        template = get_template("experiments/template.py")
+        template = sub_template(template, "{{ exp_id }}", exp_id)
+        template = sub_template(template, "{{ exp_id_python }}", python_module)
 
         # 1. Python blueprint
         views = get_viewsdir(base=args.base)
-        view_output = "%s/%s.py" %(views, python_module)
+        view_output = "%s/%s.py" % (views, python_module)
         save_template(view_output, template, base=views)
-    
+
         # 2. append to __init__
         init = "%s/__init__.py" % views
-        with open(init,'a') as filey:
-            filey.writelines('from .%s import *\n' %python_module)
+        with open(init, "a") as filey:
+            filey.writelines("from .%s import *\n" % python_module)
 
         # 3. Instructions
         if "instructions" in config:
-            instruct = "%s/%s.help" %(views, python_module)
-        with open(instruct,'w') as filey:
-            filey.writelines(config['instructions'])
+            instruct = "%s/%s.help" % (views, python_module)
+        with open(instruct, "w") as filey:
+            filey.writelines(config["instructions"])
 
     if not os.path.exists(dest):
-        os.system('mkdir -p %s' %dest)
+        os.system("mkdir -p %s" % dest)
     else:
         if args.force is False:
-            bot.error('%s is not empty! Use --force to delete and re-create.' %folder)
-            sys.exit(1) 
+            bot.error("%s is not empty! Use --force to delete and re-create." % folder)
+            sys.exit(1)
 
     # We don't need to copy if experiment already there
     if source != dest:
-        os.system('cp -R %s/* %s' %(source, dest))
+        os.system("cp -R %s/* %s" % (source, dest))

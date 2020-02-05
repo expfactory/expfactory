@@ -4,5 +4,6 @@ if EXPFACTORY_DATABASE == "filesystem":
     from .filesystem import *
 else:
     from .relational import *
-    if EXPFACTORY_DATABASE.startswith('sqlite'):
+
+    if EXPFACTORY_DATABASE.startswith("sqlite"):
         from .sqlite import *

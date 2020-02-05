@@ -1,4 +1,4 @@
-'''
+"""
 views.py: part of expfactory package
 
 Copyright (c) 2017-2020, Vanessa Sochat
@@ -29,26 +29,17 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-'''
+"""
 
-from flask import (
-    flash,
-    render_template, 
-    redirect,
-    session
-)
+from flask import flash, render_template, redirect, session
 
 from expfactory.logger import bot
 import os
 
 
-def perform_checks(template,
-                   do_redirect=False,
-                   context=None,
-                   next=None,
-                   quiet=False):
+def perform_checks(template, do_redirect=False, context=None, next=None, quiet=False):
 
-    '''return all checks for required variables before returning to 
+    """return all checks for required variables before returning to 
        desired view
 
        Parameters
@@ -59,58 +50,57 @@ def perform_checks(template,
        next: a pre-defined next experiment, will calculate if None
        quiet: decrease verbosity
 
-    '''
+    """
     from expfactory.server import app
-    username = session.get('username')
-    subid = session.get('subid')
+
+    username = session.get("username")
+    subid = session.get("subid")
 
     # If redirect, "last" is currently active (about to start)
     # If render, "last" is last completed / active experiment (just finished)
-    last = session.get('exp_id')
+    last = session.get("exp_id")
     if next is None:
         next = app.get_next(session)
-    session['exp_id'] = next
+    session["exp_id"] = next
 
     # Headless mode requires token
     if "token" not in session and app.headless is True:
-        flash('A token is required for these experiments.')
-        return redirect('/')
+        flash("A token is required for these experiments.")
+        return redirect("/")
 
     # Update the user / log
     if quiet is False:
-        app.logger.info("[router] %s --> %s [subid] %s [user] %s" %(last,
-                                                                    next, 
-                                                                    subid,
-                                                                    username))
+        app.logger.info(
+            "[router] %s --> %s [subid] %s [user] %s" % (last, next, subid, username)
+        )
 
     if username is None and app.headless is False:
-        flash('You must start a session before doing experiments.')
-        return redirect('/')
+        flash("You must start a session before doing experiments.")
+        return redirect("/")
 
     if subid is None:
-        flash('You must have a participant identifier before doing experiments')
-        return redirect('/')
+        flash("You must have a participant identifier before doing experiments")
+        return redirect("/")
 
     if next is None:
-        flash('Congratulations, you have finished the battery!')
-        return redirect('/finish')
+        flash("Congratulations, you have finished the battery!")
+        return redirect("/finish")
 
     if do_redirect is True:
-        app.logger.debug('Redirecting to %s' %template)
+        app.logger.debug("Redirecting to %s" % template)
         return redirect(template)
 
     if context is not None and isinstance(context, dict):
-        app.logger.debug('Rendering %s' %template)
+        app.logger.debug("Rendering %s" % template)
         return render_template(template, **context)
     return render_template(template)
 
 
 def clear_session():
-
     def clear_variables(variables):
         for var in variables:
             if var in session:
                 del session[var]
 
-    clear_variables(['subid', 'experiments', 'exp_id'])
-    clear_variables(['username', 'token'])
+    clear_variables(["subid", "experiments", "exp_id"])
+    clear_variables(["username", "token"])

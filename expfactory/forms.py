@@ -1,4 +1,4 @@
-'''
+"""
 views.py: part of expfactory package
 
 Copyright (c) 2017-2020, Vanessa Sochat
@@ -30,27 +30,28 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-'''
+"""
 
 from flask_wtf import FlaskForm
-from wtforms import (
-    StringField, 
-    BooleanField
-)
+from wtforms import StringField, BooleanField
 
 from wtforms.validators import DataRequired
 
+
 class ParticipantForm(FlaskForm):
-    '''the participant form is shown in the portal given an interactive
+    """the participant form is shown in the portal given an interactive
        (non headless) runtime. We collection an (optional) participant name,
        along with the experiments to run.
-    '''
-    openid = StringField('openid')
-    exp_ids = StringField('exp_ids', validators=[DataRequired()])
-    randomize = BooleanField('randomize', default=True)
+    """
+
+    openid = StringField("openid")
+    exp_ids = StringField("exp_ids", validators=[DataRequired()])
+    randomize = BooleanField("randomize", default=True)
+
 
 class EntryForm(FlaskForm):
-    '''the entry form is shown for a headless install. The user is required to
+    """the entry form is shown for a headless install. The user is required to
        enter a pre-generated token, otherwise entry is denied
-    '''
-    token = StringField('token', validators=[DataRequired()])
+    """
+
+    token = StringField("token", validators=[DataRequired()])

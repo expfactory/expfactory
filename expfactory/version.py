@@ -1,4 +1,4 @@
-'''
+"""
 
 Copyright (c) 2017-2020, Vanessa Sochat
 All rights reserved.
@@ -28,26 +28,26 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-'''
+"""
 
-__version__ = "3.15"
-AUTHOR = 'Vanessa Sochat'
-AUTHOR_EMAIL = 'vsochat@stanford.edu'
-NAME = 'expfactory'
+__version__ = "3.16"
+AUTHOR = "Vanessa Sochat"
+AUTHOR_EMAIL = "vsochat@stanford.edu"
+NAME = "expfactory"
 PACKAGE_URL = "http://www.github.com/expfactory/expfactory"
-KEYWORDS = 'docker container reproducible behavior neuroscience experiment factory'
+KEYWORDS = "docker container reproducible behavior neuroscience experiment factory"
 DESCRIPTION = "software to generate a reproducible container battery of experiments."
 LICENSE = "LICENSE"
 
 INSTALL_REQUIRES = (
-    ('flask', {'exact_version': '1.0.2'}),
-    ('flask-restful', {'min_version': "0.3.6"}),
-    ('flask-blueprint',{'exact_version': "1.2.2"}),
-    ('Flask-WTF', {'min_version': "0.14.2"}),
-    ('Flask-SQLAlchemy', {'min_version': "2.3.2"}),
-    ('flask-cors', {'min_version': "3.0.6"}),
-    ('requests', {'min_version': '2.12.4'}),
-    ('retrying', {'min_version': '1.3.3'})
+    ("flask", {"exact_version": "1.0.2"}),
+    ("flask-restful", {"min_version": "0.3.6"}),
+    ("flask-blueprint", {"exact_version": "1.2.2"}),
+    ("Flask-WTF", {"min_version": "0.14.2"}),
+    ("Flask-SQLAlchemy", {"min_version": "2.3.2"}),
+    ("flask-cors", {"min_version": "3.0.6"}),
+    ("requests", {"min_version": "2.12.4"}),
+    ("retrying", {"min_version": "1.3.3"}),
 )
 
 # Original working versions, in case needed

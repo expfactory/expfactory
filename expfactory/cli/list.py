@@ -1,4 +1,4 @@
-'''
+"""
 
 Copyright (c) 2017-2020, Vanessa Sochat
 All rights reserved.
@@ -28,7 +28,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-'''
+"""
 from expfactory.logger import bot
 from expfactory.defaults import EXPFACTORY_LIBRARY
 from glob import glob
@@ -38,7 +38,7 @@ import sys
 import os
 
 
-def main(args,parser,subparser):
+def main(args, parser, subparser):
 
     response = requests.get(EXPFACTORY_LIBRARY)
     if response.status_code == 200:
@@ -48,7 +48,6 @@ def main(args,parser,subparser):
 
         rows = []
         for experiment in library:
-            rows.append([ experiment['name'],
-                          experiment['github'] ])
+            rows.append([experiment["name"], experiment["github"]])
 
         bot.table(rows)
