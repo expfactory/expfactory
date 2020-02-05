@@ -135,13 +135,6 @@ install_python_3: &install_python_3
       if [[ ! -e /usr/bin/python ]]; then ln -sf /usr/bin/python3 /usr/bin/python; fi
       rm -r /root/.cache
 
-install_python_2: &install_python_2
-  name: install Python 2.7 dependencies
-  command: | 
-      ls $HOME
-      echo "Testing builder in $PWD" && ls
-      apk add python python-dev py-pip
-
 
 test_builder: &test_builder
   name: Test Expfactory Builder
@@ -167,19 +160,7 @@ test_builder: &test_builder
 
     # Get the hostname
     container=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' experiments-fs;)
-
     echo "Running container is at ${container}"
-
-    # HTTP/1.1 200 OK
-    docker pull byrnedo/alpine-curl
-    response=$(docker run byrnedo/alpine-curl -I ${container} | grep 200)
-    echo "Response is ${response}"
-
-    if [[ $response != *"HTTP/1.1 200 OK"* ]]; then
-        echo "Bad response, should be HTTP/1.1 200 OK"
-        exit 1;
-    fi
-    cd /root/repo
 
 
 test_expfactory: &test_expfactory
