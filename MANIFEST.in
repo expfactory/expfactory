@@ -1,6 +1,6 @@
 include README.md LICENSE
 recursive-include expfactory *
 recursive-include expfactory * *
-global-exclude docs
-global-exclude __pycache__
-global-exclude OLD
+prune docs
+prune __pycache__
+prune OLD

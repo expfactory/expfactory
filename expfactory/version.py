@@ -1,6 +1,6 @@
 '''
 
-Copyright (c) 2017-2019, Vanessa Sochat
+Copyright (c) 2017-2020, Vanessa Sochat
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
-__version__ = "3.14"
+__version__ = "3.15"
 AUTHOR = 'Vanessa Sochat'
 AUTHOR_EMAIL = 'vsochat@stanford.edu'
 NAME = 'expfactory'
@@ -40,7 +40,7 @@ DESCRIPTION = "software to generate a reproducible container battery of experime
 LICENSE = "LICENSE"
 
 INSTALL_REQUIRES = (
-    ('flask', {'min_version': '0.12'}),
+    ('flask', {'exact_version': '1.0.2'}),
     ('flask-restful', {'min_version': "0.3.6"}),
     ('flask-blueprint',{'exact_version': "1.2.2"}),
     ('Flask-WTF', {'min_version': "0.14.2"}),
@@ -51,6 +51,7 @@ INSTALL_REQUIRES = (
 )
 
 # Original working versions, in case needed
+# flask 1.0.2
 # Flask-Cors==3.0.6
 # Flask-RESTful==0.3.6
 # Flask-SQLAlchemy==2.3.2

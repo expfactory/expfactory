@@ -15,6 +15,7 @@ Critical items to know are:
 
 
 ## [v3.x](https://github.com/expfactory/expfactory/tree/master) (master)
+ - pinning flask version to known working (3.15)
  - set psycopg2==2.7.5, removing python 2 support (3.14)
  - added option to print version, and https configuration (3.13)
  - documentation for labjs integration, and re-organization of integrations
