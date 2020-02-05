@@ -18,7 +18,7 @@ workflows:
     jobs:
 
       - docker-publish/publish:
-          image: quay.io/vanessa/expfactory-builder
+          image: vanessa/expfactory-builder
           dockerfile: expfactory/templates/build/docker/builder-base/Dockerfile
           registry: quay.io
           deploy: false
@@ -46,7 +46,7 @@ workflows:
   docker_with_lifecycle:
     jobs:
       - docker-publish/publish:
-          image: quay.io/vanessa/expfactory-builder
+          image: vanessa/expfactory-builder
           dockerfile: expfactory/templates/build/docker/builder-base/Dockerfile
           registry: quay.io
           tag: base
