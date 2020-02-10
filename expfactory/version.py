@@ -46,6 +46,7 @@ INSTALL_REQUIRES = (
     ("Flask-WTF", {"exact_version": "0.14.2"}),
     ("Flask-SQLAlchemy", {"exact_version": "2.3.2"}),
     ("Flask-cors", {"exact_version": "3.0.6"}),
+    ("Jinja2", {"exact_version": "2.10"}),
     ("requests", {"min_version": "2.12.4"}),
     ("retrying", {"min_version": "1.3.3"}),
     ("werkzeug", {"exact_version": "0.12.2"}),
@@ -61,6 +62,7 @@ INSTALL_REQUIRES = (
 
 # Working verisons in expfactory-experiments container
 # Flask==0.12.2
+# Jinja2==2.1
 # flask-blueprint==1.2.2
 # Flask-Cors==3.0.3
 # Flask-RESTful==0.3.6
