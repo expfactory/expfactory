@@ -30,7 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 """
 
-__version__ = "3.16"
+__version__ = "3.17"
 AUTHOR = "Vanessa Sochat"
 AUTHOR_EMAIL = "vsochat@stanford.edu"
 NAME = "expfactory"
@@ -40,19 +40,29 @@ DESCRIPTION = "software to generate a reproducible container battery of experime
 LICENSE = "LICENSE"
 
 INSTALL_REQUIRES = (
-    ("flask", {"exact_version": "1.0.2"}),
+    ("Flask", {"exact_version": "0.12.2"}),
     ("flask-restful", {"min_version": "0.3.6"}),
     ("flask-blueprint", {"exact_version": "1.2.2"}),
-    ("Flask-WTF", {"min_version": "0.14.2"}),
-    ("Flask-SQLAlchemy", {"min_version": "2.3.2"}),
-    ("flask-cors", {"min_version": "3.0.6"}),
+    ("Flask-WTF", {"exact_version": "0.14.2"}),
+    ("Flask-SQLAlchemy", {"exact_version": "2.3.2"}),
+    ("Flask-cors", {"exact_version": "3.0.6"}),
     ("requests", {"min_version": "2.12.4"}),
     ("retrying", {"min_version": "1.3.3"}),
+    ("werkzeug", {"exact_version": "0.12.2"}),
 )
 
 # Original working versions, in case needed
 # flask 1.0.2
 # Flask-Cors==3.0.6
+# Flask-RESTful==0.3.6
+# Flask-SQLAlchemy==2.3.2
+# Flask-WTF==0.14.2
+# flask-blueprint==1.2.2
+
+# Working verisons in expfactory-experiments container
+# Flask==0.12.2
+# flask-blueprint==1.2.2
+# Flask-Cors==3.0.3
 # Flask-RESTful==0.3.6
 # Flask-SQLAlchemy==2.3.2
 # Flask-WTF==0.14.2
