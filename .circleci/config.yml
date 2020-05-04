@@ -4,101 +4,18 @@ orbs:
   # https://circleci.com/orbs/registry/orb/circleci/docker-publish
   docker-publish: circleci/docker-publish@0.1.7
 
-workflows:
-  test:
-    jobs:
-      - test-python-3:
-          filters:
-            branches:
-              ignore: 
-                - master
-
-  # This workflow will be run on all branches but master (to test)
-  build_without_publishing_job:
-    jobs:
-
-      - docker-publish/publish:
-          image: vanessa/expfactory-builder
-          dockerfile: expfactory/templates/build/docker/builder-base/Dockerfile
-          registry: quay.io
-          deploy: false
-          tag: base
-          filters:
-            branches:
-              ignore: 
-                - master
-          after_build:
-            - run:
-                name: Preview Docker Tag for Build
-                command: |
-                   for string in $(cat expfactory/version.py | grep __version__); do
-                          DOCKER_TAG="${string//\"}"
-                   done
-                   echo "Version for Docker tag is ${DOCKER_TAG}"
-            - run:
-                name: Generate Builder (not base)
-                command: |
-                    echo "PWD is ${PWD}"
-                    cd expfactory/templates/build/docker/builder
-                    docker build --no-cache -t quay.io/vanessa/expfactory-builder .
-
-  # This workflow will deploy images on merge to master only
-  docker_with_lifecycle:
-    jobs:
-      - docker-publish/publish:
-          image: vanessa/expfactory-builder
-          dockerfile: expfactory/templates/build/docker/builder-base/Dockerfile
-          registry: quay.io
-          tag: base
-          filters:
-            branches:
-             only: master
-          after_build:
-            - run:
-                name: Publish Docker Tag with Expfactory Version
-                command: |
-                   for string in $(cat expfactory/version.py | grep __version__); do
-                          DOCKER_TAG="${string//\"}"
-                   done
-                   echo "Version for Docker tag is ${DOCKER_TAG}"
-                   docker tag quay.io/vanessa/expfactory-builder:base quay.io/vanessa/expfactory-builder:base-v${DOCKER_TAG}
-                   echo "PWD is ${PWD}"
-                   ls
-                   cd expfactory/templates/build/docker/builder
-                   docker build --no-cache -t quay.io/vanessa/expfactory-builder .
-                   docker tag quay.io/vanessa/expfactory-builder quay.io/vanessa/expfactory-builder:${DOCKER_TAG}
-
-
 install: &install
   name: install expfactory
   command: |
-     cd /root/repo
+     export PATH=$HOME/conda/bin:$PATH
      pip uninstall expfactory --yes || echo "Not installed"
      pip install .[all]
-
-load_docker_cache: &load_docker_cache
-  name: Load Docker Cache
-  command: |
-     docker info
-     set +o pipefail
-     if [ -f /tmp/cache/container.tar.gz ]; then
-       pigz -d --stdout /tmp/cache/container.tar.gz | docker load
-     fi
-     docker images
-
-docker_save: &docker_save
-  name: Docker save
-  command: |
-    echo "Saving ${CONTAINER_NAME} to container.tar.gz"
-    mkdir -p /tmp/cache
-    docker save ${CONTAINER_NAME}:latest \
-    | pigz -2 -p 3 > /tmp/cache/container.tar.gz
-
 
 build_docker_image: &build_docker_image
   name: Build Docker Images
   command: |
         echo $PWD
+        export CONTAINER_NAME=quay.io/vanessa/expfactory-builder-ci
         echo " Testing container: ${CONTAINER_NAME}"
         ls
         cd expfactory/templates/build/docker/builder-ci && 
@@ -107,7 +24,7 @@ build_docker_image: &build_docker_image
         cp ../builder-dev/entrypoint.sh /tmp/builder/entrypoint.sh
         cp Dockerfile /tmp/builder
         cp build.sh /tmp/builder && chmod u+x /tmp/builder/build.sh
-        cp -R /root/repo /tmp/builder/expfactory && cd /tmp/builder && ls
+        cp -R /home/circleci/project /tmp/builder/expfactory && cd /tmp/builder && ls
         echo "Working directory is ${PWD}"
         # Build docker image
         e=1 && for i in {1..5}; do
@@ -118,29 +35,23 @@ build_docker_image: &build_docker_image
           && e=0 && break || sleep 15
         done && [ "$e" -eq "0" ]
 
-install_deps: &install_deps
-  name: Install dependencies
-  command: |
-      apk update
-      apk add pigz
-
 install_python_3: &install_python_3
   name: install Python 3.5 dependencies
   command: | 
       echo "Testing builder in $PWD" && ls
-      cd $HOME
-      apk add --no-cache python3
-      python3 -m ensurepip
-      rm -r /usr/lib/python*/ensurepip
-      pip3 install --upgrade pip setuptools
-      if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi
-      if [[ ! -e /usr/bin/python ]]; then ln -sf /usr/bin/python3 /usr/bin/python; fi
-      rm -r /root/.cache
-
+      if [ ! -d "/home/circleci/conda" ]; then
+          wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+          /bin/bash Miniconda3-latest-Linux-x86_64.sh -b -p $HOME/conda
+          export PATH=$HOME/conda/bin:$PATH
+          conda install -y -c defaults -c conda-forge sregistry
+      else
+           echo "Miniconda is already installed, continuing to build."
+      fi
 
 test_builder: &test_builder
   name: Test Expfactory Builder
   command: |
+    export PATH=$HOME/conda/bin:$PATH
     python --version
     mkdir -p /tmp/data && cd /tmp/data
     echo "Testing expfactory-builder"
@@ -168,40 +79,75 @@ test_builder: &test_builder
 test_expfactory: &test_expfactory
   name: Test Expfactory
   command: |
-    cd /root/repo/expfactory
+    export PATH=$HOME/conda/bin:$PATH
+    cd /home/circleci/project/expfactory
     python -m unittest testing.test_experiment
     python -m unittest testing.test_client 
 
-jobs:
-  test-python-3:
-    docker:
-      - image: docker:18.01.0-ce-git
-    working_directory: ~/repo
-    environment:
-      - TEST_RUN_FOLDER: /tmp
-      - CONTAINER_NAME: quay.io/vanessa/expfactory-builder-ci
-    steps:
-      - restore_cache:
-          keys:
-            - docker-v1-{{ .Branch }}-{{ epoch }}
-            - docker-v1-{{ .Branch }}-
-            - docker-v1-master-
-            - docker-v1-
-          paths:
-            - /tmp/cache/container.tar.gz
-      - checkout
-      - setup_remote_docker
-      - run: *install_deps
-      - run: *load_docker_cache
-      - run: *build_docker_image
-      - run: *docker_save
-      - save_cache:
-         key: docker-v1-{{ .Branch }}-{{ epoch }}
-         paths:
-            - /tmp/cache/container.tar.gz
-      - run: *install_python_3
-      - run: *install
-      - run: *test_builder
-      - run: *test_expfactory
-      - store_test_results:
-          path: /root/out/tests
+workflows:
+
+  # This workflow will be run on all branches but master (to test)
+  build_without_publishing_job:
+    jobs:
+      - docker-publish/publish:
+          image: vanessa/expfactory-builder
+          dockerfile: expfactory/templates/build/docker/builder-base/Dockerfile
+          registry: quay.io
+          deploy: false
+          tag: base
+          filters:
+            branches:
+              ignore: 
+                - master
+          after_build:
+            - run:
+                name: Preview Docker Tag for Build
+                command: |
+                   for string in $(cat expfactory/version.py | grep __version__); do
+                          DOCKER_TAG="${string//\"}"
+                   done
+                   echo "Version for Docker tag is ${DOCKER_TAG}"
+            - run:
+                name: Generate Builder (not base)
+                command: |
+                    echo "PWD is ${PWD}"
+                    cd expfactory/templates/build/docker/builder
+                    docker build --no-cache -t quay.io/vanessa/expfactory-builder .
+            - run: *build_docker_image
+            - restore_cache:
+                keys:
+                  - conda-may-2020
+            - run: *install_python_3
+            - save_cache:
+                key: conda-may-2020
+                paths:
+                 - /home/circleci/conda
+            - run: *install
+            - run: *test_builder
+            - run: *test_expfactory
+
+  # This workflow will deploy images on merge to master only
+  docker_with_lifecycle:
+    jobs:
+      - docker-publish/publish:
+          image: vanessa/expfactory-builder
+          dockerfile: expfactory/templates/build/docker/builder-base/Dockerfile
+          registry: quay.io
+          tag: base
+          filters:
+            branches:
+             only: master
+          after_build:
+            - run:
+                name: Publish Docker Tag with Expfactory Version
+                command: |
+                   for string in $(cat expfactory/version.py | grep __version__); do
+                          DOCKER_TAG="${string//\"}"
+                   done
+                   echo "Version for Docker tag is ${DOCKER_TAG}"
+                   docker tag quay.io/vanessa/expfactory-builder:base quay.io/vanessa/expfactory-builder:base-v${DOCKER_TAG}
+                   echo "PWD is ${PWD}"
+                   ls
+                   cd expfactory/templates/build/docker/builder
+                   docker build --no-cache -t quay.io/vanessa/expfactory-builder .
+                   docker tag quay.io/vanessa/expfactory-builder quay.io/vanessa/expfactory-builder:${DOCKER_TAG}
