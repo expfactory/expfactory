@@ -15,6 +15,7 @@ Critical items to know are:
 
 
 ## [v3.x](https://github.com/expfactory/expfactory/tree/master) (master)
+ - pinning version of werkzeug (3.17)
  - adding black lint formatting (3.16)
  - pinning flask version to known working (3.15)
  - set psycopg2==2.7.5, removing python 2 support (3.14)
