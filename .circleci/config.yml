@@ -7,7 +7,6 @@ orbs:
 install: &install
   name: install expfactory
   command: |
-     cd /root/repo
      pip uninstall expfactory --yes || echo "Not installed"
      pip install .[all]
 
@@ -23,7 +22,7 @@ build_docker_image: &build_docker_image
         cp ../builder-dev/entrypoint.sh /tmp/builder/entrypoint.sh
         cp Dockerfile /tmp/builder
         cp build.sh /tmp/builder && chmod u+x /tmp/builder/build.sh
-        cp -R /root/repo /tmp/builder/expfactory && cd /tmp/builder && ls
+        cp -R /home/circleci/project /tmp/builder/expfactory && cd /tmp/builder && ls
         echo "Working directory is ${PWD}"
         # Build docker image
         e=1 && for i in {1..5}; do
@@ -45,7 +44,6 @@ install_python_3: &install_python_3
       pip3 install --upgrade pip setuptools
       if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi
       if [[ ! -e /usr/bin/python ]]; then ln -sf /usr/bin/python3 /usr/bin/python; fi
-      rm -r /root/.cache
 
 
 test_builder: &test_builder
@@ -78,7 +76,6 @@ test_builder: &test_builder
 test_expfactory: &test_expfactory
   name: Test Expfactory
   command: |
-    cd /root/repo/expfactory
     python -m unittest testing.test_experiment
     python -m unittest testing.test_client 
 
@@ -116,8 +113,6 @@ workflows:
             - run: *install
             - run: *test_builder
             - run: *test_expfactory
-            - store_test_results:
-                path: /root/out/tests
 
   # This workflow will deploy images on merge to master only
   docker_with_lifecycle:
