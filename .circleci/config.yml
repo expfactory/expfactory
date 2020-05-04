@@ -80,6 +80,7 @@ test_expfactory: &test_expfactory
   name: Test Expfactory
   command: |
     export PATH=$HOME/conda/bin:$PATH
+    cd /home/circleci/project/expfactory
     python -m unittest testing.test_experiment
     python -m unittest testing.test_client 
 
@@ -113,7 +114,14 @@ workflows:
                     cd expfactory/templates/build/docker/builder
                     docker build --no-cache -t quay.io/vanessa/expfactory-builder .
             - run: *build_docker_image
+            - restore_cache:
+                keys:
+                  - conda-may-2020
             - run: *install_python_3
+            - save_cache:
+                key: conda-may-2020
+                paths:
+                 - /home/circleci/conda
             - run: *install
             - run: *test_builder
             - run: *test_expfactory
