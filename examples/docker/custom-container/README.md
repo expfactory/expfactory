@@ -5,4 +5,4 @@ docker run -v $PWD:/data quay.io/vanessa/expfactory-builder build digit-span spa
 docker build -t vanessa/experiment .
 ```
 
-This container recipe was generated with the commands shown in [the generate docs](https://expfactory.github.io/expfactory/generate.html).  See them for building and usage.
+This container recipe was generated with the commands shown in [the generate docs](https://expfactory.github.io/generate).  See them for building and usage.

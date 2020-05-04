@@ -23,7 +23,7 @@ docker run -p 80:80 -v /tmp/data:/data vanessa/expfactory-surveys start
 ```
 
 
-See [the generate docs](https://expfactory.github.io/expfactory/generate.html) for more details.
+See [the generate docs](https://expfactory.github.io/generate) for more details.
 
 ## Development
 Here is the push command, mostly for my future reference.

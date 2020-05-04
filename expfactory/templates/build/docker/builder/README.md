@@ -1,6 +1,6 @@
 # Docker Builder
 
-This is the expfactory builder image provided on Docker Hub to produce other Dockerfiles to generate custom experiment containers. **Note that updated versions of these docs are maintained at [expfactory](https://expfactory.github.io/expfactory/generate).
+This is the expfactory builder image provided on Docker Hub to produce other Dockerfiles to generate custom experiment containers. **Note that updated versions of these docs are maintained at [expfactory](https://expfactory.github.io/generate).
 
 To do a build, you will be doing the following:
 

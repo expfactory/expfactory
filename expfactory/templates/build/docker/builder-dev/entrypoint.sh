@@ -26,7 +26,7 @@ usage () {
               # Test local library in folder 'library'
               docker run -v library:/scif/apps quay.io/vanessa/expfactory-builder test-library
  
-         https://expfactory.github.io/expfactory/generate.html#container-generation 
+         https://expfactory.github.io/generate#container-generation
          "
 }
 
