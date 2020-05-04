@@ -14,6 +14,7 @@ build_docker_image: &build_docker_image
   name: Build Docker Images
   command: |
         echo $PWD
+        export CONTAINER_NAME=expfactory/test
         echo " Testing container: ${CONTAINER_NAME}"
         ls
         cd expfactory/templates/build/docker/builder-ci && 
