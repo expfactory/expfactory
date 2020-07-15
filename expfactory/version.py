@@ -30,7 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 """
 
-__version__ = "3.16"
+__version__ = "3.17"
 AUTHOR = "Vanessa Sochat"
 AUTHOR_EMAIL = "vsochat@stanford.edu"
 NAME = "expfactory"
