@@ -1,6 +1,6 @@
 """
 
-Copyright (c) 2017-2020, Vanessa Sochat
+Copyright (c) 2017-2021, Vanessa Sochat
 
 All rights reserved.
 
