@@ -15,6 +15,7 @@ Critical items to know are:
 
 
 ## [v3.x](https://github.com/expfactory/expfactory/tree/master) (master)
+ - update of base images to ubuntu 20.04 (3.18)
  - removing uneeded import of secure_filename (3.17)
  - adding black lint formatting (3.16)
  - pinning flask version to known working (3.15)
