@@ -257,8 +257,7 @@ def get_parser():
 
 
 def get_subparsers(parser):
-    """get a dictionary of subparsers to help with printing help
-    """
+    """get a dictionary of subparsers to help with printing help"""
     actions = [
         action
         for action in parser._actions

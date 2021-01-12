@@ -58,7 +58,7 @@ def get_templatedir():
 
 def get_viewsdir(base=None):
     """views might be written to a secondary expfactory install, which can
-       be specified with base"""
+    be specified with base"""
     if base is None:
         base = get_installdir()
     return "%s/views" % (base)
@@ -93,8 +93,7 @@ def find_directories(root, fullpath=True):
 
 
 def copy_directory(src, dest, force=False):
-    """ Copy an entire directory recursively
-    """
+    """Copy an entire directory recursively"""
     if os.path.exists(dest) and force is True:
         shutil.rmtree(dest)
 
@@ -153,8 +152,7 @@ def run_command(cmd):
 
 
 def get_template(name, base=None):
-    """read in and return a template file
-    """
+    """read in and return a template file"""
     # If the file doesn't exist, assume relative to base
     template_file = name
     if not os.path.exists(template_file):
@@ -171,8 +169,7 @@ def get_template(name, base=None):
 
 
 def sub_template(template, template_tag, substitution):
-    """make a substitution for a template_tag in a template
-    """
+    """make a substitution for a template_tag in a template"""
     template = template.replace(template_tag, substitution)
     return template
 
@@ -217,8 +214,7 @@ def write_file(filename, content, mode="w"):
 
 
 def get_post_fields(request):
-    """parse through a request, and return fields from post in a dictionary
-    """
+    """parse through a request, and return fields from post in a dictionary"""
     fields = dict()
     for field, value in request.form.items():
         fields[field] = value

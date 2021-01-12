@@ -99,7 +99,7 @@ def home():
 @app.route("/save", methods=["POST"])
 def save():
     """save is a view to save data. We might want to adjust this to allow for
-       updating saved data, but given single file is just one post for now
+    updating saved data, but given single file is just one post for now
     """
     if request.method == "POST":
         exp_id = session.get("exp_id")
@@ -171,6 +171,5 @@ def finish():
 
 @app.route("/start")
 def start():
-    """start a battery.
-    """
+    """start a battery."""
     return perform_checks("routes/start.html")

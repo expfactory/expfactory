@@ -59,7 +59,7 @@ import sys
 
 def generate_subid(self, token=None, return_user=False):
     """generate a new user in the database, still session based so we
-       create a new identifier.
+    create a new identifier.
     """
     from expfactory.database.models import Participant
 
@@ -75,8 +75,7 @@ def generate_subid(self, token=None, return_user=False):
 
 
 def print_user(self, user):
-    """print a relational database user
-    """
+    """print a relational database user"""
     status = "active"
     token = user.token
 
@@ -93,8 +92,8 @@ def print_user(self, user):
 
 def list_users(self, user=None):
     """list users, each having a model in the database. A headless experiment
-       will use protected tokens, and interactive will be based on auto-
-       incremented ids.
+    will use protected tokens, and interactive will be based on auto-
+    incremented ids.
     """
     from expfactory.database.models import Participant
 
@@ -110,8 +109,8 @@ def list_users(self, user=None):
 
 def generate_user(self):
     """generate a new user in the database, still session based so we
-       create a new identifier. This function is called from the users new 
-       entrypoint, and it assumes we want a user generated with a token.
+    create a new identifier. This function is called from the users new
+    entrypoint, and it assumes we want a user generated with a token.
     """
     token = str(uuid.uuid4())
     return self.generate_subid(token=token, return_user=True)
@@ -119,7 +118,7 @@ def generate_user(self):
 
 def finish_user(self, subid):
     """finish user will remove a user's token, making the user entry not
-       accesible if running in headless model"""
+    accesible if running in headless model"""
 
     p = self.revoke_token(subid)
     p.token = "finished"
@@ -139,7 +138,7 @@ def restart_user(self, subid):
 
 def validate_token(self, token):
     """retrieve a subject based on a token. Valid means we return a participant
-       invalid means we return None
+    invalid means we return None
     """
     from expfactory.database.models import Participant
 
@@ -177,7 +176,7 @@ def refresh_token(self, subid):
 
 def save_data(self, session, exp_id, content):
     """save data will obtain the current subid from the session, and save it
-       depending on the database type. Currently we just support flat files"""
+    depending on the database type. Currently we just support flat files"""
     from expfactory.database.models import Participant, Result
 
     subid = session.get("subid")
@@ -224,11 +223,11 @@ Base = declarative_base()
 
 def init_db(self):
     """initialize the database, with the default database path or custom with
-       a format corresponding to the database type:
+    a format corresponding to the database type:
 
-       Examples:
+    Examples:
 
-       sqlite:////scif/data/expfactory.db
+    sqlite:////scif/data/expfactory.db
     """
 
     # The user can provide a custom string

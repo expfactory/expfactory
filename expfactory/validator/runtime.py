@@ -53,8 +53,8 @@ class RuntimeValidator:
         return "expfactory.RuntimeValidator"
 
     def validate(self, url):
-        """ takes in a Github repository for validation of preview and 
-            runtime (and possibly tests passing?
+        """takes in a Github repository for validation of preview and
+        runtime (and possibly tests passing?
         """
 
         # Preview must provide the live URL of the repository
