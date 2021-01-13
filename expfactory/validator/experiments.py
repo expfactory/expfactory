@@ -56,8 +56,8 @@ class ExperimentValidator:
         return "expfactory.ExperimentValidator"
 
     def _validate_folder(self, folder=None):
-        """ validate folder takes a cloned github repo, ensures
-            the existence of the config.json, and validates it.
+        """validate folder takes a cloned github repo, ensures
+        the existence of the config.json, and validates it.
         """
         from expfactory.experiment import load_experiment
 
@@ -72,11 +72,11 @@ class ExperimentValidator:
         return self._validate_config(folder)
 
     def validate(self, folder, cleanup=False, validate_folder=True):
-        """ validate is the entrypoint to all validation, for
-            a folder, config, or url. If a URL is found, it is
-            cloned and cleaned up.
-           :param validate_folder: ensures the folder name (github repo)
-                                   matches.
+        """validate is the entrypoint to all validation, for
+         a folder, config, or url. If a URL is found, it is
+         cloned and cleaned up.
+        :param validate_folder: ensures the folder name (github repo)
+                                matches.
         """
 
         # Obtain any repository URL provided
@@ -95,7 +95,7 @@ class ExperimentValidator:
         return valid
 
     def _validate_config(self, folder, validate_folder=True):
-        """ validate config is the primary validation function that checks
+        """validate config is the primary validation function that checks
             for presence and format of required fields.
 
         Parameters
@@ -156,15 +156,15 @@ class ExperimentValidator:
 
     def get_validation_fields(self):
         """get_validation_fields returns a list of tuples (each a field)
-           we only require the exp_id to coincide with the folder name, for the sake
-           of reproducibility (given that all are served from sample image or Github
-           organization). All other fields are optional.
-           To specify runtime variables, add to "experiment_variables"
+        we only require the exp_id to coincide with the folder name, for the sake
+        of reproducibility (given that all are served from sample image or Github
+        organization). All other fields are optional.
+        To specify runtime variables, add to "experiment_variables"
 
-                 0: not required, no warning
-                 1: required, not valid
-                 2: not required, warning      
-                type: indicates the variable type
+              0: not required, no warning
+              1: required, not valid
+              2: not required, warning
+             type: indicates the variable type
         """
         return [
             ("name", 1, str),  # required

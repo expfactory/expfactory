@@ -41,18 +41,18 @@ import os
 
 def get_runtime_vars(varset, experiment, token):
     """get_runtime_vars will return the urlparsed string of one or more runtime
-       variables. If None are present, None is returned.
-  
-       Parameters
-       ==========
-       varset: the variable set, a dictionary lookup with exp_id, token, vars
-       experiment: the exp_id to look up
-       token: the participant id (or token) that must be defined.
- 
-       Returns
-       =======
-       url: the variable portion of the url to be passed to experiment, e.g,
-            '?words=at the thing&color=red&globalname=globalvalue'
+    variables. If None are present, None is returned.
+
+    Parameters
+    ==========
+    varset: the variable set, a dictionary lookup with exp_id, token, vars
+    experiment: the exp_id to look up
+    token: the participant id (or token) that must be defined.
+
+    Returns
+    =======
+    url: the variable portion of the url to be passed to experiment, e.g,
+         '?words=at the thing&color=red&globalname=globalvalue'
 
     """
     url = ""
@@ -83,38 +83,38 @@ def get_runtime_vars(varset, experiment, token):
 
 
 def generate_runtime_vars(variable_file=None, sep=","):
-    """generate a lookup data structure from a 
-       delimited file. We typically obtain the file name and delimiter from
-       the environment by way of EXPFACTORY_RUNTIME_VARS, and
-       EXPFACTORY_RUNTIME_DELIM, respectively, but the user can also parse
-       from a custom variable file by way of specifying it to the function
-       (preference is given here). The file should be csv, with the
-       only required first header field as "token" and second as "exp_id" to
-       distinguish the participant ID and experiment id. The subsequent
-       columns should correspond to experiment variable names. No special parsing
-       of either is done. 
+    """generate a lookup data structure from a
+    delimited file. We typically obtain the file name and delimiter from
+    the environment by way of EXPFACTORY_RUNTIME_VARS, and
+    EXPFACTORY_RUNTIME_DELIM, respectively, but the user can also parse
+    from a custom variable file by way of specifying it to the function
+    (preference is given here). The file should be csv, with the
+    only required first header field as "token" and second as "exp_id" to
+    distinguish the participant ID and experiment id. The subsequent
+    columns should correspond to experiment variable names. No special parsing
+    of either is done.
 
-       Parameters
-       ==========
-       variable_file: full path to the tabular file with token, exp_id, etc.
-       sep: the default delimiter to use, if not set in enironment.
+    Parameters
+    ==========
+    variable_file: full path to the tabular file with token, exp_id, etc.
+    sep: the default delimiter to use, if not set in enironment.
 
-       Returns
-       =======
-       varset: a dictionary lookup by exp_id and then participant ID.
+    Returns
+    =======
+    varset: a dictionary lookup by exp_id and then participant ID.
 
-       { 'test-parse-url': {
-                             '123': {
-                                      'color': 'red',
-                                      'globalname': 'globalvalue',
-                                      'words': 'at the thing'
-                                    },
+    { 'test-parse-url': {
+                          '123': {
+                                   'color': 'red',
+                                   'globalname': 'globalvalue',
+                                   'words': 'at the thing'
+                                 },
 
-                             '456': {'color': 'blue',
-                                     'globalname': 'globalvalue',
-                                     'words': 'omg tacos'}
-                              }
-       }
+                          '456': {'color': 'blue',
+                                  'globalname': 'globalvalue',
+                                  'words': 'omg tacos'}
+                           }
+    }
 
     """
 
@@ -178,25 +178,25 @@ def generate_runtime_vars(variable_file=None, sep=","):
 
 def _read_runtime_vars(variable_file, sep=","):
     """read the entire runtime variable file, and return a list of lists,
-       each corresponding to a row. We also check the header, and exit
-       if anything is missing or malformed.
+    each corresponding to a row. We also check the header, and exit
+    if anything is missing or malformed.
 
-       Parameters
-       ==========
+    Parameters
+    ==========
 
-       variable_file: full path to the tabular file with token, exp_id, etc.
-       sep: the default delimiter to use, if not set in enironment.
+    variable_file: full path to the tabular file with token, exp_id, etc.
+    sep: the default delimiter to use, if not set in enironment.
 
-       Returns
-       =======
+    Returns
+    =======
 
-       valid_rows: a list of lists, each a valid row
+    valid_rows: a list of lists, each a valid row
 
-           [['test-parse-url', 'globalname', 'globalvalue', '*'],
-            ['test-parse-url', 'color', 'red', '123'], 
-            ['test-parse-url', 'color', 'blue', '456'],
-            ['test-parse-url', 'words', 'at the thing', '123'],
-            ['test-parse-url', 'words', 'omg tacos', '456']]
+        [['test-parse-url', 'globalname', 'globalvalue', '*'],
+         ['test-parse-url', 'color', 'red', '123'],
+         ['test-parse-url', 'color', 'blue', '456'],
+         ['test-parse-url', 'words', 'at the thing', '123'],
+         ['test-parse-url', 'words', 'omg tacos', '456']]
 
     """
 
@@ -222,13 +222,13 @@ def _read_runtime_vars(variable_file, sep=","):
 
 def _validate_row(row, sep=",", required_length=None):
     """validate_row will ensure that a row has the proper length, and is
-       not empty and cleaned of extra spaces.
- 
-       Parameters
-       ==========
-       row: a single row, not yet parsed.
+    not empty and cleaned of extra spaces.
 
-       Returns a valid row, or None if not valid
+    Parameters
+    ==========
+    row: a single row, not yet parsed.
+
+    Returns a valid row, or None if not valid
 
     """
     if not isinstance(row, list):
@@ -248,8 +248,8 @@ def _validate_row(row, sep=",", required_length=None):
 
 def _parse_row(row, sep=","):
     """parse row is a helper function to simply clean up a string, and parse
-       into a row based on a delimiter. If a required length is provided,
-       we check for this too.
+    into a row based on a delimiter. If a required length is provided,
+    we check for this too.
 
     """
     parsed = row.split(sep)
@@ -259,17 +259,17 @@ def _parse_row(row, sep=","):
 
 def validate_header(header, required_fields=None):
     """validate_header ensures that the first row contains the exp_id,
-       var_name, var_value, and token. Capitalization isn't important, but
-       ordering is. This criteria is very strict, but it's reasonable
-       to require.
- 
-       Parameters
-       ==========
-       header: the header row, as a list
-       required_fields: a list of required fields. We derive the required
-                        length from this list.
+    var_name, var_value, and token. Capitalization isn't important, but
+    ordering is. This criteria is very strict, but it's reasonable
+    to require.
 
-       Does not return, instead exits if malformed. Runs silently if OK.
+    Parameters
+    ==========
+    header: the header row, as a list
+    required_fields: a list of required fields. We derive the required
+                     length from this list.
+
+    Does not return, instead exits if malformed. Runs silently if OK.
 
     """
     if required_fields is None:

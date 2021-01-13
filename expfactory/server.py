@@ -48,8 +48,8 @@ class EFServer(Flask):
 
     def initdb(self):
         """initdb will check for writability of the data folder, meaning
-           that it is bound to the local machine. If the folder isn't bound,
-           expfactory runs in demo mode (not saving data)
+        that it is bound to the local machine. If the folder isn't bound,
+        expfactory runs in demo mode (not saving data)
         """
 
         self.database = EXPFACTORY_DATABASE
@@ -69,8 +69,8 @@ class EFServer(Flask):
         bot.log("Data base: %s" % self.database)
 
     def setup(self):
-        """ obtain database and filesystem preferences from defaults,
-            and compare with selection in container.
+        """obtain database and filesystem preferences from defaults,
+        and compare with selection in container.
         """
 
         self.selection = EXPFACTORY_EXPERIMENTS
@@ -98,10 +98,10 @@ class EFServer(Flask):
 
     def get_next(self, session):
         """return the name of the next experiment, depending on the user's
-           choice to randomize. We don't remove any experiments here, that is
-           done on finish, in the case the user doesn't submit data (and
-           thus finish). A return of None means the user has completed the
-           battery of experiments.
+        choice to randomize. We don't remove any experiments here, that is
+        done on finish, in the case the user doesn't submit data (and
+        thus finish). A return of None means the user has completed the
+        battery of experiments.
         """
         next = None
         experiments = session.get("experiments", [])
@@ -114,8 +114,7 @@ class EFServer(Flask):
         return next
 
     def finish_experiment(self, session, exp_id):
-        """remove an experiment from the list after completion.
-        """
+        """remove an experiment from the list after completion."""
         self.logger.debug("Finishing %s" % exp_id)
         experiments = session.get("experiments", [])
         experiments = [x for x in experiments if x != exp_id]
@@ -158,6 +157,9 @@ cors = CORS(
 )
 
 app.config["CORS_HEADERS"] = "Content-Type"
+
+# 3 hours. Set to None for life of session
+app.config["WTF_CSRF_TIME_LIMIT"] = 10800
 
 csrf = CSRFProtect(app)
 

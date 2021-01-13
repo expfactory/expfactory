@@ -40,8 +40,8 @@ from expfactory.database import Base
 
 class Participant(Base):
     """A participant in a local assessment. id must be unique. If a token is
-       revoked or finished, it will end with `_revoked` or `_finished`. A
-       user generated without a token will have value of None
+    revoked or finished, it will end with `_revoked` or `_finished`. A
+    user generated without a token will have value of None
     """
 
     __tablename__ = "participant"

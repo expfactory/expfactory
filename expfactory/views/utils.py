@@ -39,16 +39,16 @@ import os
 
 def perform_checks(template, do_redirect=False, context=None, next=None, quiet=False):
 
-    """return all checks for required variables before returning to 
-       desired view
+    """return all checks for required variables before returning to
+    desired view
 
-       Parameters
-       ==========
-       template: the html template to render
-       do_redirect: if True, perform a redirect and not render
-       context: dictionary of context variables to pass to render_template
-       next: a pre-defined next experiment, will calculate if None
-       quiet: decrease verbosity
+    Parameters
+    ==========
+    template: the html template to render
+    do_redirect: if True, perform a redirect and not render
+    context: dictionary of context variables to pass to render_template
+    next: a pre-defined next experiment, will calculate if None
+    quiet: decrease verbosity
 
     """
     from expfactory.server import app

@@ -121,8 +121,7 @@ class ExpfactoryMessage:
         return False
 
     def isEnabledFor(self, messageLevel):
-        """check if a messageLevel is enabled to emit a level
-        """
+        """check if a messageLevel is enabled to emit a level"""
         if messageLevel <= self.level:
             return True
         return False
@@ -272,8 +271,7 @@ class ExpfactoryMessage:
         self.emit(TEST, message, "TEST")
 
     def is_quiet(self):
-        """is_quiet returns true if the level is under 1
-        """
+        """is_quiet returns true if the level is under 1"""
         if self.level < 1:
             return False
         return True
@@ -281,7 +279,7 @@ class ExpfactoryMessage:
     # Terminal ------------------------------------------
 
     def table(self, rows, col_width=2):
-        """table will print a table of entries. If the rows is 
+        """table will print a table of entries. If the rows is
         a dictionary, the keys are interpreted as column names. if
         not, a numbered list is used.
         """

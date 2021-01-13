@@ -92,7 +92,7 @@ def main(args, parser, subparser):
 
 def clean(subid):
     """clean a subid, removing any folder extensions (_revoked or _finished)
-       for the functions
+    for the functions
     """
     for ext in ["_revoked", "_revoked"]:
         subid = subid.replace(ext, "")

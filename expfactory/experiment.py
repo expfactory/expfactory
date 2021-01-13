@@ -50,7 +50,7 @@ import os
 
 
 def get_experiments(base, load=False):
-    """ get_experiments will return loaded json for all valid experiments from an experiment folder
+    """get_experiments will return loaded json for all valid experiments from an experiment folder
     :param base: full path to the base folder with experiments inside
     :param load: if True, returns a list of loaded config.json objects. If False (default) returns the paths to the experiments
     """
@@ -96,8 +96,8 @@ def load_experiment(folder, return_path=False):
 
 
 def get_selection(available, selection, base="/scif/apps"):
-    """we compare the basename (the exp_id) of the selection and available, 
-       regardless of parent directories"""
+    """we compare the basename (the exp_id) of the selection and available,
+    regardless of parent directories"""
 
     if isinstance(selection, str):
         selection = selection.split(",")
@@ -115,7 +115,7 @@ def make_lookup(experiment_list, key="exp_id"):
     """make_lookup returns dict object to quickly look up query experiment on exp_id
     :param experiment_list: a list of query (dict objects)
     :param key_field: the key in the dictionary to base the lookup key (str)
-    :returns lookup: dict (json) with key as "key_field" from query_list 
+    :returns lookup: dict (json) with key as "key_field" from query_list
     """
     lookup = dict()
     for single_experiment in experiment_list:

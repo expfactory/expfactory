@@ -40,8 +40,8 @@ from wtforms.validators import DataRequired
 
 class ParticipantForm(FlaskForm):
     """the participant form is shown in the portal given an interactive
-       (non headless) runtime. We collection an (optional) participant name,
-       along with the experiments to run.
+    (non headless) runtime. We collection an (optional) participant name,
+    along with the experiments to run.
     """
 
     openid = StringField("openid")
@@ -51,7 +51,7 @@ class ParticipantForm(FlaskForm):
 
 class EntryForm(FlaskForm):
     """the entry form is shown for a headless install. The user is required to
-       enter a pre-generated token, otherwise entry is denied
+    enter a pre-generated token, otherwise entry is denied
     """
 
     token = StringField("token", validators=[DataRequired()])
