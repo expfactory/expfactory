@@ -30,11 +30,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 """
 
-__version__ = "3.19"
+__version__ = "3.2.0"
 AUTHOR = "Vanessa Sochat"
-AUTHOR_EMAIL = "vsochat@stanford.edu"
+AUTHOR_EMAIL = "vsoch@users.noreply.github.com"
 NAME = "expfactory"
-PACKAGE_URL = "http://www.github.com/expfactory/expfactory"
+PACKAGE_URL = "http://github.com/expfactory/expfactory"
 KEYWORDS = "docker container reproducible behavior neuroscience experiment factory"
 DESCRIPTION = "software to generate a reproducible container battery of experiments."
 LICENSE = "LICENSE"

@@ -7,7 +7,7 @@ FROM quay.io/vanessa/expfactory-builder:base
 ###################################
 
 WORKDIR /opt
-RUN git clone https://www.github.com/expfactory/expfactory
+RUN git clone https://github.com/expfactory/expfactory
 WORKDIR /opt/expfactory
 RUN python3 setup.py install
 RUN python3 -m pip install pyaml

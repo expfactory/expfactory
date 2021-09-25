@@ -1,7 +1,7 @@
 {
     "name": "Test Task",
     "exp_id": "test-task",
-    "url": "https://www.github.com/expfactory-experiments/test-task",
+    "url": "https://github.com/expfactory-experiments/test-task",
     "description":"The text task shows a brief X on the screen to respond to.",
     "instructions": "Press spacebar to respond to the black X on the screen.",
     "template":"jspsych",

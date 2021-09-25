@@ -73,7 +73,7 @@ if [ $1 == "build" ]; then
     expfactory build  --output ${recipe} "$@" 
 
     if [ -f "${recipe}" ]; then
-        cp /opt/expfactory/expfactory/templates/build/docker/startscript.sh /data
+        cp /opt/expfactory/expfactory/templates/build/docker/startscript.sh /data        
         echo
         echo "To build, cd to directory with Dockerfile and:
               docker build --no-cache -t expfactory/experiments ."

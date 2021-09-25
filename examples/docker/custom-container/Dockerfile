@@ -16,7 +16,7 @@ ADD startscript.sh /startscript.sh
 RUN chmod u+x /startscript.sh
 
 WORKDIR /opt 
-RUN git clone -b master https://www.github.com/expfactory/expfactory
+RUN git clone -b master https://github.com/expfactory/expfactory
 WORKDIR expfactory 
 RUN cp script/nginx.gunicorn.conf /etc/nginx/sites-enabled/default && \
     cp script/nginx.conf /etc/nginx/nginx.conf
@@ -38,19 +38,19 @@ RUN apt-get clean          # tests, mysql,  postgres
 
 LABEL EXPERIMENT_digit-span /scif/apps/digit-span
 WORKDIR /scif/apps
-RUN expfactory install https://www.github.com/expfactory-experiments/digit-span
+RUN expfactory install https://github.com/expfactory-experiments/digit-span
 
 LABEL EXPERIMENT_spatial-span /scif/apps/spatial-span
 WORKDIR /scif/apps
-RUN expfactory install https://www.github.com/expfactory-experiments/spatial-span
+RUN expfactory install https://github.com/expfactory-experiments/spatial-span
 
 LABEL EXPERIMENT_tower-of-london /scif/apps/tower-of-london
 WORKDIR /scif/apps
-RUN expfactory install https://www.github.com/expfactory-experiments/tower-of-london
+RUN expfactory install https://github.com/expfactory-experiments/tower-of-london
 
 LABEL EXPERIMENT_test-task /scif/apps/test-task
 WORKDIR /scif/apps
-RUN expfactory install https://www.github.com/expfactory-experiments/test-task
+RUN expfactory install https://github.com/expfactory-experiments/test-task
 
 
 
