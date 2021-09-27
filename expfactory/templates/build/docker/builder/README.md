@@ -48,23 +48,23 @@ docker run quay.io/vanessa/expfactory-builder list
 
 Expfactory Version: 3.0
 Experiments
-1  adaptive-n-back	https://www.github.com/expfactory-experiments/adaptive-n-back
-2  breath-counting-task	https://www.github.com/expfactory-experiments/breath-counting-task
-3  dospert-eb-survey	https://www.github.com/expfactory-experiments/dospert-eb-survey
-4  dospert-rp-survey	https://www.github.com/expfactory-experiments/dospert-rp-survey
-5  dospert-rt-survey	https://www.github.com/expfactory-experiments/dospert-rt-survey
-6  test-task	https://www.github.com/expfactory-experiments/test-task
-7  tower-of-london	https://www.github.com/expfactory-experiments/tower-of-london
+1  adaptive-n-back	https://github.com/expfactory-experiments/adaptive-n-back
+2  breath-counting-task	https://github.com/expfactory-experiments/breath-counting-task
+3  dospert-eb-survey	https://github.com/expfactory-experiments/dospert-eb-survey
+4  dospert-rp-survey	https://github.com/expfactory-experiments/dospert-rp-survey
+5  dospert-rt-survey	https://github.com/expfactory-experiments/dospert-rt-survey
+6  test-task	https://github.com/expfactory-experiments/test-task
+7  tower-of-london	https://github.com/expfactory-experiments/tower-of-london
 ```
 
 Try using grep if you want to search for a term in the name or url
 
 ```
 docker run quay.io/vanessa/expfactory-builder list | grep survey
-2  alcohol-drugs-survey	https://www.github.com/expfactory-experiments/alcohol-drugs-survey
-4  dospert-eb-survey	https://www.github.com/expfactory-experiments/dospert-eb-survey
-5  dospert-rp-survey	https://www.github.com/expfactory-experiments/dospert-rp-survey
-6  dospert-rt-survey	https://www.github.com/expfactory-experiments/dospert-rt-survey
+2  alcohol-drugs-survey	https://github.com/expfactory-experiments/alcohol-drugs-survey
+4  dospert-eb-survey	https://github.com/expfactory-experiments/dospert-eb-survey
+5  dospert-rp-survey	https://github.com/expfactory-experiments/dospert-rp-survey
+6  dospert-rt-survey	https://github.com/expfactory-experiments/dospert-rt-survey
 ```
 
 ## Recipe Generation
@@ -277,22 +277,22 @@ url again? Let's ask...
 expfactory list
 Expfactory Version: 3.0
 Experiments
-1  adaptive-n-back	https://www.github.com/expfactory-experiments/adaptive-n-back
-2  alcohol-drugs-survey	https://www.github.com/expfactory-experiments/alcohol-drugs-survey
-3  breath-counting-task	https://www.github.com/expfactory-experiments/breath-counting-task
-4  digit-span	https://www.github.com/expfactory-experiments/digit-span
-5  dospert-eb-survey	https://www.github.com/expfactory-experiments/dospert-eb-survey
-6  dospert-rp-survey	https://www.github.com/expfactory-experiments/dospert-rp-survey
-7  dospert-rt-survey	https://www.github.com/expfactory-experiments/dospert-rt-survey
-8  spatial-span	https://www.github.com/expfactory-experiments/spatial-span
-9  test-task	https://www.github.com/expfactory-experiments/test-task
-10 tower-of-london	https://www.github.com/expfactory-experiments/tower-of-london
+1  adaptive-n-back	https://github.com/expfactory-experiments/adaptive-n-back
+2  alcohol-drugs-survey	https://github.com/expfactory-experiments/alcohol-drugs-survey
+3  breath-counting-task	https://github.com/expfactory-experiments/breath-counting-task
+4  digit-span	https://github.com/expfactory-experiments/digit-span
+5  dospert-eb-survey	https://github.com/expfactory-experiments/dospert-eb-survey
+6  dospert-rp-survey	https://github.com/expfactory-experiments/dospert-rp-survey
+7  dospert-rt-survey	https://github.com/expfactory-experiments/dospert-rt-survey
+8  spatial-span	https://github.com/expfactory-experiments/spatial-span
+9  test-task	https://github.com/expfactory-experiments/test-task
+10 tower-of-london	https://github.com/expfactory-experiments/tower-of-london
 ```
 
 Ah yes, let's install test-task:
 
 ```
-$ expfactory install https://www.github.com/expfactory-experiments/test-task
+$ expfactory install https://github.com/expfactory-experiments/test-task
 Expfactory Version: 3.0
 Cloning into '/tmp/tmp5xn6oc4v/test-task'...
 remote: Counting objects: 62, done.
@@ -317,7 +317,7 @@ docker restart vigorous_lovelace
 This is a quick preview of running a quick server with gunicorn, Flask, and Docker. While this implementation isn't
 ideal for production, it will work reasonable well for a local lab that needs to run participants through a 
 behavioral paradigm. Do you have a use case that warrants a different kind of database, experiment, or deployment? 
-Please [get in touch](https://www.github.com/expfactory/issues) as I am looking to develop this.
+Please [get in touch](https://github.com/expfactory/issues) as I am looking to develop this.
 
 
 ## Building the Builder

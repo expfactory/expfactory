@@ -17,4 +17,4 @@ docker build -t quay.io/vanessa/expfactory-builder-dev .
 docker push quay.io/vanessa/expfactory-builder-dev
 ```
 
-Follow instructions in the [main builder](../builder) README for using the builder. If you have questions please [get in touch](https://www.github.com/expfactory/issues).
+Follow instructions in the [main builder](../builder) README for using the builder. If you have questions please [get in touch](https://github.com/expfactory/issues).

@@ -93,7 +93,7 @@ class TestClient(unittest.TestCase):
             [
                 "expfactory",
                 "install",
-                "https://www.github.com/expfactory-experiments/test-task",
+                "https://github.com/expfactory-experiments/test-task",
             ]
         )
         self.assertTrue(os.path.exists("%s/test-task" % self.tmpdir))

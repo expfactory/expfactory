@@ -50,6 +50,30 @@ from expfactory.forms import EntryForm
 # HEADLESS LOGIN ###############################################################
 
 
+@app.route("/login", methods=["GET"])
+def login_get():
+
+    # If not headless, we don't need to login
+    if not app.headless:
+        app.logger.debug("Not running in headless mode, redirect to /start.")
+        redirect("/start")
+
+    subid = session.get("subid")
+    if not subid:
+        token = request.args.get("token")
+        if token:
+
+            subid = app.validate_token(token)
+            if subid is None:
+                return headless_denied(form=EntryForm())
+
+            session["subid"] = subid
+            session["token"] = token
+
+            app.logger.info("Logged in user [subid] %s" % subid)
+    return redirect("/next")
+
+
 @app.route("/login", methods=["POST"])
 def login():
 

@@ -49,7 +49,7 @@ var tip = d3.tip()
     .attr('class', 'd3-tip')
     .offset([-10, 0])
     .html(function(d) {
-        return "<a id='github-"+ d.exp_id +"' href='https://www.github.com/expfactory-experiments/" + d.exp_id + "' target='_blank'><strong><span style='color:black;text-decoration:none'>" + d.exp_id +"</span></a>";
+        return "<a id='github-"+ d.exp_id +"' href='https://github.com/expfactory-experiments/" + d.exp_id + "' target='_blank'><strong><span style='color:black;text-decoration:none'>" + d.exp_id +"</span></a>";
 })
 
 // D3
