@@ -143,7 +143,7 @@ def validate(folder=None, cleanup=False):
 
 
 def get_library(lookup=True, key="exp_id"):
-    """ return the raw library, without parsing"""
+    """return the raw library, without parsing"""
     library = None
     response = requests.get(EXPFACTORY_LIBRARY)
     if response.status_code == 200:
