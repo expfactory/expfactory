@@ -3,8 +3,8 @@
 import random
 import string
 
-punctuation = '!#$%&()*+,-./:;<=>?@^_{|}~'
+punctuation = "!#$%&()*+,-./:;<=>?@^_{|}~"
 choices = string.ascii_letters + string.digits + punctuation
 selected = [random.SystemRandom().choice(choices) for _ in range(50)]
-generated_key = ''.join(selected)
+generated_key = "".join(selected)
 print(generated_key)

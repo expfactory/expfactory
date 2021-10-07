@@ -159,7 +159,16 @@ cors = CORS(
 app.config["CORS_HEADERS"] = "Content-Type"
 
 # 3 hours. Set to None for life of session
-app.config["WTF_CSRF_TIME_LIMIT"] = 10800
+time_limit = os.environ.get("EXPFACTORY_WTF_CSRF_TIME_LIMIT")
+if time_limit:
+    try:
+        time_limit = int(time_limit)
+    except:
+        bot.warning(
+            "time_limit setting %s cannot be parsed, will use default" % time_limit
+        )
+
+app.config["WTF_CSRF_TIME_LIMIT"] = time_limit or 10800
 
 csrf = CSRFProtect(app)
 
