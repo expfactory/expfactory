@@ -77,7 +77,7 @@ class LibraryValidator:
 
         if os.path.exists(expfile):
             with open(expfile, "r") as stream:
-                docs = yaml.load_all(stream)
+                docs = yaml.safe_load(stream)
                 for doc in docs:
                     if isinstance(doc, dict):
                         for k, v in doc.items():
