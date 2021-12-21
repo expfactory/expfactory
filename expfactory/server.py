@@ -143,6 +143,8 @@ app.config.from_object("expfactory.config")
 
 # EXPERIMENTS #################################################################
 
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+
 # Cors
 cors = CORS(
     app,
@@ -162,6 +164,7 @@ app.config["CORS_HEADERS"] = "Content-Type"
 app.config["WTF_CSRF_TIME_LIMIT"] = 10800
 
 csrf = CSRFProtect(app)
+
 
 import expfactory.views
 import expfactory.api
