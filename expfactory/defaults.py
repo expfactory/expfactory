@@ -10,7 +10,7 @@ can be found here. The order of operations works as follows:
        case that required = True. A required = True variable not found
        will system exit with an error.
 
-Copyright (c) 2017-2021, Vanessa Sochat
+Copyright (c) 2017-2022, Vanessa Sochat
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
