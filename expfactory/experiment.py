@@ -1,7 +1,7 @@
 """
 experiment.py: part of expfactory package
 
-Copyright (c) 2017-2021, Vanessa Sochat
+Copyright (c) 2017-2022, Vanessa Sochat
 
 All rights reserved.
 
