@@ -202,14 +202,16 @@ def tokens_from_file(self, token_file):
             % token_file
         )
     users = []
-    for token in read_file(token_file):
+    for token in read_file(token_file, readlines=True):
         token = token.strip()
 
         # Skip comments
-        if token.startswith("#"):
+        if token.startswith("#") or not token:
             continue
         if not re.search(token_regex, token):
-            self.logger.warning("Token %s does not match regex requirements, skipping" % token)
+            self.logger.warning(
+                "Token %s does not match regex requirements, skipping" % token
+            )
 
         users.append(self.generate_user(token))
     return users

@@ -146,6 +146,7 @@ def restart_user(self, subid):
 
 # Tokens #######################################################################
 
+
 def tokens_from_file(self, token_file):
     """
     Generate one or more tokens from a newline separated file.
@@ -158,21 +159,25 @@ def tokens_from_file(self, token_file):
             % token_file
         )
     users = []
-    for token in read_file(token_file):
+    for token in read_file(token_file, readlines=True):
+
         token = token.strip()
 
         # Skip comments
-        if token.startswith("#"):
+        if token.startswith("#") or not token:
             continue
 
         if not re.search(token_regex, token):
-            self.logger.warning("Token %s does not match regex requirements, skipping" % token)
+            self.logger.warning(
+                "Token %s does not match regex requirements, skipping" % token
+            )
 
         # Only create if not created yet
         p = Participant.query.filter(Participant.token == token).first()
         if p is None:
             users.append(self.generate_subid(token))
     return users
+
 
 def validate_token(self, token):
     """

@@ -204,9 +204,13 @@ def write_json(json_obj, filename, mode="w"):
     return filename
 
 
-def read_file(filename, mode="r"):
-    with open(filename, mode) as filey:
-        data = filey.read()
+def read_file(filename, mode="r", readlines=False):
+    if readlines:
+        with open(filename, mode) as filey:
+            data = filey.readlines()
+    else:
+        with open(filename, mode) as filey:
+            data = filey.read()
     return data
 
 
