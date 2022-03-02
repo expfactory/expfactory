@@ -131,6 +131,7 @@ EFServer.generate_user = generate_user
 EFServer.validate_token = validate_token
 EFServer.refresh_token = refresh_token
 EFServer.revoke_token = revoke_token
+EFServer.tokens_from_file = tokens_from_file
 
 # User Actions
 EFServer.list_users = list_users

@@ -42,6 +42,9 @@ import sys
 import os
 import re
 
+# match any letter, upper or lowercase, number and dash/underscore
+token_regex = "^[A-Za-z0-9_-]*$"
+
 ################################################################################
 # io utils
 ################################################################################

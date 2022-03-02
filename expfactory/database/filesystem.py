@@ -30,11 +30,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 """
 from flask import session
-from expfactory.utils import write_json, mkdir_p
+from expfactory.utils import write_json, mkdir_p, read_file, token_regex
 from expfactory.defaults import EXPFACTORY_SUBID, EXPFACTORY_DATA
 from glob import glob
 import uuid
 import os
+import re
 import sys
 
 
@@ -48,7 +49,8 @@ import sys
 
 
 def generate_subid(self, token=None):
-    """assumes a flat (file system) database, organized by experiment id, and
+    """
+    assumes a flat (file system) database, organized by experiment id, and
     subject id, with data (json) organized by subject identifier
     """
 
@@ -61,14 +63,17 @@ def generate_subid(self, token=None):
 
 
 def list_users(self):
-    """list users, each associated with a filesystem folder"""
+    """
+    list users, each associated with a filesystem folder
+    """
     folders = glob("%s/*" % (self.database))
     folders.sort()
     return [self.print_user(x) for x in folders]
 
 
 def print_user(self, user):
-    """print a filesystem database user. A "database" folder that might end with
+    """
+    Print a filesystem database user. A "database" folder that might end with
     the participant status (e.g. _finished) is extracted to print in format
 
     [folder]                        [identifier][studyid]
@@ -96,7 +101,8 @@ def print_user(self, user):
 
 
 def generate_user(self, subid=None):
-    """generate a new user on the filesystem, still session based so we
+    """
+    Generate a new user on the filesystem, still session based so we
     create a new identifier. This function is called from the users new
     entrypoint, and it assumes we want a user generated with a token.
     since we don't have a database proper, we write the folder name to
@@ -104,8 +110,8 @@ def generate_user(self, subid=None):
     """
     # Only generate token if subid being created
     if subid is None:
-        token = str(uuid.uuid4())
-        subid = self.generate_subid(token=token)
+        subid = str(uuid.uuid4())
+    subid = self.generate_subid(token=subid)
 
     if os.path.exists(self.data_base):  # /scif/data
         data_base = "%s/%s" % (self.data_base, subid)
@@ -117,7 +123,8 @@ def generate_user(self, subid=None):
 
 
 def finish_user(self, subid, ext="finished"):
-    """finish user will append "finished" (or other) to the data folder when
+    """
+    Finish user will append "finished" (or other) to the data folder when
     the user has completed (or been revoked from) the battery.
     For headless, this means that the session is ended and the token
     will not work again to rewrite the result. If the user needs to update
@@ -157,7 +164,8 @@ def finish_user(self, subid, ext="finished"):
 
 
 def restart_user(self, subid):
-    """restart user will remove any "finished" or "revoked" extensions from
+    """
+    Restart user will remove any "finished" or "revoked" extensions from
     the user folder to restart the session. This command always comes from
     the client users function, so we know subid does not start with the
     study identifer first
@@ -184,8 +192,32 @@ def restart_user(self, subid):
 # Tokens #######################################################################
 
 
+def tokens_from_file(self, token_file):
+    """
+    Generate one or more tokens from a newline separated file.
+    """
+    if not os.path.exists(token_file):
+        sys.exit(
+            "Tokens file %s does not exist. Are you sure it's bound to the container?"
+            % token_file
+        )
+    users = []
+    for token in read_file(token_file):
+        token = token.strip()
+
+        # Skip comments
+        if token.startswith("#"):
+            continue
+        if not re.search(token_regex, token):
+            self.logger.warning("Token %s does not match regex requirements, skipping" % token)
+
+        users.append(self.generate_user(token))
+    return users
+
+
 def validate_token(self, token):
-    """retrieve a subject based on a token. Valid means we return a participant
+    """
+    Retrieve a subject based on a token. Valid means we return a participant
     invalid means we return None
     """
     # A token that is finished or revoked is not valid
@@ -199,8 +231,10 @@ def validate_token(self, token):
 
 
 def refresh_token(self, subid):
-    """refresh or generate a new token for a user. If the user is finished,
-    this will also make the folder available again for using."""
+    """
+    Refresh or generate a new token for a user. If the user is finished,
+    this will also make the folder available again for using.
+    """
     if os.path.exists(self.data_base):  # /scif/data
         data_base = "%s/%s" % (self.data_base, subid)
         if os.path.exists(data_base):
@@ -215,13 +249,17 @@ def refresh_token(self, subid):
 
 
 def revoke_token(self, subid):
-    """revoke a presently active token, meaning append _revoked to it."""
+    """
+    Revoke a presently active token, meaning append _revoked to it.
+    """
     return self.finish_user(subid, ext="revoked")
 
 
 def save_data(self, session, exp_id, content):
-    """save data will obtain the current subid from the session, and save it
-    depending on the database type. Currently we just support flat files"""
+    """
+    Save data will obtain the current subid from the session, and save it
+    depending on the database type. Currently we just support flat files
+    """
 
     subid = session.get("subid")
 
@@ -255,7 +293,8 @@ def save_data(self, session, exp_id, content):
 
 
 def init_db(self):
-    """init_db for the filesystem ensures that the base folder (named
+    """
+    init_db for the filesystem ensures that the base folder (named
     according to the studyid) exists.
     """
     self.session = None
