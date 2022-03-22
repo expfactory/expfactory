@@ -15,6 +15,7 @@ Critical items to know are:
 
 
 ## [v3.x](https://github.com/expfactory/expfactory/tree/master) (master)
+ - adding support for first/last experiment (3.2.13)
  - updating flask to 1.1.4 (3.2.12)
  - updating yaml to use safe_load (3.2.11)
  - adding support for receiving a token in the url and updating docs template (3.2.0)
