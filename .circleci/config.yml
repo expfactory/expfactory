@@ -112,7 +112,7 @@ workflows:
                 command: |
                     echo "PWD is ${PWD}"
                     cd expfactory/templates/build/docker/builder
-                    docker build --no-cache -t quay.io/vanessa/expfactory-builder .
+                    docker build --build-arg branch=$CIRCLE_BRANCH --no-cache -t quay.io/vanessa/expfactory-builder .
             - run: *build_docker_image
             - restore_cache:
                 keys:

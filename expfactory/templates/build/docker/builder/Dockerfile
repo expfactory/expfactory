@@ -2,12 +2,15 @@ FROM quay.io/vanessa/expfactory-builder:base
 
 # docker build -t quay.io/vanessa/expfactory-builder .
 
+ARG branch=master
+ENV branch=${branch}
+
 ###################################
 # Experiment Factory
 ###################################
 
 WORKDIR /opt
-RUN git clone https://github.com/expfactory/expfactory
+RUN git clone -b ${branch} https://github.com/expfactory/expfactory
 WORKDIR /opt/expfactory
 RUN python3 setup.py install
 RUN python3 -m pip install pyaml
