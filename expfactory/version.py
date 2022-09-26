@@ -30,7 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 """
 
-__version__ = "3.2.12"
+__version__ = "3.2.13"
 AUTHOR = "Vanessa Sochat"
 AUTHOR_EMAIL = "vsoch@users.noreply.github.com"
 NAME = "expfactory"
@@ -40,7 +40,7 @@ DESCRIPTION = "software to generate a reproducible container battery of experime
 LICENSE = "LICENSE"
 
 INSTALL_REQUIRES = (
-    ("flask", {"exact_version": "1.1.4"}),
+    ("flask", {"min_version": "2.0"}),
     ("flask-restful", {"min_version": "0.3.6"}),
     ("flask-blueprint", {"exact_version": "1.2.2"}),
     ("Flask-WTF", {"min_version": "0.14.2"}),
