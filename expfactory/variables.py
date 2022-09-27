@@ -30,13 +30,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 """
 
-import filecmp
 from expfactory.utils import read_file
 from expfactory.defaults import EXPFACTORY_RUNTIME_DELIM, EXPFACTORY_RUNTIME_VARS
 from expfactory.logger import bot
-import json
-import re
 import os
+import sys
 
 
 def get_runtime_vars(varset, experiment, token):
@@ -83,8 +81,10 @@ def get_runtime_vars(varset, experiment, token):
 
 
 def generate_runtime_vars(variable_file=None, sep=","):
-    """generate a lookup data structure from a
-    delimited file. We typically obtain the file name and delimiter from
+    """
+    Generate a lookup data structure from a delimited file.
+
+    We typically obtain the file name and delimiter from
     the environment by way of EXPFACTORY_RUNTIME_VARS, and
     EXPFACTORY_RUNTIME_DELIM, respectively, but the user can also parse
     from a custom variable file by way of specifying it to the function
@@ -142,7 +142,7 @@ def generate_runtime_vars(variable_file=None, sep=","):
     # Read in the file, generate config
 
     varset = dict()
-    rows = _read_runtime_vars(variable_file)
+    rows = _read_runtime_vars(variable_file, delim)
 
     if len(rows) > 0:
 

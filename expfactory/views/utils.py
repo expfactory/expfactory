@@ -33,9 +33,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from flask import flash, render_template, redirect, session
 
-from expfactory.logger import bot
-import os
-
 
 def perform_checks(template, do_redirect=False, context=None, next=None, quiet=False):
 

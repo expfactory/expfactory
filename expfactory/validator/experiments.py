@@ -36,14 +36,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import os
 import re
-import sys
 import tempfile
 import shutil
 from expfactory.validator.utils import notvalid
 from expfactory.logger import bot
 from expfactory.utils import clone, read_json
-from glob import glob
-import json
 
 
 class ExperimentValidator:
@@ -55,7 +52,7 @@ class ExperimentValidator:
     def __str__(self):
         return "expfactory.ExperimentValidator"
 
-    def _validate_folder(self, folder=None):
+    def _validate_folder(self, folder=None, validate_folder=True):
         """validate folder takes a cloned github repo, ensures
         the existence of the config.json, and validates it.
         """
@@ -69,7 +66,7 @@ class ExperimentValidator:
         if not config:
             return notvalid("%s is not an experiment." % (folder))
 
-        return self._validate_config(folder)
+        return self._validate_config(folder, validate_folder)
 
     def validate(self, folder, cleanup=False, validate_folder=True):
         """validate is the entrypoint to all validation, for
@@ -89,7 +86,7 @@ class ExperimentValidator:
             return self._validate_config(config, validate_folder)
 
         # Otherwise, validate folder and cleanup
-        valid = self._validate_folder(folder)
+        valid = self._validate_folder(folder, validate_folder)
         if cleanup is True:
             shutil.rmtree(folder)
         return valid

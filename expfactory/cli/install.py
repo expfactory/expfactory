@@ -40,6 +40,7 @@ from expfactory.utils import (
     save_template,
 )
 from expfactory.logger import bot
+import uuid
 import tempfile
 import sys
 import os
@@ -77,9 +78,13 @@ def main(args, parser, subparser):
         bot.error("%s is not valid." % exp_id)
         sys.exit(1)
 
-    # Move static files to output folder
-    dest = "%s/%s" % (folder, exp_id)
+    # If we are concealing names, the exp_id should be a string with numbers, letters, -
+    exp_url = exp_id
+    conceal_names = os.environ.get("EXPFACTORY_CONCEAL_NAMES") is not None
+    if conceal_names:
+        exp_url = str(uuid.uuid4())
 
+    dest = os.path.join(folder, exp_url)
     bot.log("Installing %s to %s" % (exp_id, dest))
 
     # Building container
@@ -99,6 +104,7 @@ def main(args, parser, subparser):
         bot.log("Preparing experiment routes...")
         template = get_template("experiments/template.py")
         template = sub_template(template, "{{ exp_id }}", exp_id)
+        template = sub_template(template, "{{ exp_url }}", exp_url)
         template = sub_template(template, "{{ exp_id_python }}", python_module)
 
         # 1. Python blueprint

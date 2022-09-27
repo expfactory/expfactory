@@ -26,14 +26,13 @@ from expfactory.experiment import get_experiments, make_lookup, get_selection
 
 from expfactory.database import *
 from flask import Flask
-from flask_wtf.csrf import CSRFProtect, generate_csrf
+from flask_wtf.csrf import CSRFProtect
 from expfactory.variables import generate_runtime_vars
 from flask_cors import CORS
 from expfactory.logger import bot
 from expfactory.defaults import *
 
 import random
-import sys
 import os
 
 # SERVER CONFIGURATION #########################################################
@@ -80,6 +79,7 @@ class EFServer(Flask):
         self.base = EXPFACTORY_BASE
         self.randomize = EXPFACTORY_RANDOMIZE
         self.headless = EXPFACTORY_HEADLESS
+        self.conceal_names = EXPFACTORY_CONCEAL_NAMES
 
         # Generate variables, if they exist
         self.vars = generate_runtime_vars() or None
@@ -88,13 +88,18 @@ class EFServer(Flask):
         self.experiments = get_selection(available, self.selection)
         self.logger.debug(self.experiments)
         self.lookup = make_lookup(self.experiments)
-        final = "\n".join(list(self.lookup.keys()))
+        final = "\n".join(self.exp_ids)
 
         bot.log("Headless mode: %s" % self.headless)
+        bot.log("Conceal names: %s" % self.conceal_names)
         bot.log("User has selected: %s" % self.selection)
         bot.log("Experiments Available: %s" % "\n".join(available))
         bot.log("Randomize: %s" % self.randomize)
         bot.log("Final Set \n%s" % final)
+
+    @property
+    def exp_ids(self):
+        return [x["exp_id"] for _, x in self.lookup.items()]
 
     def get_next(self, session):
         """return the name of the next experiment, depending on the user's
@@ -113,8 +118,21 @@ class EFServer(Flask):
                 next = experiments[0]
         return next
 
+    def lookup_experiment(self, exp_id):
+        """
+        Given an exp_id or uuid (folder hiding name) get the original exp_id
+        """
+        experiment = [
+            meta for _, meta in self.lookup.items() if meta["folder"] == exp_id
+        ]
+        if experiment:
+            exp_id = experiment[0]["exp_id"]
+        return exp_id
+
     def finish_experiment(self, session, exp_id):
-        """remove an experiment from the list after completion."""
+        """
+        Remove an experiment from the list after completion.
+        """
         self.logger.debug("Finishing %s" % exp_id)
         experiments = session.get("experiments", [])
         experiments = [x for x in experiments if x != exp_id]

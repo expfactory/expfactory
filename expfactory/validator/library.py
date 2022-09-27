@@ -36,7 +36,6 @@ import os
 import re
 import sys
 from expfactory.logger import bot
-from glob import glob
 from .utils import notvalid
 import json
 
@@ -103,9 +102,11 @@ class LibraryValidator:
                     return False
 
             if "github" not in self.metadata["github"]:
-                return notvalid("%s: not a valid github repository" % name)
+                return notvalid(
+                    "%s: not a valid github repository" % self.metadata["github"]
+                )
             if not isinstance(self.metadata["tags"], list):
-                return notvalid("%s: tags must be a list" % name)
+                return notvalid("%s: tags must be a list" % self.metadata["tags"])
             if not re.search(
                 "(\w+://)(.+@)*([\w\d\.]+)(:[\d]+){0,1}/*(.*)", self.metadata["github"]
             ):

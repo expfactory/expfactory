@@ -32,9 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 from flask_restful import Resource, Api
-from expfactory.logger import bot
 from expfactory.server import app
-import os
 
 
 # API VIEWS ####################################################################
@@ -56,7 +54,9 @@ class apiExperimentSingle(Resource):
     """
 
     def get(self, exp_id):
-        return app.lookup[exp_id]
+        for _, metadata in app.lookup:
+            if metadata["exp_id"] == exp_id:
+                return metadata
 
 
 # Create custom loader with experiments to serve

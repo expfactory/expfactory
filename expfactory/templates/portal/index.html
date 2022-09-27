@@ -43,7 +43,7 @@
                                     <div class="row">
                                         <div class="col-xs-6">
                                             <div class="ticket-name">
-                                                {{ experiment }}
+                                                {{ metadata.exp_id }}
                                                 <span><br></span>
                                             </div>
                                         </div>                                    
@@ -54,7 +54,7 @@
                                                       <span class="input-group-btn">
                                                           <button type="button" 
                                                                   class="btn btn-default btn-number experiment-select-button experiment-unselected" 
-                                                                  id="{{ experiment }}"
+                                                                  id="{{ metadata.exp_id }}"
                                                                   {% if metadata.time %}
                                                                   data-time="{{ metadata.time }}"
                                                                   {% else %}

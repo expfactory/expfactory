@@ -34,13 +34,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from expfactory.utils import find_directories, read_json
 
-from glob import glob
-import filecmp
-from expfactory.defaults import EXPFACTORY_LIBRARY
+from expfactory.defaults import EXPFACTORY_LIBRARY, EXPFACTORY_CONCEAL_NAMES
 from expfactory.logger import bot
-import json
 import requests
-import re
 import os
 
 
@@ -55,7 +51,11 @@ def get_experiments(base, load=False):
     :param load: if True, returns a list of loaded config.json objects. If False (default) returns the paths to the experiments
     """
     experiments = find_directories(base)
-    valid_experiments = [e for e in experiments if validate(e, cleanup=False)]
+    valid_experiments = [
+        e
+        for e in experiments
+        if validate(e, cleanup=False, validate_folder=not EXPFACTORY_CONCEAL_NAMES)
+    ]
     bot.info("Found %s valid experiments" % (len(valid_experiments)))
     if load is True:
         valid_experiments = load_experiments(valid_experiments)
@@ -72,7 +72,7 @@ def load_experiments(folders):
     """
     experiments = []
     if isinstance(folders, str):
-        folders = [experiment_folders]
+        folders = [folders]
     for folder in folders:
         exp = load_experiment(folder)
         experiments.append(exp)
@@ -96,8 +96,10 @@ def load_experiment(folder, return_path=False):
 
 
 def get_selection(available, selection, base="/scif/apps"):
-    """we compare the basename (the exp_id) of the selection and available,
-    regardless of parent directories"""
+    """
+    Compare the basename (the exp_id) of the selection and available,
+    regardless of parent directories
+    """
 
     if isinstance(selection, str):
         selection = selection.split(",")
@@ -119,14 +121,17 @@ def make_lookup(experiment_list, key="exp_id"):
     """
     lookup = dict()
     for single_experiment in experiment_list:
+        folder_name = single_experiment
         if isinstance(single_experiment, str):
+            folder_name = os.path.basename(single_experiment)
             single_experiment = load_experiment(single_experiment)
+        single_experiment["folder"] = folder_name
         lookup_key = single_experiment[key]
         lookup[lookup_key] = single_experiment
     return lookup
 
 
-def validate(folder=None, cleanup=False):
+def validate(folder=None, cleanup=False, validate_folder=True):
     """validate
     :param folder: full path to experiment folder with config.json. If path begins
                    with https, we assume to be starting from a repository.
@@ -134,7 +139,7 @@ def validate(folder=None, cleanup=False):
     from expfactory.validator import ExperimentValidator
 
     cli = ExperimentValidator()
-    return cli.validate(folder, cleanup=cleanup)
+    return cli.validate(folder, cleanup=cleanup, validate_folder=validate_folder)
 
 
 ################################################################################
