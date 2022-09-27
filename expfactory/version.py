@@ -40,13 +40,13 @@ DESCRIPTION = "software to generate a reproducible container battery of experime
 LICENSE = "LICENSE"
 
 INSTALL_REQUIRES = (
-    ("flask", {"exact_version": "1.1.4"}),
+    ("flask", {"min_version": "2.0"}),
     ("flask-restful", {"min_version": "0.3.6"}),
     ("flask-blueprint", {"exact_version": "1.2.2"}),
     ("Flask-WTF", {"min_version": "0.14.2"}),
     ("Flask-SQLAlchemy", {"min_version": "2.3.2"}),
     ("flask-cors", {"min_version": "3.0.6"}),
-    ("markupsafe", {"exact_version": "2.0.1"}),
+    ("markupsafe", {"min_version": "2.0.1"}),
     ("requests", {"min_version": "2.12.4"}),
     ("retrying", {"min_version": "1.3.3"}),
 )
