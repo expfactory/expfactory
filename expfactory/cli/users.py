@@ -56,6 +56,13 @@ def main(args, parser, subparser):
             app.print_user(user)
         sys.exit(0)
 
+    # The user wants to create custom tokens
+    token_file = args.token_file
+    if token_file is not None:
+        users = app.tokens_from_file(token_file)
+        print("%s users existing or generated from file." % len(users))
+        sys.exit(0)
+
     # The user wants to manage user token
     action = None
     if args.revoke is not None:

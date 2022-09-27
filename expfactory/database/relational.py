@@ -36,7 +36,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 
 from sqlalchemy.ext.declarative import declarative_base
 from expfactory.logger import bot
-from expfactory.utils import write_json
+from expfactory.utils import write_json, read_file, token_regex
 from expfactory.defaults import EXPFACTORY_SUBID, EXPFACTORY_DATA
 from glob import glob
 import os
@@ -58,15 +58,18 @@ import sys
 
 
 def generate_subid(self, token=None, return_user=False):
-    """generate a new user in the database, still session based so we
+    """
+    Generate a new user in the database, still session based so we
     create a new identifier.
     """
     from expfactory.database.models import Participant
 
+    # TODO: do we need to query here first instead to see if exists?
     if not token:
         p = Participant()
     else:
         p = Participant(token=token)
+
     self.session.add(p)
     self.session.commit()
     if return_user is True:
@@ -75,7 +78,9 @@ def generate_subid(self, token=None, return_user=False):
 
 
 def print_user(self, user):
-    """print a relational database user"""
+    """
+    Print a relational database user
+    """
     status = "active"
     token = user.token
 
@@ -91,7 +96,8 @@ def print_user(self, user):
 
 
 def list_users(self, user=None):
-    """list users, each having a model in the database. A headless experiment
+    """
+    List users, each having a model in the database. A headless experiment
     will use protected tokens, and interactive will be based on auto-
     incremented ids.
     """
@@ -108,7 +114,8 @@ def list_users(self, user=None):
 
 
 def generate_user(self):
-    """generate a new user in the database, still session based so we
+    """
+    Generate a new user in the database, still session based so we
     create a new identifier. This function is called from the users new
     entrypoint, and it assumes we want a user generated with a token.
     """
@@ -117,8 +124,10 @@ def generate_user(self):
 
 
 def finish_user(self, subid):
-    """finish user will remove a user's token, making the user entry not
-    accesible if running in headless model"""
+    """
+    Finish user will remove a user's token, making the user entry not
+    accesible if running in headless model
+    """
 
     p = self.revoke_token(subid)
     p.token = "finished"
@@ -127,7 +136,9 @@ def finish_user(self, subid):
 
 
 def restart_user(self, subid):
-    """restart a user, which means revoking and issuing a new token."""
+    """
+    Restart a user, which means revoking and issuing a new token.
+    """
     p = self.revoke_token(subid)
     p = self.refresh_token(subid)
     return p
@@ -136,8 +147,41 @@ def restart_user(self, subid):
 # Tokens #######################################################################
 
 
+def tokens_from_file(self, token_file):
+    """
+    Generate one or more tokens from a newline separated file.
+    """
+    from expfactory.database.models import Participant
+
+    if not os.path.exists(token_file):
+        sys.exit(
+            "Tokens file %s does not exist. Are you sure it's bound to the container?"
+            % token_file
+        )
+    users = []
+    for token in read_file(token_file, readlines=True):
+
+        token = token.strip()
+
+        # Skip comments
+        if token.startswith("#") or not token:
+            continue
+
+        if not re.search(token_regex, token):
+            self.logger.warning(
+                "Token %s does not match regex requirements, skipping" % token
+            )
+
+        # Only create if not created yet
+        p = Participant.query.filter(Participant.token == token).first()
+        if p is None:
+            users.append(self.generate_subid(token))
+    return users
+
+
 def validate_token(self, token):
-    """retrieve a subject based on a token. Valid means we return a participant
+    """
+    Retrieve a subject based on a token. Valid means we return a participant
     invalid means we return None
     """
     from expfactory.database.models import Participant
@@ -152,8 +196,10 @@ def validate_token(self, token):
 
 
 def revoke_token(self, subid):
-    """revoke a token by removing it. Is done at finish, and also available
-    as a command line option"""
+    """
+    Revoke a token by removing it. Is done at finish, and also available
+    as a command line option
+    """
     from expfactory.database.models import Participant
 
     p = Participant.query.filter(Participant.id == subid).first()
@@ -164,7 +210,9 @@ def revoke_token(self, subid):
 
 
 def refresh_token(self, subid):
-    """refresh or generate a new token for a user"""
+    """
+    Refresh or generate a new token for a user
+    """
     from expfactory.database.models import Participant
 
     p = Participant.query.filter(Participant.id == subid).first()
@@ -175,8 +223,10 @@ def refresh_token(self, subid):
 
 
 def save_data(self, session, exp_id, content):
-    """save data will obtain the current subid from the session, and save it
-    depending on the database type. Currently we just support flat files"""
+    """
+    Save data will obtain the current subid from the session, and save it
+    depending on the database type. Currently we just support flat files
+    """
     from expfactory.database.models import Participant, Result
 
     subid = session.get("subid")
@@ -222,7 +272,8 @@ Base = declarative_base()
 
 
 def init_db(self):
-    """initialize the database, with the default database path or custom with
+    """
+    Initialize the database, with the default database path or custom with
     a format corresponding to the database type:
 
     Examples:

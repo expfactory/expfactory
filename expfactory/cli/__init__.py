@@ -73,6 +73,12 @@ def get_parser():
     )
 
     users.add_argument(
+        "--tokens",
+        dest="token_file",
+        help="provide a filename with a single list (newline separated) of custom tokens to generate",
+    )
+
+    users.add_argument(
         "--list",
         dest="list",
         help="list current tokens, for a headless install",

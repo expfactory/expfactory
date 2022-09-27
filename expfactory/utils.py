@@ -42,6 +42,9 @@ import sys
 import os
 import re
 
+# match any letter, upper or lowercase, number and dash/underscore
+token_regex = "^[A-Za-z0-9_-]*$"
+
 ################################################################################
 # io utils
 ################################################################################
@@ -201,9 +204,13 @@ def write_json(json_obj, filename, mode="w"):
     return filename
 
 
-def read_file(filename, mode="r"):
-    with open(filename, mode) as filey:
-        data = filey.read()
+def read_file(filename, mode="r", readlines=False):
+    if readlines:
+        with open(filename, mode) as filey:
+            data = filey.readlines()
+    else:
+        with open(filename, mode) as filey:
+            data = filey.read()
     return data
 
 
