@@ -6,8 +6,11 @@ FROM quay.io/vanessa/expfactory-builder:base
 # Experiment Factory
 ###################################
 
+ARG branch=master
+ENV branch=${branch}
+
 WORKDIR /opt
-RUN git clone -b add/variables https://github.com/expfactory/expfactory
+RUN git clone -b ${branch} https://github.com/expfactory/expfactory
 WORKDIR /opt/expfactory
 RUN python3 setup.py install
 RUN python3 -m pip install pyaml
