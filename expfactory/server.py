@@ -80,12 +80,15 @@ class EFServer(Flask):
         self.base = EXPFACTORY_BASE
         self.randomize = EXPFACTORY_RANDOMIZE
         self.headless = EXPFACTORY_HEADLESS
+        self.first_experiment = EXPFACTORY_EXPERIMENT_FIRST
+        self.last_experiment = EXPFACTORY_EXPERIMENT_LAST
 
         # Generate variables, if they exist
         self.vars = generate_runtime_vars() or None
 
-        available = get_experiments("%s" % self.base)
+        available = get_experiments(self.base)
         self.experiments = get_selection(available, self.selection)
+        self.check_experiments()
         self.logger.debug(self.experiments)
         self.lookup = make_lookup(self.experiments)
         final = "\n".join(list(self.lookup.keys()))
@@ -95,6 +98,28 @@ class EFServer(Flask):
         bot.log("Experiments Available: %s" % "\n".join(available))
         bot.log("Randomize: %s" % self.randomize)
         bot.log("Final Set \n%s" % final)
+
+    def check_experiments(self):
+        """
+        Given we have first or last experiments, ensure they exist
+        """
+        if self.first_experiment and self.first_experiment not in self.experiments:
+            bot.warning(
+                "First experiment should be %s, but not found in experiment listing."
+                % self.first_experiment
+            )
+        if self.last_experiment and self.last_experiment not in self.experiments:
+            bot.warning(
+                "Last experiment should be %s, but not found in experiment listing."
+                % self.last_experiment
+            )
+
+    def choose_random_experiment(self, experiments):
+        """
+        Choose a random experiment from experiments.
+        """
+        next = random.choice(range(0, len(experiments)))
+        return experiments[next]
 
     def get_next(self, session):
         """return the name of the next experiment, depending on the user's
@@ -106,9 +131,26 @@ class EFServer(Flask):
         next = None
         experiments = session.get("experiments", [])
         if len(experiments) > 0:
-            if app.randomize is True:
-                next = random.choice(range(0, len(experiments)))
-                next = experiments[next]
+
+            # Grab the first experiment if haven't done it yet
+            if self.first_experiment and self.first_experiment in experiments:
+                next = self.first_experiment
+
+            # Quickly grab the last experiment
+            elif self.last_experiment and self.last_experiment in experiments:
+                next = self.last_experiment
+
+            # If we have a last experiment, don't choose if there are > 1 left
+            elif self.last_experiment and len(experiments) > 1:
+                subset = [x for x in experiments if x != self.last_experiment]
+                if self.randomize is True:
+                    next = self.choose_random_experiment(subset)
+                else:
+                    next = subset[0]
+
+            # Last cases, randomize or not!
+            elif self.randomize is True:
+                next = self.choose_random_experiment(experiments)
             else:
                 next = experiments[0]
         return next

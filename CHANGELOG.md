@@ -15,6 +15,7 @@ Critical items to know are:
 
 
 ## [v3.x](https://github.com/expfactory/expfactory/tree/master) (master)
+ - adding support for first/last experiment (3.2.14)
  - updating sqlalchemy (3.2.13)
  - updating flask to 1.1.4 (3.2.12)
  - updating yaml to use safe_load (3.2.11)
