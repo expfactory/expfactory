@@ -12,7 +12,7 @@ ENV EXPFACTORY_DATABASE {{database}}
 ENV EXPFACTORY_HEADLESS {{headless}}
 ENV EXPFACTORY_BASE /scif/apps
  
-ADD startscript.sh /startscript.sh
+COPY startscript.sh /startscript.sh
 RUN chmod u+x /startscript.sh
 
 RUN apt-get update && apt-get install -y nginx git python3-pip python3-dev
