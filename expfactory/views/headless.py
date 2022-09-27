@@ -62,7 +62,7 @@ def login_get():
     if not subid:
         token = request.args.get("token")
         if token:
-
+            token = form.token.data.encode('ascii', errors = 'ignore').decode().strip()
             subid = app.validate_token(token)
             if subid is None:
                 return headless_denied(form=EntryForm())
