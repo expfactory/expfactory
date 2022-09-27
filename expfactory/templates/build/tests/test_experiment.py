@@ -47,8 +47,7 @@ class TestExperiment(TestCase):
         self.contenders = [os.path.basename(x) for x in self.experiments]
 
     def test_experiment(self):
-        """test an experiment, including the markdown file, and repo itself
-        """
+        """test an experiment, including the markdown file, and repo itself"""
         print("...Test: Experiment Validation")
 
         # First priority - the user gave an experiment folder

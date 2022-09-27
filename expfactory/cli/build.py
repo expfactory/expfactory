@@ -61,7 +61,7 @@ def main(args, parser, subparser):
     database = args.database
     studyid = args.studyid
     experiments = args.experiments
-    branch = "-b %s" % os.environ.get("EXPFACTORY_BRANCH", "master")
+    branch = os.environ.get("EXPFACTORY_BRANCH", "master")
 
     headless = "false"
     if args.headless is True:
@@ -124,7 +124,7 @@ def main(args, parser, subparser):
 
             app = "LABEL EXPERIMENT_%s /scif/apps/%s\n" % (exp_id, exp_id)
 
-            # Here add custom build routine, should be list of lines
+            # Here copy custom build routine, should be list of lines
             if "install" in config:
                 commands = "\n".join(["RUN %s " % s for x in config["install"]]).strip(
                     "\n"
@@ -133,7 +133,7 @@ def main(args, parser, subparser):
 
             # The final installation step, either from Github (url) or local folder
             if "local" in config:
-                app = "%sADD %s /scif/apps/%s\n" % (app, exp_id, exp_id)
+                app = "%sCOPY %s /scif/apps/%s\n" % (app, exp_id, exp_id)
                 app = "%sWORKDIR /scif/apps\nRUN expfactory install %s\n" % (
                     app,
                     exp_id,

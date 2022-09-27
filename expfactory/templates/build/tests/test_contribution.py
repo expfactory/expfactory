@@ -56,8 +56,7 @@ class TestContribution(TestCase):
         self.experiments = glob("%s/*md" % self.experiments_base)
 
     def test_contribution(self):
-        """test an experiment, including the markdown file, and repo itself
-        """
+        """test an experiment, including the markdown file, and repo itself"""
         if len(self.experiments) == 0:
             print("Please bind the directory with your markdown files for the library.")
             sys.exit(1)

@@ -12,7 +12,7 @@ ENV EXPFACTORY_DATABASE filesystem
 ENV EXPFACTORY_HEADLESS false
 ENV EXPFACTORY_BASE /scif/apps
  
-ADD startscript.sh /startscript.sh
+COPY startscript.sh /startscript.sh
 RUN chmod u+x /startscript.sh
 
 WORKDIR /opt 

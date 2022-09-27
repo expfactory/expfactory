@@ -7,7 +7,7 @@ FROM quay.io/vanessa/expfactory-builder:base
 ###################################
 
 WORKDIR /opt
-ADD . /opt
+COPY . /opt
 WORKDIR /opt/expfactory
 RUN python3 setup.py install
 RUN mv /opt/entrypoint.sh /entrypoint.sh
