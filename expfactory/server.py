@@ -110,6 +110,7 @@ class EFServer(Flask):
         """
         next = None
         finished = app.get_finished_experiments(session)
+        bot.log("Finished experiments %s" % "\n".join(finished))
         experiments = [x for x in session.get("experiments", []) if x not in finished]
 
         if len(experiments) > 0:
