@@ -235,14 +235,11 @@ def get_finished_experiments(self, session):
 
     if subid is not None:
         data_base = "%s/%s" % (self.data_base, subid)
+        print('Searching in data base %s' % data_base)
 
         # Cut out early if nothing written yet
         if not os.path.exists(data_base):
             return finished
-
-        # If not running in headless, ensure path exists
-        if not self.headless and not os.path.exists(data_base):
-            mkdir_p(data_base)
 
         # We only care about basename
         for result in os.listdir(data_base):
