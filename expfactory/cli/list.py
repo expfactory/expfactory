@@ -31,11 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 from expfactory.logger import bot
 from expfactory.defaults import EXPFACTORY_LIBRARY
-from glob import glob
 import requests
-import tempfile
-import sys
-import os
 
 
 def main(args, parser, subparser):

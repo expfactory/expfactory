@@ -109,7 +109,9 @@ class EFServer(Flask):
         battery of experiments.
         """
         next = None
-        experiments = session.get("experiments", [])
+        finished = app.get_finished_experiments(session)
+        experiments = [x for x in session.get("experiments", []) if x not in finished]
+
         if len(experiments) > 0:
             if app.randomize is True:
                 next = random.choice(range(0, len(experiments)))
@@ -134,14 +136,17 @@ class EFServer(Flask):
         Remove an experiment from the list after completion.
         """
         self.logger.debug("Finishing %s" % exp_id)
+        finished = app.get_finished_experiments(session)
+        self.logger.debug("Found finished experments %s" "\n".join(finished))
         experiments = session.get("experiments", [])
-        experiments = [x for x in experiments if x != exp_id]
+        experiments = [x for x in experiments if x != exp_id and x not in finished]
         session["experiments"] = experiments
         return experiments
 
 
 EFServer.init_db = init_db
 EFServer.save_data = save_data
+EFServer.get_finished_experiments = get_finished_experiments
 EFServer.generate_subid = generate_subid
 EFServer.generate_user = generate_user
 

@@ -31,9 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 from expfactory.logger import bot
-from expfactory.defaults import EXPFACTORY_DATABASE
 import sys
-import os
 
 
 def main(args, parser, subparser):
@@ -44,7 +42,7 @@ def main(args, parser, subparser):
 
     # The user wants to list active subjects
     if args.list is True:
-        users = app.list_users()  # returns id\ttoken
+        app.list_users()  # returns id\ttoken
         sys.exit(0)
 
     # The user wants to add new subjects

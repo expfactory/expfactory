@@ -35,13 +35,11 @@ from expfactory.experiment import load_experiment
 from expfactory.utils import (
     get_viewsdir,
     get_template,
-    run_command,
     sub_template,
     save_template,
 )
 from expfactory.logger import bot
 import uuid
-import tempfile
 import sys
 import os
 

@@ -102,7 +102,8 @@ def list_users(self, user=None):
 
 
 def generate_user(self):
-    """generate a new user in the database, still session based so we
+    """
+    Generate a new user in the database, still session based so we
     create a new identifier. This function is called from the users new
     entrypoint, and it assumes we want a user generated with a token.
     """
@@ -111,8 +112,10 @@ def generate_user(self):
 
 
 def finish_user(self, subid):
-    """finish user will remove a user's token, making the user entry not
-    accesible if running in headless model"""
+    """
+    Finish user will remove a user's token, making the user entry not
+    accesible if running in headless model
+    """
 
     p = self.revoke_token(subid)
     p.token = "finished"
@@ -121,7 +124,9 @@ def finish_user(self, subid):
 
 
 def restart_user(self, subid):
-    """restart a user, which means revoking and issuing a new token."""
+    """
+    Restart a user, which means revoking and issuing a new token.
+    """
     p = self.revoke_token(subid)
     p = self.refresh_token(subid)
     return p
@@ -131,7 +136,8 @@ def restart_user(self, subid):
 
 
 def validate_token(self, token):
-    """retrieve a subject based on a token. Valid means we return a participant
+    """
+    Retrieve a subject based on a token. Valid means we return a participant
     invalid means we return None
     """
     from expfactory.database.models import Participant
@@ -158,7 +164,9 @@ def revoke_token(self, subid):
 
 
 def refresh_token(self, subid):
-    """refresh or generate a new token for a user"""
+    """
+    Refresh or generate a new token for a user
+    """
     from expfactory.database.models import Participant
 
     p = Participant.query.filter(Participant.id == subid).first()
@@ -168,9 +176,31 @@ def refresh_token(self, subid):
     return p
 
 
+def get_finished_experiments(self, session):
+    """
+    Get names of finished experiments (with results files) so we don't show again.
+    """
+    from expfactory.database.models import Participant, Result
+
+    finished = []
+    subid = session.get("subid")
+
+    if subid is not None:
+        p = Participant.query.filter(
+            Participant.id == subid
+        ).first()  # better query here
+
+        # Get results for the participant
+        for result in Result.query.filter(participant_id=p.id):
+            finished.append(result.exp_id)
+    return finished
+
+
 def save_data(self, session, exp_id, content):
-    """save data will obtain the current subid from the session, and save it
-    depending on the database type. Currently we just support flat files"""
+    """
+    Save data will obtain the current subid from the session, and save it
+    depending on the database type. Currently we just support flat files
+    """
     from expfactory.database.models import Participant, Result
 
     subid = session.get("subid")
@@ -208,7 +238,6 @@ def save_data(self, session, exp_id, content):
             self.session.add(result)
             p.results.append(result)
             self.session.commit()
-
             self.logger.info("Save [participant] %s [result] %s" % (p, result))
 
 

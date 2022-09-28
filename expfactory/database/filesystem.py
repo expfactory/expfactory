@@ -226,6 +226,30 @@ def revoke_token(self, subid):
     return self.finish_user(subid, ext="revoked")
 
 
+def get_finished_experiments(self, session):
+    """
+    Get names of finished experiments (with results files) so we don't show again.
+    """
+    finished = []
+    subid = session.get("subid")
+
+    if subid is not None:
+        data_base = "%s/%s" % (self.data_base, subid)
+
+        # Cut out early if nothing written yet
+        if not os.path.exists(data_base):
+            return finished
+
+        # If not running in headless, ensure path exists
+        if not self.headless and not os.path.exists(data_base):
+            mkdir_p(data_base)
+
+        # We only care about basename
+        for result in os.listdir(data_base):
+            finished.append(result.replace("-results.json", ""))
+    return finished
+
+
 def save_data(self, session, exp_id, content):
     """
     Save data will obtain the current subid from the session, and save it

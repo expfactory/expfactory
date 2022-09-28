@@ -31,7 +31,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 from expfactory.defaults import EXPFACTORY_LOGS
-import sys
 import os
 
 

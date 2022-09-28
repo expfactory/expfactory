@@ -33,7 +33,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 """
 
-from glob import glob
 import argparse
 import sys
 import os

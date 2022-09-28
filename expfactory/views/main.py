@@ -175,5 +175,7 @@ def finish():
 
 @app.route("/start")
 def start():
-    """start a battery."""
+    """
+    Start a battery.
+    """
     return perform_checks("routes/start.html")

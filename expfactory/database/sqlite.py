@@ -52,8 +52,10 @@ import json
 
 
 def save_data(self, session, exp_id, content):
-    """save data will obtain the current subid from the session, and save it
-    depending on the database type."""
+    """
+    Save data will obtain the current subid from the session, and save it
+    depending on the database type.
+    """
     from expfactory.database.models import Participant, Result
 
     subid = session.get("subid")
@@ -87,9 +89,9 @@ Base = declarative_base()
 
 
 def init_db(self):
-    """initialize the database, with the default database path or custom of
+    """
+    Initialize the database, with the default database path or custom of
     the format sqlite:////scif/data/expfactory.db
-
     """
 
     # Database Setup, use default if uri not provided

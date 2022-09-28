@@ -33,7 +33,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from expfactory.utils import (
     copy_directory,
-    get_templatedir,
     get_template,
     sub_template,
     write_file,
@@ -41,8 +40,6 @@ from expfactory.utils import (
 from expfactory.experiment import get_library, load_experiment
 from expfactory.validator import ExperimentValidator
 from expfactory.logger import bot
-from glob import glob
-import tempfile
 import sys
 import os
 
@@ -126,7 +123,7 @@ def main(args, parser, subparser):
 
             # Here copy custom build routine, should be list of lines
             if "install" in config:
-                commands = "\n".join(["RUN %s " % s for x in config["install"]]).strip(
+                commands = "\n".join(["RUN %s " % x for x in config["install"]]).strip(
                     "\n"
                 )
                 app = "%s%s\n" % (app, commands)
