@@ -196,9 +196,9 @@ def validate_token(self, token):
     if not token.endswith(("finished", "revoked")):
         subid = self.generate_subid(token=token)
         data_base = "%s/%s" % (self.data_base, subid)
-        print("Looking for data base %s" % data_base)
+        self.logger.info("Looking for data base %s" % data_base)
         if not os.path.exists(data_base):
-            print("Data base %s does not exist." % data_base)
+            self.logger.info("Data base %s does not exist." % data_base)
             subid = None
     return subid
 
@@ -237,7 +237,6 @@ def get_finished_experiments(self, session):
 
     if subid is not None:
         data_base = "%s/%s" % (self.data_base, subid)
-        print('Searching in data base %s' % data_base)
 
         # Cut out early if nothing written yet
         if not os.path.exists(data_base):
