@@ -55,6 +55,9 @@ def main(args, parser, subparser):
         bot.error("Please provide a Github https address to install.")
         sys.exit(1)
 
+    # Ensure we strip trailing slashes
+    source = source.rstrip(os.sep)
+
     # Is the experiment valid?
     cli = ExperimentValidator()
     valid = cli.validate(source, cleanup=False)

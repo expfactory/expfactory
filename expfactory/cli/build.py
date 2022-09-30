@@ -83,6 +83,8 @@ def main(args, parser, subparser):
     for experiment in experiments:
         if os.path.exists(experiment):
 
+            # Strip trailing slashes
+            experiment = experiment.rstrip(os.sep)
             bot.info("local experiment %s found, validating..." % experiment)
 
             # Is the experiment valid?
