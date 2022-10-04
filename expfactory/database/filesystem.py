@@ -29,13 +29,11 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 """
-from flask import session
+
 from expfactory.utils import write_json, mkdir_p
-from expfactory.defaults import EXPFACTORY_SUBID, EXPFACTORY_DATA
 from glob import glob
 import uuid
 import os
-import sys
 
 
 # DEFAULT FLAT #################################################################
@@ -48,7 +46,8 @@ import sys
 
 
 def generate_subid(self, token=None):
-    """assumes a flat (file system) database, organized by experiment id, and
+    """
+    Assumes a flat (file system) database, organized by experiment id, and
     subject id, with data (json) organized by subject identifier
     """
 
@@ -68,7 +67,8 @@ def list_users(self):
 
 
 def print_user(self, user):
-    """print a filesystem database user. A "database" folder that might end with
+    """
+    Print a filesystem database user. A "database" folder that might end with
     the participant status (e.g. _finished) is extracted to print in format
 
     [folder]                        [identifier][studyid]
@@ -96,7 +96,8 @@ def print_user(self, user):
 
 
 def generate_user(self, subid=None):
-    """generate a new user on the filesystem, still session based so we
+    """
+    Generate a new user on the filesystem, still session based so we
     create a new identifier. This function is called from the users new
     entrypoint, and it assumes we want a user generated with a token.
     since we don't have a database proper, we write the folder name to
@@ -117,7 +118,8 @@ def generate_user(self, subid=None):
 
 
 def finish_user(self, subid, ext="finished"):
-    """finish user will append "finished" (or other) to the data folder when
+    """
+    Finish user will append "finished" (or other) to the data folder when
     the user has completed (or been revoked from) the battery.
     For headless, this means that the session is ended and the token
     will not work again to rewrite the result. If the user needs to update
@@ -157,7 +159,8 @@ def finish_user(self, subid, ext="finished"):
 
 
 def restart_user(self, subid):
-    """restart user will remove any "finished" or "revoked" extensions from
+    """
+    Restart user will remove any "finished" or "revoked" extensions from
     the user folder to restart the session. This command always comes from
     the client users function, so we know subid does not start with the
     study identifer first
@@ -193,14 +196,18 @@ def validate_token(self, token):
     if not token.endswith(("finished", "revoked")):
         subid = self.generate_subid(token=token)
         data_base = "%s/%s" % (self.data_base, subid)
+        self.logger.info("Looking for data base %s" % data_base)
         if not os.path.exists(data_base):
+            self.logger.info("Data base %s does not exist." % data_base)
             subid = None
     return subid
 
 
 def refresh_token(self, subid):
-    """refresh or generate a new token for a user. If the user is finished,
-    this will also make the folder available again for using."""
+    """
+    Refresh or generate a new token for a user. If the user is finished,
+    this will also make the folder available again for using.
+    """
     if os.path.exists(self.data_base):  # /scif/data
         data_base = "%s/%s" % (self.data_base, subid)
         if os.path.exists(data_base):
@@ -215,13 +222,37 @@ def refresh_token(self, subid):
 
 
 def revoke_token(self, subid):
-    """revoke a presently active token, meaning append _revoked to it."""
+    """
+    Revoke a presently active token, meaning append _revoked to it.
+    """
     return self.finish_user(subid, ext="revoked")
 
 
+def get_finished_experiments(self, session):
+    """
+    Get names of finished experiments (with results files) so we don't show again.
+    """
+    finished = []
+    subid = session.get("subid")
+
+    if subid is not None:
+        data_base = "%s/%s" % (self.data_base, subid)
+
+        # Cut out early if nothing written yet
+        if not os.path.exists(data_base):
+            return finished
+
+        # We only care about basename
+        for result in os.listdir(data_base):
+            finished.append(result.replace("-results.json", ""))
+    return finished
+
+
 def save_data(self, session, exp_id, content):
-    """save data will obtain the current subid from the session, and save it
-    depending on the database type. Currently we just support flat files"""
+    """
+    Save data will obtain the current subid from the session, and save it
+    depending on the database type. Currently we just support flat files
+    """
 
     subid = session.get("subid")
 

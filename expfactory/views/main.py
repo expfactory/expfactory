@@ -31,10 +31,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 """
 
-from flask import flash, jsonify, render_template, request, redirect, session
+from flask import render_template, request, redirect, session
 
 from flask_wtf.csrf import generate_csrf
-from flask_cors import cross_origin
 from expfactory.defaults import EXPFACTORY_LOGS
 from expfactory.utils import get_post_fields
 
@@ -44,12 +43,11 @@ from expfactory.server import app
 from .general import *
 from .headless import *
 
-from random import choice
 import logging
 import os
 import json
 
-from expfactory.forms import ParticipantForm, EntryForm
+from expfactory.forms import EntryForm
 
 
 # LOGGING ######################################################################
@@ -106,7 +104,11 @@ def save():
         app.logger.debug("Saving data for %s" % exp_id)
 
         fields = get_post_fields(request)
+
+        # Find the original experiment in the lookup - ensure data saved with name
+        exp_id = app.lookup_experiment(exp_id)
         result_file = app.save_data(session=session, content=fields, exp_id=exp_id)
+        app.logger.info("%s saved to %s." % (exp_id, result_file))
 
         experiments = app.finish_experiment(session, exp_id)
         app.logger.info("Finished %s, %s remaining." % (exp_id, len(experiments)))
@@ -127,8 +129,10 @@ def next():
     experiment = app.get_next(session)
 
     if experiment is not None:
+        meta = app.lookup[experiment]
+        experiment_path = meta.get("folder", experiment)
         app.logger.debug("Next experiment is %s" % experiment)
-        template = "/experiments/%s" % experiment
+        template = "/experiments/%s" % experiment_path
 
         # Do we have runtime variables?
         token = session.get("token")
@@ -171,5 +175,7 @@ def finish():
 
 @app.route("/start")
 def start():
-    """start a battery."""
+    """
+    Start a battery.
+    """
     return perform_checks("routes/start.html")

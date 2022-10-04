@@ -33,12 +33,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 import os
-import re
-import sys
 from expfactory.logger import bot
-from expfactory.utils import clone, read_file
-from .utils import notvalid
-import json
+from expfactory.utils import clone
 import requests
 import tempfile
 from glob import glob
@@ -91,7 +87,6 @@ class RuntimeValidator:
             )
             return False
 
-        index = response.text
         tmpdir = tempfile.mkdtemp()
         repo_master = clone(url, tmpdir)
         contenders = glob("%s/*" % repo_master)

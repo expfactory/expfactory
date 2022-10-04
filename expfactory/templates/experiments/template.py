@@ -44,16 +44,16 @@ from expfactory.server import app, csrf
 import os
 
 {{ exp_id_python }} = Blueprint('{{ exp_id }}', __name__,
-                                static_url_path='/experiments/{{ exp_id }}',
-                                static_folder='/scif/apps/{{ exp_id }}',
+                                static_url_path='/experiments/{{ exp_url }}',
+                                static_folder='/scif/apps/{{ exp_url }}',
                                 template_folder='/scif/apps')
 
-@{{ exp_id_python }}.route('/experiments/{{ exp_id }}/')
+@{{ exp_id_python }}.route('/experiments/{{ exp_url }}/')
 def {{ exp_id_python }}_base():
-    context = {'experiment': '{{ exp_id }}/index.html'}
+    context = {'experiment': '{{ exp_url }}/index.html'}
     return perform_checks('experiments/experiment.html', quiet=True,
                                                          context=context,
-                                                         next="{{ exp_id }}")
+                                                         next="{{ exp_url }}")
 
 {{ exp_id_python }}.before_request(csrf.protect)
 app.register_blueprint({{ exp_id_python }})

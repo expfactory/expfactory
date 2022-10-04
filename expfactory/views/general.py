@@ -32,14 +32,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 from flask import flash, render_template, request, redirect, session
-
-from expfactory.utils import get_post_fields
-
-from expfactory.views.utils import perform_checks
 from expfactory.server import app
 from expfactory.forms import ParticipantForm
-import os
-import json
 
 
 # Home portal to start experiments

@@ -42,10 +42,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 from expfactory.utils import convert2boolean, getenv
-import tempfile
-import os
-import pwd
-import sys
 
 
 ################################################################################
@@ -69,7 +65,7 @@ EXPFACTORY_LOGS = getenv("EXPFACTORY_LOGS", "/scif/logs")
 EXPFACTORY_DATABASE = getenv("EXPFACTORY_DATABASE", "filesystem")
 EXPFACTORY_BASE = getenv("EXPFACTORY_BASE", "/scif/apps")
 EXPFACTORY_DATA = getenv("EXPFACTORY_DATA", "/scif/data")
-
+EXPFACTORY_CONCEAL_NAMES = getenv("EXPFACTORY_CONCEAL_NAMES") is not None
 
 ################################################################################
 # Expfactory Experiments

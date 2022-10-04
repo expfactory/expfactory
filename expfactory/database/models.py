@@ -31,10 +31,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 """
 
-from expfactory.logger import bot
 from sqlalchemy import Column, DateTime, Integer, String, Text, ForeignKey, func
 from sqlalchemy.orm import relationship, backref
-from uuid import uuid4
 from expfactory.database import Base
 
 

@@ -32,7 +32,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from expfactory.logger import bot
 from glob import glob
-import tempfile
 import sys
 import os
 
