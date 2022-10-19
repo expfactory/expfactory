@@ -74,7 +74,7 @@ class LibraryValidator:
         self.metadata = {}
         uid = os.path.basename(expfile).strip(".md")
 
-        if os.path.exists(expfile):
+        if os.path.exists(os.path.abspath(expfile)):
             with open(expfile, "r") as stream:
                 docs = yaml.load_all(stream, Loader=yaml.SafeLoader)
                 for doc in docs:

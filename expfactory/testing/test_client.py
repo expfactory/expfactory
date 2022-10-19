@@ -96,7 +96,7 @@ class TestClient(unittest.TestCase):
                 "https://github.com/expfactory-experiments/test-task",
             ]
         )
-        self.assertTrue(os.path.exists("%s/test-task" % self.tmpdir))
+        self.assertTrue(os.path.exists(os.path.abspath("%s/test-task" % self.tmpdir)))
 
 
 if __name__ == "__main__":

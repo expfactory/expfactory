@@ -37,7 +37,7 @@ import os
 def main(args, parser, subparser):
 
     logs = "%s/expfactory.log" % EXPFACTORY_LOGS
-    if os.path.exists(logs):
+    if os.path.exists(os.path.abspath(logs)):
         if not args.tail:
             os.system("cat %s" % logs)
         else:

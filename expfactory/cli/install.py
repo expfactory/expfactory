@@ -66,7 +66,7 @@ def main(args, parser, subparser):
     if valid is True:
 
         # Local Install
-        if os.path.exists(source):
+        if os.path.exists(os.path.abspath(source)):
             config = load_experiment(source)
             source = os.path.abspath(source)
         else:
@@ -124,7 +124,7 @@ def main(args, parser, subparser):
         with open(instruct, "w") as filey:
             filey.writelines(config["instructions"])
 
-    if not os.path.exists(dest):
+    if not os.path.exists(os.path.abspath(dest)):
         os.system("mkdir -p %s" % dest)
     else:
         if args.force is False:

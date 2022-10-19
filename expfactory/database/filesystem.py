@@ -108,10 +108,10 @@ def generate_user(self, subid=None):
         token = str(uuid.uuid4())
         subid = self.generate_subid(token=token)
 
-    if os.path.exists(self.data_base):  # /scif/data
+    if os.path.exists(os.path.abspath(self.data_base)):  # /scif/data
         data_base = "%s/%s" % (self.data_base, subid)
         # expfactory/00001
-        if not os.path.exists(data_base):
+        if not os.path.exists(os.path.abspath(data_base)):
             mkdir_p(data_base)
 
     return data_base
@@ -129,7 +129,7 @@ def finish_user(self, subid, ext="finished"):
     but if called by the user, it may not (e.g., xxxx-xxxx). We check
     for this to ensure it works in both places.
     """
-    if os.path.exists(self.data_base):  # /scif/data
+    if os.path.exists(os.path.abspath(self.data_base)):  # /scif/data
 
         # Only relevant to filesystem save - the studyid is the top folder
         if subid.startswith(self.study_id):
@@ -141,11 +141,11 @@ def finish_user(self, subid, ext="finished"):
         finished = "%s_%s" % (data_base, ext)
 
         # Participant already finished
-        if os.path.exists(finished):
+        if os.path.exists(os.path.abspath(finished)):
             self.logger.warning("[%s] is already finished: %s" % (subid, data_base))
 
         # Exists and can finish
-        elif os.path.exists(data_base):
+        elif os.path.exists(os.path.abspath(data_base)):
             os.rename(data_base, finished)
 
         # Not finished, doesn't exist
@@ -165,11 +165,11 @@ def restart_user(self, subid):
     the client users function, so we know subid does not start with the
     study identifer first
     """
-    if os.path.exists(self.data_base):  # /scif/data/<study_id>
+    if os.path.exists(os.path.abspath(self.data_base)):  # /scif/data/<study_id>
         data_base = "%s/%s" % (self.data_base, subid)
         for ext in ["revoked", "finished"]:
             folder = "%s_%s" % (data_base, ext)
-            if os.path.exists(folder):
+            if os.path.exists(os.path.abspath(folder)):
                 os.rename(folder, data_base)
                 self.logger.info("Restarting %s, folder is %s." % (subid, data_base))
 
@@ -197,7 +197,7 @@ def validate_token(self, token):
         subid = self.generate_subid(token=token)
         data_base = "%s/%s" % (self.data_base, subid)
         self.logger.info("Looking for data base %s" % data_base)
-        if not os.path.exists(data_base):
+        if not os.path.exists(os.path.abspath(data_base)):
             self.logger.info("Data base %s does not exist." % data_base)
             subid = None
     return subid
@@ -208,9 +208,9 @@ def refresh_token(self, subid):
     Refresh or generate a new token for a user. If the user is finished,
     this will also make the folder available again for using.
     """
-    if os.path.exists(self.data_base):  # /scif/data
+    if os.path.exists(os.path.abspath(self.data_base)):  # /scif/data
         data_base = "%s/%s" % (self.data_base, subid)
-        if os.path.exists(data_base):
+        if os.path.exists(os.path.abspath(data_base)):
             refreshed = "%s/%s" % (self.database, str(uuid.uuid4()))
             os.rename(data_base, refreshed)
             return refreshed
@@ -239,7 +239,7 @@ def get_finished_experiments(self, session):
         data_base = "%s/%s" % (self.data_base, subid)
 
         # Cut out early if nothing written yet
-        if not os.path.exists(data_base):
+        if not os.path.exists(os.path.abspath(data_base)):
             return finished
 
         # We only care about basename
@@ -263,14 +263,14 @@ def save_data(self, session, exp_id, content):
         data_base = "%s/%s" % (self.data_base, subid)
 
         # If not running in headless, ensure path exists
-        if not self.headless and not os.path.exists(data_base):
+        if not self.headless and not os.path.exists(os.path.abspath(data_base)):
             mkdir_p(data_base)
 
         # Conditions for saving:
         do_save = False
 
         # If headless with token pre-generated OR not headless
-        if self.headless and os.path.exists(data_base) or not self.headless:
+        if self.headless and os.path.exists(os.path.abspath(data_base)) or not self.headless:
             do_save = True
         if data_base.endswith(("revoked", "finished")):
             do_save = False
@@ -278,7 +278,7 @@ def save_data(self, session, exp_id, content):
         # If headless with token pre-generated OR not headless
         if do_save is True:
             data_file = "%s/%s-results.json" % (data_base, exp_id)
-            if os.path.exists(data_file):
+            if os.path.exists(os.path.abspath(data_file)):
                 self.logger.warning("%s exists, and is being overwritten." % data_file)
             write_json(content, data_file)
 
@@ -291,9 +291,9 @@ def init_db(self):
     """
     self.session = None
 
-    if not os.path.exists(self.data_base):
+    if not os.path.exists(os.path.abspath(self.data_base)):
         mkdir_p(self.data_base)
 
     self.database = "%s/%s" % (self.data_base, self.study_id)
-    if not os.path.exists(self.database):
+    if not os.path.exists(os.path.abspath(self.database)):
         mkdir_p(self.database)

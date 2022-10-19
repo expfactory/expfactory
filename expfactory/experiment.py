@@ -87,7 +87,7 @@ def load_experiment(folder, return_path=False):
     """
     fullpath = os.path.abspath(folder)
     config = "%s/config.json" % (fullpath)
-    if not os.path.exists(config):
+    if not os.path.exists(os.path.abspath(config)):
         bot.error("config.json could not be found in %s" % (folder))
         config = None
     if return_path is False and config is not None:

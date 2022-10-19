@@ -81,7 +81,7 @@ def main(args, parser, subparser):
     # Add local experiments to library, first preference
     local_installs = 0
     for experiment in experiments:
-        if os.path.exists(experiment):
+        if os.path.exists(os.path.abspath((experiment)):
 
             # Strip trailing slashes
             experiment = experiment.rstrip(os.sep)

@@ -102,7 +102,7 @@ class ExperimentValidator:
         """
         config = "%s/config.json" % folder
         name = os.path.basename(folder)
-        if not os.path.exists(config):
+        if not os.path.exists(os.path.abspath(config)):
             return notvalid("%s: config.json not found." % (folder))
 
         # Load the config

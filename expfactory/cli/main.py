@@ -53,7 +53,7 @@ def main(args, parser, subparser=None):
         bot.error("You must set a base of experiments with --base" % base)
         sys.exit(1)
 
-    if not os.path.exists(base):
+    if not os.path.exists(os.path.abspath(base)):
         bot.error("Base folder %s does not exist." % base)
         sys.exit(1)
 
@@ -66,7 +66,7 @@ def main(args, parser, subparser=None):
 
     # If defined and file exists, set runtime variables
     if args.vars is not None:
-        if os.path.exists(args.vars):
+        if os.path.exists(os.path.abspath(args.vars)):
             os.environ["EXPFACTORY_RUNTIME_VARS"] = args.vars
             os.environ["EXPFACTORY_RUNTIME_DELIM"] = args.delim
         else:

@@ -125,7 +125,7 @@ def generate_runtime_vars(variable_file=None, sep=","):
             variable_file = EXPFACTORY_RUNTIME_VARS
 
     if variable_file is not None:
-        if not os.path.exists(variable_file):
+        if not os.path.exists(os.path.abspath(variable_file)):
             bot.warning("%s is set, but not found" % variable_file)
             return variable_file
 
