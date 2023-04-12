@@ -1,3 +1,4 @@
 [codespell]
-skip = .git,*.pdf,*.svg
-# ignore-words-list = 
+skip = .git,*.pdf,*.svg,*.css.map,*.bib
+# nodel - var name
+ignore-words-list = nodel
