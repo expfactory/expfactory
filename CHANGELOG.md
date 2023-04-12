@@ -15,6 +15,7 @@ Critical items to know are:
 
 
 ## [v3.x](https://github.com/expfactory/expfactory/tree/master) (master)
+ - Add codespell config and github workflow + fixed some typos
  - Add support for loading existing data (3.2.15)
  - fixing bug with Dockerfile generation (3.2.14)
  - updating sqlalchemy (3.2.13)
