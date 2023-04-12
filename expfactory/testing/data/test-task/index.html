@@ -58,7 +58,7 @@ $( document ).ready(function() {
                              if (err.status == 200){
                                 document.location = "/next"
                              } else {
-                                 // If error, assue local save
+                                 // If error, assume local save
                                  jsPsych.data.localSave('test-task_results.csv', 'csv');
                             }
                          }
