@@ -28,9 +28,9 @@ The Experiment Factory [@vanessa_sochat_2017_1059119] is Open Source software th
 
 The reproducibility crisis [@Ram2013-km, @Stodden2010-cu, @noauthor_2015-ig, @noauthor_undated-sn, @Baker_undated-bx, @Open_Science_Collaboration2015-hb] has been well met by many efforts [@Belmann2015-eb, @Moreews2015-dy, @Boettiger2014-cz, @Santana-Perez2015-wo, @Wandell2015-yt] across scientific disciplines to capture dependencies required for a scientific analysis. Behavioral research is especially challenging, historically due to the need to bring a study participant into the lab, and currently due to needing to develop and validate a well-tested set of paradigms. A common format for these paradigms is a web-based format that can be done on a computer with an internet connection, without one if all resources are provided locally. However, while many great tools exist for creating the web-based paradigms [@De_Leeuw2015-zw, @McDonnell2012-ns], still lacking is assurance that the generated paradigms will be reproducible. Specifically, the following challenges remain:
 
- - **Dependencies** such as software, experiment static files, and runtime variables must be captured for reproduciblity.
+ - **Dependencies** such as software, experiment static files, and runtime variables must be captured for reproducibility.
  - Individual experiments and the library must be **version controlled.**
- - Each experiment could benefit from being maintianed and tested in an **Open Source** fashion. This means that those knowledgable about the paradigm can easily collaborate on code, and others can file issues and ask questions.
+ - Each experiment could benefit from being maintianed and tested in an **Open Source** fashion. This means that those knowledgeable about the paradigm can easily collaborate on code, and others can file issues and ask questions.
  - Tools must allow for **flexibility** to allow different libraries (e.g., JavaScript).
  - The final product should be **easy to deploy** exactly as the creator intended.
 

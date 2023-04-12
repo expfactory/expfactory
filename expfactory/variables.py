@@ -97,7 +97,7 @@ def generate_runtime_vars(variable_file=None, sep=","):
     Parameters
     ==========
     variable_file: full path to the tabular file with token, exp_id, etc.
-    sep: the default delimiter to use, if not set in enironment.
+    sep: the default delimiter to use, if not set in environment.
 
     Returns
     =======
@@ -185,7 +185,7 @@ def _read_runtime_vars(variable_file, sep=","):
     ==========
 
     variable_file: full path to the tabular file with token, exp_id, etc.
-    sep: the default delimiter to use, if not set in enironment.
+    sep: the default delimiter to use, if not set in environment.
 
     Returns
     =======

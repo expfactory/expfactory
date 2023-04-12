@@ -163,7 +163,7 @@ def restart_user(self, subid):
     Restart user will remove any "finished" or "revoked" extensions from
     the user folder to restart the session. This command always comes from
     the client users function, so we know subid does not start with the
-    study identifer first
+    study identifier first
     """
     if os.path.exists(self.data_base):  # /scif/data/<study_id>
         data_base = "%s/%s" % (self.data_base, subid)

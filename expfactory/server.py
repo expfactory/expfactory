@@ -138,7 +138,7 @@ class EFServer(Flask):
         """
         self.logger.debug("Finishing %s" % exp_id)
         finished = app.get_finished_experiments(session)
-        self.logger.debug("Found finished experments %s" "\n".join(finished))
+        self.logger.debug("Found finished experiments %s" "\n".join(finished))
         experiments = session.get("experiments", [])
         experiments = [x for x in experiments if x != exp_id and x not in finished]
         session["experiments"] = experiments

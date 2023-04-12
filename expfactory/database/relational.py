@@ -114,7 +114,7 @@ def generate_user(self):
 def finish_user(self, subid):
     """
     Finish user will remove a user's token, making the user entry not
-    accesible if running in headless model
+    accessible if running in headless model
     """
 
     p = self.revoke_token(subid)

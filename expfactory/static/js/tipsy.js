@@ -3,7 +3,7 @@
 //
 // Tooltips for d3.js SVG visualizations
 
-// Public - contructs a new tooltip
+// Public - constructs a new tooltip
 //
 // Returns a tip
 d3.tip = function() {
