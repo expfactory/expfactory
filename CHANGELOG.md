@@ -15,6 +15,7 @@ Critical items to know are:
 
 
 ## [v3.x](https://github.com/expfactory/expfactory/tree/master) (master)
+ - Add codespell config and github workflow + fixed some typos
  - Add support for loading existing data (3.2.15)
  - fixing bug with Dockerfile generation (3.2.14)
  - updating sqlalchemy (3.2.13)
@@ -23,7 +24,7 @@ Critical items to know are:
  - adding support for receiving a token in the url and updating docs template (3.2.0)
  - setting csrf token expire time to 3 hours (3.19)
  - update of base images to ubuntu 20.04 (3.18)
- - removing uneeded import of secure_filename (3.17)
+ - removing unneeded import of secure_filename (3.17)
  - adding black lint formatting (3.16)
  - pinning flask version to known working (3.15)
  - set psycopg2==2.7.5, removing python 2 support (3.14)

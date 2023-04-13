@@ -87,7 +87,7 @@ To build, cd to recipe and:
 ```
 
 ## Container Generation
-Now we would go to the folder (`/tmp/my-experiment`) to bulid our experiments container. We
+Now we would go to the folder (`/tmp/my-experiment`) to build our experiments container. We
 could actually do this in the container for you, but it's better to generate the file first
 (and generate for version control) than not. You have a Dockerfile and a script to run 
 when it's used:
