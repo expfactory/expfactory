@@ -20,5 +20,5 @@ jobs:
         run: |
           export PATH="/usr/share/miniconda/bin:$PATH"
           source activate black
-          pip install black
+          pip install black==23.3.0
           black --check expfactory --exclude template.py
